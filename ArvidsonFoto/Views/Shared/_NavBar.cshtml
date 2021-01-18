@@ -1,0 +1,88 @@
+﻿@using ArvidsonFoto.Data
+@inject ICategoryService CategoryService
+
+<nav class="main-nav" role="navigation">
+    <div class="container">
+        <!-- Mobile menu toggle button (hamburger/x icon) -->
+        <input id="main-menu-state" type="checkbox" />
+        <label class="main-menu-btn" for="main-menu-state">
+            <span class="main-menu-btn-icon"></span> Växla menyns synlighet
+        </label>
+        <h2 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h2>
+        <!-- Sample menu definition -->
+        <ul id="main-menu" class="sm sm-mint">
+            <li>
+                <a href="./Senast">Senast</a>
+                <ul>
+                    <li><a href="./Senast/Fotograferad"><i class="fa fa-camera-retro" aria-hidden="true"></i> Fotograferad</a></li>
+                    <li><a href="./Senast/Uppladdad"><i class="fa fa-upload" aria-hidden="true"></i> Uppladdad</a></li>
+                    <li><a href="./Senast/Per kategori"><i class="fa fa-plus-square-o" aria-hidden="true"></i> Per kategori</a></li>
+                    @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
+                </ul>
+            </li>
+            <li><a href="/Category/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Fåglar">Fåglar</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Insekter">Insekter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Kräldjur">Kräldjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Landskap">Landskap</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Resor">Resor</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Växter">Växter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="/Category/Årstider">Årstider</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            @*<li>
+                    <a href="#">Sub test</a>
+                    <ul>
+                        <li><a href="#" class="disabled">Disabled menu item</a></li>
+                        <li><a href="#">Dummy item</a></li>
+                        <li>
+                            <a href="#">more...</a>
+                            <ul>
+                                <li><a href="#">A pretty long text to test the default subMenusMaxWidth:20em setting for the sub menus</a></li>
+                                <li><a href="#">Dummy item</a></li>
+                                <li><a href="#">Dummy item</a></li>
+                                <li>
+                                    <a href="#">more...</a>
+                                    <ul>
+                                        <li><a href="#">Dummy item</a></li>
+                                        <li><a href="#" class="current">A 'current' class item</a></li>
+                                        <li><a href="#">Dummy item</a></li>
+                                        <li>
+                                            <a href="#">more...</a>
+                                            <ul>
+                                                <li><a href="#">subMenusMinWidth</a></li>
+                                                <li><a href="#">10em</a></li>
+                                                <li><a href="#">forced.</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Dummy item</a></li>
+                                        <li><a href="#">Dummy item</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Dummy item</a></li>
+                                <li><a href="#">Dummy item</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>*@
+            <li>
+                <a href="./Info"><i class="fa fa-info" aria-hidden="true"></i> Info <span class="caret"></span></a>
+                <ul>
+                    @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
+                        <li class="divider"></li>  <!-- Kräver inloggning --> *@
+                    <li><a href="./Info/Köp_av_bilder"><i class="fa fa-shopping-basket" aria-hidden="true"></i> Köp av bilder</a></li>
+                    @*<li><a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
+                    <li><a href="./Info/Gästbok"><i class="fa fa-comment-o" aria-hidden="true"></i> Gästbok</a></li>
+                    <li class="divider"></li>
+                    @*<li class="disabled"><a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
+                    <li><a href="./Info/Kontakta"><i class="fa fa-envelope-o" aria-hidden="true"></i> Kontaktinformation</a></li>
+                    <li><a href="./Info/Om_mig"><i class="fa fa-info-circle" aria-hidden="true"></i> Om mig, Torbjörn Arvidson</a></li>
+                    <li class="divider"></li>
+                    <li><a href="./Info/Sidkarta"><i class="fa fa-sitemap" aria-hidden="true"></i> Sidkarta</a></li>
+                    <li><a href="./Info/Copyright"><i class="fa fa-copyright" aria-hidden="true"></i> Copyright</a></li>
+                    <partial name="_LoginPartial" />
+                </ul>
+            </li>
+            <li><a href="./Sök" aria-label="Sök"><i class="fa fa-search" title="Sök på sidan"></i> Sök</a></li>
+            @*<li><a href="./?log=out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logga ut</a></li> <!-- Kräver inloggning --> *@
+        </ul>
+    </div>
+</nav>
