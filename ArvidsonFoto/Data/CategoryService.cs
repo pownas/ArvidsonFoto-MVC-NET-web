@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Data;
+using Dapper;
+using Microsoft.Data.SqlClient;
+
+namespace ArvidsonFoto.Data
+{
+    public class CategoryService : ICategoryService
+    {
+        // Databas koppling
+        private readonly SqlConnConfig _sqlConn;
+        public CategoryService(SqlConnConfig config)
+        {
+            _sqlConn = config;
+        }
+
+        public async Task<bool> SetCategoryInsert(Category category)
+        {
+            using (var conn = new SqlConnection(_sqlConn.Config))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("menu_ID", category.menu_ID, DbType.Int32);
+                parameters.Add("menu_mainID", category.menu_mainID, DbType.Int32);
+                parameters.Add("menu_text", category.menu_text, DbType.String);
+                parameters.Add("menu_URLtext", category.menu_URLtext, DbType.String);
+                parameters.Add("menu_pagecounter", category.menu_pagecounter, DbType.Int32);
+
+                // Raw SQL method
+                const string query = @"INSERT INTO tbl_menu (menu_ID, menu_mainID, menu_text, menu_URLtext, menu_pagecounter) VALUES (@menu_ID, @menu_mainID, @menu_text, @menu_URLtext, @menu_pagecounter)";
+                await conn.ExecuteAsync(query, new { category.menu_ID, category.menu_mainID, category.menu_text, category.menu_URLtext, category.menu_pagecounter }, commandType: CommandType.Text);
+            }
+            return true;
+        }
+
+        public async Task<int> GetCategoryLastId()
+        {
+            int highestID = -1;
+            using (var conn = new SqlConnection(_sqlConn.Config))
+            {
+                var sql = @"SELECT MAX(menu_ID) FROM tbl_menu";
+                highestID = await conn.QuerySingleAsync<int>(sql);
+            }
+            return highestID;
+        }
+
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesList()
+        {
+            IEnumerable<Category> categories;
+            using (var conn = new SqlConnection(_sqlConn.Config))
+            {
+                categories = await conn.QueryAsync<Category>(@"SELECT menu_ID, menu_mainID, menu_text, menu_URLtext FROM tbl_menu ORDER BY menu_mainID, menu_text");
+            }
+            return categories;
+        }
+
+        public async Task<IEnumerable<Category>> GetCategorySubsList(int categoryID)
+        {
+            IEnumerable<Category> categories;
+            using (var conn = new SqlConnection(_sqlConn.Config))
+            {
+                categories = await conn.QueryAsync<Category>(@"SELECT menu_ID, menu_mainID, menu_text, menu_URLtext FROM tbl_menu WHERE menu_mainID = " + categoryID + " ORDER BY menu_mainID, menu_text");
+            }
+            return categories;
+        }
+
+        public async Task<int> GetCategoryIdByName(string categoryName)
+        {
+            int menuID = -1;
+            using (var conn = new SqlConnection(_sqlConn.Config))
+            {
+                var sql = @"SELECT menu_ID FROM tbl_menu WHERE menu_text = '" + categoryName + "'";
+                menuID = await conn.QuerySingleAsync<int>(sql);
+            }
+            return menuID;
+        }
+    }
+}
