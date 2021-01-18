@@ -1,10 +1,11 @@
 ﻿using System;
+using ArvidsonFoto.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace ArvidsonFoto.Models
+namespace ArvidsonFoto.Data
 {
     public partial class ArvidsonFotoDbContext : DbContext
     {
