@@ -1,16 +1,17 @@
 ﻿@using ArvidsonFoto.Data
-@*@inject ICategoryService CategoryService*@
-
+@inject ICategoryService _categoryService
+@{
+    List<TblMenu> categories;
+    categories = _categoryService.GetAllCategoriesList();
+}
 <nav class="main-nav" role="navigation">
     <div class="container">
-        <!-- Mobile menu toggle button (hamburger/x icon) -->
-        <input id="main-menu-state" type="checkbox" />
+        <input id="main-menu-state" type="checkbox" />@* Hamburger-meny knappen skrivs ut här:  *@
         <label class="main-menu-btn" for="main-menu-state">
             <span class="main-menu-btn-icon"></span> Växla menyns synlighet
         </label>
         <h2 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h2>
-        <!-- Sample menu definition -->
-        <ul id="main-menu" class="sm sm-mint">
+        <ul id="main-menu" class="sm sm-mint"> @* Den synliga menyn börjar här *@
             <li>
                 <a href="./Senast">Senast</a>
                 <ul>
@@ -20,54 +21,80 @@
                     @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
                 </ul>
             </li>
-            <li><a href="/Category/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Fåglar">Fåglar</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Insekter">Insekter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Kräldjur">Kräldjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Landskap">Landskap</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Resor">Resor</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Växter">Växter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="/Category/Årstider">Årstider</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            @*<li>
-                    <a href="#">Sub test</a>
-                    <ul>
-                        <li><a href="#" class="disabled">Disabled menu item</a></li>
-                        <li><a href="#">Dummy item</a></li>
+           @if (_categoryService == null || categories == null)
+            {
+                <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Fåglar">Fåglar</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Insekter">Insekter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Kräldjur">Kräldjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Landskap">Landskap</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Resor">Resor</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Växter">Växter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+                <li><a href="./Bilder/Årstider">Årstider</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            }
+            else
+            {
+                var headMenu = categories.Where(m => m.MenuMainId == 0).ToList(); // This will list main menu items on which we'll apply loop to display them.
+                if (headMenu != null && headMenu.Count > 0)
+                {
+                    foreach (var headItem in headMenu)
+                    {
                         <li>
-                            <a href="#">more...</a>
-                            <ul>
-                                <li><a href="#">A pretty long text to test the default subMenusMaxWidth:20em setting for the sub menus</a></li>
-                                <li><a href="#">Dummy item</a></li>
-                                <li><a href="#">Dummy item</a></li>
-                                <li>
-                                    <a href="#">more...</a>
+                            @{
+                                var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).ToList();
+                                if (sub1Menu != null && sub1Menu.Count > 0)
+                                {
+                                    if (@headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
+                                        { <a style="cursor: pointer;" title="@headItem.MenuText">@headItem.MenuText</a> }
+                                    else 
+                                        { <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
                                     <ul>
-                                        <li><a href="#">Dummy item</a></li>
-                                        <li><a href="#" class="current">A 'current' class item</a></li>
-                                        <li><a href="#">Dummy item</a></li>
-                                        <li>
-                                            <a href="#">more...</a>
-                                            <ul>
-                                                <li><a href="#">subMenusMinWidth</a></li>
-                                                <li><a href="#">10em</a></li>
-                                                <li><a href="#">forced.</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Dummy item</a></li>
-                                        <li><a href="#">Dummy item</a></li>
+                                       @foreach (var sub1Item in sub1Menu)
+                                        {
+                                            <li>
+                                                @{
+                                                    var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).ToList();
+                                                    if (sub2Menu != null && sub2Menu.Count > 0)
+                                                    {
+                                                        <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a>
+                                                        <ul>
+                                                           @foreach (var sub2Item in sub2Menu)
+                                                            {
+                                                                <li>
+                                                                    @{
+                                                                        var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).ToList();
+                                                                        if (sub3Menu != null && sub3Menu.Count > 0)
+                                                                        {
+                                                                            <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a>
+                                                                            <ul>
+                                                                               @foreach (var sub3Item in sub3Menu)
+                                                                                {
+                                                                                    <li>
+                                                                                        <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText/@sub3Item.MenuText" title="@sub3Item.MenuText">@sub3Item.MenuText</a>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        } else { <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a> }
+                                                                    }
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    } else { <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a> }
+                                                }
+                                            </li>
+                                        }
                                     </ul>
-                                </li>
-                                <li><a href="#">Dummy item</a></li>
-                                <li><a href="#">Dummy item</a></li>
-                            </ul>
+                                } else { <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
+                            }
                         </li>
-                    </ul>
-                </li>*@
+                    }
+                }
+            }
             <li>
-                <a href="./Info"><i class="fa fa-info" aria-hidden="true"></i> Info <span class="caret"></span></a>
+                <a href="./Info"><i class="fa fa-info" aria-hidden="true"></i> Info </a>
                 <ul>
                     @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
-                        <li class="divider"></li>  <!-- Kräver inloggning --> *@
+                    <li class="divider"></li>  <!-- Kräver inloggning --> *@
                     <li><a href="./Info/Köp_av_bilder"><i class="fa fa-shopping-basket" aria-hidden="true"></i> Köp av bilder</a></li>
                     @*<li><a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
                     <li><a href="./Info/Gästbok"><i class="fa fa-comment-o" aria-hidden="true"></i> Gästbok</a></li>
