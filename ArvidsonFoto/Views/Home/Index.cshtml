@@ -1,6 +1,11 @@
-﻿@{
+﻿@using ArvidsonFoto.Data
+@inject IImageService _imageService
+@inject ICategoryService _categoryService
+@{
     ViewData["Title"] = "Startsidan";
     string bilder = "https://arvidsonfoto.se/Bilder";
+    List<TblImage> imageList;
+    imageList = _imageService.GetRandomNumberOfImages(16); //Hämtar (x)-antal bilder att visa på startsidan
 }
 
 <div id="page-header">
@@ -23,113 +28,47 @@
     </div>
     <div id="page-gallery" class="col-12 col-sm-7">
         <div id="gallery" class="mt-3 row">
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
+
+
+            @{ var index = 1; }
+            @foreach (var img in imageList)
+            {
+                string glightboxid = "glightbox" + index;
+                string customDesc = "custom-desc" + index;
+
+                string imgHref = bilder;
+                string imgTitle = _categoryService.GetNameById(img.ImageArt);
+
+                if (img.ImageHuvudfamilj.HasValue)
+                    imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
+                if (img.ImageFamilj.HasValue)
+                    imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
+
+                imgHref += "/" + imgTitle;
+
+                string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
+
+                string imgName = img.ImageUrl + ".jpg";
+                string imgSrc = imgHref + "/" + imgName;
+
+                <figure class="figure col-4 col-lg-3">
+                    <a href="@imgSrc" class="@glightboxid rounded btn btn-light" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
 Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Knipa</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Salskrake/B61W3318.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=106&amp;Salskrake'>Salskrake</a>, hane</div><div>Fotodatum: 2020-03-16</div><div>Bildnamn: B61W3318.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Salskrake/B61W3318.thumb.jpg" alt="Salskrakehane" title="Salskrake
+                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded" width="120" height="120" title="@imgTitle
 Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Salskrake</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
-Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Kniphane</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
-Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Sothöna</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
-Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Sothöna</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
-Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Sothöna</figcaption>
-                </a>
-            </figure>
-            <figure class="figure col-4 col-lg-3">
-                <a class="rounded btn btn-light" href="@bilder/Änder/Knipa/B57W6900.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=102&amp;Knipa'>Knipa</a>, hane</div><div>Fotodatum: 2018-04-18</div><div>Bildnamn: B57W6900.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="figure-img img-fluid rounded" width="120" height="120" src="@bilder/Änder/Knipa/B57W6900.thumb.jpg" alt="Knipahane" title="Knipa
-Klicka för att förstora">
-                    <figcaption class="figure-caption text-center text-truncate">Sothöna</figcaption>
-                </a>
-            </figure>
+                        <figcaption class="figure-caption text-center text-truncate">@imgTitle</figcaption>
+                    </a>
+                </figure>
 
+                <div class="glightbox-desc @customDesc">
+                    <p><a href='@imgHref'>@imgTitle</a>, @img.ImageDescription</p>
+                    <p>Fotodatum: @img.ImageDate</p>
+                    <p>Bildnamn: @imgName <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></p>
+                    <p>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></p>
+                </div>
 
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Växter/Blommor/IMG_2012.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=303&amp;Blommor'>Blommor</a>, Tibast</div><div>Fotodatum: 2010-04-18</div><div>Bildnamn: IMG_2012.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Växter/Blommor/IMG_2012.thumb.jpg" alt="BlommorTibast" title="Blommor
-Klicka för att förstora"> Blommor
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Doppingar och skarvar/Svarthakedopping/B59W6515.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=62&amp;Svarthakedopping'>Svarthakedopping</a></div><div>Fotodatum: 2019-04-29</div><div>Bildnamn: B59W6515.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Doppingar och skarvar/Svarthakedopping/B59W6515.thumb.jpg" alt="Svarthakedopping" title="Svarthakedopping
-Klicka för att förstora"> Svarthakedopping
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Doppingar och skarvar/Storskarv/_N0Q6998.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=185&amp;Storskarv'>Storskarv</a></div><div>Fotodatum: 2006-03-14</div><div>Bildnamn: _N0Q6998.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Doppingar och skarvar/Storskarv/_N0Q6998.thumb.jpg" alt="Storskarv" title="Storskarv
-Klicka för att förstora"> Storskarv
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Växter/Blommor/B57V5400.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=303&amp;Blommor'>Blommor</a>, Mandelblom</div><div>Fotodatum: 2014-05-14</div><div>Bildnamn: B57V5400.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Växter/Blommor/B57V5400.thumb.jpg" alt="BlommorMandelblom" title="Blommor
-Klicka för att förstora"> Blommor
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Resor/2010 Turkiet, Istanbul/IMG_3450.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=334&amp;2010 Turkiet, Istanbul'>2010 Turkiet, Istanbul</a></div><div>Fotodatum: 2010-09-29</div><div>Bildnamn: IMG_3450.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Resor/2010 Turkiet, Istanbul/IMG_3450.thumb.jpg" alt="2010 Turkiet, Istanbul" title="2010 Turkiet, Istanbul
-Klicka för att förstora"> 2010 Turkiet, Istanbul
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Tättingar/Lärkor/Berglärka/_TAR4426.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=241&amp;Berglärka'>Berglärka</a></div><div>Fotodatum: 2007-06-17</div><div>Bildnamn: _TAR4426.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Tättingar/Lärkor/Berglärka/_TAR4426.thumb.jpg" alt="Berglärka" title="Berglärka
-Klicka för att förstora"> Berglärka
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Insekter/Fjärilar/Väddnätfjäril/B57V2201.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=169&amp;Väddnätfjäril'>Väddnätfjäril</a></div><div>Fotodatum: 2015-06-30</div><div>Bildnamn: B57V2201.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Insekter/Fjärilar/Väddnätfjäril/B57V2201.thumb.jpg" alt="Väddnätfjäril" title="Väddnätfjäril
-Klicka för att förstora"> Väddnätfjäril
-                </a>
-            </div>
-
-            <div class="col-xs-4 col-sm-4 col-md-3">
-                <a class="img-thumbnail text-truncate btn btn-light" href="@bilder/Växter/Träd och buskar/Gran/IMG_0296.jpg" rel="lightbox-arvidsonfoto" title="<div><a href='/Bilder/?ID=346&amp;Gran'>Gran</a></div><div>Fotodatum: 2010-02-05</div><div>Bildnamn: IMG_0296.jpg <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></div><div>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></div>">
-                    <img class="img-thumbnail" width="120" height="120" src="@bilder/Växter/Träd och buskar/Gran/IMG_0296.thumb.jpg" alt="Gran" title="Gran
-Klicka för att förstora"> Gran
-                </a>
-            </div>
-
+                index += 1;
+            }
         </div><!-- /end-gallery-row -->
         <div class="text-center">
             <small>Slumpmässigt utvalda bilder</small>
