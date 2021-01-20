@@ -1,6 +1,6 @@
 .sm-mint {
-  border-top: 2px solid #8db863;
-  border-bottom: 2px solid #8db863;
+  border-top: 2px solid #222;
+  border-bottom: 2px solid #222;
   background: #fff;
 }
 .sm-mint a, .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active {
@@ -32,7 +32,7 @@
   font: bold 14px/34px monospace !important;
   text-align: center;
   text-shadow: none;
-  background: rgba(141, 184, 99, 0.2);
+  background: rgb(128, 128, 128, 0.2);
   border-radius: 4px;
 }
 .sm-mint a .sub-arrow::before {
@@ -126,11 +126,11 @@
     border-radius: 4px 4px 0 0;
   }
   .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active {
-    background: #8db863;
+    background: #333;
     color: #fff;
   }
   .sm-mint a.highlighted {
-    background: #F6FFED;
+    background: #ddd;
     color: #333;
     box-shadow: 0 4px 3px rgba(0, 0, 0, 0.25);
   }
@@ -150,7 +150,7 @@
     height: 0;
     border-width: 6px 4.02px 0 4.02px;
     border-style: solid dashed dashed dashed;
-    border-color: #8db863 transparent transparent transparent;
+    border-color: rgba(42, 67, 17, 0.60) transparent transparent transparent;
     background: transparent;
     border-radius: 0;
   }
@@ -158,10 +158,10 @@
     border-color: #fff transparent transparent transparent;
   }
   .sm-mint a.highlighted .sub-arrow {
-    border-color: #8db863 transparent transparent transparent;
+    border-color: #333 transparent transparent transparent;
   }
   .sm-mint a.disabled .sub-arrow {
-    border-color: #8db863 transparent transparent transparent;
+    border-color: #333 transparent transparent transparent;
   }
   .sm-mint a .sub-arrow::before {
     display: none;
@@ -172,7 +172,7 @@
   .sm-mint ul {
     border: 0;
     padding: 8px 0;
-    background: #F6FFED;
+    background: #cccccc;
     border-radius: 0 4px 4px 4px;
     box-shadow: 0 4px 3px rgba(0, 0, 0, 0.25);
   }
@@ -186,13 +186,13 @@
     border-radius: 0;
   }
   .sm-mint ul a:hover, .sm-mint ul a:focus, .sm-mint ul a:active, .sm-mint ul a.highlighted {
-    background: #8db863;
+    background: #333333;
     color: #fff;
     box-shadow: none;
   }
   .sm-mint ul a.disabled {
     background: transparent;
-    color: #b3b3b3;
+    color: #cccccc;
   }
   .sm-mint ul a.has-submenu {
     padding-right: 20px;
@@ -202,13 +202,13 @@
     margin-top: -4.02px;
     border-width: 4.02px 0 4.02px 6px;
     border-style: dashed dashed dashed solid;
-    border-color: transparent transparent transparent #8db863;
+    border-color: transparent transparent transparent #888888;
   }
   .sm-mint ul a:hover .sub-arrow, .sm-mint ul a:focus .sub-arrow, .sm-mint ul a:active .sub-arrow, .sm-mint ul a.highlighted .sub-arrow {
     border-color: transparent transparent transparent #fff;
   }
   .sm-mint ul a.disabled .sub-arrow {
-    border-color: transparent transparent transparent #8db863;
+    border-color: transparent transparent transparent #888888;
   }
   .sm-mint .scroll-up,
   .sm-mint .scroll-down {
@@ -216,7 +216,7 @@
     display: none;
     visibility: hidden;
     overflow: hidden;
-    background: #F6FFED;
+    background: #ddd;
     height: 20px;
   }
   .sm-mint .scroll-up-arrow,
@@ -230,12 +230,12 @@
     overflow: hidden;
     border-width: 0 6px 8px 6px;
     border-style: dashed dashed solid dashed;
-    border-color: transparent transparent #8db863 transparent;
+    border-color: transparent transparent #888 transparent;
   }
   .sm-mint .scroll-down-arrow {
     border-width: 8px 6px 0 6px;
     border-style: solid dashed dashed dashed;
-    border-color: #8db863 transparent transparent transparent;
+    border-color: #888 transparent transparent transparent;
   }
   .sm-mint.sm-rtl a.has-submenu {
     padding-right: 20px;

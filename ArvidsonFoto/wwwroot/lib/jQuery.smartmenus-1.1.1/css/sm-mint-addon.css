@@ -1,6 +1,7 @@
 ﻿.main-nav {
-    border-bottom: 2px solid #8db863;
-    background: #fff;
+    border-bottom: 2px solid #333;
+    background: #111;
+    color: #aaa;
 }
 
 .main-nav:after {
@@ -20,7 +21,7 @@
 .nav-brand a {
     display: block;
     padding: 11px 11px 11px 20px;
-    color: #333;
+    color: #aaa;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 22px;
     font-weight: normal;
@@ -28,10 +29,40 @@
     text-decoration: none;
 }
 
+.sm-mint a {
+    color: #aaa;
+}
+
+.sm-mint a, .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active, .sm-mint a.highlighted {
+    padding: 11px 10px; /* Här sätts padding på meny-knapparna, default: 11px 20px*/
+}
+
+.sm-mint a.has-submenu {
+    padding-right: 34px;
+}
+
+/* färger på mobile-nav */
+@media (max-width: 769px) {
+    .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active {
+        color: #ccc;
+        background: #333
+    }
+
+    .sm-mint a {
+        color: #333;
+    }
+
+    .sm-mint ul {
+        background: rgba(200, 200, 200, 0.20);
+        
+    }
+}
+
 #main-menu {
     clear: both;
     border-bottom: 0;
 }
+
 
 @media (min-width: 768px) {
     #main-menu {
@@ -68,7 +99,7 @@
     left: 2px;
     height: 2px;
     width: 24px;
-    background: #333;
+    background: #aaa;
     -webkit-transition: all 0.25s;
     transition: all 0.25s;
 }

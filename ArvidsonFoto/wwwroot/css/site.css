@@ -9,7 +9,7 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-    color: #0366d6;
+    color: #0078ff;
 }
 
 .btn-primary {
@@ -51,6 +51,10 @@ button.accept-policy {
     line-height: inherit;
 }
 
+header {
+    background-color: #111;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -62,11 +66,34 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
     overflow-y: scroll;
+    background-color: #444;
+    color: #ddd;
 }
+
 .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+    line-height: 2em; /* Vertically center the text there */
+}
+
+/* Footer-xs fix på Container */
+@media (max-width: 400px) {
+    .overridden-footer {
+        position: relative;
+    }
+}
+
+@media (max-height: 450px) {
+    .overridden-footer {
+        position: relative;
+    }
+}
+
+/* Footer-xl fix på Container */
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1200px;
+    }
 }
