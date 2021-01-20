@@ -1,4 +1,4 @@
-using ArvidsonFoto.Data;
+﻿using ArvidsonFoto.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,14 +27,27 @@ namespace ArvidsonFoto
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Lägger till databaskoppling för IdentityContext:
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            //Lägger till IdentityUser ( som ska kunna användas för inloggning ) :
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            //Lägger till Databaskoppling för appen: 
+            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+
+            //Lägger till Services:
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddControllersWithViews();
+            services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
