@@ -33,18 +33,13 @@ namespace ArvidsonFoto.Data
             //    await conn.ExecuteAsync(query, new { category.menu_ID, category.menu_mainID, category.menu_text, category.menu_URLtext, category.menu_pagecounter }, commandType: CommandType.Text);
             //}
             //return true;
-            return false;
+            throw new NotImplementedException();
         }
 
         public int GetCategoryLastId()
         {
             int highestID = -1;
             highestID = _entityContext.TblMenus.LastOrDefault().MenuId;
-            //using (var conn = new SqlConnection(_sqlConn.Config))
-            //{
-            //    var sql = @"SELECT MAX(menu_ID) FROM tbl_menu";
-            //    highestID = await conn.QuerySingleAsync<int>(sql);
-            //}
             return highestID;
         }
 
@@ -52,23 +47,25 @@ namespace ArvidsonFoto.Data
         public List<TblMenu> GetAllCategoriesList()
         {
             List<TblMenu> categories;
-            categories = _entityContext.Set<TblMenu>().ToList();
-            //using (var conn = new SqlConnection(_sqlConn.Config))
-            //{
-            //    categories = await conn.QueryAsync<TblMenu>(@"SELECT menu_ID, menu_mainID, menu_text, menu_URLtext FROM tbl_menu ORDER BY menu_mainID, menu_text");
-            //}
+            categories = _entityContext.TblMenus.ToList();
             return categories;
         }
 
-        public IEnumerable<TblMenu> GetCategorySubsList(int categoryID)
+        public List<TblMenu> GetCategorySubsList(int categoryID)
         {
-            IEnumerable<TblMenu> categories;
-            categories = _entityContext.Set<TblMenu>().Where(c => c.MenuMainId == categoryID).ToList();
-            //using (var conn = new SqlConnection(_sqlConn.Config))
-            //{
-            //    categories = await conn.QueryAsync<TblMenu>(@"SELECT menu_ID, menu_mainID, menu_text, menu_URLtext FROM tbl_menu WHERE menu_mainID = " + categoryID + " ORDER BY menu_mainID, menu_text");
-            //}
+            List<TblMenu> categories;
+            categories = _entityContext.TblMenus.Where(c => c.MenuMainId.Equals(categoryID)).ToList();
             return categories;
+        }
+
+        public string GetNameById(int? id)
+        {
+            string categoryName = "";
+            TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuId.Equals(id));
+            if (category is not null)
+                categoryName = category.MenuText;
+
+            return categoryName;
         }
 
         public int GetCategoryIdByName(string categoryName)
@@ -79,6 +76,7 @@ namespace ArvidsonFoto.Data
             //    var sql = @"SELECT menu_ID FROM tbl_menu WHERE menu_text = '" + categoryName + "'";
             //    menuID = await conn.QuerySingleAsync<int>(sql);
             //}
+            throw new NotImplementedException();
             return menuID;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Models;
 
@@ -13,9 +12,11 @@ namespace ArvidsonFoto.Data
         int GetCategoryLastId();
         
         int GetCategoryIdByName(string categoryName);
-        
+
+        string GetNameById(int? id);
+
         List<TblMenu> GetAllCategoriesList();
         
-        IEnumerable<TblMenu> GetCategorySubsList(int categoryID);
+        List<TblMenu> GetCategorySubsList(int categoryID);
     }
 }
