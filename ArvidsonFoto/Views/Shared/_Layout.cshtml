@@ -16,19 +16,16 @@
     <header>
         <partial name="_NavBar" />
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+    <main role="main" class="container pb-3">
+        @RenderBody()
+    </main>
+    <footer class="footer overridden-footer border-top">
         <div class="container">
-            &copy; @DateTime.Now.Year - ArvidsonFoto - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <partial name="_Footer" />
         </div>
     </footer>
     <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
     <script src="lib/jQuery.smartmenus-1.1.1/jquery.smartmenus.min.js"></script>
     <script src="lib/jQuery.smartmenus-1.1.1/smartmenu.js"></script>
     <script src="js/site.js"></script>
