@@ -5,7 +5,7 @@
     categories = _categoryService.GetAllCategoriesList();
 }
 <nav class="main-nav" role="navigation">
-    <div class="container">
+    @*<div class="container">*@
         <input id="main-menu-state" type="checkbox" />@* Hamburger-meny knappen skrivs ut här:  *@
         <label class="main-menu-btn" for="main-menu-state">
             <span class="main-menu-btn-icon"></span> Växla menyns synlighet
@@ -41,7 +41,7 @@
                     {
                         <li>
                             @{
-                                var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).ToList();
+                                var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
                                 if (sub1Menu != null && sub1Menu.Count > 0)
                                 {
                                     if (@headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
@@ -53,7 +53,7 @@
                                         {
                                             <li>
                                                 @{
-                                                    var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).ToList();
+                                                    var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
                                                     if (sub2Menu != null && sub2Menu.Count > 0)
                                                     {
                                                         <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a>
@@ -62,7 +62,7 @@
                                                             {
                                                                 <li>
                                                                     @{
-                                                                        var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).ToList();
+                                                                        var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
                                                                         if (sub3Menu != null && sub3Menu.Count > 0)
                                                                         {
                                                                             <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a>
@@ -111,5 +111,5 @@
             <li><a href="./Sök" aria-label="Sök"><i class="fa fa-search" title="Sök på sidan"></i> Sök</a></li>
             @*<li><a href="./?log=out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logga ut</a></li> <!-- Kräver inloggning --> *@
         </ul>
-    </div>
+    @*</div>*@
 </nav>
