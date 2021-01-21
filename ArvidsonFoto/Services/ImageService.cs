@@ -49,9 +49,33 @@ namespace ArvidsonFoto.Data
         public List<TblImage> GetAllImagesByCategoryID(int categoryID)
         {
             List<TblImage> images;
-            images = _entityContext.TblImages
-                                   .Where(i => i.ImageArt == categoryID)
-                                   .ToList();
+            images = _entityContext.Set<TblImage>().Where(i => i.ImageArt == categoryID).ToList();
+            if(images is null || images.Count.Equals(0)) //Om ImageArt ger null, kolla mot ImageFamilj
+            {
+                try
+                {
+                    images = _entityContext.Set<TblImage>().Where(i => i.ImageFamilj == categoryID).ToList();
+                }
+                catch (Exception)
+                {
+                    images = new List<TblImage>();
+                }
+                if (images is null || images.Count.Equals(0)) //Om ImageFamilj ger null, kolla mot ImageHuvudfamilj
+                {
+                    try
+                    {
+                        images = _entityContext.Set<TblImage>().Where(i => i.ImageHuvudfamilj == categoryID).ToList();
+                    }
+                    catch (Exception)
+                    {
+                        images = new List<TblImage>();
+                    }
+                    //if (images is null) //Om ImageHuvudfamilj ger null, kolla mot Fåglar....
+                    //{
+                    //    images = _entityContext.TblImages.Where(i => i.ImageHuvudfamilj == categoryID).ToList();
+                    //}
+                }
+            }
             return images;
         }
 

@@ -2,7 +2,7 @@
 @inject ICategoryService _categoryService
 @{
     List<TblMenu> categories;
-    categories = _categoryService.GetAllCategoriesList();
+    categories = _categoryService.GetAll();
 }
 <nav class="main-nav" role="navigation">
     @*<div class="container">*@
@@ -12,7 +12,7 @@
         </label>
         <h2 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h2>
         <ul id="main-menu" class="sm sm-mint"> @* Den synliga menyn börjar här *@
-            <li>
+            <li class="pr-1">
                 <a href="./Senast">Senast</a>
                 <ul>
                     <li><a href="./Senast/Fotograferad"><i class="fa fa-camera-retro" aria-hidden="true"></i> Fotograferad</a></li>
@@ -39,7 +39,7 @@
                 {
                     foreach (var headItem in headMenu)
                     {
-                        <li>
+                        <li class="pr-1">
                             @{
                                 var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
                                 if (sub1Menu != null && sub1Menu.Count > 0)
@@ -90,8 +90,8 @@
                     }
                 }
             }
-            <li>
-                <a href="./Info"><i class="fa fa-info" aria-hidden="true"></i> Info </a>
+            <li class="pr-1">
+                <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
                 <ul>
                     @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
                     <li class="divider"></li>  <!-- Kräver inloggning --> *@
@@ -108,7 +108,7 @@
                     <partial name="_LoginPartial" />
                 </ul>
             </li>
-            <li><a href="./Sök" aria-label="Sök"><i class="fa fa-search" title="Sök på sidan"></i> Sök</a></li>
+            <li class="pr-2"><a href="./Sök" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
             @*<li><a href="./?log=out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logga ut</a></li> <!-- Kräver inloggning --> *@
         </ul>
     @*</div>*@

@@ -36,22 +36,28 @@ namespace ArvidsonFoto.Data
             throw new NotImplementedException();
         }
 
-        public int GetCategoryLastId()
+        public int GetLastId()
         {
             int highestID = -1;
             highestID = _entityContext.TblMenus.LastOrDefault().MenuId;
             return highestID;
         }
 
+        public TblMenu GetByName(string categoryName)
+        {
+            TblMenu category = new TblMenu();
+            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
+            return category;
+        }
 
-        public List<TblMenu> GetAllCategoriesList()
+        public List<TblMenu> GetAll()
         {
             List<TblMenu> categories;
             categories = _entityContext.TblMenus.ToList();
             return categories;
         }
 
-        public List<TblMenu> GetCategorySubsList(int categoryID)
+        public List<TblMenu> GetSubsList(int categoryID)
         {
             List<TblMenu> categories;
             categories = _entityContext.TblMenus.Where(c => c.MenuMainId.Equals(categoryID)).ToList();
@@ -68,15 +74,17 @@ namespace ArvidsonFoto.Data
             return categoryName;
         }
 
-        public int GetCategoryIdByName(string categoryName)
+        public int GetIdByName(string categoryName)
         {
             int menuID = -1;
+            TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
+            if (category is not null)
+                menuID = category.MenuId;
             //using (var conn = new SqlConnection(_sqlConn.Config))
             //{
             //    var sql = @"SELECT menu_ID FROM tbl_menu WHERE menu_text = '" + categoryName + "'";
             //    menuID = await conn.QuerySingleAsync<int>(sql);
             //}
-            throw new NotImplementedException();
             return menuID;
         }
     }

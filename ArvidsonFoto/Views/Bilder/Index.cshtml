@@ -1,0 +1,20 @@
+﻿@model GalleryViewModel
+@inject IImageService _imageService
+@inject ICategoryService _categoryService
+@{
+    try
+    {
+        if (Model.SelectedCategory.MenuText.Length > 0)
+            ViewData["Title"] = Model.SelectedCategory.MenuText;
+        else
+            ViewData["Title"] = "Ingen kategori skickades med...";
+    }
+    catch (Exception ex)
+    {
+        Model.ErrorMessage = ex.Message;
+        ViewData["Title"] = "Bilder-sidan hittades inte";
+    }
+}
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_Gallery" model="Model" />

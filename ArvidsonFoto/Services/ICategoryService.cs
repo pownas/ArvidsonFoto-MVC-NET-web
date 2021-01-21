@@ -9,14 +9,16 @@ namespace ArvidsonFoto.Data
     {
         bool SetCategoryInsert(TblMenu category);
         
-        int GetCategoryLastId();
+        int GetLastId();
         
-        int GetCategoryIdByName(string categoryName);
+        int GetIdByName(string categoryName);
 
         string GetNameById(int? id);
 
-        List<TblMenu> GetAllCategoriesList();
+        TblMenu GetByName(string categoryName);
+
+        List<TblMenu> GetAll();
         
-        List<TblMenu> GetCategorySubsList(int categoryID);
+        List<TblMenu> GetSubsList(int categoryID);
     }
 }

@@ -1,10 +1,9 @@
+﻿@model GalleryViewModel
 @inject IImageService _imageService
-@inject ICategoryService _categoryService
 @{
     ViewData["Title"] = "Startsidan";
-    string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList;
-    imageList = _imageService.GetRandomNumberOfImages(16); //Hämtar (x)-antal bilder att visa på startsidan
+
+    Model.ImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
 }
 
 <div id="page-header">
@@ -19,107 +18,15 @@
             Kontakta mig på <a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a>.
         </p>
         <p><i>/Torbjörn Arvidson</i></p>
-
-        <figure class="figure btn btn-light">
-            <img class="figure-img img-fluid rounded" width="420" height="420" src="./img/Torbjorn2020.jpg" alt="Torbjörn Arvidson" title="Torbjörn Arvidson">
-            <figcaption class="figure-caption text-center text-truncate">Torbjörn Arvidson</figcaption>
-        </figure>
+        <div class="text-center text-md-left">
+            <figure class="figure btn btn-light">
+                <img class="figure-img img-fluid rounded" width="420" height="420" src="./img/Torbjorn2020.jpg" alt="Torbjörn Arvidson" title="Torbjörn Arvidson">
+                <figcaption class="figure-caption text-center text-truncate">Torbjörn Arvidson</figcaption>
+            </figure>
+        </div>
     </div>
-    <div id="page-gallery" class="col-12 col-sm-7">
-        <div id="gallery" class="mt-3 row">
-
-            <ul class="box-container three-cols">
-                <li class="box show" style="transition-delay: 0s;">
-                    <div class="inner">
-                        <a href="https://arvidsonfoto.se/Bilder/T%C3%A4ttingar/%C3%96vriga/Kungsf%C3%A5gel/B57V4100.jpg" class="glightbox2" data-glightbox="title: Kungsfågel; description: You can set the position of the description <a href=&quot;http://google.com&quot;>with a link to Google</a>">
-                            <img src="https://arvidsonfoto.se/Bilder/Tättingar/Övriga/Kungsfågel/B57V4100.thumb.jpg" alt="image">
-                        </a>
-                    </div>
-                </li>
-                <li class="box show" style="transition-delay: 0.15s;">
-                    <div class="inner">
-                        <a href="https://arvidsonfoto.se/Bilder/T%C3%A4ttingar/Flugsnappare/Halsbandsflugsnappare/_TAR9745.jpg" class="glightbox2" data-glightbox="title: Halsbandsflugsnappare; description: .custom-desc1">
-                            <img src="https://arvidsonfoto.se/Bilder/Tättingar/Flugsnappare/Halsbandsflugsnappare/_TAR9745.thumb.jpg" alt="image">
-                        </a>
-
-                        <div class="glightbox-desc custom-desc1">
-                            <p>
-                                You can set the position of the description in different ways for example
-                                <strong style="text-decoration: underline">top, bottom, left or right</strong>
-                            </p>
-                            <p>
-                                <a href="http://google.com" target="_blank" style="text-decoration: underline; font-weight: bold">Example Google link</a>
-                                ipsum vehicula eros ultrices lacinia Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Duis quis ipsum vehicula eros ultrices lacinia.
-                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                            </p>
-                            <p>
-                                Primis pharetra facilisis lorem quis penatibus ad nulla inceptos, dui per tempor taciti aliquet consequat sodales, curae tristique gravida auctor interdum malesuada sagittis.
-                                Felis pretium eros ligula natoque ad ante rutrum himenaeos, adipiscing urna mauris porta quam efficitur odio, sagittis morbi tellus nisi molestie mus faucibus.
-                            </p>
-                            <p>
-                                Primis pharetra facilisis lorem quis penatibus ad nulla inceptos, dui per tempor taciti aliquet consequat sodales, curae tristique gravida auctor interdum malesuada sagittis.
-                                Felis pretium eros ligula natoque ad ante rutrum himenaeos, adipiscing urna mauris porta quam efficitur odio, sagittis morbi tellus nisi molestie mus faucibus.
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li class="box show" style="transition-delay: 0.3s;">
-                    <div class="inner">
-                        <a href="https://arvidsonfoto.se/Bilder/Insekter/Fj%C3%A4rilar/Brunspr%C3%B6tad%20skymningssv%C3%A4rmare/IMG_9789%20kopiera.jpg" class="glightbox2" data-glightbox="title: Brunsprötad skymningssvärmare; description: .custom-desc2">
-                            <img src="https://arvidsonfoto.se/Bilder/Insekter/Fjärilar/Brunsprötad%20skymningssvärmare/IMG_9789%20kopiera.thumb.jpg" alt="image">
-                        </a>
-                        <div class="glightbox-desc custom-desc2">
-                            <p>You can set the position of the description in different ways for example top, bottom, left or right</p>
-                            <p>Duis quis ipsum vehicula eros ultrices lacinia. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-
-
-            <br />
-            <br />
-
-            @{ var index = 1; }
-            @foreach (var img in imageList)
-            {
-                string glightboxid = "glightbox" + index;
-                string customDesc = "custom-desc" + index;
-
-                string imgHref = bilder;
-                string imgTitle = _categoryService.GetNameById(img.ImageArt);
-
-                if (img.ImageHuvudfamilj.HasValue)
-                    imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
-                if (img.ImageFamilj.HasValue)
-                    imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
-
-                imgHref += "/" + imgTitle;
-
-                string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
-
-                string imgName = img.ImageUrl + ".jpg";
-                string imgSrc = imgHref + "/" + imgName;
-
-                <figure class="figure col-4 col-lg-3">
-                    <a href="@imgSrc" class="@glightboxid rounded btn btn-light" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
-Klicka för att förstora">
-                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded" width="120" height="120" title="@imgTitle
-Klicka för att förstora">
-                        <figcaption class="figure-caption text-center text-truncate">@imgTitle</figcaption>
-                    </a>
-                </figure>
-
-                <div class="glightbox-desc @customDesc">
-                    <p><a href='@imgHref'>@imgTitle</a>, @img.ImageDescription</p>
-                    <p>Fotodatum: @img.ImageDate</p>
-                    <p>Bildnamn: @imgName <a href='/Info/Copyright/'>© Torbjörn Arvidson</a></p>
-                    <p>Intresserad av bilden? Se: <a href='/Info/Köp_av_bilder/'>Köp av bilder</a></p>
-                </div>
-
-                index += 1;
-            }
-        </div><!-- /end-gallery-row -->
+    <div id="page-gallery" class="mt-3 col-12 col-sm-7">
+        <partial name="../Bilder/_Gallery" model="Model" />
         <div class="text-center">
             <small>Slumpmässigt utvalda bilder</small>
         </div>

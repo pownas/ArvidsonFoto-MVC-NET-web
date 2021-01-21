@@ -20,7 +20,8 @@ namespace ArvidsonFoto.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new GalleryViewModel();
+            return View(viewModel);
         }
 
         public IActionResult Privacy()

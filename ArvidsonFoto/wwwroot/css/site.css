@@ -75,11 +75,11 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 2em; /* Vertically center the text there */
+    line-height: 1.5em; /* Vertically center the text there */
 }
 
 /* Footer-xs fix på Container */
-@media (max-width: 400px) {
+@media (max-width: 1200px) {
     .overridden-footer {
         position: relative;
     }
@@ -97,3 +97,25 @@ body {
         max-width: 1200px;
     }
 }
+
+
+/* ---------start of glightbox config----------- */
+/* Description / Beskrivningen */
+.gslide-description { 
+    color: #aaa;
+}
+
+.gslide-description p {
+    margin-bottom: 0px;
+}
+
+/* Title / Rubriken */
+.glightbox-clean .gslide-title { 
+    color: #aaa;
+}
+
+/* Bakgrunden */
+.glightbox-clean .gslide-description { 
+    background-color: rgba(34, 34, 34, 0.75);
+}
+/* ----------end of glightbox config------------ */

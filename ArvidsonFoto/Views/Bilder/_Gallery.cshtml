@@ -1,0 +1,75 @@
+﻿@model GalleryViewModel
+@inject IImageService _imageService
+@inject ICategoryService _categoryService
+@{
+    string bilder = "https://arvidsonfoto.se/Bilder";
+    List<TblImage> imageList = Model.ImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+
+    int imageCount = 0;
+    if (imageList is not null)
+        imageCount = imageList.Count();
+
+    bool startsidan = false;
+    if (imageCount.Equals(12) && Model.SelectedCategory is null || Model.SelectedCategory is null)
+        startsidan = true;
+
+    //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
+    string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-md-2";
+}
+
+@if (imageList is null || imageList.Count.Equals(0))
+{
+    <p>Det finns inga bilder i denna kategorin...</p>
+}
+else if (Model.ErrorMessage is not null)
+{
+    <p>Något gick fel... Felmeddelande: @Model.ErrorMessage</p>
+}
+else
+{
+    <div id="gallery" class="row">
+        @{ var index = 1; }
+        @foreach (var img in imageList)
+        {
+            //string glightboxid = "glightbox" + index;
+            string customDesc = "custom-desc" + index;
+
+            string imgHref = bilder;
+            string imgTitle = _categoryService.GetNameById(img.ImageArt);
+            string imgDesc = "";
+
+            if (img.ImageDescription is not null)
+                imgDesc = img.ImageDescription;
+
+            if (img.ImageHuvudfamilj.HasValue)
+                imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
+            if (img.ImageFamilj.HasValue)
+                imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
+
+            imgHref += "/" + imgTitle;
+
+            string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
+
+            string imgName = img.ImageUrl + ".jpg";
+            string imgSrc = imgHref + "/" + imgName;
+
+            <figure class="figure @rowSizeClass">
+                <a href="@imgSrc" class="glightbox rounded btn btn-light" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
+Klicka för att förstora">
+                    <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded" width="120" height="120" style="min-width:5rem;" title="@imgTitle
+Klicka för att förstora">
+                    <figcaption class="figure-caption text-center d-inline-block text-truncate" style="max-width:5rem;">@imgTitle</figcaption>
+                </a>
+            </figure>
+
+            <div class="glightbox-desc @customDesc">
+                <p><a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc</p>
+                <p>Fotodatum: @img.ImageDate.ToShortDateString()</p>
+                <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a></p>
+                <p>Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+            </div>
+
+            index += 1;
+        }
+    </div><!-- /end-gallery-row -->
+}
