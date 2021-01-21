@@ -1,3 +1,70 @@
-﻿<h1>@ViewData["Title"]</h1>
+﻿@inject IGuestBookService _guestBookService
+@{ 
+    List<TblGb> gbListView = new List<TblGb>();
+    gbListView = _guestBookService.GetAll();
+}
 
-<p>Lite info...</p>
+<ul id="page-breadcrumbs" class="previousMenu">
+    <li><a href="/">ArvidsonFoto.se</a>/</li>
+    <li><a href="/Info">Info</a>/</li>
+    <li>Gästbok</li>
+</ul>
+
+<h1>@ViewData["Title"]</h1>
+
+<div id="page-content" class="brodtext">
+    <form class="form-horizontal" action="?send=yes" method="post">
+        <div class="form-group">
+            <label for="inputNamn" class="col-md-4 col-lg-3 control-label">Namn</label>
+            <div class="col-md-8 col-lg-9">
+                <input type="text" class="form-control" placeholder="Namn (blank för anonym)" name="namn">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEpost" class="col-md-4 col-lg-3 control-label">Epost</label>
+            <div class="col-md-8 col-lg-9">
+                <input type="email" class="form-control" placeholder="Epost (visas ej)" name="epost">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputHemsida" class="col-md-4 col-lg-3 control-label">Hemsida</label>
+            <div class="col-md-8 col-lg-9">
+                <input type="url" class="form-control" placeholder="Hemsida (om du vill)" name="hemsida">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputTexten" class="col-md-4 col-lg-3 control-label">Meddelande</label>
+            <div class="col-md-8 col-lg-9">
+                <textarea class="form-control" placeholder="Meddelande" rows="4" name="texten"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputCode" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
+            <div class="col-md-8 col-lg-9">
+                <input type="number" class="form-control" placeholder="Siffror" name="code">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <button type="submit" class="btn btn-default">Skicka meddelandet</button>
+            </div>
+        </div>
+    </form>
+    <div class="infotable">
+        @if (_guestBookService is not null && gbListView is not null)
+        {
+            @foreach (var gbPost in gbListView)
+            {
+                <strong>Datum: </strong>@gbPost.GbDate<br />
+                <strong>Namn: </strong>@gbPost.GbName<br />
+                <strong>Meddelande: </strong>@gbPost.GbText<br />
+                <hr />
+            }
+        }
+    </div>
+</div>
