@@ -49,5 +49,23 @@ namespace ArvidsonFoto.Controllers
             }
             return View(viewModel);
         }
+
+        [Route("/Sök")]
+        public IActionResult Sök()
+        {
+            ViewData["Title"] = "Sök efter bilder";
+            GalleryViewModel viewModel = new GalleryViewModel();
+
+            return View(viewModel);
+        }
+
+        [Route("/Sök/{s}")]
+        public IActionResult Sök(string s)
+        {
+            ViewData["Title"] = "Söfer efter: " + s;
+            GalleryViewModel viewModel = new GalleryViewModel();
+
+            return View(viewModel);
+        }
     }
 }
