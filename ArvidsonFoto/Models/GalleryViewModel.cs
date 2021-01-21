@@ -15,7 +15,7 @@ namespace ArvidsonFoto.Models
 
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }
-
+        public string CurrentUrl { get; set; }
         public string ErrorMessage { get; set; }
     }
 }

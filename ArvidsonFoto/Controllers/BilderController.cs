@@ -37,21 +37,25 @@ namespace ArvidsonFoto.Controllers
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
+                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
             }
             else if (subLevel3 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
+                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
             }
             else if (subLevel2 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
+                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2;
             }
             else if (subLevel1 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
+                viewModel.CurrentUrl = "./Bilder/" + subLevel1;
             }
 
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
