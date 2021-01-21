@@ -26,7 +26,14 @@ namespace ArvidsonFoto.Data
             throw new NotImplementedException();
         }
 
-        public List<TblImage> GetAllImagesList()
+        public TblImage GetOneImageFromCategory(int category)
+        {
+            TblImage image;
+            image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(category) || i.ImageFamilj.Equals(category) || i.ImageHuvudfamilj.Equals(category)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+            return image;
+        }
+
+        public List<TblImage> GetAll()
         {
             List<TblImage> images;
             images = _entityContext.TblImages.ToList();

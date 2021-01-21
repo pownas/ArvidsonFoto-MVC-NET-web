@@ -9,8 +9,10 @@ namespace ArvidsonFoto.Data
         bool SetImageInsert(TblImage image);
         
         int GetImageLastId();
-        
-        List<TblImage> GetAllImagesList();
+
+        TblImage GetOneImageFromCategory(int category);
+
+        List<TblImage> GetAll();
 
         List<TblImage> GetRandomNumberOfImages(int count);
 

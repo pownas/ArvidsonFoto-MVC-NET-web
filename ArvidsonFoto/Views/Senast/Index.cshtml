@@ -10,7 +10,7 @@
 
 <h1>Senast - @ViewData["Title"]</h1>
 
-<partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
+<partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
@@ -40,7 +40,7 @@
         </ul>
     </nav>
 }@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
-@if (Model.SelectedCategory.MenuText.Length > 0)
+@if (Model.AllImagesList.Count > 0)
 {
     <p class="text-center">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }

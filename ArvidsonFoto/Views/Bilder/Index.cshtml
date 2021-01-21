@@ -28,7 +28,7 @@
 
 @if (Model.SelectedCategory.MenuText.Length > 0)
 {
-<p class="text-center text-md-right">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+<p class="text-center">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {

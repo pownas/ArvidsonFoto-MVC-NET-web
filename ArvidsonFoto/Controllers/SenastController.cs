@@ -11,10 +11,12 @@ namespace ArvidsonFoto.Controllers
     public class SenastController : Controller
     {
         private IImageService _imageService;
+        private ICategoryService _categoryService;
 
-        public BilderController(ArvidsonFotoDbContext context)
+        public SenastController(ArvidsonFotoDbContext context)
         {
             _imageService = new ImageService(context);
+            _categoryService = new CategoryService(context);
         }
 
         [Route("[controller]/{sortOrder}")]
@@ -31,20 +33,32 @@ namespace ArvidsonFoto.Controllers
             if (sortOrder.Equals("Per kategori"))
             {
                 ViewData["Title"] = "Per kategori";
-                viewModel.AllImagesList = _imageService.GetAllImagesList()
+                List<TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
+                foreach (var category in categories)
+                {
+                    viewModel.AllImagesList.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+                }
             }
             else if (sortOrder.Equals("Uppladdad"))
             {
                 ViewData["Title"] = "Uppladdad";
+                viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageUpdate).ToList();
             }
             else if (sortOrder.Equals("Fotograferad"))
             {
                 ViewData["Title"] = "Fotograferad";
+                viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageDate).ToList();
             }
             else
             {
                 return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
             }
+
+            viewModel.SelectedCategory = new TblMenu() { MenuText = sortOrder }; //Lägger till en SelectedCategory, så det inte blir tolkat som startsidan. 
+            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
+            viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
+            viewModel.CurrentPage = (int)sida;
+            viewModel.CurrentUrl = "./Senast/" + sortOrder;
 
             return View(viewModel);
         }
