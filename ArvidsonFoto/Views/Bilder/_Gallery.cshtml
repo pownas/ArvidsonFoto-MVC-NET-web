@@ -14,7 +14,9 @@
         startsidan = true;
 
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
-    string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-md-2";
+    string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
+    //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga): 
+    string maxCharWidth = startsidan ? "max-width:5rem;" : "max-width:7.5rem;";
 }
 
 @if (imageList is null || imageList.Count.Equals(0))
@@ -58,7 +60,7 @@ else
 Klicka för att förstora">
                     <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded" width="120" height="120" style="min-width:5rem;" title="@imgTitle
 Klicka för att förstora">
-                    <figcaption class="figure-caption text-center d-inline-block text-truncate" style="max-width:5rem;">@imgTitle</figcaption>
+                    <figcaption class="figure-caption text-center d-inline-block text-truncate" style="@maxCharWidth">@imgTitle</figcaption>
                 </a>
             </figure>
 
