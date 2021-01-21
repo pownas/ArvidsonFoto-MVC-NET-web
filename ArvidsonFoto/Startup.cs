@@ -46,6 +46,7 @@ namespace ArvidsonFoto
             //Lägger till Services:
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IGuestBookService, GuestBookService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
