@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
+using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -67,6 +68,12 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Index()
         {
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -5,7 +5,7 @@
 @{
     try
     {
-        if (Model.SelectedCategory.MenuText.Length > 0)
+        if (Model.SelectedCategory.MenuText.Length > 0 || Model.SelectedCategory is null)
             ViewData["Title"] = Model.SelectedCategory.MenuText;
         else
             ViewData["Title"] = "Ingen kategori skickades med...";
