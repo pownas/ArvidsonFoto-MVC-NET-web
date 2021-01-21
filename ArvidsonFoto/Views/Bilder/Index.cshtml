@@ -20,45 +20,68 @@
 
 @if (Model.SelectedCategory.MenuText.Length > 0)
 {
-    <p>Antal bilder: @Model.AllImagesList.Count() , sida: @Model.CurrentPage av @Model.TotalPages</p>
+<p class="text-center text-md-right">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
+@if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
+{
+<nav id="page-counter" aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.CurrentPage > 1)
+            {
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+            }
+            else
+            {
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
+            }
+        <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
+        @if (Model.CurrentPage == Model.TotalPages)
+            {
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+            }
+            else
+            {
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.TotalPages)">Sista</a></li>
+            }
+    </ul>
+</nav>
+}@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
 
 <partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
 
-
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-    <div id="page-counter" class="latest_bladdraren">
-        <nav>
-            <ul class="pagination">
-                @if (Model.CurrentPage > 1)
-                {
-                    <li><a href="@(Model.CurrentUrl)">Första</a></li>
-                    <li><a href="@(Model.CurrentUrl)?page=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
-                }
-                else
-                {
-                    <li class="disabled"><a>Första</a></li>
-                    <li class="disabled"><a aria-label="Föregående"><span aria-hidden="true">«</span></a></li>
-                }
-                <li class="active"><a aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
-                @if (Model.CurrentPage == Model.TotalPages)
-                {
-                    <li class="disabled"><a aria-label="Nästa"> »</a></li>
-                    <li class="disabled"><a>Sista</a></li>
-                }
-                else
-                {
-                    <li><a href="@(Model.CurrentUrl)?page=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
-                    <li><a href="@(Model.CurrentUrl)?page=@(Model.TotalPages)">Sista</a></li>
-                }
-            </ul>
-        </nav>
-        <p>Sida @(Model.CurrentPage) av @(Model.TotalPages)</p>
-    </div>
+<nav id="page-counter" aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.CurrentPage > 1)
+            {
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+            }
+            else
+            {
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
+            }
+        <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
+        @if (Model.CurrentPage == Model.TotalPages)
+            {
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
+        <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+            }
+            else
+            {
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
+        <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?page=@(Model.TotalPages)">Sista</a></li>
+            }
+    </ul>
+</nav>
 }@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
-
 @if (Model.SelectedCategory.MenuText.Length > 0)
 {
-    <p>Antal bilder: @Model.AllImagesList.Count() , sida: @Model.CurrentPage av @Model.TotalPages</p>
+<p class="text-center">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
