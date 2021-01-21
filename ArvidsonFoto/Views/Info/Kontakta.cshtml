@@ -1,4 +1,11 @@
-﻿<nav id="page-breadcrumbs" aria-label="breadcrumb">
+﻿@using MailKit.Net.Smtp;
+@using MailKit.Security;
+@using MimeKit;
+@using Serilog;
+@{
+    ContactFormModel contactFormModel = new ContactFormModel() { FormSubmit = DateTime.UtcNow };
+}
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/Info">Info</a></li>
@@ -8,4 +15,146 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>Lite info...</p>
+<div id="page-content" class="brodtext">
+    <p>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon. </p>
+
+    <address>
+        <div class="col-sm-12 col-md-6">
+            <p><i class="fa fa-map-marker fa-2x"></i> Adress: Hagmarksgatan 8, 70216 Örebro</p>
+            <p><i class="fa fa-phone fa-2x"></i> Telefon: <a href="tel:019120412">019-12 04 12</a></p>
+            <p><i class="fa fa-tablet fa-2x"></i> Mobil: <a href="tel:0708120412">0708-12 04 12</a></p>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <p><i class="fa fa-envelope-o fa-2x"></i> Epost: <a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
+            <p><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Facebook: <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FArvidsonFoto%2F&tabs=timeline&width=300&height=70&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=true&appId=223060987754416" width="300" height="70" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe><!--Facebook: <a href="http://Facebook.com/ArvidsonFoto" target="_blank">http://Facebook.com/ArvidsonFoto</a>--></p>
+        </div>
+    </address>
+    <div class="col-sm-offset-3 col-sm-9 col-lg-offset-2 col-lg-10">
+        <h2>Kontaktformulär</h2>
+    </div>
+    @if (displayEmailSent)
+    {
+        <span class="text-success">Meddelandet skickat!</span>
+    }
+    else
+    {
+        <div class="ContactForm">
+            @*<EditForm EditContext="@editContext"  OnSubmit=@FormSubmitted class="form-horizontal">*@
+            <EditForm Model="@contactFormModel" OnSubmit=@FormSubmitted class="form-horizontal">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                @if (displayErrorSending)
+                {
+                    <span class="text-danger">Något gick fel när meddelandet skulle skickas...</span>
+                }
+                <div class="form-group">
+                    <label asp-for=contactFormModel.Name class="col-md-4 col-lg-3 control-label">Namn</label>
+                    <div class="col-md-8 col-lg-9">
+                        <InputText id="name" @bind -Value="contactFormModel.Name" placeholder="Namn" class="form-control" /><!--  required -->
+                        <ValidationMessage For="@(() => contactFormModel.Name)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-md-4 col-lg-3 control-label">Epost</label>
+                    <div class="col-md-8 col-lg-9">
+                        <InputText id="email" @bind -Value="contactFormModel.Email" placeholder="Epost-adress" class="form-control" />
+                        <ValidationMessage For="@(() => contactFormModel.Email)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject" class="col-md-4 col-lg-3 control-label">Rubrik</label>
+                    <div class="col-md-8 col-lg-9">
+                        <InputText id="subject" @bind -Value="contactFormModel.Subject" placeholder="Rubrik" class="form-control" />
+                        <ValidationMessage For="@(() => contactFormModel.Subject)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="textBody" class="col-md-4 col-lg-3 control-label">Meddelande</label>
+                    <div class="col-md-8 col-lg-9">
+                        <InputTextArea id="textBody" @bind -Value="contactFormModel.MessageBody" placeholder="Meddelande
+(Skriv gärna vad ni önskar kontakt om)" rows="4" class="form-control"></InputTextArea>
+                        <ValidationMessage For="@(() => contactFormModel.MessageBody)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                        <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="koden" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
+                    <div class="col-md-8 col-lg-9">
+                        <InputText id="koden" @bind -Value="contactFormModel.Code" placeholder="Siffror" class="form-control" />
+                        <ValidationMessage For="@(() => contactFormModel.Code)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                        <button type="submit" class="btn btn-default">Skicka meddelandet</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    }
+</div>
+
+@{
+    bool displayEmailSent = false;
+    bool displayErrorSending = false;
+
+    void FormSubmitted(ContactFormModel contactFormModel)
+    {
+        bool isValid = editContext.Validate();
+        if (isValid)
+        {
+            displayErrorSending = false;
+
+            try
+            {
+                Log.Information("User trying to send e-mail...");
+                var fromName = "Kontaktsidan - ArvidsonFoto.se";
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
+                //message.Cc.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
+                //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
+                //message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
+                message.To.Add(new MailboxAddress(fromName, "contact.form@arvidsonfoto.se"));
+                message.Subject = "Kontakt - " + contactFormModel.Subject + " - Arvidsonfoto.se";
+
+                message.Body = new TextPart("plain")
+                {
+                    Text = contactFormModel.MessageBody
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    //Bör kunna koppla till Github-secrets:
+                    //var pwd = Environment.GetEnvironmentVariable("SVC_PWD");
+                    //var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
+
+                    //client.Connect("websmtp.simply.com", 465, true);
+                    client.Connect("websmtp.simply.com", 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
+                                                                                             //client.Connect("websmtp.simply.com", 587, false);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    Log.Information("message: " + message);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+                displayEmailSent = true;
+
+            }
+            catch (Exception e)
+            {
+                displayErrorSending = true;
+                displayEmailSent = false;
+                Log.Error("Contact sending Error-message: " + e.Message);
+            }
+        }
+        else
+        {
+            //displayValidationErrorMessages = true;
+            displayEmailSent = false;
+        }
+    }
+}
