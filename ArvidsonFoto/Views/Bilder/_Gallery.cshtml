@@ -3,12 +3,13 @@
 @inject ICategoryService _categoryService
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model.ImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<TblImage> imageList = Model.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
 
     int imageCount = 0;
     if (imageList is not null)
         imageCount = imageList.Count();
 
+    //Kontroll om det är startsidan eller ej...
     bool startsidan = false;
     if (imageCount.Equals(12) && Model.SelectedCategory is null || Model.SelectedCategory is null)
         startsidan = true;
@@ -16,7 +17,7 @@
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
     string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
     //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga): 
-    string maxCharWidth = startsidan ? "max-width:5rem;" : "max-width:7.5rem;";
+    string maxCharWidth = startsidan ? "max-width:5rem;" : "max-width:6.5rem;";
 }
 
 @if (imageList is null || imageList.Count.Equals(0))
@@ -40,8 +41,8 @@ else
             string imgTitle = _categoryService.GetNameById(img.ImageArt);
             string imgDesc = "";
 
-            if (img.ImageDescription is not null)
-                imgDesc = img.ImageDescription;
+            if (String.IsNullOrWhiteSpace(img.ImageDescription) is false)
+                imgDesc = ", " + img.ImageDescription + ".";
 
             if (img.ImageHuvudfamilj.HasValue)
                 imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
@@ -65,14 +66,8 @@ Klicka för att förstora">
             </figure>
 
             <div class="glightbox-desc row @customDesc">
-                <div class="col-6">
-                    <p><a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc</p>
-                    <p>Fotodatum: @img.ImageDate</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
-                </div>
-                <div class="col-6">
-                    <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a></p>
-                    <p>Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
-                </div>
+                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @img.ImageDate</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
 
             index += 1;

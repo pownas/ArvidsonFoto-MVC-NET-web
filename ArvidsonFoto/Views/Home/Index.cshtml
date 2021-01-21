@@ -3,8 +3,7 @@
 @inject IImageService _imageService
 @{
     ViewData["Title"] = "Startsidan";
-
-    Model.ImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
+    Model.DisplayImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
 }
 
 <div id="page-header">

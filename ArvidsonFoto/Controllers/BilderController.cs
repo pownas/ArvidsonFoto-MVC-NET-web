@@ -23,30 +23,41 @@ namespace ArvidsonFoto.Controllers
         [Route("/[controller]/{subLevel1}/{subLevel2}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4)
+        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, int? page)
         {
             GalleryViewModel viewModel = new GalleryViewModel();
+            int pageSize = 48;
+
+            if (page is null || page < 1)
+                page = 1;
+
+            viewModel.CurrentPage = (int)page - 1;
 
             if (subLevel4 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
-                viewModel.ImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
             }
             else if (subLevel3 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
-                viewModel.ImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
             }
             else if (subLevel2 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
-                viewModel.ImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
             }
             else if (subLevel1 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
-                viewModel.ImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
             }
+
+            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
+            viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
+            viewModel.CurrentPage = (int)page;
+
             return View(viewModel);
         }
 

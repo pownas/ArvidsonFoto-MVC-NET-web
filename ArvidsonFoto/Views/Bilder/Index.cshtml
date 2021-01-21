@@ -20,10 +20,10 @@
 
 @if (Model.SelectedCategory.MenuText.Length > 0)
 {
-    <p>Antal bilder: @Model.ImagesList.Count()</p>
+    <p>Antal bilder: @Model.AllImagesList.Count() , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
 <partial name="_Gallery" model="Model" />
 @if (Model.SelectedCategory.MenuText.Length > 0)
 {
-    <p>Antal bilder: @Model.ImagesList.Count()</p>
+    <p>Antal bilder: @Model.AllImagesList.Count() , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
