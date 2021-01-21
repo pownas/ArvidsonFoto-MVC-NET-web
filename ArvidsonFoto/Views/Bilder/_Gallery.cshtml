@@ -64,11 +64,15 @@ Klicka för att förstora">
                 </a>
             </figure>
 
-            <div class="glightbox-desc @customDesc">
-                <p><a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc</p>
-                <p>Fotodatum: @img.ImageDate.ToShortDateString()</p>
-                <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a></p>
-                <p>Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+            <div class="glightbox-desc row @customDesc">
+                <div class="col-6">
+                    <p><a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc</p>
+                    <p>Fotodatum: @img.ImageDate</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                </div>
+                <div class="col-6">
+                    <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a></p>
+                    <p>Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+                </div>
             </div>
 
             index += 1;
