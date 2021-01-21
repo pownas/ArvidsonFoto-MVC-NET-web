@@ -125,9 +125,9 @@ namespace ArvidsonFoto.Data
 
                 entity.ToTable("tbl_menu");
 
-                entity.Property(e => e.MenuEngtext)
-                    .HasMaxLength(50)
-                    .HasColumnName("menu_ENGtext");
+                //entity.Property(e => e.MenuEngtext)
+                //    .HasMaxLength(50)
+                //    .HasColumnName("menu_ENGtext");
 
                 entity.Property(e => e.MenuId).HasColumnName("menu_ID");
 
