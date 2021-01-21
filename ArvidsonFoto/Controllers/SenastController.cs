@@ -34,6 +34,7 @@ namespace ArvidsonFoto.Controllers
             {
                 ViewData["Title"] = "Per kategori";
                 List<TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
+                viewModel.AllImagesList = new List<TblImage>();
                 foreach (var category in categories)
                 {
                     viewModel.AllImagesList.Add(_imageService.GetOneImageFromCategory(category.MenuId));

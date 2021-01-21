@@ -29,7 +29,14 @@ namespace ArvidsonFoto.Data
         public TblImage GetOneImageFromCategory(int category)
         {
             TblImage image;
-            image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(category) || i.ImageFamilj.Equals(category) || i.ImageHuvudfamilj.Equals(category)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+            if (category.Equals(1))
+            {
+                image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(54)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+            }
+            else
+            {
+                image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(category) || i.ImageFamilj.Equals(category) || i.ImageHuvudfamilj.Equals(category)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+            }
             return image;
         }
 
