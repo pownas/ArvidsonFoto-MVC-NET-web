@@ -56,6 +56,8 @@ else
             string imgName = img.ImageUrl + ".jpg";
             string imgSrc = imgHref + "/" + imgName;
 
+            DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
+
             <figure class="figure @rowSizeClass">
                 <a href="@imgSrc" class="glightbox rounded btn btn-light" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
 Klicka för att förstora">
@@ -66,7 +68,7 @@ Klicka för att förstora">
             </figure>
 
             <div class="glightbox-desc row @customDesc">
-                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @img.ImageDate</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToShortDateString()</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
                 <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
 

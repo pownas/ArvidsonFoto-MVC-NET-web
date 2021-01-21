@@ -65,6 +65,12 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
+        [Route("/Bilder")]
+        public IActionResult Bilder()
+        {
+            return Redirect("./Senast/Fotograferad");
+        }
+
         [Route("/Sök")]
         public IActionResult Sök()
         {

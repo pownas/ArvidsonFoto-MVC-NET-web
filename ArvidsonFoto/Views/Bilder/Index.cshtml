@@ -19,16 +19,33 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Bilder">Bilder</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        @{
+            string[] splittUrl = Model.CurrentUrl.Split("/");
+            string currentUrl = "";
+            for (int i = 0; i < splittUrl.Length; i++)
+            {
+                if (i > 0) //Sorterar bort första punkten .
+                {
+                    currentUrl += "/" + splittUrl[i];
+                    if (splittUrl.Length.Equals(i+1))
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item"><a href="@currentUrl">@splittUrl[i]</a></li>
+                    }
+                }
+            }
+        }
     </ol>
 </nav>
 
 <h1>@ViewData["Title"]</h1>
 
-@if (Model.SelectedCategory.MenuText.Length > 0)
+@if (Model.AllImagesList.Count > 18)
 {
-<p class="text-center">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+<p class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
@@ -89,7 +106,7 @@
     </ul>
 </nav>
 }@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
-@if (Model.SelectedCategory.MenuText.Length > 0)
+@if (Model.AllImagesList.Count > 0)
 {
-<p class="text-center">Antal bilder: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+<p class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
