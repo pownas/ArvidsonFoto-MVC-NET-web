@@ -15,9 +15,9 @@
 
 @try
 {
-    @if (Model.DisplayImagesList.Count > 0)
+    @if (Model.DisplayImagesList.Count > 0) //Kör Continue, för att komma förbi try/catch i Debug-läget...
     {
-        <p class="text-center">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
+        <p class="text-left">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
 
         <partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
 

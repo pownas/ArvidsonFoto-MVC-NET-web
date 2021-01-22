@@ -73,30 +73,26 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Sök")]
-        public IActionResult Sök()
-        {
-            ViewData["Title"] = "Sök bland bild-kategorierna";
-            GalleryViewModel viewModel = new GalleryViewModel();
-
-            return View(viewModel);
-        }
-
-        [HttpGet, Route("/Sök/{s}")] //Form måste ha GET , för att kunna komma hit.
         public IActionResult Sök(string s)
         {
-            ViewData["Title"] = "Söker efter: " + s;
             GalleryViewModel viewModel = new GalleryViewModel();
-
-            List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
-            //List<TblMenu> searchedCategories;
-            List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
-            foreach (var category in allCategories)
+            if (s is null) //Besöker sidan utan att skrivit in någon sökning
             {
-                if(category.MenuText.Equals(s))
-                    listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+                ViewData["Title"] = "Sök bland bild-kategorierna";
             }
-
-            viewModel.DisplayImagesList = listOfFirstSearchedImages;
+            else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
+            {
+                ViewData["Title"] = "Söker efter: " + s;
+                List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
+                List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
+                foreach (var category in allCategories)
+                {
+                    if (category.MenuText.ToUpper().Contains(s.ToUpper()))
+                        listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+                }
+                viewModel.DisplayImagesList = listOfFirstSearchedImages;
+                viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+            }
             return View(viewModel);
         }
 
