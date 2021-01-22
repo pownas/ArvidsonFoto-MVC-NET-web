@@ -90,6 +90,10 @@ body {
     line-height: 1.5em; /* Vertically center the text there */
 }
 
+.sitemap {
+    list-style-type: none;
+}
+
 /* Footer-xs fix på Container */
 @media (max-width: 1200px) {
     .overridden-footer {
