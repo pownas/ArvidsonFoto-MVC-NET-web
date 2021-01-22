@@ -18,37 +18,37 @@ namespace ArvidsonFoto.Controllers
 
         public IActionResult Köp_av_bilder()
         {
-            ViewData["Title"] = "Info - Köp av bilder";
+            ViewData["Title"] = "Köp av bilder";
             return View();
         }
 
         public IActionResult Gästbok()
         {
-            ViewData["Title"] = "Info - Gästbok";
+            ViewData["Title"] = "Gästbok";
             return View();
         }
 
         public IActionResult Kontakta()
         {
-            ViewData["Title"] = "Info - Kontaktinformation";
+            ViewData["Title"] = "Kontaktinformation";
             return View();
         }
 
         public IActionResult Om_mig()
         {
-            ViewData["Title"] = "Info - Om mig, Torbjörn Arvidson";
+            ViewData["Title"] = "Om mig, Torbjörn Arvidson";
             return View();
         }
 
         public IActionResult Sidkarta()
         {
-            ViewData["Title"] = "Info - Sidkarta";
+            ViewData["Title"] = "Sidkarta";
             return View();
         }
 
         public IActionResult Copyright()
         {
-            ViewData["Title"] = "Info - Copyright";
+            ViewData["Title"] = "Copyright";
             return View();
         }
 
