@@ -75,18 +75,28 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sök")]
         public IActionResult Sök()
         {
-            ViewData["Title"] = "Sök efter bilder";
+            ViewData["Title"] = "Sök bland bild-kategorierna";
             GalleryViewModel viewModel = new GalleryViewModel();
 
             return View(viewModel);
         }
 
-        [Route("/Sök/{s}")]
+        [HttpGet, Route("/Sök/{s}")] //Form måste ha GET , för att kunna komma hit.
         public IActionResult Sök(string s)
         {
-            ViewData["Title"] = "Söfer efter: " + s;
+            ViewData["Title"] = "Söker efter: " + s;
             GalleryViewModel viewModel = new GalleryViewModel();
 
+            List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
+            //List<TblMenu> searchedCategories;
+            List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
+            foreach (var category in allCategories)
+            {
+                if(category.MenuText.Equals(s))
+                    listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+            }
+
+            viewModel.DisplayImagesList = listOfFirstSearchedImages;
             return View(viewModel);
         }
 

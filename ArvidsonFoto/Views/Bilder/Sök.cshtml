@@ -1,4 +1,5 @@
-﻿<nav id="page-breadcrumbs" aria-label="breadcrumb">
+﻿@model GalleryViewModel
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item active" aria-current="page">Sök</li>
@@ -6,3 +7,24 @@
 </nav>
 
 <h1>@ViewData["Title"]</h1>
+
+<form asp-action="Sök" method="get" class="form-inline my-2 my-lg-0">
+    <input name="s" class="form-control mr-sm-2" type="search" placeholder="Sök efter..." aria-label="Sök ruta">
+    <button class="btn btn-light btn-outline-primary my-2 my-sm-0" type="submit">Sök</button>
+</form>
+
+@try
+{
+    @if (Model.DisplayImagesList.Count > 0)
+    {
+        <p class="text-center">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
+
+        <partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
+
+        <p class="text-center">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
+    }
+}
+catch (Exception)
+{
+    <p>Skriv in en kategori du söker efter och tryck på sök. Till exempel: "Fjäril" eller en fågelart som "Havsörn".</p>
+}
