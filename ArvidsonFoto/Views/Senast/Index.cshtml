@@ -1,14 +1,20 @@
 ﻿@*<!-- Senast-sidan -->*@
 @model GalleryViewModel
+
+@{
+    string classIcon = "bi-camera";
+    classIcon = ViewData["Title"].Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
+    classIcon = ViewData["Title"].Equals("Per kategori") ? "bi-grid-3x3-gap" : classIcon;
+}
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/Senast">Senast</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi @classIcon mx-1"></i></li>
     </ol>
 </nav>
 
-<h1>Senast - @ViewData["Title"]</h1>
+<h1>Senast - @ViewData["Title"] <i class="bi @classIcon"></i></h1>
 
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
 
@@ -42,5 +48,8 @@
 }@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
 @if (Model.AllImagesList.Count > 0)
 {
-    <p class="text-center">Antal @if (Model.SelectedCategory.MenuText.Equals("Per kategori")) { <text>kategorier</text> } else { <text>bilder</text> }: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <p class="text-center">Antal @if (Model.SelectedCategory.MenuText.Equals("Per kategori"))
+    {<text>kategorier</text> }
+else
+{ <text>bilder</text>}: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages</p>
 }
