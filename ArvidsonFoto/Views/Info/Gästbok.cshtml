@@ -57,15 +57,24 @@
             </div>
         </div>
     </form>
-    <div class="infotable">
+    <div class="infotable row row-cols-1 row-cols-sm-2 row-cols-lg-3">
         @if (_guestBookService is not null && gbListView is not null)
         {
             @foreach (var gbPost in gbListView)
             {
-                <strong>Datum: </strong>@gbPost.GbDate<br />
-                <strong>Namn: </strong>@gbPost.GbName<br />
-                <strong>Meddelande: </strong>@gbPost.GbText<br />
-                <hr />
+                <div class="col mb-4">
+                    <div class="card text-left text-dark">
+                        <div class="card-header">
+                            @gbPost.GbName
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-dark">@gbPost.GbText</p>
+                        </div>
+                        <div class="card-footer text-right text-muted">
+                            @gbPost.GbDate
+                        </div>
+                    </div>
+                </div>
             }
         }
     </div>
