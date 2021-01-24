@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" /> @*<!-- version: 4.5.3-dist -->*@
     <link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-core-css.css" /> @*<!-- version: 1.1.1 -->*@
     <link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-mint/sm-mint.css" /> @*<!-- version: 1.1.1 -->*@
-    <link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-mint-addon.css" /> @*<!-- version: 1.1.1 -->*@
+    <link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-mint-addon.css" /> @*<!-- Egna inställningar till sm-mint -->*@
     <link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.css" /> @*<!-- version: 1.3.0 -->*@
     <link rel="stylesheet" href="lib/glightbox/css/glightbox.min.css" /> @*<!-- version: 3.0.7 -->*@
     <link rel="stylesheet" href="css/site.css" />
@@ -31,50 +31,8 @@
     <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
     <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
     <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
+    <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
     <script src="js/site.js"></script>
-    <script>
-        var lightbox = GLightbox();
-        lightbox.on('open', (target) => {
-            console.log('lightbox opened');
-        });
-        //var lightboxDescription = GLightbox({
-        //    selector: '.glightbox2'
-        //});
-        //var lightboxVideo = GLightbox({
-        //    selector: '.glightbox3'
-        //});
-        //lightboxVideo.on('slide_changed', ({ prev, current }) => {
-        //    console.log('Prev slide', prev);
-        //    console.log('Current slide', current);
-
-        //    const { slideIndex, slideNode, slideConfig, player } = current;
-
-        //    if (player) {
-        //        if (!player.ready) {
-        //            // If player is not ready
-        //            player.on('ready', (event) => {
-        //                // Do something when video is ready
-        //            });
-        //        }
-
-        //        player.on('play', (event) => {
-        //            console.log('Started play');
-        //        });
-
-        //        player.on('volumechange', (event) => {
-        //            console.log('Volume change');
-        //        });
-
-        //        player.on('ended', (event) => {
-        //            console.log('Video ended');
-        //        });
-        //    }
-        //});
-
-        //var lightboxInlineIframe = GLightbox({
-        //    selector: '.glightbox4'
-        //});
-    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
