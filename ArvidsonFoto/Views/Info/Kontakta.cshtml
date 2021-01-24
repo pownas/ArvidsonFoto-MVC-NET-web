@@ -45,6 +45,7 @@
                                                                                              //client.Connect("websmtp.simply.com", 587, false);
 
                     // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate("mailadress", "authinfo...");
                     Log.Information("message: " + message);
                     client.Send(message);
                     client.Disconnect(true);

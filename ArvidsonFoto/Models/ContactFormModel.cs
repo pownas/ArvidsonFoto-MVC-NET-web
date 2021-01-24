@@ -28,5 +28,8 @@ namespace ArvidsonFoto.Data
         public string MessageBody { get; set; }
 
         public DateTime FormSubmit { get; set; }
+
+        public bool DisplayEmailSent { get; set; }
+        public bool DisplayErrorSending { get; set; }
     }
 }
