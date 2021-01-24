@@ -1,0 +1,62 @@
+﻿@model ContactFormModel
+
+@if (Model.DisplayEmailSent)
+{
+    <span class="text-success">Meddelandet skickat!</span>
+}
+else
+{
+    @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
+    <form method="post" asp-action="SendMessage" asp-route-Page="Kontakta">
+        <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+        @if (Model.DisplayErrorSending)
+        {
+            <span class="text-danger">Något gick fel när meddelandet skulle skickas...</span>
+        }
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-4 col-lg-3 control-label">Namn</label>
+            <div class="col-md-8 col-lg-9">
+                <input asp-for="Name" placeholder="Namn" class="form-control" />
+                <span id="validationName" asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-4 col-lg-3 control-label">Epost</label>
+            <div class="col-md-8 col-lg-9">
+                <input asp-for="Email" placeholder="Epost-adress" class="form-control" />
+                <span id="validationEmail" asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Subject" class="col-md-4 col-lg-3 control-label">Rubrik</label>
+            <div class="col-md-8 col-lg-9">
+                <input asp-for="Subject" placeholder="Rubrik" class="form-control" />
+                <span id="validationSubject" asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Message" class="col-md-4 col-lg-3 control-label">Meddelande</label>
+            <div class="col-md-8 col-lg-9">
+                <textarea asp-for="Message" placeholder="@Model.MessagePlaceholder" rows="4" class="form-control"></textarea>
+                <span id="validationMessage" asp-validation-for="Message" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Code" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
+            <div class="col-md-8 col-lg-9">
+                <input asp-for="Code" placeholder="Siffror" class="form-control" />
+                <span id="validationCode" asp-validation-for="Code" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
+                <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary">Skicka meddelandet</button>
+            </div>
+        </div>
+    </form>
+}

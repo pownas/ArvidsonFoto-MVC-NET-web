@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Models
 {
     public class ContactFormModel
     {
@@ -25,11 +25,14 @@ namespace ArvidsonFoto.Data
 
         [Required(ErrorMessage = "Ange ett meddelande")]
         [StringLength(2000, ErrorMessage = "För långt meddelande (max 2000 tecken)")] //StringLength
-        public string MessageBody { get; set; }
+        public string Message { get; set; }
 
-        public DateTime FormSubmit { get; set; }
+        public string MessagePlaceholder { get; set; }
+
+        public DateTime FormSubmitDate { get; set; }
 
         public bool DisplayEmailSent { get; set; }
         public bool DisplayErrorSending { get; set; }
+        //public bool DisplayValidationErrorMessages { get; set; }
     }
 }

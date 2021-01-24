@@ -1,4 +1,6 @@
-﻿<nav id="page-breadcrumbs" aria-label="breadcrumb">
+﻿@model ContactFormModel
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/Info">Info</a></li>
@@ -11,57 +13,19 @@
 <div id="page-content" class="brodtext">
     <p>Du kan ta kontakt med mig om du vill köpa bilder.</p>
     <p>Se även mera info under sidan <a href="/Info/Kontakta">Kontaktinformation</a>.</p>
-    <!--<p>Ett urval av arkivets bilder samt många flera finns på bildbyrerna:</p>
-    <p><img src="images/logo_Matton.jpg" height="64" /> <a href="http://www.matton.se/bilder/sok/torbjo3rn+arvidson.html" target="_blank">Matton Collection</a></p>
-    <p><img src="images/logo_Nordic.jpg" height="64" /> <a href="http://nordicphotos.com/Torbj%C3%B6rn%20Arvidson-3204" target="_blank">Nordic Photos</a></p>
-    <p><img src="images/logo_IBL.jpg" height="64" /> <a href="http://bildarkiv.iblbildbyra.se/fotoweb/Grid.fwx?archiveId=5000&search=(IPTC080%20contains(Torbj%C3%B6rn%20Arvidson%20%2F%20IBL%20Bildbyr%C3%A5))" target="_blank">IBL Bildbyrå</a></p>-->
+    @*<!--<p>Ett urval av arkivets bilder samt många flera finns på bildbyrerna:</p>
+        <p><img src="images/logo_Matton.jpg" height="64" /> <a href="http://www.matton.se/bilder/sok/torbjo3rn+arvidson.html" target="_blank">Matton Collection</a></p>
+        <p><img src="images/logo_Nordic.jpg" height="64" /> <a href="http://nordicphotos.com/Torbj%C3%B6rn%20Arvidson-3204" target="_blank">Nordic Photos</a></p>
+        <p><img src="images/logo_IBL.jpg" height="64" /> <a href="http://bildarkiv.iblbildbyra.se/fotoweb/Grid.fwx?archiveId=5000&search=(IPTC080%20contains(Torbj%C3%B6rn%20Arvidson%20%2F%20IBL%20Bildbyr%C3%A5))" target="_blank">IBL Bildbyrå</a></p>-->*@
     <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9"><h2>Kontaktformulär</h2></div>
 
-
-    <form class="form-horizontal" action="?send=send" method="post">
-        <div class="form-group">
-            <label for="name" class="col-md-4 col-lg-3 control-label">Namn</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="text" class="form-control" placeholder="Namn" name="namn" id="name" required />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="email" class="col-md-4 col-lg-3 control-label">Epost</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="email" class="form-control" placeholder="Epost-adress" name="epost" id="email" required />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="subject" class="col-md-4 col-lg-3 control-label">Rubrik</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="text" class="form-control" placeholder="Rubrik" name="rubriken" id="subject" required />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="textBody" class="col-md-4 col-lg-3 control-label">Meddelande</label>
-            <div class="col-md-8 col-lg-9">
-                <textarea class="form-control" placeholder="Meddelande
-(Skriv gärna bildnamn på de bilderna ni är intresserade av)" rows="4" name="texten" id="textBody" required></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="koden" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="text" class="form-control" placeholder="Siffror" name="code" id="koden" required />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                <button type="submit" class="btn btn-default">Skicka meddelandet</button>
-            </div>
-        </div>
-    </form>
-    <br />
-    <br />
-
+    <div id="ContactForm">
+        <partial name="_ContactForm" model="Model" />
+    </div>
 </div>
+
+@*<!-- Kräver att man har denna för validerings-scriptet ska läsas in... -->*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/ContactForm.js"></script>
+}

@@ -1,72 +1,5 @@
 ﻿@model ContactFormModel
-@using MailKit.Net.Smtp;
-@using MailKit.Security;
-@using MimeKit;
-@using Serilog;
-@{
-    ContactFormModel contactFormModel = new ContactFormModel() { FormSubmit = DateTime.UtcNow };
 
-    bool displayEmailSent = false;
-    bool displayErrorSending = false;
-
-    void FormSubmitted(ContactFormModel contactFormModel)
-    {
-        bool isValid = true; //UPPDATERA!!!
-                             //bool isValid = editContext.Validate();
-        if (isValid)
-        {
-            displayErrorSending = false;
-
-            try
-            {
-                Log.Information("User trying to send e-mail...");
-                var fromName = "Kontaktsidan - ArvidsonFoto.se";
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                //message.Cc.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
-                //message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
-                message.To.Add(new MailboxAddress(fromName, "contact.form@arvidsonfoto.se"));
-                message.Subject = "Kontakt - " + contactFormModel.Subject + " - Arvidsonfoto.se";
-
-                message.Body = new TextPart("plain")
-                {
-                    Text = contactFormModel.MessageBody
-                };
-
-                using (var client = new SmtpClient())
-                {
-                    //Bör kunna koppla till Github-secrets:
-                    //var pwd = Environment.GetEnvironmentVariable("SVC_PWD");
-                    //var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
-
-                    //client.Connect("websmtp.simply.com", 465, true);
-                    client.Connect("websmtp.simply.com", 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
-                                                                                             //client.Connect("websmtp.simply.com", 587, false);
-
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate("mailadress", "authinfo...");
-                    Log.Information("message: " + message);
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
-                displayEmailSent = true;
-
-            }
-            catch (Exception e)
-            {
-                displayErrorSending = true;
-                displayEmailSent = false;
-                Log.Error("Contact sending Error-message: " + e.Message);
-            }
-        }
-        else
-        {
-            //displayValidationErrorMessages = true;
-            displayEmailSent = false;
-        }
-    }
-}
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -94,67 +27,14 @@
     <div class="col-sm-offset-3 col-sm-9 col-lg-offset-2 col-lg-10">
         <h2>Kontaktformulär</h2>
     </div>
-    @if (displayEmailSent)
-    {
-        <span class="text-success">Meddelandet skickat!</span>
-    }
-    else
-    {
-        <div class="ContactForm">
-            @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
-            <form method="post" asp-action="SendMessage" asp-route-Page="Kontakta">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (displayErrorSending)
-                {
-                    <span class="text-danger">Något gick fel när meddelandet skulle skickas...</span>
-                }
-                <div class="form-group">
-                    <label asp-for="Name" class="col-md-4 col-lg-3 control-label">Namn</label>
-                    <div class="col-md-8 col-lg-9">
-                        <input asp-for="Name" placeholder="Namn" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="col-md-4 col-lg-3 control-label">Epost</label>
-                    <div class="col-md-8 col-lg-9">
-                        <input asp-for="Email" placeholder="Epost-adress" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="subject" class="col-md-4 col-lg-3 control-label">Rubrik</label>
-                    <div class="col-md-8 col-lg-9">
-                        <input asp-for="Subject" placeholder="Rubrik" class="form-control" />
-                        <span asp-validation-for="Subject" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="textBody" class="col-md-4 col-lg-3 control-label">Meddelande</label>
-                    <div class="col-md-8 col-lg-9">
-                        <textarea asp-for="MessageBody" placeholder="Meddelande
-(Skriv gärna vad ni önskar kontakt om)" rows="4" class="form-control"></textarea>
-                        <span asp-validation-for="MessageBody" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                        <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="koden" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
-                    <div class="col-md-8 col-lg-9">
-                        <input asp-for="Code" placeholder="Siffror" class="form-control" />
-                        <span asp-validation-for="Code" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                        <button type="submit" class="btn btn-light btn-outline-primary">Skicka meddelandet</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    }
+    
+    <div id="ContactForm">
+        <partial name="_ContactForm" model="Model" />
+    </div>
 </div>
+
+@*<!-- Kräver att man har denna för validerings-scriptet ska läsas in... -->*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/ContactForm.js"></script>
+}
