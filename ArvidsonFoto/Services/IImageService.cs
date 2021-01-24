@@ -10,6 +10,8 @@ namespace ArvidsonFoto.Data
         
         int GetImageLastId();
 
+        TblImage GetById(int imageId);
+
         TblImage GetOneImageFromCategory(int category);
 
         List<TblImage> GetAll();

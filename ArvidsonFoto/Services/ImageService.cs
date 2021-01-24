@@ -29,21 +29,29 @@ namespace ArvidsonFoto.Data
         public TblImage GetOneImageFromCategory(int category)
         {
             TblImage image;
+
             if (category.Equals(1))
             {
-                image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(54)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+                image = _entityContext.TblImages
+                                      .Where(i => i.ImageArt.Equals(54))
+                                      .OrderByDescending(i => i.ImageUpdate)
+                                      .FirstOrDefault();
             }
             else
             {
-                image = _entityContext.TblImages.Where(i => i.ImageArt.Equals(category) || i.ImageFamilj.Equals(category) || i.ImageHuvudfamilj.Equals(category)).OrderByDescending(i => i.ImageUpdate).FirstOrDefault();
+                image = _entityContext.TblImages
+                                      .Where(i => i.ImageArt.Equals(category) 
+                                               || i.ImageFamilj.Equals(category) 
+                                               || i.ImageHuvudfamilj.Equals(category))
+                                      .OrderByDescending(i => i.ImageUpdate)
+                                      .FirstOrDefault();
             }
             return image;
         }
 
         public List<TblImage> GetAll()
         {
-            List<TblImage> images;
-            images = _entityContext.TblImages.ToList();
+            List<TblImage> images = _entityContext.TblImages.ToList();
             return images;
         }
 
@@ -52,8 +60,7 @@ namespace ArvidsonFoto.Data
         /// <returns>"count" antal bilder ifrån databasen</returns>
         public List<TblImage> GetRandomNumberOfImages(int count)
         {
-            List<TblImage> images;
-            images = _entityContext.TblImages
+            List<TblImage> images = _entityContext.TblImages
                                    .OrderBy(r => Guid.NewGuid()) //Här gör jag en random med hjälp av en ny GUID som random nummer.
                                    .Take(count)
                                    .ToList();
@@ -62,13 +69,20 @@ namespace ArvidsonFoto.Data
 
         public List<TblImage> GetAllImagesByCategoryID(int categoryID)
         {
-            List<TblImage> images;
-            images = _entityContext.Set<TblImage>().Where(i => i.ImageArt == categoryID || i.ImageFamilj == categoryID || i.ImageHuvudfamilj == categoryID).ToList();
-            //if (images is null) //Om ImageHuvudfamilj ger null, kolla mot Fåglar....
-            //{
-            //    images = _entityContext.TblImages.Where(i => i.ImageHuvudfamilj == categoryID).ToList();
-            //}
+            List<TblImage> images = _entityContext.Set<TblImage>()
+                                   .Where(i => i.ImageArt == categoryID 
+                                            || i.ImageFamilj == categoryID 
+                                            || i.ImageHuvudfamilj == categoryID)
+                                   .ToList();
             return images;
+        }
+
+        public TblImage GetById(int imageId)
+        {
+            TblImage image = _entityContext.TblImages
+                                  .Where(i => i.ImageId.Equals(imageId))
+                                  .FirstOrDefault();
+            return image;
         }
 
         // Databas koppling
