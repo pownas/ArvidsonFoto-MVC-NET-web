@@ -8,4 +8,16 @@
 
 <h1><i class="bi bi-info-circle"></i> @ViewData["Title"]</h1>
 
-<p>Lite info...</p>
+<ul class="sitemap h4">
+    @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li> <!-- Kräver inloggning --> *@
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Köp_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
+    @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Gästbok"><i class="bi bi-book"></i> Gästbok</a></li>
+    @*<li class="disabled"><i class="bi bi-arrow-bar-right"></i> <a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
+    <li><i class="bi bi-arrow-return-right"></i> <a href="./Info/Copyright">&copy; Copyright</a></li>
+    @*<partial name="_LoginPartial" />*@
+</ul>
+
