@@ -1,0 +1,44 @@
+﻿[
+  {
+    "outputFile": "./wwwroot/css/site.css",
+    "inputFile": "./wwwroot/css/site.scss",
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": true
+    }
+  }
+
+
+  //, //Sätt denna som enable för att generera en ny ./wwwroot/lib/bootstrap-icons/bootstrap-icons.min.css
+  //{
+  //  "outputFile": "./wwwroot/lib/bootstrap-icons/bootstrap-icons.css",
+  //  "inputFile": "./wwwroot/lib/bootstrap-icons/bootstrap-icons.scss",
+  //  "minify": {
+  //    "enabled": true
+  //  },
+  //  "includeInProject": true,
+  //  "options": {
+  //    "sourceMap": true
+  //  }
+  //}
+
+
+  //, //Sätt denna som enable för att generera en ny ./wwwroot/lib/jQuery.smartmenus/css/sm-mint/sm-mint-addon.min.css
+  //{
+  //  "outputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.css",
+  //  "inputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.scss",
+  //  "minify": {
+  //    "enabled": true
+  //  },
+  //  "includeInProject": true,
+  //  "options": {
+  //    "sourceMap": true
+  //  }
+  //}
+
+
+]
+/* Se info på sidan: https://github.com/madskristensen/WebCompiler , eller README: */
