@@ -17,7 +17,8 @@
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
     string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
     //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga): 
-    string maxCharWidth = startsidan ? "5.8rem" : "8rem";
+    string imgCharWidth = startsidan ? "thumb-img-startpage" : "thumb-img-gallery";
+    string figcaptionCharWidth = startsidan ? "thumb-figcaption-startpage" : "thumb-figcaption-gallery";
 }
 
 @if (imageList is null || imageList.Count.Equals(0))
@@ -58,17 +59,17 @@ else
 
             DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
 
-            <figure class="figure @rowSizeClass p-2">
-                <a href="@imgSrc" class="glightbox rounded btn btn-light" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
+            <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+                <a href="@imgSrc" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
 Klicka för att förstora">
-                    <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded" width="120" height="120" style="min-width:@maxCharWidth;" title="@imgTitle
+                    <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
 Klicka för att förstora">
-                    <figcaption class="figure-caption d-inline-block text-truncate" style="max-width: @maxCharWidth;">@imgTitle</figcaption>
+                    <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                 </a>
             </figure>
 
             <div class="glightbox-desc row @customDesc">
-                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToShortDateString()</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
                 <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
 

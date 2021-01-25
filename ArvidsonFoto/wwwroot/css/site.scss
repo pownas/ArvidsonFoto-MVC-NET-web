@@ -153,3 +153,22 @@ body {
     background-color: rgba(34, 34, 34, 0.75);
 }
 /* ----------end of glightbox config------------ */
+
+/* ---------- Gallery-fix på mobil ------------- */
+.thumb-img-startpage { min-width: 5.8rem; }
+.thumb-figcaption-startpage { max-width: 5.8rem; }
+
+.thumb-img-gallery{ min-width: 8rem; }
+.thumb-figcaption-gallery { max-width: 8rem; }
+.thumb-a-class { padding: inherit; }
+
+@media (max-width: 380px){
+    .thumb-img-startpage { min-width: 4rem; }
+    .thumb-img-gallery{ min-width: 4rem; }
+    .thumb-a-class { padding: 1em 5px; }
+}
+@media (max-width: 320px) {
+    .thumb-figcaption-startpage { max-width: 4rem; }
+    .thumb-figcaption-gallery { max-width: 4rem; }
+}
+/* -------- End Gallery-fix på mobil ------------ */
