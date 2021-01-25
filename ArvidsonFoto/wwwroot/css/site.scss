@@ -1,0 +1,155 @@
+﻿/* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
+    (Använder NuGet-paketet: BuildWebCompiler, för detta). 
+
+    Steg för kompilering: 
+    1. Skriv kod i: "site.scss"
+    2. Kompilera filen sedan genom att köra en Rebuild på projektet. 
+
+    Mer info via BuildWebCompiler: https://github.com/madskristensen/WebCompiler
+    
+    Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+@import '../lib/bootstrap/css/bootstrap.css'; /*<!-- version: 4.5.3-dist -->*/
+@import '../lib/bootstrap-icons/bootstrap-icons.min.css'; /*<!-- version: 1.3.0 , men har gjort en egen .min.css, via compilerconfig -->*/
+@import '../lib/jQuery.smartmenus/css/sm-core-css.css'; /*<!-- version: 1.1.1 -->*/
+@import '../lib/jQuery.smartmenus/css/sm-mint/sm-mint.css'; /*<!-- version: 1.1.1 -->*/
+@import '../lib/jQuery.smartmenus/css/sm-mint-addon.min.css'; /*<!-- Egna inställningar till sm-mint -->*/
+@import '../lib/glightbox/css/glightbox.min.css'; /*<!-- version: 3.0.7 -->*/
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0078ff;
+}
+
+/*.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}*/
+
+.bg-dark-arvidsonfoto {
+    background-color: #444;
+}
+
+.text-light-arvidsonfoto {
+    background-color: #ddd;
+}
+
+.text-light-muted-arvidsonfoto {
+    background-color: #aaa;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+header {
+    background-color: #111;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    overflow-y: scroll;
+    background-color: #444;
+    color: #ddd;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 1.5em; /* Vertically center the text there */
+}
+
+.sitemap {
+    list-style-type: none;
+}
+
+/* Footer-xs fix på Container */
+@media (max-width: 1200px) {
+    .overridden-footer {
+        position: relative;
+    }
+}
+
+@media (max-height: 450px) {
+    .overridden-footer {
+        position: relative;
+    }
+}
+
+/* Footer-xl fix på Container */
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1200px;
+    }
+}
+
+
+/* ---------start of glightbox config----------- */
+/* Description / Beskrivningen */
+.gslide-description {
+    color: #aaa;
+}
+
+.gslide-description p {
+    margin-bottom: 0px;
+}
+
+/* Title / Rubriken */
+.glightbox-clean .gslide-title {
+    color: #aaa;
+}
+
+/* Bakgrunden */
+.glightbox-clean .gslide-description {
+    background-color: rgba(34, 34, 34, 0.75);
+}
+/* ----------end of glightbox config------------ */
