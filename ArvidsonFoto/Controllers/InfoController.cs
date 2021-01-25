@@ -56,18 +56,20 @@ namespace ArvidsonFoto.Controllers
                     var svc_smtppwd = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPPWD");
 
                     Log.Information("User trying to send e-mail...");
-                    var fromName = "Kontaktsidan - ArvidsonFoto.se";
+                    var fromName = Page + "-ArvidsonFoto.se";
                     var message = new MimeMessage();
                     message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
                     //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
                     message.To.Add(new MailboxAddress(fromName, svc_smtpadress));
                     message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
-                    message.Subject = "Kontakt - " + contactFormModel.Subject + " - Arvidsonfoto.se";
+                    message.Subject = "Arvidsonfoto.se/" +Page+ " - " + contactFormModel.Subject;
 
                     message.Body = new TextPart("plain")
                     {
                         Text = contactFormModel.Message
                     };
+
+                    Log.Information("User message: " + message);
 
                     using (var client = new SmtpClient())
                     {
@@ -77,12 +79,13 @@ namespace ArvidsonFoto.Controllers
 
                         // Note: only needed if the SMTP server requires authentication
                         client.Authenticate(svc_smtpadress, svc_smtppwd);
-                        Log.Information("message: " + message);
                         client.Send(message);
                         client.Disconnect(true);
+                        Log.Information("Email above, sent OK.");
                     }
 
                     contactFormModel.DisplayEmailSent = true;
+                    contactFormModel = new ContactFormModel();
                 }
                 catch (Exception e)
                 {
@@ -100,6 +103,10 @@ namespace ArvidsonFoto.Controllers
             {
                 return RedirectToAction("Kontakta", contactFormModel);
             }
+            else if (Page.Equals("Köp_av_bilder"))
+            {
+                return RedirectToAction("Köp_av_bilder", contactFormModel);
+            }
             else
             {
                 return RedirectToAction("Kontakta");
@@ -110,13 +117,14 @@ namespace ArvidsonFoto.Controllers
         {
             ViewData["Title"] = "Kontaktinformation";
 
-            if (contactFormModel.FormSubmitDate < new DateTime(2000,01,01))
+            if (contactFormModel.FormSubmitDate < new DateTime(2000,01,01) && contactFormModel.Message is null)
             {
                 contactFormModel = new ContactFormModel() {
                     FormSubmitDate = DateTime.UtcNow,
                     MessagePlaceholder = "Meddelande \n(Skriv gärna vad ni önskar kontakt om)", // \n = newLine
                     DisplayEmailSent = false,
-                    DisplayErrorSending = false
+                    DisplayErrorSending = false,
+                    ReturnPageUrl = "Kontakta"
                 };
             }
 
@@ -126,14 +134,15 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Köp_av_bilder(ContactFormModel contactFormModel, string imgId)
         {
             ViewData["Title"] = "Köp av bilder";
-            if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01))
+            if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
             {
                 contactFormModel = new ContactFormModel()
                 {
                     FormSubmitDate = DateTime.UtcNow,
                     MessagePlaceholder = "Meddelande\n(Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
                     DisplayEmailSent = false,
-                    DisplayErrorSending = false
+                    DisplayErrorSending = false,
+                    ReturnPageUrl = "Köp_av_bilder"
                 };
 
                 if(imgId is not null)

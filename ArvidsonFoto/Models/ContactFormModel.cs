@@ -33,6 +33,6 @@ namespace ArvidsonFoto.Models
 
         public bool DisplayEmailSent { get; set; }
         public bool DisplayErrorSending { get; set; }
-        //public bool DisplayValidationErrorMessages { get; set; }
+        public string ReturnPageUrl { get; set; }
     }
 }
