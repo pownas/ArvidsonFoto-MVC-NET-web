@@ -50,12 +50,18 @@ namespace ArvidsonFoto.Controllers
 
                 try
                 {
+                    //Github-secrets, samt miljö variablar som krävs (Se dokumentation i OneDrive -> ArvidsonFoto -> Miljö-variabler) :
+                    var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
+                    var svc_smtpadress = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPADRESS");
+                    var svc_smtppwd = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPPWD");
+
                     Log.Information("User trying to send e-mail...");
                     var fromName = "Kontaktsidan - ArvidsonFoto.se";
                     var message = new MimeMessage();
                     message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                    //message.Cc.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                    message.To.Add(new MailboxAddress(fromName, "contact.form@arvidsonfoto.se"));
+                    //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
+                    message.To.Add(new MailboxAddress(fromName, svc_smtpadress));
+                    message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
                     message.Subject = "Kontakt - " + contactFormModel.Subject + " - Arvidsonfoto.se";
 
                     message.Body = new TextPart("plain")
@@ -65,23 +71,18 @@ namespace ArvidsonFoto.Controllers
 
                     using (var client = new SmtpClient())
                     {
-                        //Bör kunna koppla till Github-secrets:
-                        //var pwd = Environment.GetEnvironmentVariable("SVC_PWD");
-                        //var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
-
-                        //client.Connect("websmtp.simply.com", 465, true);
-                        client.Connect("websmtp.simply.com", 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
-                                                                                                 //client.Connect("websmtp.simply.com", 587, false);
+                        client.Connect(svc_mailServer, 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
+                        //client.Connect(svc_mailServer, 465, true); //Alternativ anslutning, mindre säker...
+                        //client.Connect(svc_mailServer, 587, false); //Alternativ anslutning, mindre säker...
 
                         // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate("mailadress", "authinfo...");
+                        client.Authenticate(svc_smtpadress, svc_smtppwd);
                         Log.Information("message: " + message);
                         client.Send(message);
                         client.Disconnect(true);
                     }
-                    contactFormModel.DisplayEmailSent = true;
-                    //contactFormModel.DisplayValidationErrorMessages = false;
 
+                    contactFormModel.DisplayEmailSent = true;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +93,6 @@ namespace ArvidsonFoto.Controllers
             }
             else
             {
-                //contactFormModel.DisplayValidationErrorMessages = true;
                 contactFormModel.DisplayEmailSent = false;
             }
 
