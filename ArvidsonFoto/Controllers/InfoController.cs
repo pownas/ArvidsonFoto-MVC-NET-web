@@ -15,13 +15,15 @@ namespace ArvidsonFoto.Controllers
 {
     public class InfoController : Controller
     {
-        private IImageService _imageService;
         private ICategoryService _categoryService;
+        private IImageService _imageService;
+        private IGuestBookService _guestbookService;
 
         public InfoController(ArvidsonFotoDbContext context)
         {
-            _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
+            _imageService = new ImageService(context);
+            _guestbookService = new GuestBookService(context);
         }
 
         public IActionResult Index()
@@ -30,10 +32,75 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-        public IActionResult Gästbok()
+        public IActionResult Gästbok(GuestbookInputModel inputModel)
         {
             ViewData["Title"] = "Gästbok";
-            return View();
+            
+            if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
+            {
+                inputModel = new GuestbookInputModel()
+                {
+                    FormSubmitDate = DateTime.Now,
+                    DisplayPublished = false,
+                    DisplayErrorPublish = false
+                };
+            }
+
+            return View(inputModel);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputModel inputModel)
+        {
+            if (ModelState.IsValid)
+            {
+                inputModel.DisplayErrorPublish = false;
+                try
+                {
+                    Log.Information("User trying to post to Guestbook...");
+
+                    string homePage = "";
+                    if(inputModel.Homepage is not null) {
+                        homePage = inputModel.Homepage.Replace("https://", "");
+                        homePage = homePage.Replace("http://", "");
+                        string[] splittedHome = homePage.Split("/");
+                        if(splittedHome is not null) {
+                            homePage = splittedHome[0];
+                            if(splittedHome.Length>1) { homePage += "/" + splittedHome[1]; }
+                            if (splittedHome.Length>2) { homePage += "/" + splittedHome[2]; }
+                        }
+                    }
+
+                    TblGb postToPublish = new TblGb()
+                    {
+                        GbId = (_guestbookService.GetLastGbId() + 1),
+                        GbName = inputModel.Name,
+                        GbEmail = inputModel.Email,
+                        GbHomepage = homePage,
+                        GbText = inputModel.Message,
+                        GbDate = DateTime.Now
+                    };
+                    Log.Information("User GuestBook-post: " + postToPublish.ToString());
+                    
+                    if (_guestbookService.CreateGBpost(postToPublish)) 
+                    {
+                        Log.Information("GB-post above, published OK.");
+                        inputModel = new GuestbookInputModel();
+                        inputModel.DisplayPublished = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    inputModel.DisplayErrorPublish = true;
+                    inputModel.DisplayPublished = false;
+                    Log.Error("Error publishing the GB-post. Error-message: " + e.Message);
+                }
+            }
+            else
+            {
+                inputModel.DisplayPublished = false;
+            }
+            return RedirectToAction("Gästbok", inputModel);
         }
 
         [HttpPost]
@@ -84,8 +151,8 @@ namespace ArvidsonFoto.Controllers
                         Log.Information("Email above, sent OK.");
                     }
 
-                    contactFormModel.DisplayEmailSent = true;
                     contactFormModel = new ContactFormModel();
+                    contactFormModel.DisplayEmailSent = true;
                 }
                 catch (Exception e)
                 {
@@ -120,8 +187,8 @@ namespace ArvidsonFoto.Controllers
             if (contactFormModel.FormSubmitDate < new DateTime(2000,01,01) && contactFormModel.Message is null)
             {
                 contactFormModel = new ContactFormModel() {
-                    FormSubmitDate = DateTime.UtcNow,
-                    MessagePlaceholder = "Meddelande \n(Skriv gärna vad ni önskar kontakt om)", // \n = newLine
+                    FormSubmitDate = DateTime.Now,
+                    MessagePlaceholder = "Meddelande \n (Skriv gärna vad ni önskar kontakt om)", // \n = newLine
                     DisplayEmailSent = false,
                     DisplayErrorSending = false,
                     ReturnPageUrl = "Kontakta"
@@ -138,8 +205,8 @@ namespace ArvidsonFoto.Controllers
             {
                 contactFormModel = new ContactFormModel()
                 {
-                    FormSubmitDate = DateTime.UtcNow,
-                    MessagePlaceholder = "Meddelande\n(Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
+                    FormSubmitDate = DateTime.Now,
+                    MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
                     DisplayEmailSent = false,
                     DisplayErrorSending = false,
                     ReturnPageUrl = "Köp_av_bilder"

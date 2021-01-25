@@ -1,5 +1,7 @@
-﻿@inject IGuestBookService _guestBookService
-@{ 
+﻿@model GuestbookInputModel
+
+@inject IGuestBookService _guestBookService
+@{
     List<TblGb> gbListView = new List<TblGb>();
     gbListView = _guestBookService.GetAll();
 }
@@ -15,45 +17,51 @@
 <h1><i class="bi bi-book"></i> @ViewData["Title"]</h1>
 
 <div id="page-content" class="brodtext">
-    <form class="form-horizontal" action="?send=yes" method="post">
-        <div class="form-group">
-            <label for="inputNamn" class="col-md-4 col-lg-3 control-label">Namn</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="text" class="form-control" placeholder="Namn (blank för anonym)" name="namn">
+    <form class="form-horizontal" asp-action="PostToGb" method="post">
+        <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+        @if (Model.DisplayErrorPublish)
+        {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
+        @if (Model.DisplayPublished)
+        {<div class="ml-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
+        <div class="form-row">
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Name" class="ml-2 control-label">Namn</label>
+                <div>
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)">
+                    <span asp-validation-for="Name" class="ml-2"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="inputEpost" class="col-md-4 col-lg-3 control-label">Epost</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="email" class="form-control" placeholder="Epost (visas ej)" name="epost">
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Email" class="ml-2 control-label">Epost</label>
+                <div>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)">
+                    <span asp-validation-for="Email" class="ml-2"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="inputHemsida" class="col-md-4 col-lg-3 control-label">Hemsida</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="url" class="form-control" placeholder="Hemsida (om du vill)" name="hemsida">
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Homepage" class="ml-2 control-label">Hemsida</label>
+                <div>
+                    <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)">
+                    <span asp-validation-for="Homepage" class="ml-2"></span>
+                </div>
+                <div class="ml-2 mt-1">
+                    <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive">
+                </div>
+                <label asp-for="Code" class="ml-2 control-label">Ange siffrorna från bilden</label>
+                <div>
+                    <input asp-for="Code" class="form-control" placeholder="Siffror">
+                    <span asp-validation-for="Code" class="ml-2"></span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="inputTexten" class="col-md-4 col-lg-3 control-label">Meddelande</label>
-            <div class="col-md-8 col-lg-9">
-                <textarea class="form-control" placeholder="Meddelande" rows="4" name="texten"></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="inputCode" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
-            <div class="col-md-8 col-lg-9">
-                <input type="number" class="form-control" placeholder="Siffror" name="code">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-                <button type="submit" class="btn btn-default">Skicka meddelandet</button>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Message" class="ml-2 control-label">Meddelande</label>
+                <div>
+                    <textarea asp-for="Message" class="form-control" placeholder="Meddelande" rows="5"></textarea>
+                    <span asp-validation-for="Message"></span>
+                </div>
+                <div class="text-right mt-2">
+                    <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary">Skicka inlägget</button>
+                </div>
             </div>
         </div>
     </form>
@@ -62,6 +70,8 @@
         {
             @foreach (var gbPost in gbListView)
             {
+                DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
+                
                 <div class="col mb-4">
                     <div class="card text-left text-dark">
                         <div class="card-header">
@@ -70,8 +80,12 @@
                         <div class="card-body">
                             <p class="card-text text-dark">@gbPost.GbText</p>
                         </div>
-                        <div class="card-footer text-right text-muted">
-                            @gbPost.GbDate
+                        <div class="card-footer text-muted row">
+                            <div class="col-6 text-left">
+                                @if (gbPost.GbHomepage is not null)
+                                {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
+                            </div>
+                            <div class="col-6 text-right">@gbDate.ToString("yyyy-MM-dd")</div>
                         </div>
                     </div>
                 </div>
@@ -79,3 +93,9 @@
         }
     </div>
 </div>
+
+@*<!-- Kräver att man har denna för validerings-scriptet ska läsas in... -->*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/ContactForm.js"></script>
+}

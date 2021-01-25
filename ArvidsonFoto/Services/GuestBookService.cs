@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Models;
 using Microsoft.Data.SqlClient;
+using Serilog;
 
 namespace ArvidsonFoto.Data
 {
@@ -56,14 +57,28 @@ namespace ArvidsonFoto.Data
             return gbPosts;
         }
 
-        bool IGuestBookService.CreateGBpost(TblGb gb)
+        public bool CreateGBpost(TblGb gb)
         {
-            throw new NotImplementedException();
+            bool succeeded = false;
+            try {
+                _entityContext.TblGbs.Add(gb);
+                _entityContext.SaveChanges();
+                succeeded = true;
+            } 
+            catch (Exception ex)
+            {
+                succeeded = false;
+                Log.Error("Error when creating GB-post. Error-message: " + ex.Message);
+            }
+            return succeeded;
         }
 
-        int IGuestBookService.GetLastGbId()
+        public int GetLastGbId()
         {
-            throw new NotImplementedException();
+            int idToReturn = _entityContext.TblGbs.Max(gb => gb.GbId);
+            if (idToReturn is 0)
+                idToReturn = -1;
+            return idToReturn;
         }
     }
 }
