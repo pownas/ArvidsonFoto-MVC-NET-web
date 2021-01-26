@@ -7,6 +7,7 @@ namespace ArvidsonFoto.Models
 {
     public partial class TblGb
     {
+        public int Id { get; set; }
         public int GbId { get; set; }
         public string GbName { get; set; }
         public string GbEmail { get; set; }

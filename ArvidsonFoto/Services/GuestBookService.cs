@@ -53,7 +53,7 @@ namespace ArvidsonFoto.Data
         public List<TblGb> GetAll()
         {
             List<TblGb> gbPosts;
-            gbPosts = _entityContext.TblGbs.OrderByDescending(g => g.GbDate).ToList();
+            gbPosts = _entityContext.TblGbs.OrderByDescending(g => g.GbId).ToList();
             return gbPosts;
         }
 

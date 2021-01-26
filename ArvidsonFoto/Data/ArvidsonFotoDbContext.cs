@@ -59,9 +59,9 @@ namespace ArvidsonFoto.Data
 
             modelBuilder.Entity<TblGb>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("tbl_gb");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.GbDate)
                     .HasColumnType("smalldatetime")
@@ -86,12 +86,12 @@ namespace ArvidsonFoto.Data
                     .HasColumnName("GB_name");
 
                 entity.Property(e => e.GbText).HasColumnName("GB_text");
+
+                entity.HasKey("Id");
             });
 
             modelBuilder.Entity<TblImage>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("tbl_images");
 
                 entity.Property(e => e.ImageArt).HasColumnName("image_art");
@@ -117,12 +117,12 @@ namespace ArvidsonFoto.Data
                 entity.Property(e => e.ImageUrl)
                     .HasMaxLength(50)
                     .HasColumnName("image_URL");
+
+                entity.HasKey("ImageId");
             });
 
             modelBuilder.Entity<TblMenu>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("tbl_menu");
 
                 //entity.Property(e => e.MenuEngtext)
@@ -146,6 +146,8 @@ namespace ArvidsonFoto.Data
                 entity.Property(e => e.MenuUrltext)
                     .HasMaxLength(50)
                     .HasColumnName("menu_URLtext");
+
+                entity.HasKey("MenuId");
             });
 
             OnModelCreatingPartial(modelBuilder);
