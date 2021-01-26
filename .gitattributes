@@ -1,5 +1,5 @@
 ## Tar bort filer ifrån kod-sökningen...
 ArvidsonFoto/wwwroot/lib/* linguist-vendored
-ArvidsonFoto/wwwroot/lib/bootstrap-icons/index.html -linguist-documentation
+ArvidsonFoto/wwwroot/lib/bootstrap-icons/index.html linguist-documentation
  
  ### För mer information, se sidan: https://github.com/github/linguist#overrides
