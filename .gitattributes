@@ -1,2 +1,3 @@
 ## Tar bort filer ifrån kod-sökningen...
 ArvidsonFoto/wwwroot/lib/* -linguist-vendored
+ArvidsonFoto/wwwroot/lib/bootstrap-icons/index.html -linguist-vendored
