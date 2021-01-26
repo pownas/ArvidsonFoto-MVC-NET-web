@@ -1,5 +1,8 @@
-## Tar bort filer ifrån kod-sökningen...
+## Tar bort filer ifrån kod-sökningen (linguist) på förstasidan: https://github.com/pownas/ArvidsonFoto-MVC-NET5
+### vendored:
 ArvidsonFoto/wwwroot/lib/* linguist-vendored
-ArvidsonFoto/wwwroot/lib/bootstrap-icons/index.html linguist-documentation
+
+### documentations:
+ArvidsonFoto/wwwroot/lib/bootstrap-icons/docs/index.html linguist-documentation
  
  ### För mer information, se sidan: https://github.com/github/linguist#overrides
