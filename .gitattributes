@@ -3,6 +3,6 @@
 ArvidsonFoto/wwwroot/lib/* linguist-vendored
 
 ### documentations:
-ArvidsonFoto/wwwroot/lib/* linguist-documentation
+ArvidsonFoto/wwwroot/lib/*/* linguist-documentation
  
  ### För mer information, se sidan: https://github.com/github/linguist#overrides
