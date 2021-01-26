@@ -3,11 +3,13 @@
 @inject IImageService _imageService
 @inject ICategoryService _categoryService
 @{
-    List<TblMenu> subCategories = _categoryService.GetSubsList(Model.SelectedCategory.MenuId)
-                                                  .OrderBy(c => c.MenuText)
-                                                  .ToList();
+    List<TblMenu> subCategories = new List<TblMenu>();
     try
     {
+        subCategories = _categoryService.GetSubsList(Model.SelectedCategory.MenuId)
+                                        .OrderBy(c => c.MenuText)
+                                        .ToList();
+
         if (Model.SelectedCategory.MenuText.Length > 0 || Model.SelectedCategory is null)
             ViewData["Title"] = Model.SelectedCategory.MenuText;
         else
@@ -16,7 +18,9 @@
     catch (Exception ex)
     {
         Model.ErrorMessage = ex.Message;
+        Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
+        
     }
 
 }
