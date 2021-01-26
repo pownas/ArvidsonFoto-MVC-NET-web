@@ -3,6 +3,6 @@
 ArvidsonFoto/wwwroot/lib/* linguist-vendored
 
 ### documentations:
-ArvidsonFoto/wwwroot/lib/bootstrap-icons/ linguist-documentation
+ArvidsonFoto/wwwroot/lib/bootstrap-icons/* linguist-documentation
  
  ### För mer information, se sidan: https://github.com/github/linguist#overrides
