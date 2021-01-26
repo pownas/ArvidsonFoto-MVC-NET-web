@@ -1,2 +1,2 @@
 ## Tar bort filer ifrån kod-sökningen...
-ArvidsonFoto/wwwroot/lib/* -linguist-vendored
+ArvidsonFoto/wwwroot/lib/* linguist-vendored
