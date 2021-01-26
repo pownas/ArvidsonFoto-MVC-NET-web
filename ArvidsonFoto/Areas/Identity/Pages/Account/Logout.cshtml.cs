@@ -7,7 +7,7 @@ using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account
 {
@@ -15,12 +15,10 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-        private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<ArvidsonFotoUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<ArvidsonFotoUser> signInManager)
         {
             _signInManager = signInManager;
-            _logger = logger;
         }
 
         public void OnGet()
@@ -29,8 +27,9 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            Log.Information("User: "+User.Identity.Name+", logging out.");
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            Log.Information("User logged out.");
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
