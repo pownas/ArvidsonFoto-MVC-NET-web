@@ -18,7 +18,7 @@ namespace ArvidsonFoto.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<ArvidsonFotoIdentityContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("ArvidsonFotoIdentityContextConnection")));
+                        context.Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ArvidsonFotoIdentityContext>();

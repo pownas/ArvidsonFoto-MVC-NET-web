@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ArvidsonFoto.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class DownloadPersonalDataModel : PageModel
     {
         private readonly UserManager<ArvidsonFotoUser> _userManager;

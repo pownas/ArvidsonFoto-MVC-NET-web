@@ -28,14 +28,18 @@ namespace ArvidsonFoto
         public void ConfigureServices(IServiceCollection services)
         {
             //Lägger till databaskoppling för IdentityContext:
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+            
+            
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             //Lägger till IdentityUser ( som ska kunna användas för inloggning ) :
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            
             services.AddControllersWithViews();
 
             //Lägger till Databaskoppling för appen: 

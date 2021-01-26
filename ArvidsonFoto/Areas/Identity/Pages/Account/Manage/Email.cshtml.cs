@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public partial class EmailModel : PageModel
     {
         private readonly UserManager<ArvidsonFotoUser> _userManager;

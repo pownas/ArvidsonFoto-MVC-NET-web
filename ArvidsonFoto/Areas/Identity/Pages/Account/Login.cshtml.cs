@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account
 {
@@ -20,15 +21,12 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ArvidsonFotoUser> _userManager;
         private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<ArvidsonFotoUser> signInManager, 
-            ILogger<LoginModel> logger,
             UserManager<ArvidsonFotoUser> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
         }
 
         [BindProperty]
@@ -45,13 +43,15 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "E-postadress")]
             public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Lösenord")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Kom ihåg inloggningen?")]
             public bool RememberMe { get; set; }
         }
 
@@ -85,7 +85,7 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    Log.Information("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -94,7 +94,7 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    Log.Warning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
