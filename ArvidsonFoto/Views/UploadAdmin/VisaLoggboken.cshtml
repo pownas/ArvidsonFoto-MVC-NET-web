@@ -21,7 +21,11 @@
         <p>Här nedan visas loggboken från hemsidan:</p>
         @foreach (var line in Model)
         {
-            <p>@line</p>
+            string lineColor = "";
+            lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;
+            lineColor = line.Contains("[WRN]") ? "bg-warning text-dark" : lineColor;
+            lineColor = line.Contains("[ERR]") ? "bg-danger" : lineColor;
+            <p class="@lineColor">@line</p>
         }
     </div>
 </div>
