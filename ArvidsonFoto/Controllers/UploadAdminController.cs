@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
+using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -96,11 +97,25 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-        public IActionResult VisaLoggboken()
+        /// <summary>Laddar sidan "Läs loggboken" , men heter visa för att slippa ä i Läs</summary>
+        /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
+        public IActionResult VisaLoggboken(DateTime datum)
         {
-            ViewData["Title"] = "Läs loggboken";
-            return View();
+            ViewData["Title"] = "Läser loggboken för: "+datum.ToString("yyyy-MM-dd dddd");
+
+            AppLogReader logReader = new AppLogReader();
+            List<string> logBook = new List<string>();
+            string appLogFile = "appLog"+ datum.ToString("yyyyMMdd") + ".txt";
+            logBook = logReader.ReadData(appLogFile);
+
+            return View(logBook);
         }
 
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

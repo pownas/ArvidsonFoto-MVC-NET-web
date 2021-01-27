@@ -21,7 +21,7 @@
             <div class="dropdown-divider"></div>
             <a href="./UploadAdmin/Statistik" class="nav-link" title="Visa statistik på hemsidan"><i class="bi bi-speedometer2"></i> Hemsidans statistik</a>
         </li>
-        <li><a href="./UploadAdmin/VisaLoggboken" class="nav-link" title="Läs i loggboken och fel-loggar"><i class="bi bi-journal-code"></i> Läs loggboken</a></li>
+        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link" title="Läs i loggboken och fel-loggar"><i class="bi bi-journal-code"></i> Läs loggboken</a></li>
         <li>
             <div class="dropdown-divider"></div>
             <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Hantera ditt konto" class="nav-link"><i class="bi bi-file-person"></i> Hantera kontot: @username</a>
