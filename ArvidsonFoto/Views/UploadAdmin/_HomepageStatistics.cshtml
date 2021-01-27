@@ -1,0 +1,15 @@
+﻿@inject IImageService _imageService
+@inject ICategoryService _categoryService
+@{
+    List<TblMenu> allCategories = _categoryService.GetAll().OrderByDescending(c => c.MenuPagecounter).ToList();
+    List<TblMenu> shownCategories = allCategories.Take(10).ToList();
+}
+<h3></h3>
+
+<h3>Sidvisningar</h3>
+
+<h3>10 mest visade kategorierna</h3>
+@foreach (var category in shownCategories)
+{
+    @(category.MenuPagecounter + " | " + category.MenuText + " | " + category.MenuLastshowdate)<br />
+}

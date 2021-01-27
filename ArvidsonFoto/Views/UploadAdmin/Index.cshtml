@@ -1,7 +1,4 @@
 ﻿@*<!-- UploadAdmin-index -->*@
-@model GalleryViewModel
-@inject IImageService _imageService
-@inject ICategoryService _categoryService
 @section MetaData { 
     <meta name="robots" content="noindex" />
 }
@@ -14,7 +11,7 @@
         <li class="breadcrumb-item active" aria-current="page">Upload Admin<i class="bi bi-cloud-upload ml-1"></i></li>
     </ol>
 </nav>
-<h1><i class="bi bi-cloud-upload mr-2"></i>@ViewData["Title"]</h1>
+<h1 class="offset-md-4"><i class="bi bi-cloud-upload mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
@@ -23,6 +20,10 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        Statistik kanske visas här?
+        <h3>Välkommen till Upload Admin!</h3>
+        <p>Här visas lite statistik för hemsidan:</p>
+        <div id="page-statistics">
+            <partial name="_HomepageStatistics" />
+        </div>
     </div>
 </div>

@@ -1,9 +1,11 @@
-﻿@inject ICategoryService _categoryService
+﻿@inject IGuestBookService _guestBookService
+@{
+    List<TblGb> gbListView = new List<TblGb>();
+    gbListView = _guestBookService.GetAll();
+}
+
 @section MetaData {
     <meta name="robots" content="noindex" />
-}
-@{
-
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -12,7 +14,8 @@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-book-half ml-1"></i></li>
     </ol>
 </nav>
-<h1><i class="bi bi-book-half mr-2"></i>@ViewData["Title"]</h1>
+
+<h1 class="offset-md-4"><i class="bi bi-book-half mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
@@ -22,5 +25,115 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du redigera bland Gästboks-inläggen:</p>
+        <div class="row row-cols-1">
+            @if (_guestBookService is not null && gbListView is not null)
+            {
+                @foreach (var gbPost in gbListView)
+                    {
+                        DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
+                        string gbName = (gbPost.GbName is not null) ? gbPost.GbName : "Anonym användare";
+
+                    //bool unRead = false; //Kan läggas till för notifications!
+                    <div class="col mb-4">
+                        <div class="card text-left text-dark">
+                            <div class="card-header row">
+                                <div class="text-left col-6">
+                                    @gbName
+                                </div>
+                                <div class="text-right col-6">
+                                    @*@if (unRead) //Kan adderas för notifications
+                                    {
+                                        <a title="Läsmarkera" href="/Api/Message/MarkMessageAsRead?messageId=@gbPost.GbId" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check2-square"></i>
+                                        </a>
+                                    }*@
+                                    <button title="Svara" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#AnswerTo-@gbPost.GbId">
+                                        <i class="bi bi-pencil-square mr-2"></i>Svara
+                                    </button>
+                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteMessage-@gbPost.GbId">
+                                        <i class="bi bi-trash mr-2"></i>Radera
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text text-dark">@gbPost.GbText</p>
+                            </div>
+                            <div class="card-footer text-muted row">
+                                <div class="text-left col-6">
+                                    @if (gbPost.GbHomepage is not null)
+                                        {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
+                                </div>
+                                <div class="text-right col-6">@gbDate.ToString("yyyy-MM-dd")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bootstrap-Modal id=DeleteMessage -->
+                    <div class="modal fade" id="DeleteMessage-@gbPost.GbId" tabindex="-1" aria-labelledby="DeleteMessage-@gbPost.GbId-Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-dark">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="DeleteMessage-@gbPost.GbId-Label">
+                                        Radera meddelandet från @gbName?
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Meddelande text:</strong> @gbPost.GbText <br /></p>
+                                    <p><strong>Mottaget:</strong> @gbDate.ToString("yyyy-MM-dd HH:mm")</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Avbryt <i class="bi bi-x-circle"></i>
+                                    </button>
+                                    <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
+                                        Radera <i class="bi bi-trash"></i>
+                                    </a>
+                                    @*<a href="/Api/Message/DeleteMessage?messageId=@gbPost.GbId" class="btn btn-danger">
+                                        Radera <i class="bi bi-trash"></i>
+                                    </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End of Bootstrap-Modal-->
+
+                    <!-- Bootstrap-Modal id=AnswerTo -->
+                    <div class="modal fade" id="AnswerTo-@gbPost.GbId" tabindex="-1" aria-labelledby="AnswerTo-@gbPost.GbId-Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content text-dark">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="AnswerTo-@gbPost.GbId-Label">
+                                        Skriv ett svar till: @gbName
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Meddelande text:</strong> @gbPost.GbText <br /></p>
+                                    <p><strong>Mottaget:</strong> @gbDate.ToString("yyyy-MM-dd HH:mm")</p>
+                                    <p>
+                                        <div class="mb-3">
+                                            <label for="message-text" class="col-form-label">Ditt svar:</label>
+                                            <textarea class="form-control" id="message-text-for-@gbPost.GbId"></textarea>
+                                        </div>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Avbryt <i class="bi bi-x-circle"></i>
+                                    </button>
+                                    <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
+                                        Svara <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End of Bootstrap-Modal-->
+                }
+            }
+        </div>
     </div>
 </div>

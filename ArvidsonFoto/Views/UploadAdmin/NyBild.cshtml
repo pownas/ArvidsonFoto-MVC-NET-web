@@ -1,4 +1,5 @@
-﻿@inject ICategoryService _categoryService
+﻿@model UploadImageViewModel
+@inject ICategoryService _categoryService
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -12,7 +13,7 @@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-image ml-1"></i></li>
     </ol>
 </nav>
-<h1><i class="bi bi-file-image mr-2"></i>@ViewData["Title"]</h1>
+<h1 class="offset-md-4"><i class="bi bi-file-image mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
@@ -22,6 +23,53 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du länka till en ny bild på hemsidan:</p>
-        <select>Välj?</select>
+        @if (Model.SelectedCategory is not null)
+        {
+            <h3>Vald kategori: @Model.SelectedCategory.MenuText</h3>
+
+            @if (_categoryService.GetSubsList(Model.SelectedCategory.MenuId).Count.Equals(0))
+            {
+                <form method="post" asp-action="SendMessage" class="col-12 col-sm-6"> @*<!-- asp-route-Page="@Model.ReturnPageUrl" -->*@
+                    <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="ImageInputModel.ImageUrl" class="control-label"></label>
+                        <div>
+                            <input asp-for="ImageInputModel.ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: IMG_1234" class="form-control" />
+                            <span asp-validation-for="ImageInputModel.ImageUrl"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageInputModel.ImageDate" class="control-label"></label>
+                        <div>
+                            <input asp-for="ImageInputModel.ImageDate" placeholder="YYYY-MM-DD" class="form-control" />
+                            <span asp-validation-for="ImageInputModel.ImageDate"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageInputModel.ImageDescription" class="control-label"></label>
+                        <div>
+                            <input asp-for="ImageInputModel.ImageDescription" placeholder="@Html.DisplayNameFor(model => model.ImageInputModel.ImageDescription)" class="form-control" />
+                            <span asp-validation-for="ImageInputModel.ImageDescription"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="m-3 p-2">
+                            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> Länka bilden</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        }
+        @if (Model.SubCategories is not null)
+        {
+            <ul class="sitemap">
+                @foreach (var category in Model.SubCategories)
+                {
+                    <li class="my-2">
+                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)">@category.MenuText</a>
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>

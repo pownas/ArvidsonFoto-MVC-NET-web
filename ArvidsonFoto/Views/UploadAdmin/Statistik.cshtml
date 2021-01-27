@@ -1,5 +1,4 @@
-﻿@inject ICategoryService _categoryService
-@section MetaData {
+﻿@section MetaData {
     <meta name="robots" content="noindex" />
 }
 @{
@@ -12,7 +11,7 @@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-speedometer2 ml-1"></i></li>
     </ol>
 </nav>
-<h1><i class="bi bi-speedometer2 mr-2"></i>@ViewData["Title"]</h1>
+<h1 class="offset-md-4"><i class="bi bi-speedometer2 mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
@@ -22,5 +21,8 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du se statistik från hemsidan:</p>
+        <div id="page-statistics">
+            <partial name="_HomepageStatistics" />
+        </div>
     </div>
 </div>
