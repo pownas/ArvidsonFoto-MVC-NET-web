@@ -12,7 +12,7 @@
     </ol>
 </nav>
 
-<h1><i class="bi bi-lock mr-2"></i>@ViewData["Title"]</h1>
+<h1 class="offset-md-4"><i class="bi bi-lock mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
@@ -24,7 +24,7 @@
         @{
             if (User.Identity.IsAuthenticated)
             {
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
+                <form class="form-inline mt-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
                     <button type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-lock"></i> Klicka här för att logga ut</button>
                 </form>
             }
