@@ -6,9 +6,9 @@ namespace ArvidsonFoto.Models
     public class UploadImageInputModel
     {
         //public int ImageId { get; set; }
-        //public int? ImageHuvudfamilj { get; set; }
-        //public int? ImageFamilj { get; set; }
-        //public int ImageArt { get; set; }
+        public int? ImageHuvudfamilj { get; set; }
+        public int? ImageFamilj { get; set; }
+        public int ImageArt { get; set; }
 
         [Display(Name= "Filnamn")]
         [Required(ErrorMessage = "Ange filnamn")]
@@ -23,7 +23,9 @@ namespace ArvidsonFoto.Models
         [Display(Name = "Kommentar")]
         [DataType(DataType.Text)]
         public string ImageDescription { get; set; }
-        
+
+        public bool ImageCreated { get; set; }
+
         //public DateTime ImageUpdate { get; set; }
     }
 }
