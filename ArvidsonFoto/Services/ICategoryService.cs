@@ -7,13 +7,15 @@ namespace ArvidsonFoto.Data
 {
     public interface ICategoryService
     {
-        bool SetCategoryInsert(TblMenu category);
+        bool AddCategory(TblMenu category);
         
         int GetLastId();
         
         int GetIdByName(string categoryName);
 
         string GetNameById(int? id);
+
+        public TblMenu GetById(int? id);
 
         TblMenu GetByName(string categoryName);
 

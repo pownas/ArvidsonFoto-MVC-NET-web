@@ -17,29 +17,26 @@ namespace ArvidsonFoto.Data
             _entityContext = context;
         }
 
-        public bool SetCategoryInsert(TblMenu category)
+        public bool AddCategory(TblMenu category)
         {
-            //using (var conn = new SqlConnection(_entityContext.Database))
-            //{
-            //    var parameters = new DynamicParameters();
-            //    parameters.Add("menu_ID", category.menu_ID, DbType.Int32);
-            //    parameters.Add("menu_mainID", category.menu_mainID, DbType.Int32);
-            //    parameters.Add("menu_text", category.menu_text, DbType.String);
-            //    parameters.Add("menu_URLtext", category.menu_URLtext, DbType.String);
-            //    parameters.Add("menu_pagecounter", category.menu_pagecounter, DbType.Int32);
-
-            //    // Raw SQL method
-            //    const string query = @"INSERT INTO tbl_menu (menu_ID, menu_mainID, menu_text, menu_URLtext, menu_pagecounter) VALUES (@menu_ID, @menu_mainID, @menu_text, @menu_URLtext, @menu_pagecounter)";
-            //    await conn.ExecuteAsync(query, new { category.menu_ID, category.menu_mainID, category.menu_text, category.menu_URLtext, category.menu_pagecounter }, commandType: CommandType.Text);
-            //}
-            //return true;
-            throw new NotImplementedException();
+            bool success = false;
+            try {
+                _entityContext.TblMenus.Add(category);
+                _entityContext.SaveChanges();
+                success = true;
+            }
+            catch(Exception ex)
+            {
+                success = false;
+                throw new Exception("Fel vid skapande av kategori. Felmeddelande: " + ex.Message);
+            }
+            return success;
         }
 
         public int GetLastId()
         {
             int highestID = -1;
-            highestID = _entityContext.TblMenus.LastOrDefault().MenuId;
+            highestID = _entityContext.TblMenus.OrderBy(c => c.MenuId).LastOrDefault().MenuId;
             return highestID;
         }
 
@@ -47,6 +44,12 @@ namespace ArvidsonFoto.Data
         {
             TblMenu category = new TblMenu();
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
+            return category;
+        }
+
+        public TblMenu GetById(int? id)
+        {
+            TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuId.Equals(id));
             return category;
         }
 
@@ -80,11 +83,7 @@ namespace ArvidsonFoto.Data
             TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
             if (category is not null)
                 menuID = category.MenuId;
-            //using (var conn = new SqlConnection(_sqlConn.Config))
-            //{
-            //    var sql = @"SELECT menu_ID FROM tbl_menu WHERE menu_text = '" + categoryName + "'";
-            //    menuID = await conn.QuerySingleAsync<int>(sql);
-            //}
+
             return menuID;
         }
     }

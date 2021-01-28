@@ -1,4 +1,5 @@
-﻿@inject ICategoryService _categoryService
+﻿@model UploadNewCategoryModel
+@inject ICategoryService _categoryService
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -22,6 +23,31 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du lägga till en ny kategori på hemsidan:</p>
-        <select>Välj?</select>
+        @if (Model.CategoryCreated)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Skapat nya kategorin: <span class="text-light">@Model.MenuText</span></h5>
+        }
+        <form method="post" asp-action="CreateCategory">
+            @Html.AntiForgeryToken()
+            <div class="form-group col-md-6">
+                <label asp-for="MainMenuId">Vart ska kategorin ligga under?</label>
+                <select asp-for="MainMenuId" class="form-control">
+                    <option selected disabled value="">Välj kategori...</option>
+                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.MenuText))
+                    {
+                        <option value="@category.MenuId">@category.MenuText</option>
+                    }
+                </select>
+                <span asp-validation-for="MainMenuId"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="MenuText">Nya kategorins namn</label>
+                <input asp-for="MenuText" type="text" class="form-control">
+                <span asp-validation-for="MenuText"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <button type="submit" class="btn btn-light btn-outline-primary text-dark">Skapa kategori</button>
+            </div>
+        </form>
     </div>
 </div>
