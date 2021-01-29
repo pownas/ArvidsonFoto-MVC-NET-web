@@ -6,8 +6,8 @@ namespace ArvidsonFoto.Data
 {
     public interface IImageService
     {
-        bool SetImageInsert(TblImage image);
-        
+        public bool AddImage(TblImage image);
+
         int GetImageLastId();
 
         TblImage GetById(int imageId);

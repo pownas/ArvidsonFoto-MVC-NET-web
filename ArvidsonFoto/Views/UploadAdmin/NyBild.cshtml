@@ -3,9 +3,6 @@
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
-@{
-
-}
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -23,44 +20,22 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du länka till en ny bild på hemsidan:</p>
+        @if (Model.ImageInputModel.ImageCreated)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(Model.ImageInputModel.ImageArt), @Model.ImageInputModel.ImageUrl</span></h5>
+        }
         @if (Model.SelectedCategory is not null)
         {
             <h3>Vald kategori: @Model.SelectedCategory.MenuText</h3>
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.MenuId).Count.Equals(0))
             {
-                <form method="post" asp-action="SendMessage" class="col-12 col-sm-6"> @*<!-- asp-route-Page="@Model.ReturnPageUrl" -->*@
-                    <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="ImageInputModel.ImageUrl" class="control-label"></label>
-                        <div>
-                            <input asp-for="ImageInputModel.ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: IMG_1234" class="form-control" />
-                            <span asp-validation-for="ImageInputModel.ImageUrl"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ImageInputModel.ImageDate" class="control-label"></label>
-                        <div>
-                            <input asp-for="ImageInputModel.ImageDate" placeholder="YYYY-MM-DD" class="form-control" />
-                            <span asp-validation-for="ImageInputModel.ImageDate"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ImageInputModel.ImageDescription" class="control-label"></label>
-                        <div>
-                            <input asp-for="ImageInputModel.ImageDescription" placeholder="@Html.DisplayNameFor(model => model.ImageInputModel.ImageDescription)" class="form-control" />
-                            <span asp-validation-for="ImageInputModel.ImageDescription"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="m-3 p-2">
-                            <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-light btn-outline-primary text-dark">
-                                <i class="bi bi-link-45deg"></i> Länka bilden
-                            </a>
-                            @*<button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> Länka bilden</button>*@
-                        </div>
-                    </div>
-                </form>
+                Model.ImageInputModel.ImageArt = Model.SelectedCategory.MenuId;
+                if (Model.SelectedCategory.MenuMainId is not null)
+                    Model.ImageInputModel.ImageFamilj = Model.SelectedCategory.MenuMainId;
+                if (_categoryService.GetById(Model.SelectedCategory.MenuMainId).MenuMainId is not null)
+                    Model.ImageInputModel.ImageHuvudfamilj = _categoryService.GetById(Model.SelectedCategory.MenuMainId).MenuMainId;
+                <partial name="_ImageInputForm" model="Model.ImageInputModel" />
             }
         }
         @if (Model.SubCategories is not null)

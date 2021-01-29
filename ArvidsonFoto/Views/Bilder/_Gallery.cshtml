@@ -23,7 +23,9 @@
 
 @if (imageList is null || imageList.Count.Equals(0))
 {
-    <p>Det finns inga bilder i denna kategorin...</p>
+    if(ViewData["Title"].Equals("Fåglar") is false) {
+        <p>Det finns inga bilder i denna kategorin...</p>
+    }
 }
 else if (Model.ErrorMessage is not null)
 {
