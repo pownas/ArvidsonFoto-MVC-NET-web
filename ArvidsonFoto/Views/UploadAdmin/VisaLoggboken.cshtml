@@ -1,9 +1,6 @@
-﻿@inject ICategoryService _categoryService
+﻿@model List<string>
 @section MetaData {
     <meta name="robots" content="noindex" />
-}
-@{
-
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -22,5 +19,13 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här nedan visas loggboken från hemsidan:</p>
+        @foreach (var line in Model)
+        {
+            string lineColor = "";
+            lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;
+            lineColor = line.Contains("[WRN]") ? "bg-warning text-dark" : lineColor;
+            lineColor = line.Contains("[ERR]") ? "bg-danger" : lineColor;
+            <p class="@lineColor">@line</p>
+        }
     </div>
 </div>
