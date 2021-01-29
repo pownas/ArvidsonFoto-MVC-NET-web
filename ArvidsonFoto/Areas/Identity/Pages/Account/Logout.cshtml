@@ -1,19 +1,37 @@
 ﻿@page
 @model LogoutModel
+@section MetaData { <meta name="robots" content="noindex" /> }
 @{
     ViewData["Title"] = "Logga ut";
 }
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-lock ml-1"></i></li>
+    </ol>
+</nav>
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (User.Identity.IsAuthenticated)
-    {
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
-            <button type="submit" class="btn btn-light btn-outline-primary text-dark">Klicka här för att logga ut</button>
-        </form>
-    }
-    else
-    {
-        <p>Du har loggats ut.</p>
-    }
-}
+<h1 class="offset-md-4"><i class="bi bi-lock mr-2"></i>@ViewData["Title"]</h1>
+
+<div class="row">
+    <nav class="nav col-12 col-md-4 p-0">
+        <ul class="p-0 col-11">
+            <partial name="_NavUploadAdmin" />
+        </ul>
+    </nav>
+    <div class="col-12 col-md-8">
+        @{
+            if (User.Identity.IsAuthenticated)
+            {
+                <form class="form-inline mt-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
+                    <button type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-lock"></i> Klicka här för att logga ut</button>
+                </form>
+            }
+            else
+            {
+                <p>Du har loggats ut.</p>
+            }
+        }
+    </div>
+</div>

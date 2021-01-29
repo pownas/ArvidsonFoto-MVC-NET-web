@@ -8,18 +8,39 @@
         Layout = "/Areas/Identity/Pages/_Layout.cshtml";
     }
 }
+@section MetaData {
+    <meta name="robots" content="noindex" /> 
+}
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/Areas/Identity/Pages/Account/Manage">Hantera kontot</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-person ml-1"></i></li>
+    </ol>
+</nav>
 
-<h2>Manage your account</h2>
+<h1 class="offset-md-4"><i class="bi bi-file-person mr-2"></i>Hantera ditt konto</h1>
 
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+<div class="row">
+    <nav class="nav col-12 col-md-4 p-0">
+        <ul class="p-0 col-11">
+            <partial name="_NavUploadAdmin" />
+        </ul>
+    </nav>
+    <div class="col-12 col-md-8">
+        <div>
+            <h4>Ändra konto-inställningar:</h4>
+            <p>(Dessa sidorna är inte klara...)</p>
+            <hr />
+            <div class="row">
+                <div class="col-md-3">
+                    <partial name="_ManageNav" />
+                </div>
+                <div class="col-md-9">
+                    @RenderBody()
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" /> <!-- Används för att kompilera scss-filer till css -->
     <PackageReference Include="MailKit" Version="2.10.1" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" /> <!-- Används för scaffolding av kod till Identity-sidorna -->
+    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" /> --><!-- Används för scaffolding av kod till Identity-sidorna -->
     <PackageReference Include="MimeKit" Version="2.10.1" /> <!-- Används för kryptering av skicka mail -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.2" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" /> <!-- Används för inloggning på sidan -->
