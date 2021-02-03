@@ -18,7 +18,6 @@ namespace ArvidsonFoto.Data
         {
         }
 
-        public virtual DbSet<TblAdmin> TblAdmins { get; set; }
         public virtual DbSet<TblGb> TblGbs { get; set; }
         public virtual DbSet<TblImage> TblImages { get; set; }
         public virtual DbSet<TblMenu> TblMenus { get; set; }
@@ -28,35 +27,6 @@ namespace ArvidsonFoto.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Finnish_Swedish_CI_AS");
-
-            modelBuilder.Entity<TblAdmin>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("tbl_admin");
-
-                entity.Property(e => e.AdminId).HasColumnName("admin_ID");
-
-                entity.Property(e => e.AdminLastonline)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("admin_lastonline");
-
-                entity.Property(e => e.AdminMail)
-                    .HasMaxLength(100)
-                    .HasColumnName("admin_mail");
-
-                entity.Property(e => e.AdminName)
-                    .HasMaxLength(30)
-                    .HasColumnName("admin_name");
-
-                entity.Property(e => e.AdminPass)
-                    .HasMaxLength(255)
-                    .HasColumnName("admin_pass");
-
-                entity.Property(e => e.AdminUser)
-                    .HasMaxLength(20)
-                    .HasColumnName("admin_user");
-            });
 
             modelBuilder.Entity<TblGb>(entity =>
             {
