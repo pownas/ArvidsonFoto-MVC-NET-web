@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -82,6 +83,7 @@ namespace ArvidsonFoto.Controllers
             }
             else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
             {
+                Log.Information("En användare sökte efter: "+s); //Borde logga i databas eller separat sök-fil... 
                 ViewData["Title"] = "Söker efter: " + s;
                 List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
@@ -92,6 +94,8 @@ namespace ArvidsonFoto.Controllers
                 }
                 viewModel.DisplayImagesList = listOfFirstSearchedImages;
                 viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+                if (listOfFirstSearchedImages.Count == 0)
+                    Log.Warning("Hittade inget vid sökning: "+s); //Borde logga i databas och då sätta ett "found" värde till false.
             }
             return View(viewModel);
         }
