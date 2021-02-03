@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ArvidsonFoto.Migrations
 {
-    public partial class Skapartabeller : Migration
+    public partial class SkaparPageCounterTabell : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,8 @@ namespace ArvidsonFoto.Migrations
                 name: "tbl_gb",
                 columns: table => new
                 {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GB_ID = table.Column<int>(type: "int", nullable: false),
                     GB_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     GB_email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -36,13 +38,15 @@ namespace ArvidsonFoto.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_tbl_gb", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "tbl_images",
                 columns: table => new
                 {
-                    image_ID = table.Column<int>(type: "int", nullable: false),
+                    image_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     image_huvudfamilj = table.Column<int>(type: "int", nullable: true),
                     image_familj = table.Column<int>(type: "int", nullable: true),
                     image_art = table.Column<int>(type: "int", nullable: false),
@@ -53,22 +57,40 @@ namespace ArvidsonFoto.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_tbl_images", x => x.image_ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "tbl_menu",
                 columns: table => new
                 {
-                    menu_ID = table.Column<int>(type: "int", nullable: false),
-                    menu_mainID = table.Column<short>(type: "smallint", nullable: true),
+                    menu_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    menu_mainID = table.Column<int>(type: "int", nullable: true),
                     menu_text = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     menu_URLtext = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    menu_ENGtext = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     menu_lastshowdate = table.Column<DateTime>(type: "datetime", nullable: true),
                     menu_pagecounter = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_tbl_menu", x => x.menu_ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_PageCounter",
+                columns: table => new
+                {
+                    PageCounter_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PageCounter_Views = table.Column<int>(type: "int", nullable: false),
+                    PageCounter_Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PageCounter_MonthViewed = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    PageCounter_LastShowDate = table.Column<DateTime>(type: "datetime", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_PageCounter", x => x.PageCounter_ID);
                 });
         }
 
@@ -85,6 +107,9 @@ namespace ArvidsonFoto.Migrations
 
             migrationBuilder.DropTable(
                 name: "tbl_menu");
+
+            migrationBuilder.DropTable(
+                name: "tbl_PageCounter");
         }
     }
 }

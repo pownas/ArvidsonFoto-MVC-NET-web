@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArvidsonFoto.Migrations
 {
     [DbContext(typeof(ArvidsonFotoDbContext))]
-    [Migration("20210203220908_SkaparPageCounterTabell")]
+    [Migration("20210203225546_SkaparPageCounterTabell")]
     partial class SkaparPageCounterTabell
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
