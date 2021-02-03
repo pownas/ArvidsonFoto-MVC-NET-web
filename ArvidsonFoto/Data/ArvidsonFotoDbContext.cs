@@ -22,6 +22,7 @@ namespace ArvidsonFoto.Data
         public virtual DbSet<TblGb> TblGbs { get; set; }
         public virtual DbSet<TblImage> TblImages { get; set; }
         public virtual DbSet<TblMenu> TblMenus { get; set; }
+        public virtual DbSet<TblPageCounter> TblPageCounter { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -148,6 +149,29 @@ namespace ArvidsonFoto.Data
                     .HasColumnName("menu_URLtext");
 
                 entity.HasKey("MenuId");
+            });
+
+            modelBuilder.Entity<TblPageCounter>(entity =>
+            {
+                entity.ToTable("tbl_PageCounter");
+
+                entity.Property(e => e.Id).HasColumnName("PageCounter_ID");
+
+                entity.Property(e => e.PageViews).HasColumnName("PageCounter_Views");
+
+                entity.Property(e => e.PageName)
+                    .HasMaxLength(50)
+                    .HasColumnName("PageCounter_Name");
+
+                entity.Property(e => e.MonthViewed)
+                    .HasMaxLength(20)
+                    .HasColumnName("PageCounter_MonthViewed");
+
+                entity.Property(e => e.LastShowDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("PageCounter_LastShowDate");
+
+                entity.HasKey("Id");
             });
 
             OnModelCreatingPartial(modelBuilder);
