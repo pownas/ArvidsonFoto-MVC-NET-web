@@ -5,6 +5,9 @@
 lightbox.on('open', (target) => {
     console.log('lightbox opened');
 });
+
+////Andra inställningar: 
+
     //var lightboxDescription = GLightbox({
     //    selector: '.glightbox2'
     //});

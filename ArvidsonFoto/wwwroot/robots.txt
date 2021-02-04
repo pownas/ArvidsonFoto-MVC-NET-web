@@ -1,0 +1,3 @@
+﻿User-agent: *
+Sitemap: https://arvidsonfoto.se/sitemap.xml
+Disallow: /Bilder/

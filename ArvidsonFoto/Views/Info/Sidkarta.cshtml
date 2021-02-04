@@ -1,4 +1,8 @@
-﻿@inject ICategoryService _categoryService
+﻿@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
+@inject ICategoryService _categoryService
 @{
     List<TblMenu> categories;
     categories = _categoryService.GetAll();

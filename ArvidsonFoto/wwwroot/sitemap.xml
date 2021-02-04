@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://arvidsonfoto.se/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1</priority>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Senast/Fotograferad</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Senast/Uppladdad</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Senast/Per%20kategori</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!--<url>
+    <loc>https://arvidsonfoto.se/Senast/Bildkalender</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>-->
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/K%C3%B6p_av_bilder</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/G%C3%A4stbok</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/Kontakta</loc>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/Om_mig</loc>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/Sidkarta</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/Info/Copyright</loc>
+  </url>
+
+  <url>
+    <loc>https://arvidsonfoto.se/S%C3%B6k</loc>
+  </url>
+
+</urlset>
