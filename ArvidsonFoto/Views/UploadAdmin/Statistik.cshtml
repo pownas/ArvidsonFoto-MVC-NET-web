@@ -1,8 +1,9 @@
 ﻿@section MetaData {
     <meta name="robots" content="noindex" />
 }
+@inject IPageCounterService _pageCounterService
 @{
-
+    List<TblPageCounter> allPagesCounts = _pageCounterService.GetAllGroupedByPageCount();
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -23,6 +24,27 @@
         <p>Här kan du se statistik från hemsidan:</p>
         <div id="page-statistics">
             <partial name="_HomepageStatistics" />
+
+            <h4>Alla sidvisningar genom tiderna:</h4>
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Visningar</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Senast besökt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pageViewed in allPagesCounts)
+                    {
+                        <tr>
+                            <th scope="row">@pageViewed.PageViews</th>
+                            <td>@pageViewed.PageName</td>
+                            <td>@pageViewed.LastShowDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
