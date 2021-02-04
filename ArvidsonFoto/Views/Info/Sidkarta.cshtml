@@ -1,6 +1,4 @@
-﻿@using System.Linq
-@using ArvidsonFoto.Services
-@inject ICategoryService _categoryService
+﻿@inject ICategoryService _categoryService
 @{
     List<TblMenu> categories;
     categories = _categoryService.GetAll();
