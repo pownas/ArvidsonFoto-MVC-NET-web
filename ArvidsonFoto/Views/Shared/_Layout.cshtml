@@ -3,19 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="ArvidsonFoto-version" content="v3.0.1 - https://github.com/pownas/ArvidsonFoto-MVC-NET5/tree/5cc3f6a " /> <!-- Bör vara: /tree/ - för visning av filträdet... (Annars fungerar också: /commit/ ) -->
+    <meta name="ArvidsonFoto-version" content="v3.0.1 - Commit: https://github.com/pownas/ArvidsonFoto-MVC-NET5/commit/e00a740 || Fil-trädet: https://github.com/pownas/ArvidsonFoto-MVC-NET5/tree/e00a740 " />
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
-    @*<!-- Se info i "site.scss" för dessa imports... -->*@
-    @*<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />*@
-    @*<link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-core-css.css" />*@
-    @*<link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-mint/sm-mint.css" />*@
-    @*<link rel="stylesheet" href="lib/jQuery.smartmenus/css/sm-mint-addon.css" />*@
-    @*<link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.min.css" />*@
-    @*<link rel="stylesheet" href="lib/glightbox/css/glightbox.min.css" />*@
-    <link rel="stylesheet" href="css/site.min.css" />
+    <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
     <header>
