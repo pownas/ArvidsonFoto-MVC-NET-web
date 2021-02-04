@@ -52,7 +52,7 @@ namespace ArvidsonFoto.Services
                 Log.Error("Error while updating PageCounter. Error-message: " + ex.Message);
             }
         }
-
+        
         /// <summary>
         /// En funktion som hämtar månadens sidvisningar. Exempel på input: "2021-02"
         /// </summary>
