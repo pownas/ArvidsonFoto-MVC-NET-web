@@ -44,3 +44,11 @@ INSERT INTO tbl_PageCounter VALUES
 (2473,'Copyright','2021-01','2021-02-03 20:23:25.000'),
 (2611,'Sök','2021-01','2021-02-03 22:33:06.000'),
 (5466,'Senast-Per kategori','2021-01','2021-02-04 03:49:33.000');
+
+
+
+--För att välja ut den datan ovan, körs detta scriptet: 
+SELECT SUM(PageCounter_Views) AS PageCounter_Views, PageCounter_Name, MAX(PageCounter_LastShowDate) AS PageCounter_LastShowDate
+	  FROM tbl_PageCounter 
+	  GROUP BY PageCounter_Name
+	  ORDER BY PageCounter_Views DESC;
