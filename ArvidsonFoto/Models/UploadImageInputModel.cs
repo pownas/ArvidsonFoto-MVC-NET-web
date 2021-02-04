@@ -22,6 +22,7 @@ namespace ArvidsonFoto.Models
         
         [Display(Name = "Kommentar")]
         [DataType(DataType.Text)]
+        [MaxLength(150,ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
         public string ImageDescription { get; set; }
 
         public bool ImageCreated { get; set; }

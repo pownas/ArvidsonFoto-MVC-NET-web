@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArvidsonFoto.Models;
 using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
 using Microsoft.Data.SqlClient;
+using Serilog;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public class CategoryService : ICategoryService
     {
@@ -15,6 +16,24 @@ namespace ArvidsonFoto.Data
         public CategoryService(ArvidsonFotoDbContext context)
         {
             _entityContext = context;
+        }
+
+        /// <summary>
+        /// Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+        /// </summary>
+        /// <param name="categoryToUpdate">Den kategorin som ska uppdateras med MenuPagecounter och MenuLastshowdate.</param>
+        public void AddPageCount(TblMenu categoryToUpdate)
+        {
+            try
+            {
+                categoryToUpdate.MenuPagecounter += 1;
+                categoryToUpdate.MenuLastshowdate = DateTime.Now;
+                _entityContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while updating category: "+categoryToUpdate.MenuText+", PageCounter. Error-message: " + ex.Message);
+            }
         }
 
         public bool AddCategory(TblMenu category)

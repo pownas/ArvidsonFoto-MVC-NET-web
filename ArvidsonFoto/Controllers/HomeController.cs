@@ -1,23 +1,27 @@
-﻿using ArvidsonFoto.Models;
-using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArvidsonFoto.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
+        private IPageCounterService _pageCounterService;
 
+        public HomeController(ArvidsonFotoDbContext context)
+        {
+            _pageCounterService = new PageCounterService(context);
         }
 
         public IActionResult Index()
         {
+            _pageCounterService.AddPageCount("Startsidan");
             var viewModel = new GalleryViewModel();
             return View(viewModel);
         }
