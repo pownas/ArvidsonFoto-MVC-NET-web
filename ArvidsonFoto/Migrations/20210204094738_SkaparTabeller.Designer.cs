@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArvidsonFoto.Migrations
 {
     [DbContext(typeof(ArvidsonFotoDbContext))]
-    [Migration("20210121114415_Skapar tabeller")]
-    partial class Skapartabeller
+    [Migration("20210204094738_SkaparTabeller")]
+    partial class SkaparTabeller
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,41 +22,14 @@ namespace ArvidsonFoto.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("ArvidsonFoto.Models.TblAdmin", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int")
-                        .HasColumnName("admin_ID");
-
-                    b.Property<DateTime?>("AdminLastonline")
-                        .HasColumnType("smalldatetime")
-                        .HasColumnName("admin_lastonline");
-
-                    b.Property<string>("AdminMail")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("admin_mail");
-
-                    b.Property<string>("AdminName")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("admin_name");
-
-                    b.Property<string>("AdminPass")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("admin_pass");
-
-                    b.Property<string>("AdminUser")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("admin_user");
-
-                    b.ToTable("tbl_admin");
-                });
-
             modelBuilder.Entity("ArvidsonFoto.Models.TblGb", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID")
+                        .UseIdentityColumn();
+
                     b.Property<DateTime?>("GbDate")
                         .HasColumnType("smalldatetime")
                         .HasColumnName("GB_date");
@@ -89,11 +62,19 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("GB_text");
 
+                    b.HasKey("Id");
+
                     b.ToTable("tbl_gb");
                 });
 
             modelBuilder.Entity("ArvidsonFoto.Models.TblImage", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID")
+                        .UseIdentityColumn();
+
                     b.Property<int>("ImageArt")
                         .HasColumnType("int")
                         .HasColumnName("image_art");
@@ -103,8 +84,8 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnName("image_date");
 
                     b.Property<string>("ImageDescription")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("image_description");
 
                     b.Property<int?>("ImageFamilj")
@@ -128,15 +109,18 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("image_URL");
 
+                    b.HasKey("Id");
+
                     b.ToTable("tbl_images");
                 });
 
             modelBuilder.Entity("ArvidsonFoto.Models.TblMenu", b =>
                 {
-                    b.Property<string>("MenuEngtext")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("menu_ENGtext");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID")
+                        .UseIdentityColumn();
 
                     b.Property<int>("MenuId")
                         .HasColumnType("int")
@@ -146,8 +130,8 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("menu_lastshowdate");
 
-                    b.Property<short?>("MenuMainId")
-                        .HasColumnType("smallint")
+                    b.Property<int?>("MenuMainId")
+                        .HasColumnType("int")
                         .HasColumnName("menu_mainID");
 
                     b.Property<int?>("MenuPagecounter")
@@ -164,7 +148,40 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("menu_URLtext");
 
+                    b.HasKey("Id");
+
                     b.ToTable("tbl_menu");
+                });
+
+            modelBuilder.Entity("ArvidsonFoto.Models.TblPageCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PageCounter_ID")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("LastShowDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("PageCounter_LastShowDate");
+
+                    b.Property<string>("MonthViewed")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("PageCounter_MonthViewed");
+
+                    b.Property<string>("PageName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("PageCounter_Name");
+
+                    b.Property<int>("PageViews")
+                        .HasColumnType("int")
+                        .HasColumnName("PageCounter_Views");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_PageCounter");
                 });
 #pragma warning restore 612, 618
         }

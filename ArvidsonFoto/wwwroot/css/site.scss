@@ -156,10 +156,13 @@ body {
 
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-img-startpage { min-width: 5.8rem; }
-.thumb-figcaption-startpage { max-width: 5.8rem; }
+.thumb-figcaption-startpage { max-width: 6.1rem; }
 
 .thumb-img-gallery{ min-width: 8rem; }
-.thumb-figcaption-gallery { max-width: 8rem; }
+.thumb-figcaption-gallery { 
+    min-width: 4rem;
+    max-width: 9rem;
+}
 .thumb-a-class { padding: inherit; }
 
 @media (max-width: 380px){
@@ -168,7 +171,11 @@ body {
     .thumb-a-class { padding: 1em 5px; }
 }
 @media (max-width: 320px) {
-    .thumb-figcaption-startpage { max-width: 4rem; }
-    .thumb-figcaption-gallery { max-width: 4rem; }
+    .thumb-figcaption-startpage { max-width: 4.5rem; }
+    .thumb-figcaption-gallery { 
+        min-width: 2rem;
+        max-width: 4.5rem;
+
+    }
 }
 /* -------- End Gallery-fix på mobil ------------ */

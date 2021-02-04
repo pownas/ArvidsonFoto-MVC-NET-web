@@ -1,15 +1,16 @@
-﻿using ArvidsonFoto.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using Microsoft.AspNetCore.Mvc;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using Serilog;
-using ArvidsonFoto.Data;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -18,24 +19,28 @@ namespace ArvidsonFoto.Controllers
         private ICategoryService _categoryService;
         private IImageService _imageService;
         private IGuestBookService _guestbookService;
+        private IPageCounterService _pageCounterService;
 
         public InfoController(ArvidsonFotoDbContext context)
         {
             _categoryService = new CategoryService(context);
             _imageService = new ImageService(context);
             _guestbookService = new GuestBookService(context);
+            _pageCounterService = new PageCounterService(context);
         }
 
         public IActionResult Index()
         {
             ViewData["Title"] = "Info";
+            _pageCounterService.AddPageCount("Info");
             return View();
         }
 
         public IActionResult Gästbok(GuestbookInputModel inputModel)
         {
             ViewData["Title"] = "Gästbok";
-            
+            _pageCounterService.AddPageCount("Gästbok");
+
             if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
             {
                 inputModel = new GuestbookInputModel()
@@ -183,6 +188,7 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Kontakta(ContactFormModel contactFormModel)
         {
             ViewData["Title"] = "Kontaktinformation";
+            _pageCounterService.AddPageCount("Kontaktinformation");
 
             if (contactFormModel.FormSubmitDate < new DateTime(2000,01,01) && contactFormModel.Message is null)
             {
@@ -201,6 +207,7 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Köp_av_bilder(ContactFormModel contactFormModel, string imgId)
         {
             ViewData["Title"] = "Köp av bilder";
+            _pageCounterService.AddPageCount("Köp av bilder");
             if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
             {
                 contactFormModel = new ContactFormModel()
@@ -234,18 +241,21 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Om_mig()
         {
             ViewData["Title"] = "Om mig, Torbjörn Arvidson";
+            _pageCounterService.AddPageCount("Om mig");
             return View();
         }
 
         public IActionResult Sidkarta()
         {
             ViewData["Title"] = "Sidkarta";
+            _pageCounterService.AddPageCount("Sidkarta");
             return View();
         }
 
         public IActionResult Copyright()
         {
             ViewData["Title"] = "Copyright";
+            _pageCounterService.AddPageCount("Copyright");
             return View();
         }
 

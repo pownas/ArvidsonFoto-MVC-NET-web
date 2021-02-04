@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
-using Microsoft.Data.SqlClient;
 using Serilog;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public class GuestBookService : IGuestBookService
     {

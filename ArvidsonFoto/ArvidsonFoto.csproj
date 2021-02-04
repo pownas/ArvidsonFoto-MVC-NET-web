@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" /> <!-- Mapp dit jag styrt att Serilog, ska lägga sina .log-filer -->
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

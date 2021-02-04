@@ -1,11 +1,13 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -13,11 +15,13 @@ namespace ArvidsonFoto.Controllers
     {
         private IImageService _imageService;
         private ICategoryService _categoryService;
+        private IPageCounterService _pageCounterService;
 
         public BilderController(ArvidsonFotoDbContext context)
         {
             _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
+            _pageCounterService = new PageCounterService(context);
         }
 
         [Route("/[controller]/{subLevel1}")]
@@ -59,6 +63,9 @@ namespace ArvidsonFoto.Controllers
                 viewModel.CurrentUrl = "./Bilder/" + subLevel1;
             }
 
+            _pageCounterService.AddPageCount("Bilder");
+            _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
@@ -75,6 +82,8 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sök")]
         public IActionResult Sök(string s)
         {
+            _pageCounterService.AddPageCount("Sök");
+
             GalleryViewModel viewModel = new GalleryViewModel();
             if (s is null) //Besöker sidan utan att skrivit in någon sökning
             {
@@ -82,6 +91,7 @@ namespace ArvidsonFoto.Controllers
             }
             else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
             {
+                Log.Information("En användare sökte efter: "+s); //Borde logga i databas eller separat sök-fil... 
                 ViewData["Title"] = "Söker efter: " + s;
                 List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
@@ -92,6 +102,8 @@ namespace ArvidsonFoto.Controllers
                 }
                 viewModel.DisplayImagesList = listOfFirstSearchedImages;
                 viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+                if (listOfFirstSearchedImages.Count == 0)
+                    Log.Warning("Hittade inget vid sökning: "+s); //Borde logga i databas och då sätta ett "found" värde till false.
             }
             return View(viewModel);
         }

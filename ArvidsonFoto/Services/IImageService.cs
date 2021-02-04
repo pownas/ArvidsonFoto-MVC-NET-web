@@ -1,8 +1,7 @@
-﻿using System;
+﻿using ArvidsonFoto.Models;
 using System.Collections.Generic;
-using ArvidsonFoto.Models;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public interface IImageService
     {

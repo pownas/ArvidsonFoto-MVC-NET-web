@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArvidsonFoto.Models;
+using System.Collections.Generic;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public interface ICategoryService
     {
+        void AddPageCount(TblMenu categoryToUpdate);
+
         bool AddCategory(TblMenu category);
         
         int GetLastId();

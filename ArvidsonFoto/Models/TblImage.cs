@@ -7,6 +7,7 @@ namespace ArvidsonFoto.Models
 {
     public partial class TblImage
     {
+        public int Id { get; set; }
         public int ImageId { get; set; }
         public int? ImageHuvudfamilj { get; set; }
         public int? ImageFamilj { get; set; }
