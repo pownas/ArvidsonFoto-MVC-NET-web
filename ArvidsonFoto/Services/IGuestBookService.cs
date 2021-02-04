@@ -1,8 +1,7 @@
 ﻿using ArvidsonFoto.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public interface IGuestBookService
     {

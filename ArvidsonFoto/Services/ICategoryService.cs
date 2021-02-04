@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArvidsonFoto.Models;
+using System.Collections.Generic;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public interface ICategoryService
     {

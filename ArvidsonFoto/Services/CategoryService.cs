@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArvidsonFoto.Models;
 using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
 using Microsoft.Data.SqlClient;
+using Serilog;
 
-namespace ArvidsonFoto.Data
+namespace ArvidsonFoto.Services
 {
     public class CategoryService : ICategoryService
     {

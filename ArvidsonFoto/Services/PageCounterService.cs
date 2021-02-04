@@ -1,9 +1,9 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
 using Serilog;
 
 namespace ArvidsonFoto.Services

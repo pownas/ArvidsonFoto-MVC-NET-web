@@ -1,6 +1,4 @@
-﻿using ArvidsonFoto.Models;
-
-namespace ArvidsonFoto.Services
+﻿namespace ArvidsonFoto.Services
 {
     public interface IPageCounterService
     {

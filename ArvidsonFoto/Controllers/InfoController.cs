@@ -1,15 +1,16 @@
-﻿using ArvidsonFoto.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using Microsoft.AspNetCore.Mvc;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using Serilog;
-using ArvidsonFoto.Data;
 
 namespace ArvidsonFoto.Controllers
 {

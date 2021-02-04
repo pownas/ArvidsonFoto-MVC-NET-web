@@ -1,11 +1,12 @@
-﻿using ArvidsonFoto.Models;
-using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArvidsonFoto.Controllers
 {
