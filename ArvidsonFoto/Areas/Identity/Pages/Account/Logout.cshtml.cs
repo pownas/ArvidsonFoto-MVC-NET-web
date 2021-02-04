@@ -29,7 +29,7 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
         {
             Log.Information("User: "+User.Identity.Name+", logging out.");
             await _signInManager.SignOutAsync();
-            Log.Information("User logged out.");
+            Log.Information("User logged out successfully.");
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

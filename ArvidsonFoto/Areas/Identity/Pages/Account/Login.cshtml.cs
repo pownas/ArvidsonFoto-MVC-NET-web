@@ -85,7 +85,7 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    Log.Information("User " +User.Identity.Name+ " logged in.");
+                    Log.Information("User: " + Input.Email + ", logged in.");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
