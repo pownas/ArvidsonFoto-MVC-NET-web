@@ -34,6 +34,9 @@ namespace ArvidsonFoto.Data
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.GbId)
+                    .HasColumnName("GB_ID");
+
                 entity.Property(e => e.GbDate)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("GB_date");
@@ -46,8 +49,6 @@ namespace ArvidsonFoto.Data
                     .HasMaxLength(255)
                     .HasColumnName("GB_homepage");
 
-                entity.Property(e => e.GbId).HasColumnName("GB_ID");
-
                 entity.Property(e => e.GbIp)
                     .HasMaxLength(255)
                     .HasColumnName("GB_IP");
@@ -56,7 +57,8 @@ namespace ArvidsonFoto.Data
                     .HasMaxLength(100)
                     .HasColumnName("GB_name");
 
-                entity.Property(e => e.GbText).HasColumnName("GB_text");
+                entity.Property(e => e.GbText)
+                    .HasColumnName("GB_text");
 
                 entity.HasKey("Id");
             });
@@ -65,31 +67,37 @@ namespace ArvidsonFoto.Data
             {
                 entity.ToTable("tbl_images");
 
-                entity.Property(e => e.ImageArt).HasColumnName("image_art");
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ImageId)
+                    .HasColumnName("image_ID");
+
+                entity.Property(e => e.ImageHuvudfamilj)
+                    .HasColumnName("image_huvudfamilj");
+
+                entity.Property(e => e.ImageFamilj)
+                    .HasColumnName("image_familj");
+
+                entity.Property(e => e.ImageArt)
+                    .HasColumnName("image_art");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(50)
+                    .HasColumnName("image_URL");
 
                 entity.Property(e => e.ImageDate)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("image_date");
 
                 entity.Property(e => e.ImageDescription)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .HasColumnName("image_description");
-
-                entity.Property(e => e.ImageFamilj).HasColumnName("image_familj");
-
-                entity.Property(e => e.ImageHuvudfamilj).HasColumnName("image_huvudfamilj");
-
-                entity.Property(e => e.ImageId).HasColumnName("image_ID");
 
                 entity.Property(e => e.ImageUpdate)
                     .HasColumnType("datetime")
                     .HasColumnName("image_update");
 
-                entity.Property(e => e.ImageUrl)
-                    .HasMaxLength(50)
-                    .HasColumnName("image_URL");
-
-                entity.HasKey("ImageId");
+                entity.HasKey("Id");
             });
 
             modelBuilder.Entity<TblMenu>(entity =>
@@ -99,16 +107,20 @@ namespace ArvidsonFoto.Data
                 //entity.Property(e => e.MenuEngtext)
                 //    .HasMaxLength(50)
                 //    .HasColumnName("menu_ENGtext");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.MenuId).HasColumnName("menu_ID");
+                entity.Property(e => e.MenuId)
+                    .HasColumnName("menu_ID");
 
                 entity.Property(e => e.MenuLastshowdate)
                     .HasColumnType("datetime")
                     .HasColumnName("menu_lastshowdate");
 
-                entity.Property(e => e.MenuMainId).HasColumnName("menu_mainID");
+                entity.Property(e => e.MenuMainId)
+                    .HasColumnName("menu_mainID");
 
-                entity.Property(e => e.MenuPagecounter).HasColumnName("menu_pagecounter");
+                entity.Property(e => e.MenuPagecounter)
+                    .HasColumnName("menu_pagecounter");
 
                 entity.Property(e => e.MenuText)
                     .HasMaxLength(50)
@@ -118,7 +130,7 @@ namespace ArvidsonFoto.Data
                     .HasMaxLength(50)
                     .HasColumnName("menu_URLtext");
 
-                entity.HasKey("MenuId");
+                entity.HasKey("Id");
             });
 
             modelBuilder.Entity<TblPageCounter>(entity =>
@@ -127,7 +139,8 @@ namespace ArvidsonFoto.Data
 
                 entity.Property(e => e.Id).HasColumnName("PageCounter_ID");
 
-                entity.Property(e => e.PageViews).HasColumnName("PageCounter_Views");
+                entity.Property(e => e.PageViews)
+                    .HasColumnName("PageCounter_Views");
 
                 entity.Property(e => e.PageName)
                     .HasMaxLength(50)
