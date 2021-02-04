@@ -5,7 +5,7 @@ namespace ArvidsonFoto.Models
 {
     public class UploadImageInputModel
     {
-        //public int ImageId { get; set; }
+        public int ImageId { get; set; }
         public int? ImageHuvudfamilj { get; set; }
         public int? ImageFamilj { get; set; }
         public int ImageArt { get; set; }
@@ -27,6 +27,6 @@ namespace ArvidsonFoto.Models
 
         public bool ImageCreated { get; set; }
 
-        //public DateTime ImageUpdate { get; set; }
+        public DateTime ImageUpdate { get; set; }
     }
 }

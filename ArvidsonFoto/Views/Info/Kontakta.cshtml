@@ -1,5 +1,9 @@
 ﻿@model ContactFormModel
 
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -27,7 +31,7 @@
     <div class="col-sm-offset-3 col-sm-9 col-lg-offset-2 col-lg-10">
         <h2>Kontaktformulär</h2>
     </div>
-    
+
     <div id="ContactForm">
         <partial name="_ContactForm" model="Model" />
     </div>

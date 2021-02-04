@@ -1,4 +1,8 @@
 ﻿@model GalleryViewModel
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -19,7 +23,8 @@
     {
         <p class="text-left">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
 
-        <partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
+        <partial name="_Gallery" model="Model" />
+        @*<!-- Här läggs Galleriet in via en PartialView -->*@
 
         <p class="text-center">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
     }

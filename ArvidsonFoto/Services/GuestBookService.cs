@@ -73,6 +73,24 @@ namespace ArvidsonFoto.Services
             return succeeded;
         }
 
+        public bool DeleteGbPost(int gbId)
+        {
+            bool succeeded = false;
+            try
+            {
+                TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
+                _entityContext.TblGbs.Remove(gb);
+                _entityContext.SaveChanges();
+                succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                succeeded = false;
+                Log.Error("Error when deleting GB-post. Error-message: " + ex.Message);
+            }
+            return succeeded;
+        }
+
         public int GetLastGbId()
         {
             int idToReturn = _entityContext.TblGbs.Max(gb => gb.GbId);

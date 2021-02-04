@@ -1,6 +1,10 @@
 ﻿@*<!-- Senast-index -->*@
 @model GalleryViewModel
 
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 @{
     string classIcon = "bi-camera";
     classIcon = ViewData["Title"].Equals("Uppladdad") ? "bi-calendar-week" : classIcon;

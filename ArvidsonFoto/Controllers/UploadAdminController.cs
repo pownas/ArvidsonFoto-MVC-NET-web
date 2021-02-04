@@ -17,11 +17,13 @@ namespace ArvidsonFoto.Controllers
 
         private IImageService _imageService;
         private ICategoryService _categoryService;
+        private IGuestBookService _guestBookService;
 
         public UploadAdminController(ArvidsonFotoDbContext context)
         {
             _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
+            _guestBookService = new GuestBookService(context);
         }
         
         public IActionResult Index()
@@ -141,16 +143,69 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("NyKategori", inputModel);
         }
 
-        public IActionResult RedigeraBilder()
+        public IActionResult RedigeraBilder(UploadEditImagesViewModel viewModel, int? sida)
         {
             ViewData["Title"] = "Redigera bland bilderna";
-            return View();
+            int imagesPerPage = 25;
+            if (sida is null || sida < 1 || sida > viewModel.TotalPages)
+                sida = 1;
+
+            if(viewModel.AllImagesList is not null && viewModel.TotalPages > 0)
+            {
+                viewModel.CurrentPage = (int)sida;
+                viewModel.DisplayImagesList = viewModel.AllImagesList
+                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
+                                                       .Take(imagesPerPage)
+                                                       .ToList();
+            }
+            else
+            {
+                viewModel = new UploadEditImagesViewModel()
+                {
+                    AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageId).ToList(),
+                    CurrentPage = (int)sida
+                };
+                viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
+                viewModel.DisplayImagesList = viewModel.AllImagesList
+                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
+                                                       .Take(imagesPerPage)
+                                                       .ToList();
+            }
+
+            return View(viewModel);
         }
 
-        public IActionResult HanteraGB()
+        public IActionResult HanteraGB(string Raderad, string gbId)
         {
             ViewData["Title"] = "Hantera gästboken";
-            return View();
+            UploadGbViewModel viewModel = new UploadGbViewModel();
+            if (string.IsNullOrWhiteSpace(Raderad) && string.IsNullOrWhiteSpace(gbId))
+            {
+                viewModel.Error = false;
+            }
+            else if(Raderad.Equals("OK"))
+            {
+                viewModel.Error = false;
+                viewModel.UpdatedId = gbId;
+            }
+            else
+            {
+                viewModel.Error = true;
+                viewModel.UpdatedId = gbId;
+            }
+            return View(viewModel);
+        }
+
+        public IActionResult DeleteGbPost(int gbId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if(_guestBookService.DeleteGbPost(gbId))
+                { 
+                    return RedirectToAction("HanteraGB", new { Raderad = "OK", gbId = gbId });
+                }
+            }
+            return RedirectToAction("HanteraGB", new { Raderad = "Error", gbId = gbId });
         }
 
         public IActionResult Statistik()

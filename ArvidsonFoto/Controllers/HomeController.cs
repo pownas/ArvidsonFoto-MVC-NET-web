@@ -21,6 +21,7 @@ namespace ArvidsonFoto.Controllers
 
         public IActionResult Index()
         {
+            ViewData["Title"] = "Startsidan";
             _pageCounterService.AddPageCount("Startsidan");
             var viewModel = new GalleryViewModel();
             return View(viewModel);
@@ -28,6 +29,7 @@ namespace ArvidsonFoto.Controllers
 
         public IActionResult Privacy()
         {
+            ViewData["Title"] = "Privacy Policy";
             return View();
         }
 
