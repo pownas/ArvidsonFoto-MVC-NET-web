@@ -16,7 +16,7 @@ namespace ArvidsonFoto
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 //.WriteTo.Console() //Kräver nuget paketet: Serilog.Sinks.Console
-                .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day) //Bör kanske försöka byta till Serilog DB-loggning...
                 .CreateLogger();
 
             CreateHostBuilder(args).Build().Run();
