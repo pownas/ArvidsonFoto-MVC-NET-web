@@ -12,13 +12,16 @@ namespace ArvidsonFoto.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
+        private IPageCounterService _pageCounterService;
 
+        public HomeController(ArvidsonFotoDbContext context)
+        {
+            _pageCounterService = new PageCounterService(context);
         }
 
         public IActionResult Index()
         {
+            _pageCounterService.AddPageCount("Startsidan");
             var viewModel = new GalleryViewModel();
             return View(viewModel);
         }

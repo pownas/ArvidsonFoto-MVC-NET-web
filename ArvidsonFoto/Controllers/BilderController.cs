@@ -15,11 +15,13 @@ namespace ArvidsonFoto.Controllers
     {
         private IImageService _imageService;
         private ICategoryService _categoryService;
+        private IPageCounterService _pageCounterService;
 
         public BilderController(ArvidsonFotoDbContext context)
         {
             _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
+            _pageCounterService = new PageCounterService(context);
         }
 
         [Route("/[controller]/{subLevel1}")]
@@ -79,6 +81,8 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sök")]
         public IActionResult Sök(string s)
         {
+            _pageCounterService.AddPageCount("Sök");
+
             GalleryViewModel viewModel = new GalleryViewModel();
             if (s is null) //Besöker sidan utan att skrivit in någon sökning
             {

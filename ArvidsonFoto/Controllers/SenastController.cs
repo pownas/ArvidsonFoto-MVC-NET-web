@@ -14,11 +14,13 @@ namespace ArvidsonFoto.Controllers
     {
         private IImageService _imageService;
         private ICategoryService _categoryService;
+        private IPageCounterService _pageCounterService;
 
         public SenastController(ArvidsonFotoDbContext context)
         {
             _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
+            _pageCounterService = new PageCounterService(context);
         }
 
         [Route("[controller]/{sortOrder}")]
@@ -35,6 +37,7 @@ namespace ArvidsonFoto.Controllers
             if (sortOrder.Equals("Per kategori"))
             {
                 ViewData["Title"] = "Per kategori";
+                _pageCounterService.AddPageCount("Senast-Per kategori");
                 List<TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 viewModel.AllImagesList = new List<TblImage>();
                 foreach (var category in categories)
@@ -45,11 +48,13 @@ namespace ArvidsonFoto.Controllers
             else if (sortOrder.Equals("Uppladdad"))
             {
                 ViewData["Title"] = "Uppladdad";
+                _pageCounterService.AddPageCount("Senast-Uppladdad");
                 viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageUpdate).ToList();
             }
             else if (sortOrder.Equals("Fotograferad"))
             {
                 ViewData["Title"] = "Fotograferad";
+                _pageCounterService.AddPageCount("Senast-Fotograferad");
                 viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageDate).ToList();
             }
             else
