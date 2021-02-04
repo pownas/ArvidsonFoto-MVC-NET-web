@@ -71,20 +71,28 @@ namespace ArvidsonFoto.Services
         public List<TblPageCounter> GetAllGroupedByPageCount()
         {
             List<TblPageCounter> listToReturn = new List<TblPageCounter>();
-            //var groupedList = _entityContext.TblPageCounter
-            //                             .GroupBy(p => new { p.PageName })
-            //                             .Select(g => new { PageName = g.Key.PageName, Visningar = g.Count() })
-            //                             //.OrderByDescending(p => p.PageViews)
-            //                             .ToList();
+            var listOfPages = _entityContext.TblPageCounter
+                                            .Select(p => p.PageName)
+                                            .Distinct()
+                                            .ToList();
 
-            listToReturn = _entityContext.TblPageCounter
-                                         .FromSqlRaw("SELECT SUM(PageCounter_Views) AS PageCounter_Views, PageCounter_Name, MAX(PageCounter_LastShowDate) AS PageCounter_LastShowDate " +
-                                                     "FROM tbl_PageCounter "+
-                                                     "GROUP BY PageCounter_Name "+
-                                                     "ORDER BY PageCounter_Views DESC")
-                                         .ToList();
+            for (int i = 0; i < listOfPages.Count; i++)
+            {
+                TblPageCounter aCountedPage = new TblPageCounter()
+                {
+                    Id = i+1,
+                    PageName = listOfPages[i],
+                    PageViews = _entityContext.TblPageCounter.Where(p => p.PageName.Equals(listOfPages[i])).Sum(p => p.PageViews),
+                    LastShowDate = _entityContext.TblPageCounter.Where(p => p.PageName.Equals(listOfPages[i])).Max(p => p.LastShowDate)
+                };
 
-            return listToReturn;
+                listToReturn.Add(aCountedPage);
+            }
+
+            //var SQLquery = "SELECT SUM(PageCounter_Views) AS PageCounter_Views, PageCounter_Name, MAX(PageCounter_LastShowDate) AS PageCounter_LastShowDate FROM tbl_PageCounter GROUP BY PageCounter_Name ORDER BY PageCounter_Views DESC";
+            //var groupedList = _entityContext.TblPageCounter.FromSqlRaw(SQLquery).ToList();
+
+            return listToReturn.OrderByDescending(p => p.PageViews).ToList();
         }
     }
 }
