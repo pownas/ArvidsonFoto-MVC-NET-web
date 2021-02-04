@@ -20,39 +20,6 @@ namespace ArvidsonFoto.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("ArvidsonFoto.Models.TblAdmin", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int")
-                        .HasColumnName("admin_ID");
-
-                    b.Property<DateTime?>("AdminLastonline")
-                        .HasColumnType("smalldatetime")
-                        .HasColumnName("admin_lastonline");
-
-                    b.Property<string>("AdminMail")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("admin_mail");
-
-                    b.Property<string>("AdminName")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("admin_name");
-
-                    b.Property<string>("AdminPass")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("admin_pass");
-
-                    b.Property<string>("AdminUser")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("admin_user");
-
-                    b.ToTable("tbl_admin");
-                });
-
             modelBuilder.Entity("ArvidsonFoto.Models.TblGb", b =>
                 {
                     b.Property<int>("Id")
@@ -100,10 +67,10 @@ namespace ArvidsonFoto.Migrations
 
             modelBuilder.Entity("ArvidsonFoto.Models.TblImage", b =>
                 {
-                    b.Property<int>("ImageId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("image_ID")
+                        .HasColumnName("ID")
                         .UseIdentityColumn();
 
                     b.Property<int>("ImageArt")
@@ -115,8 +82,8 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnName("image_date");
 
                     b.Property<string>("ImageDescription")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("image_description");
 
                     b.Property<int?>("ImageFamilj")
@@ -127,6 +94,10 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("int")
                         .HasColumnName("image_huvudfamilj");
 
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int")
+                        .HasColumnName("image_ID");
+
                     b.Property<DateTime>("ImageUpdate")
                         .HasColumnType("datetime")
                         .HasColumnName("image_update");
@@ -136,18 +107,22 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("image_URL");
 
-                    b.HasKey("ImageId");
+                    b.HasKey("Id");
 
                     b.ToTable("tbl_images");
                 });
 
             modelBuilder.Entity("ArvidsonFoto.Models.TblMenu", b =>
                 {
-                    b.Property<int>("MenuId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("menu_ID")
+                        .HasColumnName("ID")
                         .UseIdentityColumn();
+
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int")
+                        .HasColumnName("menu_ID");
 
                     b.Property<DateTime?>("MenuLastshowdate")
                         .HasColumnType("datetime")
@@ -171,7 +146,7 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("menu_URLtext");
 
-                    b.HasKey("MenuId");
+                    b.HasKey("Id");
 
                     b.ToTable("tbl_menu");
                 });
