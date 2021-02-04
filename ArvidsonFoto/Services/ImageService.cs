@@ -30,7 +30,10 @@ namespace ArvidsonFoto.Services
             catch (Exception ex)
             {
                 success = false;
-                throw new Exception("Fel vid länkning av bild. Felmeddelande: " + ex.Message);
+                string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
+
+                Log.Warning(ErrorMessage);
+                throw new Exception(ErrorMessage);
             }
             return success;
         }
