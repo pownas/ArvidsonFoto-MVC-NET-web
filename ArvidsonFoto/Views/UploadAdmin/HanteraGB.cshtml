@@ -1,4 +1,6 @@
-﻿@inject IGuestBookService _guestBookService
+﻿@model UploadGbViewModel
+
+@inject IGuestBookService _guestBookService
 @{
     List<TblGb> gbListView = new List<TblGb>();
     gbListView = _guestBookService.GetAll();
@@ -24,14 +26,22 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
+        @if (Model.Error)
+        {
+            <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid raderade av GB-inlägget med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
+        }
+        else if(Model.Error is false && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Har nu raderat GB-inlägget med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+        }
         <p>Här kan du redigera bland Gästboks-inläggen:</p>
         <div class="row row-cols-1">
             @if (_guestBookService is not null && gbListView is not null)
             {
                 @foreach (var gbPost in gbListView)
-                    {
-                        DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
-                        string gbName = (gbPost.GbName is not null) ? gbPost.GbName : "Anonym användare";
+                {
+                    DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
+                    string gbName = (gbPost.GbName is not null) ? gbPost.GbName : "Anonym användare";
 
                     //bool unRead = false; //Kan läggas till för notifications!
                     <div class="col mb-4">
@@ -61,7 +71,7 @@
                             <div class="card-footer text-muted row">
                                 <div class="text-left col-6">
                                     @if (gbPost.GbHomepage is not null)
-                                        {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
+                                    {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
                                 </div>
                                 <div class="text-right col-6">@gbDate.ToString("yyyy-MM-dd")</div>
                             </div>
@@ -88,12 +98,12 @@
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                         Avbryt <i class="bi bi-x-circle"></i>
                                     </button>
-                                    <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
-                                        Radera <i class="bi bi-trash"></i>
-                                    </a>
-                                    @*<a href="/Api/Message/DeleteMessage?messageId=@gbPost.GbId" class="btn btn-danger">
+                                    @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
                                         Radera <i class="bi bi-trash"></i>
                                     </a>*@
+                                    <a href="/UploadAdmin/DeleteGbPost?gbId=@gbPost.GbId" class="btn btn-danger">
+                                        Radera <i class="bi bi-trash"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

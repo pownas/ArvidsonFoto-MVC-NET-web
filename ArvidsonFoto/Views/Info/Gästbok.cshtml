@@ -1,5 +1,9 @@
 ﻿@model GuestbookInputModel
 
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 @inject IGuestBookService _guestBookService
 @{
     List<TblGb> gbListView = new List<TblGb>();
@@ -71,7 +75,7 @@
             @foreach (var gbPost in gbListView)
             {
                 DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
-                
+
                 <div class="col mb-4">
                     <div class="card text-left text-dark">
                         <div class="card-header">

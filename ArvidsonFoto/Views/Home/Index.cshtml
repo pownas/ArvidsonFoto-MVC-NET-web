@@ -1,8 +1,12 @@
 ﻿@*<!-- Home-Index (Startsidan) -->*@
 @model GalleryViewModel
+
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 @inject IImageService _imageService
 @{
-    ViewData["Title"] = "Startsidan";
     Model.DisplayImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
 }
 

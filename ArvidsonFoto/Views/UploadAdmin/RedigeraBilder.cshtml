@@ -1,9 +1,8 @@
-﻿@inject ICategoryService _categoryService
+﻿@model UploadEditImagesViewModel
+@inject ICategoryService _categoryService
+
 @section MetaData {
     <meta name="robots" content="noindex" />
-}
-@{
-
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -13,7 +12,6 @@
     </ol>
 </nav>
 <h1 class="offset-md-4"><i class="bi bi-pencil-square mr-2"></i>@ViewData["Title"]</h1>
-
 <div class="row">
     <nav class="nav col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
@@ -21,7 +19,138 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>Här kan du redigera bland de senaste bilderna:</p>
-        <p>Välj?</p>
+        <p>Här nedanför kan du redigera bland de senaste bilderna:</p>
     </div>
+</div>
+<div class="col-12">
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">HuvudFamilj</th>
+                <th scope="col">Familj</th>
+                <th scope="col">Art</th>
+                <th scope="col">Fotodatum</th>
+                <th scope="col">Bildnamn</th>
+                <th scope="col">Beskrivning</th>
+                <th scope="col">Redigera</th>
+            </tr>
+        </thead>
+        <tbody>
+            @try
+            {
+                @foreach (var image in Model.DisplayImagesList)
+                {
+                    string imgArt = _categoryService.GetNameById(image.ImageArt);
+                    string imgFamilj = _categoryService.GetNameById(image.ImageFamilj);
+                    string imgHuvudFamilj = _categoryService.GetNameById(image.ImageHuvudfamilj);
+
+                    string imgThumbSrc = "https://arvidsonfoto.se/Bilder";
+                    if (imgHuvudFamilj is not null)
+                        imgThumbSrc += "/" + imgHuvudFamilj;
+                    if (imgFamilj is not null)
+                        imgThumbSrc += "/" + imgFamilj;
+
+                    imgThumbSrc += "/" + imgArt + "/" + image.ImageUrl + ".thumb.jpg";
+                    <tr>
+                        <th scope="row"><img src="@imgThumbSrc" alt="@imgArt" width="80" height="80" title="@imgArt"></th>
+                        <td>@imgHuvudFamilj</td>
+                        <td>@imgFamilj</td>
+                        <td>@imgArt</td>
+                        <td>@image.ImageDate</td>
+                        <td>@image.ImageUrl</td>
+                        <td>@image.ImageDescription</td>
+                        <td>
+                            <p class="m-0 mb-3">
+                                <button title="Ändra" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#EditImage-@image.ImageId">
+                                    <i class="bi bi-pencil-square mr-2"></i> Ändra
+                                </button>
+                            </p>
+                            <p class="m-0">
+                                <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
+                                    <i class="bi bi-trash mr-2"></i> Radera
+                                </button>
+                            </p>
+
+                            <!-- Bootstrap-Modal id=DeleteImage -->
+                            <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content text-dark">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
+                                                Radera bilden: @image.ImageUrl på @imgArt?
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-center"><img src="@imgThumbSrc" alt="@imgArt" width="120" height="120" title="@imgArt"></p>
+                                            <p>Vill du ta bort denna bilden på @imgArt?</p>
+                                            <p><strong>Filnamn:</strong> @image.ImageUrl</p>
+                                            <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                Avbryt <i class="bi bi-x-circle"></i>
+                                            </button>
+                                            <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
+                                                Radera bilden <i class="bi bi-trash"></i>
+                                            </a>
+                                            @*
+                                            <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
+                                                Radera <i class="bi bi-trash"></i>
+                                            </a>
+                                            *@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- End of Bootstrap-Modal-->
+                            <!-- Bootstrap-Modal id=EditImage -->
+                            <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content text-dark">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
+                                                Ändra bilden: @image.ImageUrl på @imgArt
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-center"><img src="@imgThumbSrc" alt="@imgArt" width="120" height="120" title="@imgArt"></p>
+                                            <p><strong>Art:</strong> @imgArt <br /></p>
+                                            <p><strong>Fotodatum:</strong> @image.ImageDate</p> <!-- .ToString("yyyy-MM-dd") -->
+                                            <p>
+                                                <div class="mb-3">
+                                                    <label for="message-text" class="col-form-label">Beskrivning:</label>
+                                                    <textarea class="form-control" id="message-text-for-@image.ImageId">@image.ImageDescription</textarea>
+                                                </div>
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                Avbryt <i class="bi bi-x-circle"></i>
+                                            </button>
+                                            <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
+                                                Spara ändring <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- End of Bootstrap-Modal-->
+
+                        </td>
+                    </tr>
+                }
+            }
+            catch (Exception ex)
+            {
+                <tr>
+                    <td colspan="8">Hittade inga bilder</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

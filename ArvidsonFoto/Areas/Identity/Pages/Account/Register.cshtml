@@ -7,7 +7,8 @@
 
 <h1>@ViewData["Title"]</h1>
 <p>Kontakta Jonas för att registrera dig...</p>
-@*<div class="row">
+@*
+<div class="row">
     <div class="col-md-4">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h4>Create a new account.</h4>
@@ -61,8 +62,9 @@
             }
         </section>
     </div>
-</div>*@
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+*@ 

@@ -1,5 +1,9 @@
 ﻿@*<!-- Bilder-index (Galleriet) -->*@
 @model GalleryViewModel
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
 @inject IImageService _imageService
 @inject ICategoryService _categoryService
 @{
@@ -20,7 +24,7 @@
         Model.ErrorMessage = ex.Message;
         Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
-        
+
     }
 
 }
