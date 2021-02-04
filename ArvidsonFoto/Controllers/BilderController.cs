@@ -61,6 +61,8 @@ namespace ArvidsonFoto.Controllers
                 viewModel.CurrentUrl = "./Bilder/" + subLevel1;
             }
 
+            _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
