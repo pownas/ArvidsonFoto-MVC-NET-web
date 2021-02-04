@@ -50,7 +50,7 @@ namespace ArvidsonFoto.Data
                     .HasColumnName("GB_homepage");
 
                 entity.Property(e => e.GbIp)
-                    .HasMaxLength(255)
+                    .HasMaxLength(50)
                     .HasColumnName("GB_IP");
 
                 entity.Property(e => e.GbName)
