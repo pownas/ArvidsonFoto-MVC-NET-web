@@ -143,10 +143,36 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("NyKategori", inputModel);
         }
 
-        public IActionResult RedigeraBilder()
+        public IActionResult RedigeraBilder(UploadEditImagesViewModel viewModel, int? sida)
         {
             ViewData["Title"] = "Redigera bland bilderna";
-            return View();
+            int imagesPerPage = 25;
+            if (sida is null || sida < 1 || sida > viewModel.TotalPages)
+                sida = 1;
+
+            if(viewModel.AllImagesList is not null && viewModel.TotalPages > 0)
+            {
+                viewModel.CurrentPage = (int)sida;
+                viewModel.DisplayImagesList = viewModel.AllImagesList
+                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
+                                                       .Take(imagesPerPage)
+                                                       .ToList();
+            }
+            else
+            {
+                viewModel = new UploadEditImagesViewModel()
+                {
+                    AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageId).ToList(),
+                    CurrentPage = (int)sida
+                };
+                viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
+                viewModel.DisplayImagesList = viewModel.AllImagesList
+                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
+                                                       .Take(imagesPerPage)
+                                                       .ToList();
+            }
+
+            return View(viewModel);
         }
 
         public IActionResult HanteraGB(string Raderad, string gbId)
