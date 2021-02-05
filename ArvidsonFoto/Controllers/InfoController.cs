@@ -85,7 +85,8 @@ namespace ArvidsonFoto.Controllers
                         GbText = inputModel.Message,
                         GbDate = DateTime.Now
                     };
-                    Log.Information("User GuestBook-post: " + postToPublish.ToString());
+                    Log.Information("User GuestBook-post: " + postToPublish.GbId + " Name: " + postToPublish.GbName + " Email: " + postToPublish.GbEmail + " Homepage:" + postToPublish.GbHomepage);
+                    Log.Information("GB-Message: \n" + postToPublish.GbText);
                     
                     if (_guestbookService.CreateGBpost(postToPublish)) 
                     {
