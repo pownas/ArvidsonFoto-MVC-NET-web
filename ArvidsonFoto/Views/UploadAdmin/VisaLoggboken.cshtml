@@ -18,6 +18,44 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
+        <p>Välj en dag att visa:</p>
+        <p>
+            @{ //Start på kalender-vy
+                var getDate = DateTime.Now;
+
+                var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
+                var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);
+
+                var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
+                DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
+            }
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mon</th>
+                        <th>Tis</th>
+                        <th>Ons</th>
+                        <th>Tor</th>
+                        <th>Fre</th>
+                        <th>Lör</th>
+                        <th>Sön</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @for (int i = 0; i < 42; i++)
+                        {
+                            DateTime date = startDate.AddDays(i);
+                            if (i % 7 == 0 && i > 0) //start a new row every 7 days
+                            {
+                                @:</tr><tr>
+                            }
+                            <td>@date.Day</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
         @foreach (var line in Model)
         {
