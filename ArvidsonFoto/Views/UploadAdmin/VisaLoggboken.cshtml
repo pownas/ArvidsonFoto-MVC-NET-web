@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model UploadLogReaderViewModel
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -21,7 +21,7 @@
         <p>Välj en dag att visa:</p>
         <p>
             @{ //Start på kalender-vy
-                var getDate = DateTime.Now;
+                var getDate = Model.DateShown;
 
                 var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
                 var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);
@@ -29,7 +29,7 @@
                 var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
                 DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
             }
-            <table class="table table-striped table-dark text-center" style="width: 20rem;">
+            <table class="table table-responsive-sm table-striped table-bordered table-dark text-center" style="width: 20rem;">
                 <thead>
                     <tr>
                         <th>V.</th>
@@ -44,7 +44,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>@SharedStaticFunctions.GetWeekNumber(firstDayOfTheMonth)</td>
+                        <th>@SharedStaticFunctions.GetWeekNumber(firstDayOfTheMonth)</th>
                         @for (int i = 0; i < 42; i++)
                         {
                             DateTime date = startDate.AddDays(i + 1); //Lägger till +1 för att justera för amerikanska söndagen...
@@ -57,11 +57,15 @@
                                 else
                                 {
                                 @:</tr><tr>
-                                    <td>@SharedStaticFunctions.GetWeekNumber(date.AddDays(1))</td>
+                                    <th>@SharedStaticFunctions.GetWeekNumber(date.AddDays(1))</th>
                                 }
                             }
 
                             if (getDate.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                            {
+                                <td class="bg-primary">@date.Day</td>
+                            }
+                            else if (DateTime.Now.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
                             {
                                 <td class="bg-secondary">idag</td>
                             }
@@ -75,7 +79,7 @@
             </table>
         </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
-        @foreach (var line in Model)
+        @foreach (var line in Model.LogBook)
         {
             string lineColor = "";
             lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;

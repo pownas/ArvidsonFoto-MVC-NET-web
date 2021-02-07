@@ -246,11 +246,13 @@ namespace ArvidsonFoto.Controllers
             ViewData["Title"] = "Läser loggboken för: "+datum.ToString("yyyy-MM-dd dddd");
 
             AppLogReader logReader = new AppLogReader();
-            List<string> logBook = new List<string>();
             string appLogFile = "appLog"+ datum.ToString("yyyyMMdd") + ".txt";
-            logBook = logReader.ReadData(appLogFile);
+            
+            UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel();
+            viewModel.LogBook = logReader.ReadData(appLogFile);
+            viewModel.DateShown = datum;
 
-            return View(logBook);
+            return View(viewModel);
         }
 
 
