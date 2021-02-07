@@ -143,35 +143,60 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("NyKategori", inputModel);
         }
 
-        public IActionResult RedigeraBilder(UploadEditImagesViewModel viewModel, int? sida)
+        public IActionResult RedigeraBilder(int? sida)
         {
             ViewData["Title"] = "Redigera bland bilderna";
+
             int imagesPerPage = 25;
-            if (sida is null || sida < 1 || sida > viewModel.TotalPages)
+            if (sida is null || sida < 1)
                 sida = 1;
 
-            if(viewModel.AllImagesList is not null && viewModel.TotalPages > 0)
-            {
-                viewModel.CurrentPage = (int)sida;
-                viewModel.DisplayImagesList = viewModel.AllImagesList
-                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
-                                                       .Take(imagesPerPage)
-                                                       .ToList();
-            }
-            else
-            {
-                viewModel = new UploadEditImagesViewModel()
-                {
-                    AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageId).ToList(),
-                    CurrentPage = (int)sida
-                };
-                viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
-                viewModel.DisplayImagesList = viewModel.AllImagesList
-                                                       .Skip(viewModel.CurrentPage * imagesPerPage)
-                                                       .Take(imagesPerPage)
-                                                       .ToList();
-            }
+            List<TblImage> displayTblImages = new List<TblImage>();
 
+            UploadEditImagesViewModel viewModel = new UploadEditImagesViewModel()
+            {
+                AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageId).ToList(),
+                CurrentPage = (int)sida,
+                CurrentUrl = "./UploadAdmin/RedigeraBilder"
+            };
+            viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
+            displayTblImages = viewModel.AllImagesList
+                                        .Skip(viewModel.CurrentPage * imagesPerPage)
+                                        .Take(imagesPerPage)
+                                        .ToList();
+            viewModel.DisplayImagesList = new List<UploadImageInputModel>();
+
+
+            foreach (var item in displayTblImages)
+            {
+                DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
+
+                UploadImageInputModel inputModel = new UploadImageInputModel()
+                {
+                    ImageId = item.ImageId,
+                    ImageHuvudfamilj = item.ImageHuvudfamilj,
+                    ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageHuvudfamilj),
+                    ImageFamilj = item.ImageFamilj,
+                    ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilj),
+                    ImageArt = item.ImageArt,
+                    ImageArtNamn = _categoryService.GetNameById(item.ImageArt),
+                    ImageDate = imgDate,
+                    ImageUpdate = item.ImageUpdate,
+                    ImageDescription = item.ImageDescription,
+                    ImageUrl = item.ImageUrl
+                };
+
+                inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
+                if (inputModel.ImageHuvudfamilj is not null)
+                    inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
+                if (inputModel.ImageFamilj is not null)
+                    inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
+
+                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
+
+                viewModel.DisplayImagesList.Add(inputModel);
+            }
+            
             return View(viewModel);
         }
 
