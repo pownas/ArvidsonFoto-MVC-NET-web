@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
-using Microsoft.Data.SqlClient;
 using Serilog;
 
 namespace ArvidsonFoto.Services
@@ -24,15 +23,15 @@ namespace ArvidsonFoto.Services
         /// <param name="categoryToUpdate">Den kategorin som ska uppdateras med MenuPagecounter och MenuLastshowdate.</param>
         public void AddPageCount(TblMenu categoryToUpdate)
         {
-            try
+            if(categoryToUpdate is not null)
             {
                 categoryToUpdate.MenuPagecounter += 1;
                 categoryToUpdate.MenuLastshowdate = DateTime.Now;
                 _entityContext.SaveChanges();
             }
-            catch (Exception ex)
+            else
             {
-                Log.Error("Error while updating category: "+categoryToUpdate.MenuText+", PageCounter. Error-message: " + ex.Message);
+                throw new NullReferenceException("Null when trying to update MenuPagecounter.");
             }
         }
 
@@ -63,12 +62,20 @@ namespace ArvidsonFoto.Services
         {
             TblMenu category = new TblMenu();
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
+            if(category is null)
+            {
+                Log.Warning("Could not find category: " + categoryName);
+            }
             return category;
         }
 
         public TblMenu GetById(int? id)
         {
             TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuId.Equals(id));
+            if(category is null)
+            {
+                Log.Information("Could not find id with number: "+id);
+            }
             return category;
         }
 
