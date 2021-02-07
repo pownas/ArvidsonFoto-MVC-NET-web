@@ -29,28 +29,46 @@
                 var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
                 DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
             }
-            <table>
+            <table class="table table-striped table-dark text-center" style="width: 20rem;">
                 <thead>
                     <tr>
-                        <th>Mon</th>
-                        <th>Tis</th>
-                        <th>Ons</th>
-                        <th>Tor</th>
-                        <th>Fre</th>
-                        <th>Lör</th>
-                        <th>Sön</th>
+                        <th>V.</th>
+                        <th>Mo</th>
+                        <th>Ti</th>
+                        <th>On</th>
+                        <th>To</th>
+                        <th>Fr</th>
+                        <th>Lö</th>
+                        <th>Sö</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td>@SharedStaticFunctions.GetWeekNumber(firstDayOfTheMonth)</td>
                         @for (int i = 0; i < 42; i++)
                         {
-                            DateTime date = startDate.AddDays(i);
+                            DateTime date = startDate.AddDays(i + 1); //Lägger till +1 för att justera för amerikanska söndagen...
                             if (i % 7 == 0 && i > 0) //start a new row every 7 days
                             {
+                                if (i > 29 && date.Day > 5)
+                                {
+                                @:</tr><tr class="d-none">
+                                }
+                                else
+                                {
                                 @:</tr><tr>
+                                    <td>@SharedStaticFunctions.GetWeekNumber(date.AddDays(1))</td>
+                                }
                             }
-                            <td>@date.Day</td>
+
+                            if (getDate.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                            {
+                                <td class="bg-secondary">idag</td>
+                            }
+                            else
+                            {
+                                <td>@date.Day</td>
+                            }
                         }
                     </tr>
                 </tbody>
