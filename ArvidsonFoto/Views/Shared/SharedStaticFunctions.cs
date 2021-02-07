@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ArvidsonFoto.Views.Shared
+namespace ArvidsonFoto
 {
-    public static class WeekNumber
+    public static class SharedStaticFunctions
     {
-        public static int Get()
+        public static int GetWeekNumber(DateTime date)
         {
             //Code from: https://docs.microsoft.com/en-us/dotnet/api/system.globalization.calendar.getweekofyear?view=net-5.0
 
@@ -23,10 +23,10 @@ namespace ArvidsonFoto.Views.Shared
             //Console.WriteLine("Therefore, the current week is Week {0} of the current year.", myCal.GetWeekOfYear(DateTime.Now, myCWR, myFirstDOW));
 
             // Displays the total number of weeks in the current year.
-            DateTime LastDay = new System.DateTime(DateTime.Now.Year, 12, 31);
+            //DateTime LastDay = new System.DateTime(DateTime.Now.Year, 12, 31);
             //Console.WriteLine("There are {0} weeks in the current year ({1}).", myCal.GetWeekOfYear(LastDay, myCWR, myFirstDOW), LastDay.Year);
 
-            return myCal.GetWeekOfYear(LastDay, myCWR, myFirstDOW);
+            return myCal.GetWeekOfYear(date, myCWR, myFirstDOW);
         }
     }
 }
