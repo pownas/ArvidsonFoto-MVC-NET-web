@@ -44,5 +44,19 @@ namespace ArvidsonFoto.Data
             
             return returnList;
         }
+
+        public List<string> ExistingLogFiles()
+        {
+            List<string> returnList = new List<string>();
+
+            DirectoryInfo di = new DirectoryInfo(folderDataPath);
+            var files = di.GetFiles("*.txt");
+            foreach (var fileInfo in files)
+            {
+                returnList.Add(fileInfo.Name);
+            }
+
+            return returnList;
+        }
     }
 }
