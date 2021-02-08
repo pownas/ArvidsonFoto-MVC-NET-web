@@ -42,6 +42,24 @@ namespace ArvidsonFoto.Services
             return succeeded;
         }
 
+        public bool ReadGbPost(int gbId)
+        {
+            bool succeeded = false;
+            try
+            {
+                TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
+                gb.GbReadPost = true;
+                _entityContext.SaveChanges();
+                succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                succeeded = false;
+                Log.Error("Error when trying to mark GB-post with id: " + gbId + ", as read. Error-message: " + ex.Message);
+            }
+            return succeeded;
+        }
+
         public bool DeleteGbPost(int gbId)
         {
             bool succeeded = false;

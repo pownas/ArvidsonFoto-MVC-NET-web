@@ -27,13 +27,21 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        @if (Model.Error)
+        @if (Model.DisplayMessage.Equals("ErrorGbDelete"))
         {
             <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid raderade av GB-inlägget med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
         }
-        else if(Model.Error is false && Model.UpdatedId is not null)
+        else if (Model.DisplayMessage.Equals("OkGbDelete") && Model.UpdatedId is not null)
         {
             <h5 class="alert alert-success bg-success text-dark">Har nu raderat GB-inlägget med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+        }
+        else if (Model.DisplayMessage.Equals("OkGbRead") && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Har nu läsmarkerat GB-inlägget med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+        }
+        else if (Model.DisplayMessage.Equals("ErrorGbRead") && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid läsmarkering av GB-inlägget med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
         }
         <p>Här kan du redigera bland Gästboks-inläggen:</p>
         <div class="row row-cols-1">
@@ -49,19 +57,19 @@
                         <div class="card text-left text-dark">
                             <div class="card-header row">
                                 <div class="text-left col-6">
-                                    @gbName
+                                    <p class="my-1"><strong>@gbName</strong></p>
                                 </div>
                                 <div class="text-right col-6">
-                                    @*@if (unRead) //Kan adderas för notifications
+                                    @if (gbPost.GbReadPost is not true) //Kan adderas för notifications
                                     {
-                                        <a title="Läsmarkera" href="/Api/Message/MarkMessageAsRead?messageId=@gbPost.GbId" class="btn btn-sm btn-success">
-                                            <i class="bi bi-check2-square"></i>
+                                        <a title="Läsmarkera" href="/UploadAdmin/MarkGbPostAsRead?gbId=@gbPost.GbId" class="btn btn-sm btn-success my-1">
+                                            <i class="bi bi-check2-square mr-2"></i> Läsmarkera
                                         </a>
-                                    }*@
-                                    <button title="Svara" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#AnswerTo-@gbPost.GbId">
+                                    }
+                                    <button title="Svara" type="button" class="btn btn-sm btn-primary my-1" data-toggle="modal" data-target="#AnswerTo-@gbPost.GbId">
                                         <i class="bi bi-pencil-square mr-2"></i>Svara
                                     </button>
-                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteMessage-@gbPost.GbId">
+                                    <button title="Radera" type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#DeleteMessage-@gbPost.GbId">
                                         <i class="bi bi-trash mr-2"></i>Radera
                                     </button>
                                 </div>

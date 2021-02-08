@@ -168,16 +168,11 @@ namespace ArvidsonFoto.Controllers
 
             if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
             {
-                viewModel.DisplayMessage = "OK";
-            }
-            else if (DisplayMessage.Equals("OKdeleted"))
-            {
-                viewModel.DisplayMessage = "OkDeleted";
-                viewModel.UpdatedId = imgId;
+                viewModel.DisplayMessage = "";
             }
             else
             {
-                viewModel.DisplayMessage = "ErrorDelete";
+                viewModel.DisplayMessage = DisplayMessage;
                 viewModel.UpdatedId = imgId;
             }
 
@@ -220,19 +215,26 @@ namespace ArvidsonFoto.Controllers
             UploadGbViewModel viewModel = new UploadGbViewModel();
             if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
             {
-                viewModel.Error = false;
-            }
-            else if(DisplayMessage.Equals("OK"))
-            {
-                viewModel.Error = false;
-                viewModel.UpdatedId = gbId;
+                viewModel.DisplayMessage = "";
             }
             else
             {
-                viewModel.Error = true;
+                viewModel.DisplayMessage = DisplayMessage;
                 viewModel.UpdatedId = gbId;
             }
             return View(viewModel);
+        }
+
+        public IActionResult MarkGbPostAsRead(int gbId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (_guestBookService.ReadGbPost(gbId))
+                {
+                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId = gbId });
+                }
+            }
+            return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId = gbId });
         }
 
         public IActionResult DeleteGbPost(int gbId)
@@ -241,10 +243,10 @@ namespace ArvidsonFoto.Controllers
             {
                 if(_guestBookService.DeleteGbPost(gbId))
                 { 
-                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OK", gbId = gbId });
+                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId = gbId });
                 }
             }
-            return RedirectToAction("HanteraGB", new { DisplayMessage = "Error", gbId = gbId });
+            return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId = gbId });
         }
 
         public IActionResult DeleteImage(int imgId)
@@ -253,10 +255,10 @@ namespace ArvidsonFoto.Controllers
             {
                 if (_imageService.DeleteImgId(imgId))
                 {
-                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OKdeleted", imgId = imgId });
+                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId = imgId });
                 }
             }
-            return RedirectToAction("RedigeraBilder", new { DisplayMessage = "Error", imgId = imgId });
+            return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId = imgId });
         }
 
         public IActionResult Statistik()

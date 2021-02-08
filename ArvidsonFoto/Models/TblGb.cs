@@ -14,7 +14,7 @@ namespace ArvidsonFoto.Models
         public string GbHomepage { get; set; }
         public string GbText { get; set; }
         public DateTime? GbDate { get; set; }
-        public bool GbUnreadPost { get; set; }
+        public bool? GbReadPost { get; set; }
         public string GbIp { get; set; }
     }
 }
