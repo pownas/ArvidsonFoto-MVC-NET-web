@@ -249,6 +249,7 @@ namespace ArvidsonFoto.Controllers
             string appLogFile = "appLog"+ datum.ToString("yyyyMMdd") + ".txt";
             
             UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel();
+            viewModel.ExistingLogFiles = logReader.ExistingLogFiles();
             viewModel.LogBook = logReader.ReadData(appLogFile);
             viewModel.DateShown = datum;
 

@@ -50,10 +50,15 @@ namespace ArvidsonFoto.Data
             List<string> returnList = new List<string>();
 
             DirectoryInfo di = new DirectoryInfo(folderDataPath);
-            var files = di.GetFiles("*.txt");
+            var files = di.GetFiles("appLog*.txt");
             foreach (var fileInfo in files)
             {
-                returnList.Add(fileInfo.Name);
+                string[] splittedFileName = fileInfo.Name.Split("Log"); //[0]app [1]20210207.txt
+                string date = splittedFileName[1]; //20210207.txt
+                splittedFileName = date.Split("."); //[0]20210207 [1]txt
+                date = splittedFileName[0]; //20210207
+
+                returnList.Add(date);
             }
 
             return returnList;

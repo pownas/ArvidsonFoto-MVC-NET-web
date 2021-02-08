@@ -28,7 +28,12 @@
 
                 var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
                 DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
+
+                var previousMonth = getDate.AddMonths(-1).ToString("yyyy-MM-dd");
+                var yesterDay = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             }
+            
+            <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">Föregående månad</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">Senaste loggen (Igår)</a>
             <table class="table table-responsive-sm table-striped table-bordered table-dark text-center" style="width: 20rem;">
                 <thead>
                     <tr>
@@ -71,7 +76,21 @@
                             }
                             else
                             {
-                                <td>@date.Day</td>
+                                bool fileExist = false;
+                                foreach (var item in Model.ExistingLogFiles)
+                                {
+                                    if (item.Equals(date.ToString("yyyyMMdd")))
+                                        fileExist = true;
+                                }
+
+                                if (fileExist)
+                                {
+                                    <td><a href="/UploadAdmin/VisaLoggboken?datum=@date.ToString("yyyy-MM-dd")">@date.Day</a></td>
+                                }
+                                else
+                                {
+                                    <td>@date.Day</td>
+                                }
                             }
                         }
                     </tr>
