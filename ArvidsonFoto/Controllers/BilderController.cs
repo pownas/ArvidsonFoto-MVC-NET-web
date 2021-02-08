@@ -104,7 +104,7 @@ namespace ArvidsonFoto.Controllers
             }
             else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
             {
-                Log.Information("En användare sökte efter: "+s); //Borde logga i databas eller separat sök-fil... 
+                Log.Information("En användare sökte efter: '"+s+"'"); //Borde logga i databas eller separat sök-fil... 
                 ViewData["Title"] = "Söker efter: " + s;
                 s = s.Trim(); // tar bort blankspace i början och slutet. Använd annars TrimEnd/TrimStart. 
                 s = s.Replace("+", " ");
@@ -118,7 +118,7 @@ namespace ArvidsonFoto.Controllers
                 viewModel.DisplayImagesList = listOfFirstSearchedImages;
                 viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s, MenuUrltext = "/Search" }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
                 if (listOfFirstSearchedImages.Count == 0)
-                    Log.Warning("Hittade inget vid sökning: "+s); //Borde logga i databas och då sätta ett "found" värde till false.
+                    Log.Warning("Hittade inget vid sökning: '"+s+"'"); //Borde logga i databas och då sätta ett "found" värde till false.
             }
             return View(viewModel);
         }
