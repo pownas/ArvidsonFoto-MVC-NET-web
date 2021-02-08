@@ -53,6 +53,10 @@ namespace ArvidsonFoto.Data
                     .HasMaxLength(50)
                     .HasColumnName("GB_IP");
 
+                entity.Property(e => e.GbUnreadPost)
+                    .HasColumnType("bit")
+                    .HasColumnName("GB_Unread");
+
                 entity.Property(e => e.GbName)
                     .HasMaxLength(100)
                     .HasColumnName("GB_name");
