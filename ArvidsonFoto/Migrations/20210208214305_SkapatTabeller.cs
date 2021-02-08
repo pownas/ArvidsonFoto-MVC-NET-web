@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ArvidsonFoto.Migrations
 {
-    public partial class SkaparTabeller : Migration
+    public partial class SkapatTabeller : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,7 +19,8 @@ namespace ArvidsonFoto.Migrations
                     GB_homepage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     GB_text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GB_date = table.Column<DateTime>(type: "smalldatetime", nullable: true),
-                    GB_IP = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    GB_ReadPost = table.Column<bool>(type: "bit", nullable: true),
+                    GB_IP = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
