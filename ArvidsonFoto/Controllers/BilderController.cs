@@ -92,6 +92,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Sök")]
+        [Route("/Search")]
         public IActionResult Sök(string s)
         {
             _pageCounterService.AddPageCount("Sök");
@@ -105,6 +106,8 @@ namespace ArvidsonFoto.Controllers
             {
                 Log.Information("En användare sökte efter: "+s); //Borde logga i databas eller separat sök-fil... 
                 ViewData["Title"] = "Söker efter: " + s;
+                s = s.Trim(); // tar bort blankspace i början och slutet. Använd annars TrimEnd/TrimStart. 
+                s = s.Replace("+", " ");
                 List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
                 foreach (var category in allCategories)
@@ -113,7 +116,7 @@ namespace ArvidsonFoto.Controllers
                         listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
                 }
                 viewModel.DisplayImagesList = listOfFirstSearchedImages;
-                viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+                viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s, MenuUrltext = "/Search" }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
                 if (listOfFirstSearchedImages.Count == 0)
                     Log.Warning("Hittade inget vid sökning: "+s); //Borde logga i databas och då sätta ett "found" värde till false.
             }
