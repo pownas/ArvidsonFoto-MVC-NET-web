@@ -81,6 +81,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Bilder/")]
+        [Route("gallery.asp")]
         public IActionResult Bilder(int? ID)
         {
             if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())

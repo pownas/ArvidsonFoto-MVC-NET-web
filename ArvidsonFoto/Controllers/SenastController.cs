@@ -32,6 +32,9 @@ namespace ArvidsonFoto.Controllers
             if (sida is null || sida < 1)
                 sida = 1;
 
+            if (sortOrder is null)
+                sortOrder = "Fotograferad";
+
             viewModel.CurrentPage = (int)sida - 1;
 
             if (sortOrder.Equals("Per kategori"))
@@ -71,6 +74,9 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
+        [Route("latest.asp")]
+        [Route("bild_kalender.asp")]
+        [Route("[controller]")]
         public IActionResult Index()
         {
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
