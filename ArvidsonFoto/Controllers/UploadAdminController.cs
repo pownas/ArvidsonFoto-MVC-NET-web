@@ -177,7 +177,7 @@ namespace ArvidsonFoto.Controllers
             }
             else
             {
-                viewModel.Error = true;
+                viewModel.DisplayMessage = "ErrorDelete";
                 viewModel.UpdatedId = imgId;
             }
 

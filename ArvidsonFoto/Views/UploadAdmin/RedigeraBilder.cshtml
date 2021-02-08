@@ -27,11 +27,11 @@
         }
         else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkDeleted") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-success bg-success text-dark">Har nu raderat bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+            <h5 class="alert alert-success bg-success text-dark">Har nu raderat länkningen för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
         }
-        else if (Model.Error is false && Model.UpdatedId is not null)
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkUpdated") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-success bg-success text-dark">Har nu raderat GB-inlägget med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+            <h5 class="alert alert-success bg-success text-dark">Har nu sparat ändringar för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
         }
         <p>Här nedanför kan du redigera bland de senaste bilderna:</p>
         <p class="">(du kan scrolla i sidled på telefonen)</p>
