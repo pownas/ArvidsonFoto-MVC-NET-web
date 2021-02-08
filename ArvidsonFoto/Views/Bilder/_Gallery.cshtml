@@ -60,7 +60,7 @@ else
 
         DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
 
-        if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
+        if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
         {
             <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                 <a href="@imgHref" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
