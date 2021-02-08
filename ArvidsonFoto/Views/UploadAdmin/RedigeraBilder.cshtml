@@ -3,6 +3,9 @@
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
+@{
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraBilder;
+}
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -12,7 +15,7 @@
 </nav>
 <h1 class="offset-md-4"><i class="bi bi-pencil-square mr-2"></i>@ViewData["Title"]</h1>
 <div class="row">
-    <nav class="nav col-12 col-md-4 p-0">
+    <nav class="nav nav-pills col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
             <partial name="_NavUploadAdmin" />
         </ul>
@@ -106,9 +109,9 @@
                                 Radera bilden <i class="bi bi-trash"></i>
                             </a>
                             @*
-                            <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
-                                Radera <i class="bi bi-trash"></i>
-                            </a>
+                                <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
+                                    Radera <i class="bi bi-trash"></i>
+                                </a>
                             *@
                         </div>
                     </div>
