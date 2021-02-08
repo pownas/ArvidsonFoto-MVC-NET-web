@@ -143,7 +143,7 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("NyKategori", inputModel);
         }
 
-        public IActionResult RedigeraBilder(int? sida)
+        public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
         {
             ViewData["Title"] = "Redigera bland bilderna";
 
@@ -166,6 +166,20 @@ namespace ArvidsonFoto.Controllers
                                         .ToList();
             viewModel.DisplayImagesList = new List<UploadImageInputModel>();
 
+            if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
+            {
+                viewModel.DisplayMessage = "OK";
+            }
+            else if (DisplayMessage.Equals("OKdeleted"))
+            {
+                viewModel.DisplayMessage = "OkDeleted";
+                viewModel.UpdatedId = imgId;
+            }
+            else
+            {
+                viewModel.Error = true;
+                viewModel.UpdatedId = imgId;
+            }
 
             foreach (var item in displayTblImages)
             {
@@ -200,15 +214,15 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
-        public IActionResult HanteraGB(string Raderad, string gbId)
+        public IActionResult HanteraGB(string DisplayMessage, string gbId)
         {
             ViewData["Title"] = "Hantera gästboken";
             UploadGbViewModel viewModel = new UploadGbViewModel();
-            if (string.IsNullOrWhiteSpace(Raderad) && string.IsNullOrWhiteSpace(gbId))
+            if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
             {
                 viewModel.Error = false;
             }
-            else if(Raderad.Equals("OK"))
+            else if(DisplayMessage.Equals("OK"))
             {
                 viewModel.Error = false;
                 viewModel.UpdatedId = gbId;
@@ -227,10 +241,22 @@ namespace ArvidsonFoto.Controllers
             {
                 if(_guestBookService.DeleteGbPost(gbId))
                 { 
-                    return RedirectToAction("HanteraGB", new { Raderad = "OK", gbId = gbId });
+                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OK", gbId = gbId });
                 }
             }
-            return RedirectToAction("HanteraGB", new { Raderad = "Error", gbId = gbId });
+            return RedirectToAction("HanteraGB", new { DisplayMessage = "Error", gbId = gbId });
+        }
+
+        public IActionResult DeleteImage(int imgId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (_imageService.DeleteImgId(imgId))
+                {
+                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OKdeleted", imgId = imgId });
+                }
+            }
+            return RedirectToAction("RedigeraBilder", new { DisplayMessage = "Error", imgId = imgId });
         }
 
         public IActionResult Statistik()
