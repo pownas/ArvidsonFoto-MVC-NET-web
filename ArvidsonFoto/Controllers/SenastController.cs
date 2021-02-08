@@ -69,7 +69,7 @@ namespace ArvidsonFoto.Controllers
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
-            viewModel.CurrentUrl = "./Senast/" + sortOrder;
+            viewModel.CurrentUrl = "/Senast/" + sortOrder;
 
             return View(viewModel);
         }
