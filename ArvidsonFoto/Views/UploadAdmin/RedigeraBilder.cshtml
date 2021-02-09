@@ -21,15 +21,15 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        @if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("ErrorEdit") && Model.UpdatedId is not null)
+        @if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("ErrorImgEdit") && Model.UpdatedId is not null)
         {
             <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid redigering av bilden med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
         }
-        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkDeleted") && Model.UpdatedId is not null)
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgDelete") && Model.UpdatedId is not null)
         {
             <h5 class="alert alert-success bg-success text-dark">Har nu raderat länkningen för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
         }
-        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkUpdated") && Model.UpdatedId is not null)
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgEdit") && Model.UpdatedId is not null)
         {
             <h5 class="alert alert-success bg-success text-dark">Har nu sparat ändringar för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
         }
