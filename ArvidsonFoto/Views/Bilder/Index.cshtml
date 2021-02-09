@@ -1,7 +1,10 @@
 ﻿@*<!-- Bilder-index (Galleriet) -->*@
 @model GalleryViewModel
 @section MetaData {
-    <meta name="robots" content="noimageindex" />
+    <meta name="robots" content="noimageindex, nofollow" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @if (Model.DisplayImagesList is not null) {@Model.DisplayImagesList.Count} else {@("0")}st" />
+    @*<meta name="keywords" content="Bilder, Djur, Natur"> <!-- Här ska det sedan in sökord som ska också in i databasen och hämtas därifrån -->*@
+    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
 }
 
 @inject IImageService _imageService

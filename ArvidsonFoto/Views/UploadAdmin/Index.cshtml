@@ -3,7 +3,7 @@
     <meta name="robots" content="noindex" />
 }
 @{
-
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.Index;
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -14,7 +14,7 @@
 <h1 class="offset-md-4"><i class="bi bi-cloud-upload mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
-    <nav class="nav col-12 col-md-4 p-0">
+    <nav class="nav nav-pills col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
             <partial name="_NavUploadAdmin" />
         </ul>

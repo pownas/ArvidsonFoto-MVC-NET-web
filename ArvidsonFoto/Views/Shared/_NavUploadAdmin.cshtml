@@ -8,24 +8,24 @@
     string[] splittedUser = username.Split("@");
     username = splittedUser[0];
 
-    <a href="./UploadAdmin" class="nav-link"><i class="bi bi-cloud-upload"></i> Upload Admin</a>
+    <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)"><i class="bi bi-cloud-upload"></i> Upload Admin</a>
     <ul class="p-0 sitemap">
-        <li><a href="./UploadAdmin/NyBild" class="nav-link" title="Länka till ny bild på hemsidan"><i class="bi bi-file-image"></i> Ny bild</a></li>
-        <li><a href="./UploadAdmin/NyKategori" class="nav-link" title="Lägg till en ny kategori på hemsidan"><i class="bi bi-file-font"></i> Ny kategori</a></li>
+        <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" title="Länka till ny bild på hemsidan"><i class="bi bi-file-image"></i> Ny bild</a></li>
+        <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" title="Lägg till en ny kategori på hemsidan"><i class="bi bi-file-font"></i> Ny kategori</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/RedigeraBilder" class="nav-link" title="Redigera bland de senast uppladdade bilderna på sidan"><i class="bi bi-pencil-square"></i> Redigera bland bilder</a>
+            <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="Redigera bland de senast uppladdade bilderna på sidan"><i class="bi bi-pencil-square"></i> Redigera bland bilder</a>
         </li>
-        <li><a href="./UploadAdmin/HanteraGB" class="nav-link" title="Hantera gästbokens inlägg"><i class="bi bi-book-half"></i> Hantera gästboken</a></li>
+        <li><a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="Hantera gästbokens inlägg"><i class="bi bi-book-half"></i> Hantera gästboken</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/Statistik" class="nav-link" title="Visa statistik på hemsidan"><i class="bi bi-speedometer2"></i> Hemsidans statistik</a>
+            <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" title="Visa statistik på hemsidan"><i class="bi bi-speedometer2"></i> Hemsidans statistik</a>
         </li>
-        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link" title="Läs i loggboken och fel-loggar"><i class="bi bi-journal-code"></i> Läs loggboken</a></li>
+        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link @UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext)" title="Läs i loggboken och fel-loggar"><i class="bi bi-journal-code"></i> Läs loggboken</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Hantera ditt konto" class="nav-link"><i class="bi bi-file-person"></i> Hantera kontot: @username</a>
+            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Hantera ditt konto" class="nav-link @UploadAdminNavPages.HanteraKontotNavClass(ViewContext)"><i class="bi bi-file-person"></i> Hantera kontot: @username</a>
         </li>
-        <li><a asp-area="Identity" asp-page="/Account/Logout" class="nav-link" title="Logga ut"><i class="bi bi-lock"></i> Logga ut</a></li>
+        <li><a asp-area="Identity" asp-page="/Account/Logout" class="nav-link @UploadAdminNavPages.LoggaUtNavClass(ViewContext)" title="Logga ut"><i class="bi bi-lock"></i> Logga ut</a></li>
     </ul>
 }

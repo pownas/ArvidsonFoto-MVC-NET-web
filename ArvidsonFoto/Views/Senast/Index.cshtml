@@ -2,7 +2,9 @@
 @model GalleryViewModel
 
 @section MetaData {
-    <meta name="robots" content="noimageindex" />
+    <meta name="robots" content="noimageindex, nofollow" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur. Antal bilder: @if (Model.DisplayImagesList is not null) {@Model.DisplayImagesList.Count} else {@("0")}st" />
+    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
 }
 
 @{

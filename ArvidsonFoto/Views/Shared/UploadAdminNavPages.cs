@@ -9,40 +9,37 @@ namespace ArvidsonFoto
     public static class UploadAdminNavPages
     {
         public static string Index => "Index";
+        public static string IndexNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, Index);
 
-        public static string Email => "Email";
+        public static string NyBild => "NyBild";
+        public static string NyBildNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, NyBild);
 
-        public static string ChangePassword => "ChangePassword";
+        public static string NyKategori => "NyKategori";
+        public static string NyKategoriNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, NyKategori);
 
-        public static string DownloadPersonalData => "DownloadPersonalData";
+        public static string RedigeraBilder => "RedigeraBilder";
+        public static string RedigeraBilderNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, RedigeraBilder);
 
-        public static string DeletePersonalData => "DeletePersonalData";
+        public static string HanteraGB => "HanteraGB";
+        public static string HanteraGBNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, HanteraGB);
 
-        public static string ExternalLogins => "ExternalLogins";
+        public static string Statistik => "Statistik";
+        public static string StatistikNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, Statistik);
 
-        public static string PersonalData => "PersonalData";
+        public static string VisaLoggboken => "VisaLoggboken";
+        public static string VisaLoggbokenNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, VisaLoggboken);
 
-        public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+        public static string HanteraKontot => "HanteraKontot";
+        public static string HanteraKontotNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, HanteraKontot);
 
-        public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+        public static string LoggaUt => "LoggaUt";
+        public static string LoggaUtNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, LoggaUt);
 
-        public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 
-        public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 
-        public static string DownloadPersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, DownloadPersonalData);
-
-        public static string DeletePersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, DeletePersonalData);
-
-        public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
-
-        public static string PersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, PersonalData);
-
-        public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
-
-        private static string PageNavClass(ViewContext viewContext, string page)
+        private static string UploadPageNavClass(ViewContext viewContext, string page)
         {
-            var activePage = viewContext.ViewData["ActivePage"] as string
+            var activePage = viewContext.ViewData["ActiveUploadPage"] as string
                 ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
             return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
         }

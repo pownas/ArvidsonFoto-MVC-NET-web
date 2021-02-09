@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArvidsonFoto.Migrations
 {
     [DbContext(typeof(ArvidsonFotoDbContext))]
-    [Migration("20210204094738_SkaparTabeller")]
-    partial class SkaparTabeller
+    [Migration("20210208214305_SkapatTabeller")]
+    partial class SkapatTabeller
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,14 +49,18 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnName("GB_ID");
 
                     b.Property<string>("GbIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("GB_IP");
 
                     b.Property<string>("GbName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("GB_name");
+
+                    b.Property<bool?>("GbReadPost")
+                        .HasColumnType("bit")
+                        .HasColumnName("GB_ReadPost");
 
                     b.Property<string>("GbText")
                         .HasColumnType("nvarchar(max)")
