@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model UploadLogReaderViewModel
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -18,8 +18,87 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
+        <p>Välj en dag att visa:</p>
+        <p>
+            @{ //Start på kalender-vy
+                var getDate = Model.DateShown;
+
+                var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
+                var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);
+
+                var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
+                DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
+
+                var previousMonth = getDate.AddMonths(-1).ToString("yyyy-MM-dd");
+                var yesterDay = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+            }
+            
+            <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">Föregående månad</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">Senaste loggen (Igår)</a>
+            <table class="table table-responsive-sm table-striped table-bordered table-dark text-center" style="width: 20rem;">
+                <thead>
+                    <tr>
+                        <th>V.</th>
+                        <th>Mo</th>
+                        <th>Ti</th>
+                        <th>On</th>
+                        <th>To</th>
+                        <th>Fr</th>
+                        <th>Lö</th>
+                        <th>Sö</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>@SharedStaticFunctions.GetWeekNumber(firstDayOfTheMonth)</th>
+                        @for (int i = 0; i < 42; i++)
+                        {
+                            DateTime date = startDate.AddDays(i + 1); //Lägger till +1 för att justera för amerikanska söndagen...
+                            if (i % 7 == 0 && i > 0) //start a new row every 7 days
+                            {
+                                if (i > 29 && date.Day > 5)
+                                {
+                                @:</tr><tr class="d-none">
+                                }
+                                else
+                                {
+                                @:</tr><tr>
+                                    <th>@SharedStaticFunctions.GetWeekNumber(date.AddDays(1))</th>
+                                }
+                            }
+
+                            if (getDate.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                            {
+                                <td class="bg-primary">@date.Day</td>
+                            }
+                            else if (DateTime.Now.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                            {
+                                <td class="bg-secondary">idag</td>
+                            }
+                            else
+                            {
+                                bool fileExist = false;
+                                foreach (var item in Model.ExistingLogFiles)
+                                {
+                                    if (item.Equals(date.ToString("yyyyMMdd")))
+                                        fileExist = true;
+                                }
+
+                                if (fileExist)
+                                {
+                                    <td><a href="/UploadAdmin/VisaLoggboken?datum=@date.ToString("yyyy-MM-dd")">@date.Day</a></td>
+                                }
+                                else
+                                {
+                                    <td>@date.Day</td>
+                                }
+                            }
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
-        @foreach (var line in Model)
+        @foreach (var line in Model.LogBook)
         {
             string lineColor = "";
             lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;

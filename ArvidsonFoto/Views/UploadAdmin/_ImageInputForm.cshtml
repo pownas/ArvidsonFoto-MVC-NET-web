@@ -1,6 +1,5 @@
 ﻿@model UploadImageInputModel
-<form method="post" asp-action="CreateImageLink" class="col-12 col-sm-6">
-    @*<!-- asp-route-Page="@Model.ReturnPageUrl" -->*@
+<form method="post" asp-controller="UploadAdmin" asp-action="CreateImageLink" class="col-12 col-sm-6">
     @Html.AntiForgeryToken()
     <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="ImageHuvudfamilj" hidden />
@@ -9,7 +8,7 @@
     <div class="form-group">
         <label asp-for="ImageUrl" class="control-label"></label>
         <div>
-            <input asp-for="ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: IMG_1234" class="form-control" />
+            <input asp-for="ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: TA1_1234" class="form-control" />
             <span asp-validation-for="ImageUrl"></span>
         </div>
     </div>
@@ -29,9 +28,6 @@
     </div>
     <div class="form-group">
         <div class="m-3 p-2">
-            @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-light btn-outline-primary text-dark">
-                    <i class="bi bi-link-45deg"></i> Länka bilden
-                </a>*@
             <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> Länka bilden</button>
         </div>
     </div>

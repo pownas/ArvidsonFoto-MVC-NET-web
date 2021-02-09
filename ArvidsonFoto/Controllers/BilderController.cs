@@ -64,7 +64,14 @@ namespace ArvidsonFoto.Controllers
             }
 
             _pageCounterService.AddPageCount("Bilder");
-            _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+            try
+            {
+                _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+            }
+            catch(Exception ex)
+            {
+                Log.Warning("Couldn't add pagecount for the page: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
+            }
 
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
@@ -73,10 +80,15 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
-        [Route("/Bilder")]
-        public IActionResult Bilder()
+        [Route("/Bilder/")]
+        public IActionResult Bilder(int? ID)
         {
-            return Redirect("./Senast/Fotograferad");
+            if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
+            {
+                return Redirect("/Bilder/" + _categoryService.GetNameById(ID));
+            }
+
+            return Redirect("/Senast/Fotograferad");
         }
 
         [Route("/Sök")]
