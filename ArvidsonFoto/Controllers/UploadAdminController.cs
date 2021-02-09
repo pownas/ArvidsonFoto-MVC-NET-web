@@ -149,7 +149,7 @@ namespace ArvidsonFoto.Controllers
 
             int imagesPerPage = 25;
             if (sida is null || sida < 1)
-                sida = 1;
+                sida = 0;
 
             List<TblImage> displayTblImages = new List<TblImage>();
 
