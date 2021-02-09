@@ -1,0 +1,132 @@
+﻿@page
+@using ArvidsonFoto_LogReader.Data
+@using ArvidsonFoto_LogReader.Model
+
+@model IndexModel
+@{
+    ViewData["Title"] = "LogReader - Startpage";
+    AppLogReader _appLogReader = new AppLogReader();
+
+    List<LogPost> logbook = _appLogReader.ReadData("arvidsonfoto.se-2021-02-07.log");
+    List<LogPost> displayLog = logbook.Where(l => l.ErrorCode is not "200").OrderByDescending(l => l.ErrorCode).ToList();
+}
+
+@*<p>Välj en dag att visa:</p>
+<p>
+    @{ //Start på kalender-vy
+        var getDate = Model.DateShown;
+
+        var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
+        var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);
+
+        var numberOfDays = Convert.ToInt16(lastDayOfTheMonth.ToString("dd"));
+        DateTime startDate = firstDayOfTheMonth.AddDays(-(int)firstDayOfTheMonth.DayOfWeek);
+
+        var previousMonth = getDate.AddMonths(-1).ToString("yyyy-MM-dd");
+        var yesterDay = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+    }
+
+    <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">Föregående månad</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">Senaste loggen (Igår)</a>
+    <table class="table table-striped table-bordered table-dark text-center" style="width: 23rem;">
+        <thead>
+            <tr>
+                <th>V.</th>
+                <th>Mo</th>
+                <th>Ti</th>
+                <th>On</th>
+                <th>To</th>
+                <th>Fr</th>
+                <th>Lö</th>
+                <th>Sö</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@SharedStaticFunctions.GetWeekNumber(firstDayOfTheMonth)</th>
+                @for (int i = 0; i < 42; i++)
+                {
+                    DateTime date = startDate.AddDays(i + 1); //Lägger till +1 för att justera för amerikanska söndagen...
+                    if (i % 7 == 0 && i > 0) //start a new row every 7 days
+                    {
+                        if (i > 29 && date.Day > 5)
+                        {
+                        @:</tr><tr class="d-none">
+                        }
+                        else
+                        {
+                        @:</tr><tr>
+                            <th>@SharedStaticFunctions.GetWeekNumber(date.AddDays(1))</th>
+                        }
+                    }
+
+                    if (getDate.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                    {
+                        <td class="bg-primary">@date.Day</td>
+                    }
+                    else if (DateTime.Now.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
+                    {
+                        <td class="bg-secondary">idag</td>
+                    }
+                    else
+                    {
+                        bool fileExist = false;
+                        foreach (var item in Model.ExistingLogFiles)
+                        {
+                            if (item.Equals(date.ToString("yyyyMMdd")))
+                                fileExist = true;
+                        }
+
+                        if (fileExist)
+                        {
+                            <td><a href="/UploadAdmin/VisaLoggboken?datum=@date.ToString("yyyy-MM-dd")">@date.Day</a></td>
+                        }
+                        else
+                        {
+                            <td>@date.Day</td>
+                        }
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+</p>*@
+
+
+<table class="table table-bordered table-striped table-dark small">
+    <thead>
+        <tr>
+            <th scope="col">IPadress</th>
+            <th scope="col">Date</th>
+            <th scope="col">HTTPmethod</th>
+            <th scope="col">UrlPath</th>
+            <th scope="col">ErrorCode</th>
+            <th scope="col">TimeToLoad</th>
+            <th scope="col">RequestFrom</th>
+            <th scope="col">Browser</th>
+        </tr>
+    </thead>
+    <tbody>
+        @try
+        {
+            @foreach (var logPost in displayLog)
+            {
+                <tr>
+                    <th scope="row">@logPost.IPadress</th>
+                    <td>@logPost.Date</td> @* <td>@logPost.Date.ToString("yyyy-MM-dd HH:mm:ss")</td> *@
+                    <td>@logPost.HTTPmethod</td>
+                    <td>@logPost.UrlPath</td>
+                    <td>@logPost.ErrorCode</td>
+                    <td>@logPost.TimeToLoad</td>
+                    <td>@logPost.RequestFrom</td>
+                    <td>@logPost.Browser</td>
+                </tr>
+            }
+        }
+        catch (Exception)
+        {
+            <tr>
+                <td colspan="8">Hittade ingen loggfil...</td>
+            </tr>
+        }
+    </tbody>
+</table>

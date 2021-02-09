@@ -32,12 +32,12 @@
   </url>-->
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/K%C3%B6p_av_bilder</loc>
+    <loc>https://arvidsonfoto.se/Info/Kop_av_bilder</loc>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/G%C3%A4stbok</loc>
+    <loc>https://arvidsonfoto.se/Info/GB</loc>
     <changefreq>monthly</changefreq>
   </url>
 
@@ -59,7 +59,7 @@
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/S%C3%B6k</loc>
+    <loc>https://arvidsonfoto.se/Search</loc>
   </url>
 
 </urlset>

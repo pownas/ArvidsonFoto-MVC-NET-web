@@ -2,6 +2,8 @@
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok." />
+    <link rel="canonical" href="https://ArvidsonFoto.se/Info/GB" />
 }
 
 @inject IGuestBookService _guestBookService
@@ -80,9 +82,9 @@
                     <div class="card text-left text-dark">
                         <div class="card-header">
                             @if (gbPost.GbName is not null)
-                                {@gbPost.GbName}
-                            else
-                                {@("Anonym användare")}
+                            {@gbPost.GbName}
+                        else
+                        {@("Anonym användare")}
                         </div>
                         <div class="card-body">
                             <p class="card-text text-dark">@gbPost.GbText</p>
@@ -90,7 +92,7 @@
                         <div class="card-footer text-muted row">
                             <div class="text-left col-6">
                                 @if (gbPost.GbHomepage is not null)
-                                    {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
+                                {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
                             </div>
                             <div class="text-right col-6">@gbDate.ToString("yyyy-MM-dd")</div>
                         </div>
