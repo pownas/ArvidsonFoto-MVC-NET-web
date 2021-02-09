@@ -92,8 +92,10 @@ namespace ArvidsonFoto.Controllers
             return Redirect("/Senast/Fotograferad");
         }
 
-        [Route("/Sök")]
+        [Route("/Sk")]
+        [Route("/Sok")]
         [Route("/Search")]
+        [Route("/Sök")]
         public IActionResult Sök(string s)
         {
             _pageCounterService.AddPageCount("Sök");
