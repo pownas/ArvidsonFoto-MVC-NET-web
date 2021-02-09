@@ -1,0 +1,73 @@
+﻿@model UploadImageInputModel
+@inject ICategoryService _categoryService
+
+@{
+    string imgThumbSrc = Model.ImageUrlFullSrc + ".thumb.jpg";
+
+    TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
+}
+
+<form method="post" asp-controller="UploadAdmin" asp-action="CreateImageLink">
+    <div class="modal-body">
+        <p class="text-center"><img src="@imgThumbSrc" alt="@Model.ImageArtNamn" width="120" height="120" title="@Model.ImageArtNamn"></p>
+
+        @Html.AntiForgeryToken()
+        <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="ImageHuvudfamilj" hidden />
+        <input asp-for="ImageFamilj" hidden />
+        <div class="form-group">
+            <label asp-for="ImageArt" class="control-label">Art</label>
+            <div>
+                <select asp-for="ImageArt" class="form-control">
+
+                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.MenuText))
+                    {
+                        if (category.Equals(selectedCategory))
+                        {
+                            <option selected value="@Model.ImageArt">@Model.ImageArtNamn</option>
+                        }
+                        else
+                        {
+                            <option value="@category.MenuId">@category.MenuText</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="ImageArt"></span>
+            </div>
+        </div>
+        @*<p><strong>Art:</strong> @Model.ImageArtNamn <input asp-for="ImageArt" /></p>*@
+        <div class="form-group">
+            <label asp-for="ImageUrl" class="control-label"></label>
+            <div>
+                <input asp-for="ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: TA1_1234" class="form-control" />
+                <span asp-validation-for="ImageUrl"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageDate" class="control-label"></label>
+            <div>
+                <input asp-for="ImageDate" value="@Model.ImageDate.ToString("yyyy-MM-dd")" placeholder="YYYY-MM-DD" class="form-control" />
+                <span asp-validation-for="ImageDate"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageDescription" class="control-label"></label>
+            <div>
+                <input asp-for="ImageDescription" value="@Model.ImageDescription" class="form-control" />
+                <span asp-validation-for="ImageDescription"></span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Avbryt <i class="bi bi-x-circle"></i>
+        </button>
+        <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
+            Spara ändring <i class="bi bi-pencil-square"></i>
+        </a>
+
+        @*<div class="m-3 p-2">
+            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark">Spara ändring <i class="bi bi-pencil-square"></i></button>
+        </div>*@
+    </div>
+</form>

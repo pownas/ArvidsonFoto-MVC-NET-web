@@ -49,7 +49,7 @@ namespace ArvidsonFoto.Services
             }
             catch (Exception ex)
             {
-                Log.Error("Error while updating PageCounter. Error-message: " + ex.Message);
+                Log.Error("Error while updating PageCounter for the Page: "+ pageName + ". Error-message: " + ex.Message);
             }
         }
         

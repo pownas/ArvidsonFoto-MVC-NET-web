@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ArvidsonFoto.Views.Shared
+namespace ArvidsonFoto
 {
     public static class UploadAdminNavPages
     {

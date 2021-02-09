@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="ArvidsonFoto-version" content="v3.0.1 - Commit: https://github.com/pownas/ArvidsonFoto-MVC-NET5/commit/e00a740 || Fil-trädet: https://github.com/pownas/ArvidsonFoto-MVC-NET5/tree/e00a740 " />
+    <meta name="ArvidsonFoto-version" content="v3.1.0 - Commit: https://github.com/pownas/ArvidsonFoto-MVC-NET5/commit/3e6b7ac || Fil-trädet: https://github.com/pownas/ArvidsonFoto-MVC-NET5/tree/3e6b7ac " />
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
@@ -22,13 +22,15 @@
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 -->*@
-    <script src="lib/bootstrap/js/bootstrap.min.js"></script> @*<!-- version: 4.5.3-dist -->*@
-    <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
-    <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
-    <script src="js/site.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <section id="Scripts">
+        <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 -->*@
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script> @*<!-- version: 4.5.3-dist -->*@
+        <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
+        <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
+        <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
+        <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
+        <script src="js/site.js"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </section>
 </body>
 </html>

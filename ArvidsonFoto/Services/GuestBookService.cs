@@ -86,7 +86,7 @@ namespace ArvidsonFoto.Services
             catch (Exception ex)
             {
                 succeeded = false;
-                Log.Error("Error when deleting GB-post. Error-message: " + ex.Message);
+                Log.Error("Error when deleting GB-post with id: "+ gbId + ". Error-message: " + ex.Message);
             }
             return succeeded;
         }

@@ -1,5 +1,4 @@
 ﻿@model UploadEditImagesViewModel
-@inject ICategoryService _categoryService
 
 @section MetaData {
     <meta name="robots" content="noindex" />
@@ -20,137 +19,148 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här nedanför kan du redigera bland de senaste bilderna:</p>
+        <p class="">(du kan scrolla i sidled på telefonen)</p>
     </div>
 </div>
 <div class="col-12">
-    <table class="table table-striped table-dark">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">HuvudFamilj</th>
-                <th scope="col">Familj</th>
-                <th scope="col">Art</th>
-                <th scope="col">Fotodatum</th>
-                <th scope="col">Bildnamn</th>
-                <th scope="col">Beskrivning</th>
-                <th scope="col">Redigera</th>
-            </tr>
-        </thead>
-        <tbody>
-            @try
-            {
-                @foreach (var image in Model.DisplayImagesList)
-                {
-                    string imgArt = _categoryService.GetNameById(image.ImageArt);
-                    string imgFamilj = _categoryService.GetNameById(image.ImageFamilj);
-                    string imgHuvudFamilj = _categoryService.GetNameById(image.ImageHuvudfamilj);
-
-                    string imgThumbSrc = "https://arvidsonfoto.se/Bilder";
-                    if (imgHuvudFamilj is not null)
-                        imgThumbSrc += "/" + imgHuvudFamilj;
-                    if (imgFamilj is not null)
-                        imgThumbSrc += "/" + imgFamilj;
-
-                    imgThumbSrc += "/" + imgArt + "/" + image.ImageUrl + ".thumb.jpg";
-                    <tr>
-                        <th scope="row"><img src="@imgThumbSrc" alt="@imgArt" width="80" height="80" title="@imgArt"></th>
-                        <td>@imgHuvudFamilj</td>
-                        <td>@imgFamilj</td>
-                        <td>@imgArt</td>
-                        <td>@image.ImageDate</td>
-                        <td>@image.ImageUrl</td>
-                        <td>@image.ImageDescription</td>
-                        <td>
-                            <p class="m-0 mb-3">
-                                <button title="Ändra" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#EditImage-@image.ImageId">
-                                    <i class="bi bi-pencil-square mr-2"></i> Ändra
-                                </button>
-                            </p>
-                            <p class="m-0">
-                                <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
-                                    <i class="bi bi-trash mr-2"></i> Radera
-                                </button>
-                            </p>
-
-                            <!-- Bootstrap-Modal id=DeleteImage -->
-                            <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content text-dark">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
-                                                Radera bilden: @image.ImageUrl på @imgArt?
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="text-center"><img src="@imgThumbSrc" alt="@imgArt" width="120" height="120" title="@imgArt"></p>
-                                            <p>Vill du ta bort denna bilden på @imgArt?</p>
-                                            <p><strong>Filnamn:</strong> @image.ImageUrl</p>
-                                            <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                Avbryt <i class="bi bi-x-circle"></i>
-                                            </button>
-                                            <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
-                                                Radera bilden <i class="bi bi-trash"></i>
-                                            </a>
-                                            @*
-                                            <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
-                                                Radera <i class="bi bi-trash"></i>
-                                            </a>
-                                            *@
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- End of Bootstrap-Modal-->
-                            <!-- Bootstrap-Modal id=EditImage -->
-                            <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content text-dark">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
-                                                Ändra bilden: @image.ImageUrl på @imgArt
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="text-center"><img src="@imgThumbSrc" alt="@imgArt" width="120" height="120" title="@imgArt"></p>
-                                            <p><strong>Art:</strong> @imgArt <br /></p>
-                                            <p><strong>Fotodatum:</strong> @image.ImageDate</p> <!-- .ToString("yyyy-MM-dd") -->
-                                            <p>
-                                                <div class="mb-3">
-                                                    <label for="message-text" class="col-form-label">Beskrivning:</label>
-                                                    <textarea class="form-control" id="message-text-for-@image.ImageId">@image.ImageDescription</textarea>
-                                                </div>
-                                            </p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                Avbryt <i class="bi bi-x-circle"></i>
-                                            </button>
-                                            <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
-                                                Spara ändring <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- End of Bootstrap-Modal-->
-
-                        </td>
-                    </tr>
-                }
-            }
-            catch (Exception ex)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped table-dark">
+            <thead>
                 <tr>
-                    <td colspan="8">Hittade inga bilder</td>
+                    <th scope="col">Id</th>
+                    <th scope="col">HuvudFamilj</th>
+                    <th scope="col">Familj</th>
+                    <th scope="col">Art</th>
+                    <th scope="col">Fotodatum</th>
+                    <th scope="col">Bildnamn</th>
+                    <th scope="col">Beskrivning</th>
+                    <th scope="col">Redigera</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @try
+                {
+                    @foreach (var image in Model.DisplayImagesList)
+                    {
+                        string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
+                        <tr>
+                            <th scope="row"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="80" height="80" title="@image.ImageArtNamn"></th>
+                            <td>@image.ImageHuvudfamiljNamn</td>
+                            <td>@image.ImageFamiljNamn</td>
+                            <td>@image.ImageArtNamn</td>
+                            <td>@image.ImageDate.ToString("yyyy-MM-dd")</td>
+                            <td>@image.ImageUrl</td>
+                            <td>@image.ImageDescription</td>
+                            <td>
+                                <p class="m-0 mb-3">
+                                    <button title="Ändra" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#EditImage-@image.ImageId">
+                                        <i class="bi bi-pencil-square mr-2"></i> Ändra
+                                    </button>
+                                </p>
+                                <p class="m-0">
+                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
+                                        <i class="bi bi-trash mr-2"></i> Radera
+                                    </button>
+                                </p>
+
+                                <!-- Bootstrap-Modal id=DeleteImage -->
+                                <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content text-dark">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
+                                                    Radera bilden: @image.ImageUrl på @image.ImageArtNamn?
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
+                                                <p>Vill du ta bort denna bilden på @image.ImageArtNamn?</p>
+                                                <p><strong>Filnamn:</strong> @image.ImageUrl</p>
+                                                <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Avbryt <i class="bi bi-x-circle"></i>
+                                                </button>
+                                                <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
+                                                    Radera bilden <i class="bi bi-trash"></i>
+                                                </a>
+                                                @*
+                                                    <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
+                                                        Radera <i class="bi bi-trash"></i>
+                                                    </a>
+                                                *@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- End of Bootstrap-Modal-->
+
+                                <!-- Bootstrap-Modal id=EditImage -->
+                                <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content text-dark">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
+                                                    Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
+                                        </div>
+                                    </div>
+                                </div><!-- End of Bootstrap-Modal-->
+
+                            </td>
+                        </tr>
+                    }
+                }
+                catch (Exception ex)
+                {
+                    <tr>
+                        <td colspan="8">Hittade inga bilder</td>
+                    </tr>
+                    Log.Error("Något gick fel på RedigeraBilder-sidan. Felmeddelande: " + ex.Message);
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
+    {
+        <nav id="page-paging-top" aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
+                }
+                <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
+                @if (Model.CurrentPage == Model.TotalPages)
+                {
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
+                }
+            </ul>
+        </nav>
+    }@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
