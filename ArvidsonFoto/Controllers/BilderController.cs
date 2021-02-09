@@ -96,6 +96,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sok")]
         [Route("/Search")]
         [Route("/Sök")]
+        [Route("/Search")]
         public IActionResult Sök(string s)
         {
             _pageCounterService.AddPageCount("Sök");
