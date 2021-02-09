@@ -5,4 +5,8 @@
     <RootNamespace>ArvidsonFoto_LogReader</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
 </Project>
