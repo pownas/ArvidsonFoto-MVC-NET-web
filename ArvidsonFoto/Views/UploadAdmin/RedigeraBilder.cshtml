@@ -3,6 +3,9 @@
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
+@{
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraBilder;
+}
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
@@ -12,19 +15,31 @@
 </nav>
 <h1 class="offset-md-4"><i class="bi bi-pencil-square mr-2"></i>@ViewData["Title"]</h1>
 <div class="row">
-    <nav class="nav col-12 col-md-4 p-0">
+    <nav class="nav nav-pills col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
             <partial name="_NavUploadAdmin" />
         </ul>
     </nav>
     <div class="col-12 col-md-8">
+        @if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("ErrorImgEdit") && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid redigering av bilden med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
+        }
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgDelete") && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Har nu raderat länkningen för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+        }
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgEdit") && Model.UpdatedId is not null)
+        {
+            <h5 class="alert alert-success bg-success text-dark">Har nu sparat ändringar för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+        }
         <p>Här nedanför kan du redigera bland de senaste bilderna:</p>
         <p class="">(du kan scrolla i sidled på telefonen)</p>
     </div>
 </div>
 <div class="col-12">
     <div class="table-responsive">
-        <table class="table table-striped table-dark">
+        <table class="table table-bordered table-striped table-dark">
             <thead>
                 <tr>
                     <th scope="col">Id</th>
@@ -53,68 +68,15 @@
                             <td>@image.ImageDescription</td>
                             <td>
                                 <p class="m-0 mb-3">
-                                    <button title="Ändra" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#EditImage-@image.ImageId">
+                                    <button title="Ändra" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-toggle="modal" data-target="#EditImage-@image.ImageId">
                                         <i class="bi bi-pencil-square mr-2"></i> Ändra
                                     </button>
                                 </p>
                                 <p class="m-0">
-                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
+                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
                                         <i class="bi bi-trash mr-2"></i> Radera
                                     </button>
                                 </p>
-
-                                <!-- Bootstrap-Modal id=DeleteImage -->
-                                <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content text-dark">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
-                                                    Radera bilden: @image.ImageUrl på @image.ImageArtNamn?
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
-                                                <p>Vill du ta bort denna bilden på @image.ImageArtNamn?</p>
-                                                <p><strong>Filnamn:</strong> @image.ImageUrl</p>
-                                                <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                    Avbryt <i class="bi bi-x-circle"></i>
-                                                </button>
-                                                <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
-                                                    Radera bilden <i class="bi bi-trash"></i>
-                                                </a>
-                                                @*
-                                                    <a href="/UploadAdmin/DeleteGbPost?gbId=@image.ImageId" class="btn btn-danger">
-                                                        Radera <i class="bi bi-trash"></i>
-                                                    </a>
-                                                *@
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!-- End of Bootstrap-Modal-->
-
-                                <!-- Bootstrap-Modal id=EditImage -->
-                                <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content text-dark">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
-                                                    Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
-                                        </div>
-                                    </div>
-                                </div><!-- End of Bootstrap-Modal-->
-
                             </td>
                         </tr>
                     }
@@ -129,11 +91,66 @@
             </tbody>
         </table>
     </div>
+    <section id="page-Modals">
+        @foreach (var image in Model.DisplayImagesList) //Modal-loop (Popup rutorna Delete och Edit)
+        {
+            string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
+            @*<!-- Bootstrap-Modal id=DeleteImage -->*@
+            <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
+                                Radera bilden: @image.ImageUrl på @image.ImageArtNamn?
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
+                            <p>Vill du ta bort denna bilden på @image.ImageArtNamn?</p>
+                            <p><strong>Filnamn:</strong> @image.ImageUrl</p>
+                            <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Avbryt <i class="bi bi-x-circle"></i>
+                            </button>
+                            <a href="/UploadAdmin/DeleteImage?imgId=@image.ImageId" class="btn btn-danger">
+                                Radera <i class="bi bi-trash"></i>
+                            </a>
+                            @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
+                                Radera bilden <i class="bi bi-trash"></i>
+                            </a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>@*<!-- End of Bootstrap-Modal-->*@
 
-    <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+            @*<!-- Bootstrap-Modal id=EditImage -->*@
+            <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
+                                Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
+                    </div>
+                </div>
+            </div>@*<!-- End of Bootstrap-Modal-->*@
+        }
+    </section>
+
+    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
     @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
     {
-        <nav id="page-paging-top" aria-label="Page navigation example">
+        <nav id="page-paging-bottom" aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 @if (Model.CurrentPage > 1)
                 {

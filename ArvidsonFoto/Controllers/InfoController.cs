@@ -113,10 +113,6 @@ namespace ArvidsonFoto.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormModel contactFormModel, string Page)
         {
-            //bool isValid = ModelState.IsValid;
-            //bool isValid = contactFormModel.Validate(); //UPPDATERA!!!
-                                                            //bool isValid = editContext.Validate();
-                                                            //Behöver validera alla fält i modellen korrekt, att de uppfyller Required status. 
             if (ModelState.IsValid)
             {
                 contactFormModel.DisplayErrorSending = false;
@@ -157,8 +153,10 @@ namespace ArvidsonFoto.Controllers
                         Log.Information("Email above, sent OK.");
                     }
 
-                    contactFormModel = new ContactFormModel();
-                    contactFormModel.DisplayEmailSent = true;
+                    contactFormModel = new ContactFormModel() {
+                        DisplayEmailSent = true,
+                        FormSubmitDate = DateTime.Now
+                    };
                 }
                 catch (Exception e)
                 {

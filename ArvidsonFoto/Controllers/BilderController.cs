@@ -42,25 +42,25 @@ namespace ArvidsonFoto.Controllers
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
-                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+                viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
             }
             else if (subLevel3 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
-                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+                viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
             }
             else if (subLevel2 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
-                viewModel.CurrentUrl = "./Bilder/" + subLevel1 + "/" + subLevel2;
+                viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
             }
             else if (subLevel1 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
-                viewModel.CurrentUrl = "./Bilder/" + subLevel1;
+                viewModel.CurrentUrl = "/Bilder/" + subLevel1;
             }
 
             _pageCounterService.AddPageCount("Bilder");
@@ -81,6 +81,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Bilder/")]
+        [Route("gallery.asp")]
         public IActionResult Bilder(int? ID)
         {
             if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
@@ -92,6 +93,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Sök")]
+        [Route("/Search")]
         public IActionResult Sök(string s)
         {
             _pageCounterService.AddPageCount("Sök");
@@ -103,8 +105,10 @@ namespace ArvidsonFoto.Controllers
             }
             else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
             {
-                Log.Information("En användare sökte efter: "+s); //Borde logga i databas eller separat sök-fil... 
+                Log.Information("En användare sökte efter: '"+s+"'"); //Borde logga i databas eller separat sök-fil... 
                 ViewData["Title"] = "Söker efter: " + s;
+                s = s.Trim(); // tar bort blankspace i början och slutet. Använd annars TrimEnd/TrimStart. 
+                s = s.Replace("+", " ");
                 List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
                 foreach (var category in allCategories)
@@ -113,9 +117,9 @@ namespace ArvidsonFoto.Controllers
                         listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
                 }
                 viewModel.DisplayImagesList = listOfFirstSearchedImages;
-                viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+                viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s, MenuUrltext = "/Search" }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
                 if (listOfFirstSearchedImages.Count == 0)
-                    Log.Warning("Hittade inget vid sökning: "+s); //Borde logga i databas och då sätta ett "found" värde till false.
+                    Log.Warning("Hittade inget vid sökning: '"+s+"'"); //Borde logga i databas och då sätta ett "found" värde till false.
             }
             return View(viewModel);
         }

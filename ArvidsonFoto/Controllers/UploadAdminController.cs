@@ -143,13 +143,13 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("NyKategori", inputModel);
         }
 
-        public IActionResult RedigeraBilder(int? sida)
+        public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
         {
             ViewData["Title"] = "Redigera bland bilderna";
 
             int imagesPerPage = 25;
             if (sida is null || sida < 1)
-                sida = 1;
+                sida = 0;
 
             List<TblImage> displayTblImages = new List<TblImage>();
 
@@ -166,6 +166,15 @@ namespace ArvidsonFoto.Controllers
                                         .ToList();
             viewModel.DisplayImagesList = new List<UploadImageInputModel>();
 
+            if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
+            {
+                viewModel.DisplayMessage = "";
+            }
+            else
+            {
+                viewModel.DisplayMessage = DisplayMessage;
+                viewModel.UpdatedId = imgId;
+            }
 
             foreach (var item in displayTblImages)
             {
@@ -200,25 +209,32 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
-        public IActionResult HanteraGB(string Raderad, string gbId)
+        public IActionResult HanteraGB(string DisplayMessage, string gbId)
         {
             ViewData["Title"] = "Hantera gästboken";
             UploadGbViewModel viewModel = new UploadGbViewModel();
-            if (string.IsNullOrWhiteSpace(Raderad) && string.IsNullOrWhiteSpace(gbId))
+            if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
             {
-                viewModel.Error = false;
-            }
-            else if(Raderad.Equals("OK"))
-            {
-                viewModel.Error = false;
-                viewModel.UpdatedId = gbId;
+                viewModel.DisplayMessage = "";
             }
             else
             {
-                viewModel.Error = true;
+                viewModel.DisplayMessage = DisplayMessage;
                 viewModel.UpdatedId = gbId;
             }
             return View(viewModel);
+        }
+
+        public IActionResult MarkGbPostAsRead(int gbId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (_guestBookService.ReadGbPost(gbId))
+                {
+                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId = gbId });
+                }
+            }
+            return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId = gbId });
         }
 
         public IActionResult DeleteGbPost(int gbId)
@@ -227,10 +243,22 @@ namespace ArvidsonFoto.Controllers
             {
                 if(_guestBookService.DeleteGbPost(gbId))
                 { 
-                    return RedirectToAction("HanteraGB", new { Raderad = "OK", gbId = gbId });
+                    return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId = gbId });
                 }
             }
-            return RedirectToAction("HanteraGB", new { Raderad = "Error", gbId = gbId });
+            return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId = gbId });
+        }
+
+        public IActionResult DeleteImage(int imgId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (_imageService.DeleteImgId(imgId))
+                {
+                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId = imgId });
+                }
+            }
+            return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId = imgId });
         }
 
         public IActionResult Statistik()

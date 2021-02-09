@@ -38,6 +38,24 @@ namespace ArvidsonFoto.Services
             return success;
         }
 
+        public bool DeleteImgId(int imgId)
+        {
+            bool succeeded = false;
+            try
+            {
+                TblImage image = _entityContext.TblImages.FirstOrDefault(i => i.ImageId == imgId);
+                _entityContext.TblImages.Remove(image);
+                _entityContext.SaveChanges();
+                succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                succeeded = false;
+                Log.Error("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
+            }
+            return succeeded;
+        }
+
         public int GetImageLastId()
         {
             int highestID = -1;

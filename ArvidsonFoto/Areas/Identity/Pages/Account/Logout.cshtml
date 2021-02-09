@@ -3,6 +3,7 @@
 @section MetaData { <meta name="robots" content="noindex" /> }
 @{
     ViewData["Title"] = "Logga ut";
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.LoggaUt;
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -15,7 +16,7 @@
 <h1 class="offset-md-4"><i class="bi bi-lock mr-2"></i>@ViewData["Title"]</h1>
 
 <div class="row">
-    <nav class="nav col-12 col-md-4 p-0">
+    <nav class="nav nav-pills col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
             <partial name="_NavUploadAdmin" />
         </ul>

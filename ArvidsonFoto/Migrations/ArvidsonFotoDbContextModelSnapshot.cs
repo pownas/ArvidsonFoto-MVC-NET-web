@@ -47,14 +47,18 @@ namespace ArvidsonFoto.Migrations
                         .HasColumnName("GB_ID");
 
                     b.Property<string>("GbIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("GB_IP");
 
                     b.Property<string>("GbName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("GB_name");
+
+                    b.Property<bool?>("GbReadPost")
+                        .HasColumnType("bit")
+                        .HasColumnName("GB_ReadPost");
 
                     b.Property<string>("GbText")
                         .HasColumnType("nvarchar(max)")

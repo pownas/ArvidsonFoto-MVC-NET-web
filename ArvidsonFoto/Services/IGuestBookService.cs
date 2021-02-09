@@ -7,6 +7,8 @@ namespace ArvidsonFoto.Services
     {
         bool CreateGBpost(TblGb gb);
 
+        bool ReadGbPost(int gbId);
+
         bool DeleteGbPost(int gbId);
 
         int GetLastGbId();
