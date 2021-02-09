@@ -95,6 +95,24 @@
         @foreach (var image in Model.DisplayImagesList) //Modal-loop (Popup rutorna Delete och Edit)
         {
             string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
+
+            @*<!-- Bootstrap-Modal id=EditImage -->*@
+            <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
+                                Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
+                    </div>
+                </div>
+            </div>@*<!-- End of Bootstrap-Modal-->*@
+
             @*<!-- Bootstrap-Modal id=DeleteImage -->*@
             <div class="modal fade" id="DeleteImage-@image.ImageId" tabindex="-1" aria-labelledby="DeleteImage-@image.ImageId-Label" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -124,23 +142,6 @@
                                 Radera bilden <i class="bi bi-trash"></i>
                             </a>*@
                         </div>
-                    </div>
-                </div>
-            </div>@*<!-- End of Bootstrap-Modal-->*@
-
-            @*<!-- Bootstrap-Modal id=EditImage -->*@
-            <div class="modal fade" id="EditImage-@image.ImageId" tabindex="-1" aria-labelledby="EditImage-@image.ImageId-Label" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content text-dark">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
-                                Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
                     </div>
                 </div>
             </div>@*<!-- End of Bootstrap-Modal-->*@
