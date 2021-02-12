@@ -39,6 +39,16 @@ namespace ArvidsonFoto.Controllers
             viewModel.CurrentPage = (int)sida - 1;
 
             if (subLevel4 is not null)
+                subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
+            if (subLevel3 is not null)
+                subLevel3 = SharedStaticFunctions.ReplaceAAO(subLevel3);
+            if (subLevel2 is not null)
+                subLevel2 = SharedStaticFunctions.ReplaceAAO(subLevel2);
+            if (subLevel1 is not null)
+                subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
+
+
+            if (subLevel4 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
@@ -96,7 +106,6 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sok")]
         [Route("/Search")]
         [Route("/Sök")]
-        [Route("/Search")]
         public IActionResult Sök(string s)
         {
             _pageCounterService.AddPageCount("Sök");

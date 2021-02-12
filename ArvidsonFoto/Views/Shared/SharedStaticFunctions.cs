@@ -28,5 +28,17 @@ namespace ArvidsonFoto
 
             return myCal.GetWeekOfYear(date, myCWR, myFirstDOW);
         }
+
+        public static string ReplaceAAO(string replaceAAO)
+        {
+            replaceAAO = replaceAAO.Replace("Ã¥", "å");
+            replaceAAO = replaceAAO.Replace("Ã¤", "ä");
+            replaceAAO = replaceAAO.Replace("Ã¶", "ö");
+            replaceAAO = replaceAAO.Replace("Ã…", "Å");
+            replaceAAO = replaceAAO.Replace("Ã„", "Ä");
+            replaceAAO = replaceAAO.Replace("Ã–", "Ö");
+            
+            return replaceAAO;
+        }
     }
 }

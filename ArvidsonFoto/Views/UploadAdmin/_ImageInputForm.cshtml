@@ -8,21 +8,21 @@
     <div class="form-group">
         <label asp-for="ImageUrl" class="control-label"></label>
         <div>
-            <input asp-for="ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: TA1_1234" class="form-control" />
+            <input asp-for="ImageUrl" placeholder="Filnamnet UTAN .jpg, t.ex: 'TA1_1234'" class="form-control" />
             <span asp-validation-for="ImageUrl"></span>
         </div>
     </div>
     <div class="form-group">
         <label asp-for="ImageDate" class="control-label"></label>
         <div>
-            <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" placeholder="YYYY-MM-DD" class="form-control" />
+            <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="ÅÅÅÅ-MM-DD" class="form-control" />
             <span asp-validation-for="ImageDate"></span>
         </div>
     </div>
     <div class="form-group">
         <label asp-for="ImageDescription" class="control-label"></label>
         <div>
-            <input asp-for="ImageDescription" placeholder="@Html.DisplayNameFor(model => model.ImageDescription)" class="form-control" />
+            <input asp-for="ImageDescription" placeholder="" class="form-control" />
             <span asp-validation-for="ImageDescription"></span>
         </div>
     </div>
