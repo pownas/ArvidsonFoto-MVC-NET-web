@@ -63,7 +63,7 @@ else
         if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
         {
             <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                <a href="@imgHref" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
+                <a rel="nofollow" href="@imgHref" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
                     <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
                     <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                 </a>
@@ -72,7 +72,7 @@ else
         else
         {
             <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                <a href="@imgSrc" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
+                <a rel="nofollow" href="@imgSrc" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
 Tryck för att förstora">
                     <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
 Tryck för att förstora">
@@ -82,7 +82,7 @@ Tryck för att förstora">
 
             <div class="glightbox-desc row @customDesc">
                 <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
-                <p>Bildnamn: @imgName <a href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+                <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
         }
 

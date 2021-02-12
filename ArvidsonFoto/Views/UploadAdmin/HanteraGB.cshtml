@@ -8,7 +8,7 @@
 }
 
 @section MetaData {
-    <meta name="robots" content="noindex" />
+    <meta name="robots" content="noindex, nofollow" />
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -66,9 +66,15 @@
                                             <i class="bi bi-check2-square mr-2"></i> Läsmarkera
                                         </a>
                                     }
-                                    <button title="Svara" type="button" class="btn btn-sm btn-primary my-1" data-toggle="modal" data-target="#AnswerTo-@gbPost.GbId">
-                                        <i class="bi bi-pencil-square mr-2"></i>Svara
-                                    </button>
+                                    @if (gbPost.GbEmail is not null && gbPost.GbEmail.Contains("@")) //Kollar om Email innehåller en e-postadress...
+                                    {
+                                        @*<button title="Svara" type="button" class="btn btn-sm btn-primary my-1" data-toggle="modal" data-target="#AnswerTo-@gbPost.GbId">
+                                            <i class="bi bi-pencil-square mr-2"></i>Svara
+                                        </button>*@
+                                        <a title="Svara via Outlook" class="btn btn-sm btn-primary my-1" href="mailto:@gbPost.GbEmail?subject=Svar%20på%20gästboks-inlägget%20du%20skrev%20på%20min%20hemsida:%20ArvidsonFoto.se" target="_blank" rel="noopener noreferrer">
+                                            <i class="bi bi-pencil-square mr-2"></i>Svara
+                                        </a>
+                                    }
                                     <button title="Radera" type="button" class="btn btn-sm btn-danger my-1" data-toggle="modal" data-target="#DeleteMessage-@gbPost.GbId">
                                         <i class="bi bi-trash mr-2"></i>Radera
                                     </button>
@@ -117,7 +123,7 @@
                             </div>
                         </div>
                     </div><!-- End of Bootstrap-Modal-->
-
+                    @*
                     <!-- Bootstrap-Modal id=AnswerTo -->
                     <div class="modal fade" id="AnswerTo-@gbPost.GbId" tabindex="-1" aria-labelledby="AnswerTo-@gbPost.GbId-Label" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -147,10 +153,13 @@
                                     <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
                                         Svara <i class="bi bi-pencil-square"></i> (fungerar ej)
                                     </a>
+                                    <a class="btn btn-primary text-white" href="mailto:@gbPost.GbEmail?subject=Svar%20på%20gästboks-inlägget%20du%20skrev%20på%20min%20hemsida&body=test" target="_blank" rel="noopener noreferrer">
+                                        Svara via Outlook <i class="bi bi-pencil-square"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div><!-- End of Bootstrap-Modal-->
+                    </div><!-- End of Bootstrap-Modal-->*@
                 }
             }
         </div>
