@@ -83,10 +83,13 @@ namespace ArvidsonFoto.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.ImageHuvudfamilj.Equals(0))
+                    model.ImageHuvudfamilj = null;
+
                 if (model.ImageFamilj.Equals(0))
                     model.ImageFamilj = null;
                 
-                if (model.ImageHuvudfamilj.Equals(0))
+                if (model.ImageHuvudfamilj.Equals(1)) //ID för Fåglar = 1
                     model.ImageHuvudfamilj = null;
 
                 TblImage newImage = new TblImage()
