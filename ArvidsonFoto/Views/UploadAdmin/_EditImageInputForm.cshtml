@@ -7,7 +7,7 @@
     TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
 }
 
-<form method="post" asp-controller="UploadAdmin" asp-action="CreateImageLink">
+<form method="post" asp-controller="UploadAdmin" asp-action="EditImageLink">
     <div class="modal-body">
         <p class="text-center"><img src="@imgThumbSrc" alt="@Model.ImageArtNamn" width="120" height="120" title="@Model.ImageArtNamn"></p>
 
@@ -19,12 +19,14 @@
             <input asp-for="ImageFamilj" hidden />
             @*<label asp-for="ImageFamilj" class="control-label">Familj: @Model.ImageFamiljNamn</label>*@
             <input asp-for="ImageArt" hidden />
+            <input asp-for="ImageId" hidden />
             @*<label asp-for="ImageArt" class="control-label">Art: @Model.ImageArtNamn</label>*@
+            <p><strong>Bildnummer:</strong> @Model.ImageId</p>
             <p><strong>Art:</strong> @Model.ImageArtNamn</p>
             <p class="m-0">Är det fel art?</p>
             <p>Då behöver du <a title="Radera" class="text-danger" data-toggle="modal" data-target="#DeleteImage-@Model.ImageId">Radera</a> och göra en ny länkning.</p>
         </div>
-        @*<div class="form-group">
+        @*<div class="form-group"> <!-- Listar alla Arter i en dropdown-list -->
             <label asp-for="ImageArt" class="control-label">Art</label>
             <div>
                 <select asp-for="ImageArt" class="form-control">
@@ -70,12 +72,13 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Avbryt <i class="bi bi-x-circle"></i>
         </button>
-        <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
+        @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
             Spara ändring <i class="bi bi-pencil-square"></i> (fungerar ej)
-        </a>
-
-        @*<div class="m-3 p-2">
-            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark">Spara ändring <i class="bi bi-pencil-square"></i></button>
-        </div>*@
+        </a>*@
+        @*<div class="m-3 p-2">*@
+        <button id="SubmitButton" type="submit" class="btn btn-primary text-white">
+            Spara ändring <i class="bi bi-pencil-square"></i>
+        </button>
+        @*</div>*@
     </div>
 </form>

@@ -104,15 +104,24 @@ namespace ArvidsonFoto.Controllers
                     ImageUrl = model.ImageUrl
                 };
 
-                if (_imageService.AddImage(newImage))
-                {
-                    model.ImageCreated = true; //Om allt OK...
-                }
+                model.ImageCreated = _imageService.AddImage(newImage); //Om allt OK...
             }
             if (model.ImageCreated)
                 return RedirectToAction("NyBild", new { model.ImageCreated, model.ImageArt, model.ImageUrl });
             else
                 return RedirectToAction("NyBild", model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult EditImageLink(UploadImageInputModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_imageService.UpdateImage(model)) //Lägg in skapandet här, och då sätt som true/false..
+                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
+            }
+
+            return RedirectToAction("RedigeraBilder", model);
         }
 
         public IActionResult NyKategori(UploadNewCategoryModel inputModel)
@@ -176,7 +185,7 @@ namespace ArvidsonFoto.Controllers
             else
             {
                 viewModel.DisplayMessage = DisplayMessage;
-                viewModel.UpdatedId = imgId;
+                viewModel.UpdatedId = Convert.ToInt32(imgId);
             }
 
             foreach (var item in displayTblImages)

@@ -20,7 +20,7 @@ namespace ArvidsonFoto.Services
 
         public bool AddImage(TblImage image)
         {
-            bool success = false;
+            bool success; //default är false
             try
             {
                 _entityContext.TblImages.Add(image);
@@ -29,7 +29,30 @@ namespace ArvidsonFoto.Services
             }
             catch (Exception ex)
             {
-                success = false;
+                string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
+
+                Log.Warning(ErrorMessage);
+                throw new Exception(ErrorMessage);
+            }
+            return success;
+        }
+
+        public bool UpdateImage(UploadImageInputModel updatedImage)
+        {
+            bool success; //default är false
+            try
+            {
+                TblImage imageToEdit = GetById(updatedImage.ImageId);
+
+                imageToEdit.ImageUrl = updatedImage.ImageUrl; //Filnamn
+                imageToEdit.ImageDate = updatedImage.ImageDate; //Fotodatum
+                imageToEdit.ImageDescription = updatedImage.ImageDescription; //Beskrivning
+
+                _entityContext.SaveChanges();
+                success = true;
+            }
+            catch (Exception ex)
+            {
                 string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
 
                 Log.Warning(ErrorMessage);
@@ -40,7 +63,7 @@ namespace ArvidsonFoto.Services
 
         public bool DeleteImgId(int imgId)
         {
-            bool succeeded = false;
+            bool succeeded = false; //verkar som det måste heta "success" för att defaulta till false. För det går inte att ta bort false tilldelningen.
             try
             {
                 TblImage image = _entityContext.TblImages.FirstOrDefault(i => i.ImageId == imgId);
@@ -50,7 +73,6 @@ namespace ArvidsonFoto.Services
             }
             catch (Exception ex)
             {
-                succeeded = false;
                 Log.Error("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
             }
             return succeeded;

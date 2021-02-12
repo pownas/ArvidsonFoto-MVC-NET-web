@@ -7,6 +7,8 @@ namespace ArvidsonFoto.Services
     {
         public bool AddImage(TblImage image);
 
+        public bool UpdateImage(UploadImageInputModel image);
+
         bool DeleteImgId(int imgId);
 
         int GetImageLastId();
