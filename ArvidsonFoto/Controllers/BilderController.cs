@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ArvidsonFoto;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
@@ -37,6 +38,16 @@ namespace ArvidsonFoto.Controllers
                 sida = 1;
 
             viewModel.CurrentPage = (int)sida - 1;
+
+            if (subLevel4 is not null)
+                subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
+            if (subLevel3 is not null)
+                subLevel3 = SharedStaticFunctions.ReplaceAAO(subLevel3);
+            if (subLevel2 is not null)
+                subLevel2 = SharedStaticFunctions.ReplaceAAO(subLevel2);
+            if (subLevel1 is not null)
+                subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
+
 
             if (subLevel4 is not null)
             {
