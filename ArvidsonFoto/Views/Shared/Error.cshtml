@@ -1,29 +1,30 @@
 ﻿@model ErrorViewModel
-@inject NavigationManager NavigationManager
 @{
-    //var UrlConnection = this.Url.ActionContext.HttpContext.Connection;
-    //var url = Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.RawTarget;
-
-    //var url = HttpRequestExtensions.GetRawUrl(this.HttpRequest);
-
-    ViewData["Title"] = "Error";
-    Log.Error("Error-page was shown. URL visited: " + Url.ToString()); //Loggar den sidan som gett error till /logs/datum-logfil.txt , via Serilog
+    @if (Model.VisitedUrl is null)
+    {
+        ViewData["Title"] = "Error";
+    }
+    else
+    {
+        ViewData["Title"] = "Error 404 - Page not found";
+    }
 }
 
-<h1 class="text-danger">Error.</h1>
+<h1 class="text-danger">@ViewData["Title"]</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+@if (Model.VisitedUrl is not null)
+{
+    <p>Error 404 - Page not found on URL: <strong>https://ArvidsonFoto.se/@Model.VisitedUrl</strong> </p>
+}
 @if (Model.ShowRequestId)
 {
-    Log.Error("Error-page was shown via requestId: " + Model.RequestId);
     <p>
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }
-
-<h3>Development Mode</h3>
 <p>
-    If this error occurs alot, please contact me. So my webmaster can fix the error...
+    If this error occurs alot, please <a href="/Info/Contact">contact me</a>. So my webmaster can fix the error...
 </p>
 
-<p>Go back to the <a href="/">startpage</a></p>
+<p>Go back to the startpage: <a href="/">ArvidsonFoto.se</a>.</p>
