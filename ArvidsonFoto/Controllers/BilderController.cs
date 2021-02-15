@@ -28,7 +28,8 @@ namespace ArvidsonFoto.Controllers
         [Route("/[controller]/{subLevel1}/{subLevel2}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, int? sida)
+        [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
+        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, string subLevel5ImageName, int? sida)
         {
             GalleryViewModel viewModel = new GalleryViewModel();
             int pageSize = 48;
@@ -71,6 +72,11 @@ namespace ArvidsonFoto.Controllers
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
                 viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
                 viewModel.CurrentUrl = "/Bilder/" + subLevel1;
+            }
+
+            if (subLevel5ImageName is not null)
+            {
+                Log.Information($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
             }
 
             _pageCounterService.AddPageCount("Bilder");
