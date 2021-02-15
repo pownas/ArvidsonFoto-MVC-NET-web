@@ -37,43 +37,13 @@ namespace ArvidsonFoto.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            //HttpRequestFeature rawerUrl = this.IHttpRequestFeature;
-            //PropertyInfo rawUrl = rawerUrl.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance).Single(pi => pi.Name == "RawTarget");
-            //object url = rawUrl.GetValue(rawerUrl, null);
+            var viewModel = new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
+
             var url = Url.ActionContext.HttpContext;
+            viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Warning("Navigation error to page: " + viewModel.VisitedUrl);
 
-            string currentUrl = HttpRequestExtensions.GetRawUrl(url);
-
-            //foreach (var item in url.Where(uri => uri.Key.Equals("RawTarget")))
-            //foreach (var item in url)
-            //{
-            //    if (item.Key.Equals("IHttpResponseFeature"))
-            //    {    //currentUrl = item.Value.ToString();
-            //        currentUrl = item.ToString();
-            //        currentUrl2 = item.Value.ToString();
-            //    }
-            //    if (item.Value.Equals("IHttpResponseFeature"))
-            //    {
-            //        //currentUrl = item.Value.ToString();
-            //        currentUrl = item.ToString();
-            //        currentUrl2 = item.Value.ToString();
-            //    }
-            //    if (item.Value.GetType().Equals("RawTarget"))
-            //    {
-            //        currentUrl = item.ToString();
-            //        currentUrl2 = item.Key.ToString();
-            //        //currentUrl = item.Key.ToString();
-            //    }
-            //    if (item.Equals("RawTarget"))
-            //    {
-            //        currentUrl = item.ToString();
-            //        currentUrl2 = item.Value.ToString();
-            //    }
-            //}
-
-            Log.Warning("Navigation error to page: " + currentUrl);
-
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(viewModel);
         }
     }
 }
