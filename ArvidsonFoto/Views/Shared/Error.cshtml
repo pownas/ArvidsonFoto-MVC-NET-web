@@ -1,8 +1,13 @@
 ﻿@model ErrorViewModel
 @inject NavigationManager NavigationManager
 @{
+    //var UrlConnection = this.Url.ActionContext.HttpContext.Connection;
+    //var url = Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.RawTarget;
+
+    //var url = HttpRequestExtensions.GetRawUrl(this.HttpRequest);
+
     ViewData["Title"] = "Error";
-    Log.Error("Error-page was shown. URL visited: " + NavigationManager.Uri); //Loggar den sidan som gett error till /logs/datum-logfil.txt , via Serilog
+    Log.Error("Error-page was shown. URL visited: " + Url.ToString()); //Loggar den sidan som gett error till /logs/datum-logfil.txt , via Serilog
 }
 
 <h1 class="text-danger">Error.</h1>
