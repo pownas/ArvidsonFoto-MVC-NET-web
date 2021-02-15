@@ -23,6 +23,7 @@ namespace ArvidsonFoto.Controllers
             _pageCounterService = new PageCounterService(context);
         }
 
+        [Route("Bilder/[controller]/{sortOrder}")]
         [Route("[controller]/{sortOrder}")]
         public IActionResult Index(string sortOrder, int? sida)
         {
@@ -76,6 +77,7 @@ namespace ArvidsonFoto.Controllers
 
         [Route("latest.asp")]
         [Route("bild_kalender.asp")]
+        [Route("Bilder/[controller]")]
         [Route("[controller]")]
         public IActionResult Index()
         {
