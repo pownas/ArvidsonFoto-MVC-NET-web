@@ -190,6 +190,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Kontakta")]
+        [Route("/[controller]/Contact")]
         [Route("/[controller]/Kontakta")]
         public IActionResult Kontakta(ContactFormModel contactFormModel)
         {
