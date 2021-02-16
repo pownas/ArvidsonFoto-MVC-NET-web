@@ -76,7 +76,7 @@ namespace ArvidsonFoto.Controllers
 
             if (subLevel5ImageName is not null)
             {
-                Log.Information($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
+                Log.Verbose($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
             }
 
             _pageCounterService.AddPageCount("Bilder");
@@ -86,7 +86,7 @@ namespace ArvidsonFoto.Controllers
             }
             catch(Exception ex)
             {
-                Log.Warning("Couldn't add pagecount for the page: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
+                Log.Verbose("User navigated to strange URL: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
             }
 
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
