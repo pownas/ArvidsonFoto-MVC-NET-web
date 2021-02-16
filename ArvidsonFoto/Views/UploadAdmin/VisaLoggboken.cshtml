@@ -100,9 +100,14 @@
                 </tbody>
             </table>
         </p>
+        @*<p>
+            Visa alla loggar // 
+            public bool ShowAllLogs { get; set; } //ShowAllLogs , borde vara en prop på user-settings-nivå
+        </p>*@
         <p>Här nedan visas loggboken från hemsidan:</p>
         @foreach (var line in Model.LogBook)
         {
+            //if (ShowAllLogs || ShowInLogBook(line)) {
             if (ShowInLogBook(line))
             {
                 string lineColor = "";
