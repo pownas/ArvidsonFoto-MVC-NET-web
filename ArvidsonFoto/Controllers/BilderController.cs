@@ -100,11 +100,16 @@ namespace ArvidsonFoto.Controllers
         [Route("gallery.asp")]
         public IActionResult Bilder(int? ID)
         {
+            var url = Url.ActionContext.HttpContext;
+            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+
             if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
             {
-                return Redirect("/Bilder/" + _categoryService.GetNameById(ID));
+                string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
+                Log.Information($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
+                return Redirect(redirectUrl);
             }
-
+            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return Redirect("/Senast/Fotograferad");
         }
 
