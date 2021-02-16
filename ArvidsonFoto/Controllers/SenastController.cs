@@ -64,6 +64,10 @@ namespace ArvidsonFoto.Controllers
             }
             else
             {
+                var url = Url.ActionContext.HttpContext;
+                string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+                Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
+
                 return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
             }
 
@@ -82,6 +86,9 @@ namespace ArvidsonFoto.Controllers
         [Route("[controller]")]
         public IActionResult Index()
         {
+            var url = Url.ActionContext.HttpContext;
+            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
         }
 
