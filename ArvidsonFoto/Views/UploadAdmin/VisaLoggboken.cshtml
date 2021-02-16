@@ -126,6 +126,8 @@
 
         if (line.Contains("/images/gallery"))
             show = false;
+        if (line.Contains("to page: /Senast/Fotograferad"))
+            show = false;
 
         return show;
     }
