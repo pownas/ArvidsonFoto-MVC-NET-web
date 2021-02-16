@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -55,7 +53,6 @@ namespace ArvidsonFoto
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IGuestBookService, GuestBookService>();
             services.AddScoped<IPageCounterService, PageCounterService>();
-            //services.AddSingleton<NavigationManager>();
 
             services.AddControllersWithViews();
             services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
