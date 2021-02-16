@@ -10,13 +10,16 @@
     }
 }
 
-<h1 class="text-danger">@ViewData["Title"]</h1>
+<h1 class="mt-3 text-danger">@ViewData["Title"]</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
 @if (Model.VisitedUrl is not null)
 {
-    <p>Error 404 - Page not found on URL: <strong>https://ArvidsonFoto.se/@Model.VisitedUrl</strong> </p>
+    <p>Error 404 - Page not found on URL: <strong><a href="/">ArvidsonFoto.se</a>@Model.VisitedUrl</strong> </p>
 }
+<p>
+    <strong>Request time:</strong> <code>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</code>
+</p>
 @if (Model.ShowRequestId)
 {
     <p>
@@ -24,7 +27,7 @@
     </p>
 }
 <p>
-    If this error occurs alot, please <a href="/Info/Contact">contact me</a>. So my webmaster can fix the error...
+    If this error occurs alot for you, please <a href="/Info/Contact">contact me</a>. So I can get a fix for the error on the page.
 </p>
 
 <p>Go back to the startpage: <a href="/">ArvidsonFoto.se</a>.</p>
