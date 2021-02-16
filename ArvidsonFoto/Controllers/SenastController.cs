@@ -6,7 +6,8 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+//using System.Diagnostics;
+using Serilog;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -84,10 +85,10 @@ namespace ArvidsonFoto.Controllers
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
