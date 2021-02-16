@@ -41,7 +41,7 @@ namespace ArvidsonFoto.Controllers
 
             var url = Url.ActionContext.HttpContext;
             viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Verbose("Navigation error to page: " + viewModel.VisitedUrl);
+            Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
 
             return View(viewModel);
         }
