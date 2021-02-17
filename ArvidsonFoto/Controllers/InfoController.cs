@@ -266,6 +266,7 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
+        [Route("copyright.asp")]
         [Route("/Copyright")]
         [Route("/[controller]/Copyright")]
         public IActionResult Copyright()
