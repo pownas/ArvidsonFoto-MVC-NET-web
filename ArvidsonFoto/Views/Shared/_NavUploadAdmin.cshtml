@@ -4,6 +4,9 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    @inject IGuestBookService _guestBookService
+    int countOfUnreadGbPosts = _guestBookService.GetCountOfUnreadPosts();
+
     string username = User.Identity.Name;
     string[] splittedUser = username.Split("@");
     username = splittedUser[0];
@@ -16,7 +19,15 @@
             <div class="dropdown-divider"></div>
             <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="Redigera bland de senast uppladdade bilderna på sidan"><i class="bi bi-pencil-square"></i> Redigera bland bilder</a>
         </li>
-        <li><a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="Hantera gästbokens inlägg"><i class="bi bi-book-half"></i> Hantera gästboken</a></li>
+        <li>
+            <a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="Hantera gästbokens inlägg">
+                <i class="bi bi-book-half"></i> Hantera gästboken
+                @if (countOfUnreadGbPosts > 0)
+                {
+                    <span class="badge badge-success text-light">@countOfUnreadGbPosts olästa</span>
+                }
+            </a>
+        </li>
         <li>
             <div class="dropdown-divider"></div>
             <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" title="Visa statistik på hemsidan"><i class="bi bi-speedometer2"></i> Hemsidans statistik</a>
