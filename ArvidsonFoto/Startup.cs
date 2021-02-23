@@ -41,7 +41,7 @@ namespace ArvidsonFoto
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             
             
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
 
             //Lägger till Databaskoppling för appen: 
             services.AddDbContext<ArvidsonFotoDbContext>(options =>
