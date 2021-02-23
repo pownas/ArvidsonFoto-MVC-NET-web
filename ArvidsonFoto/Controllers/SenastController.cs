@@ -72,11 +72,7 @@ namespace ArvidsonFoto.Controllers
             }
 
             viewModel.SelectedCategory = new TblMenu() { MenuText = sortOrder }; //Lägger till en SelectedCategory, så det inte blir tolkat som startsidan. 
-            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
-
-            if (sortOrder.Equals("Fotograferad")) //Om det är sidan för senast-fotograferad, så ska OrderBy, justeras till ImageDate DESC:
-                viewModel.DisplayImagesList = viewModel.DisplayImagesList.OrderByDescending(i => i.ImageDate).ToList();
-
+            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
             viewModel.CurrentUrl = "/Senast/" + sortOrder;
