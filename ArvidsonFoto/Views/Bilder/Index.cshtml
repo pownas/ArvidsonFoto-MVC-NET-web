@@ -28,7 +28,6 @@
         Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
     }
-
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -43,7 +42,7 @@
                     currentUrl += "/" + splittUrl[i];
                     if (splittUrl.Length.Equals(i + 1))
                     {
-                        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                        <li class="breadcrumb-item active" aria-current="page">@splittUrl[i]</li>
                     }
                     else
                     {
