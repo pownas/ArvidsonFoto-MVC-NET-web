@@ -16,7 +16,7 @@
 
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
     string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
-    //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga): 
+    //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga):
     string imgCharWidth = startsidan ? "thumb-img-startpage" : "thumb-img-gallery";
     string figcaptionCharWidth = startsidan ? "thumb-figcaption-startpage" : "thumb-figcaption-gallery";
 }
@@ -33,60 +33,60 @@ else if (Model.ErrorMessage is not null)
 }
 else
 {
-<div id="gallery" class="row">
-    @{ var index = 1; }
-    @foreach (var img in imageList)
-    {
-        string customDesc = "custom-desc" + index;
-
-        string imgHref = bilder;
-        string imgTitle = _categoryService.GetNameById(img.ImageArt);
-        string imgDesc = "";
-
-        if (String.IsNullOrWhiteSpace(img.ImageDescription) is false)
-            imgDesc = ", " + img.ImageDescription + ".";
-
-        if (img.ImageHuvudfamilj.HasValue)
-            imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
-        if (img.ImageFamilj.HasValue)
-            imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
-
-        imgHref += "/" + imgTitle;
-
-        string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
-
-        string imgName = img.ImageUrl + ".jpg";
-        string imgSrc = imgHref + "/" + imgName;
-
-        DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
-
-        if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
+    <div id="gallery" class="row">
+        @{ var index = 1; }
+        @foreach (var img in imageList)
         {
-            <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                <a rel="nofollow" href="@imgHref" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
-                    <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
-                    <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
-                </a>
-            </figure>
-        }
-        else
-        {
-            <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                <a rel="nofollow" href="@imgSrc" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
-Tryck för att förstora">
-                    <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
-Tryck för att förstora">
-                    <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
-                </a>
-            </figure>
+            string customDesc = "custom-desc" + index;
 
-            <div class="glightbox-desc row @customDesc">
-                <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
-                <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
-            </div>
-        }
+            string imgHref = bilder;
+            string imgTitle = _categoryService.GetNameById(img.ImageArt);
+            string imgDesc = "";
 
-        index += 1;
-    }
-</div><!-- /end-gallery-row -->
+            if (String.IsNullOrWhiteSpace(img.ImageDescription) is false)
+                imgDesc = ", " + img.ImageDescription + ".";
+
+            if (img.ImageHuvudfamilj.HasValue)
+                imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
+            if (img.ImageFamilj.HasValue)
+                imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
+
+            imgHref += "/" + imgTitle;
+
+            string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
+
+            string imgName = img.ImageUrl + ".jpg";
+            string imgSrc = imgHref + "/" + imgName;
+
+            DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
+
+            if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
+            {
+                <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+                    <a rel="nofollow" href="@imgHref" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
+                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
+                        <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
+                    </a>
+                </figure>
+            }
+            else
+            {
+                <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+                    <a rel="nofollow" href="@imgSrc" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
+Tryck för att förstora">
+                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
+Tryck för att förstora">
+                        <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
+                    </a>
+                </figure>
+
+                <div class="glightbox-desc row @customDesc">
+                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                    <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+                </div>
+            }
+
+            index += 1;
+        }
+    </div><!-- /end-gallery-row -->
 }
