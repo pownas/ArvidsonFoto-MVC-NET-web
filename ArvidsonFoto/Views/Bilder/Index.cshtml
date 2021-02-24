@@ -68,7 +68,13 @@ else
 {
     foreach (var category in subCategories)
     {
-        <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)">@category.MenuText</a>
+        TblImage img = _imageService.GetOneImageFromCategory(category.MenuId);
+        <div class="tooltip">
+            <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)">
+                @category.MenuText
+            </a>
+            <span class="tooltiptext"><img src="@(img.ImageUrl).thumb.jpg" alt="Bild av @category.MenuText" /><br />@category.MenuText</span>
+        </div>
     }
 }
 
