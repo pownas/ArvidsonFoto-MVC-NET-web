@@ -23,7 +23,11 @@
 
 @if (imageList is null || imageList.Count.Equals(0))
 {
-    if (ViewData["Title"].Equals("Fåglar") is false)
+    if (ViewData["Title"].Equals("Fåglar"))
+    {
+        <p class="m-4">Välj en fågel-kategori här ovanför ⤴</p>
+    }
+    else
     {
         <p>
             Det finns inga bilder i denna kategori... <br />
@@ -32,18 +36,18 @@
         <p class="mt-4">
             Här är en bild på en söt kanin 🐇 istället:
         </p>
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+        <div id="imageRabbit" class="col-12 col-sm-10 col-md-8 col-lg-6">
             <figure class="figure alert alert-light" title="Kanin 🐇">
                 <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg" alt="Bild på en söt kanin..." />
                 <figcaption class="figure-caption text-center text-truncate">Kanin 🐇</figcaption>
             </figure>
         </div>
         <h3>Sök bland kategorier</h3>
-        <p>
-            Du kan även söka bland kategorierna här nedan eller se alla kategorier via: <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a><br />
+        <div id="search" class="mb-5">
+            Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
+            <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a><br />
             <partial name="_SearchBar" />
-        </p>
-        <p class="mb-5"></p>
+        </div>
     }
 }
 else if (Model.ErrorMessage is not null)
