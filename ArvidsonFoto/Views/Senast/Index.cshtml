@@ -24,14 +24,14 @@
 
 @if (ViewData["Title"].Equals("Per kategori"))
 {
-    <partial name="_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+    <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
-<partial name="_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+<partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
 @if (ViewData["Title"].Equals("Per kategori"))
 {
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-4">
         <div class="col-12 text-center">
             <h3>Sök bland kategorierna</h3>
             <p>
@@ -39,7 +39,7 @@
                 <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
             </p>
         </div>
-        <div id="searchbar" class="mb-5">
+        <div id="searchbar" class="mb-4">
             <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
         </div>
     </div>
