@@ -6,7 +6,6 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Mvc;
-//using System.Diagnostics;
 using Serilog;
 
 namespace ArvidsonFoto.Controllers
@@ -80,22 +79,5 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
-        [Route("latest.asp")]
-        [Route("bild_kalender.asp")]
-        [Route("Bilder/[controller]")]
-        [Route("[controller]")]
-        public IActionResult Index()
-        {
-            var url = Url.ActionContext.HttpContext;
-            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
-            return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
-        }
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }
