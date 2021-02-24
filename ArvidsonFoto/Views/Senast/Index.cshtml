@@ -32,6 +32,15 @@
 @if (ViewData["Title"].Equals("Per kategori"))
 {
     <div class="row justify-content-center">
-        <div class="mb-4"><partial name="../Bilder/_SearchBar" /></div> @*<!-- Sökruta via PartialView -->*@
+        <div class="col-12 text-center">
+            <h3>Sök bland kategorierna</h3>
+            <p>
+                Du kan även söka bland kategorierna här nedan eller se alla kategorier via: 
+                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
+            </p>
+        </div>
+        <div id="searchbar" class="mb-5">
+            <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
+        </div>
     </div>
 }
