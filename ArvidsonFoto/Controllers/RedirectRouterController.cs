@@ -33,6 +33,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Latest.asp")]
         [Route("/Bild_kalender.asp")]
         [Route("/Bilder/Senast")]
+        [Route("/Bilder/Senast/{sortOrder}")]
         [Route("/Senast")]
         [Route("/Senast/Index.html")]
         [Route("/Senast/Default.asp")]
