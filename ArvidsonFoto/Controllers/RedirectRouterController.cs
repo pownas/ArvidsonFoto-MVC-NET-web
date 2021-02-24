@@ -10,6 +10,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Default.aspx")]
         public RedirectToActionResult RedirectToHomeIndex()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To startpage: /");
@@ -23,9 +24,10 @@ namespace ArvidsonFoto.Controllers
         [Route("/Search.asp")]
         public RedirectToActionResult RedirectToBilderSök()
         {
-            var url = Url.ActionContext.HttpContext;
-            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
+            ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
+            //var url = Url.ActionContext.HttpContext;
+            //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
 
             return RedirectToActionPermanent("Sök","Bilder");
         }
@@ -39,16 +41,18 @@ namespace ArvidsonFoto.Controllers
         [Route("/Senast/Default.asp")]
         public RedirectToActionResult RedirectToSenast()
         {
-            var url = Url.ActionContext.HttpContext;
-            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Senast/Fotograferad");
-            
+            ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
+            //var url = Url.ActionContext.HttpContext;
+            //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Senast/Fotograferad");
+
             return RedirectToActionPermanent("Index", "Senast", new { sortOrder = "Fotograferad" });
         }
 
         [Route("/Info.asp")]
         public RedirectToActionResult RedirectToInfoIndex()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info");
@@ -62,6 +66,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Info/Gastbok")]
         public RedirectToActionResult RedirectToInfoGästbok()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Gästbok");
@@ -74,6 +79,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Info/Contact")]
         public RedirectToActionResult RedirectToInfoKontakta()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Kontakta");
@@ -87,6 +93,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Info/Kop_av_bilder")]
         public RedirectToActionResult RedirectToInfoKöp_av_bilder()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Köp_av_bilder");
@@ -98,6 +105,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Om")]
         public RedirectToActionResult RedirectToInfoOm_mig()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Om_mig");
@@ -110,6 +118,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Sidkarta")]
         public RedirectToActionResult RedirectToInfoSidkarta()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Sidkarta");
@@ -121,6 +130,7 @@ namespace ArvidsonFoto.Controllers
         [Route("/Copyright")]
         public RedirectToActionResult RedirectToInfoCopyright()
         {
+            //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             var url = Url.ActionContext.HttpContext;
             string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Copyright");
