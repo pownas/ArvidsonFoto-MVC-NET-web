@@ -11,22 +11,30 @@
 
 @if (Model.VisitedUrl is not null)
 {
-    <p class="text-break">
+    <p class="text-break mb-0">
         <strong>Requested URL:</strong> <code><a href="/">ArvidsonFoto.se</a>@Model.VisitedUrl</code>
     </p>
 }
-    <p>
+    <p class="text-break my-0">
         <strong>Request time:</strong> <code>@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</code>
     </p>
 @if (Model.ShowRequestId)
 {
-    <p>
+    <p class="text-break my-0">
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }
-<p>
+<p class="my-2">
     If this error occurs alot for you, please <a href="/Info/Contact">contact me</a>. So I can get a fix for the error on the page.
 </p>
-<p>
+<p class="mt-4">
     Go back to the startpage: <a href="/">ArvidsonFoto.se</a>.
+</p>
+
+<p class="mt-5 mb-0">I hope this rabbit atleast will cheer you up a bit 🙂 </p>
+<p>
+    <figure class="figure alert alert-light" title="Rabbit 🐇">
+        <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.thumb.jpg" alt="Image of a Rabbit..." />
+        <figcaption class="figure-caption text-center text-truncate">Rabbit 🐇</figcaption>
+    </figure>
 </p>
