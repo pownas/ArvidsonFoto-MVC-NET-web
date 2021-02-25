@@ -108,7 +108,7 @@ namespace ArvidsonFoto.Controllers
             {
                 string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
                 Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
-                return Redirect(redirectUrl);
+                return RedirectPermanent(redirectUrl);
             }
             //Log.Fatal($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return Redirect("/Senast/Fotograferad");
