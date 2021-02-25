@@ -1,3 +1,5 @@
+![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET5?style=flat-square&cacheSeconds=86400)
+
 # ArvidsonFoto-MVC-NET5
  Ombyggnation av ArvidsonFoto med MVC och .NET5
 
