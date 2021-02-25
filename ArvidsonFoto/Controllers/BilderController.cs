@@ -97,7 +97,8 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Bilder/")]
-        [Route("gallery.asp")]
+        [Route("/gallery.asp")]
+        [Route("/showimagecategory.asp")]
         public IActionResult Bilder(int? ID)
         {
             var url = Url.ActionContext.HttpContext;
@@ -106,16 +107,13 @@ namespace ArvidsonFoto.Controllers
             if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
             {
                 string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
-                Log.Information($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
-                return Redirect(redirectUrl);
+                Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
+                return RedirectPermanent(redirectUrl);
             }
-            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
+            //Log.Fatal($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return Redirect("/Senast/Fotograferad");
         }
 
-        [Route("/Sk")]
-        [Route("/Sok")]
-        [Route("/Search")]
         [Route("/Sök")]
         public IActionResult Sök(string s)
         {
@@ -146,11 +144,5 @@ namespace ArvidsonFoto.Controllers
             }
             return View(viewModel);
         }
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }

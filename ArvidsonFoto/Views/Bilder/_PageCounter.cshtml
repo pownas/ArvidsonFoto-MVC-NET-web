@@ -1,0 +1,40 @@
+﻿@model GalleryViewModel
+
+@if (Model.AllImagesList.Count > 0)
+{
+    <p class="text-center">
+        Antal @if (Model.SelectedCategory.MenuText.Equals("Per kategori"))
+        {<text>kategorier</text> }
+    else
+    { <text>bilder</text>}: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages
+</p>
+}
+
+@if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
+{
+    <nav id="page-counter" aria-label="Sid-navigering">
+        <ul class="pagination justify-content-center">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
+                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+            }
+            else
+            {
+                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
+            }
+            <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
+            @if (Model.CurrentPage == Model.TotalPages)
+            {
+                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
+                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
+                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
+            }
+        </ul>
+    </nav>
+}@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@

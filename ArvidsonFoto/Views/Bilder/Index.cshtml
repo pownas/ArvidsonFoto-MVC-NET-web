@@ -25,10 +25,9 @@
     catch (Exception ex)
     {
         Model.ErrorMessage = ex.Message;
-        Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
+        //Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
     }
-
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -43,7 +42,7 @@
                     currentUrl += "/" + splittUrl[i];
                     if (splittUrl.Length.Equals(i + 1))
                     {
-                        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+                        <li class="breadcrumb-item active" aria-current="page">@splittUrl[i]</li>
                     }
                     else
                     {
@@ -62,6 +61,9 @@
 else
 {
     <h1>@ViewData["Title"]</h1>
+
+    if(ViewData["Title"].Equals("Bilder-sidan hittades inte"))
+        Log.Fatal("Could not show the Image-URL: '" + currentUrl + "'");
 }
 
 
@@ -73,70 +75,29 @@ else
     }
 }
 
-@if (Model.AllImagesList.Count > 12)
+
+@if (Model.TotalPages > 1)
 {
-    <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <partial name="_PageCounter" model="Model" /> @*<!-- Page-counter (Sidräknaren) via PartialView -->*@
 }
-@if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
+else
 {
-    <nav id="page-paging-top" aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            @if (Model.CurrentPage > 1)
-            {
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
-            }
-            <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
-            @if (Model.CurrentPage == Model.TotalPages)
-            {
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
-            }
-            else
-            {
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
-            }
-        </ul>
-    </nav>
-}@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
+    @if (Model.AllImagesList.Count > 12)
+    {
+        <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    }
+}
 
-<partial name="_Gallery" model="Model" /> @*<!-- Här läggs Galleriet in via en PartialView -->*@
+<partial name="_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-    <nav id="page-paging-bottom" aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            @if (Model.CurrentPage > 1)
-            {
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
-            }
-            <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only">(nuvarande)</span></a></li>
-            @if (Model.CurrentPage == Model.TotalPages)
-            {
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
-                <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
-            }
-            else
-            {
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
-                <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
-            }
-        </ul>
-    </nav>
-}@*// === Slutet på page-counter (Paging, sidnumreringen) ===*@
-@if (Model.AllImagesList.Count > 0)
+    <partial name="_PageCounter" model="Model" /> @*<!-- Page-counter (Sidräknaren) via PartialView -->*@
+}
+else
 {
-    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    @if (Model.AllImagesList.Count > 0)
+    {
+        <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    }
 }

@@ -7,8 +7,11 @@
     ViewData["Title"] = "LogReader - Startpage";
     AppLogReader _appLogReader = new AppLogReader();
 
-    List<LogPost> logbook = _appLogReader.ReadData("arvidsonfoto.se-2021-02-07.log");
-    List<LogPost> displayLog = logbook.Where(l => l.ErrorCode is not "200").OrderByDescending(l => l.ErrorCode).ToList();
+    List<LogPost> logbook = _appLogReader.ReadData("arvidsonfoto.se-2021-02-25.log");
+    List<LogPost> displayLog = logbook.Where(l => l.ErrorCode is not "200") //Sorterar bort alla ErrorCode 200 (OK).
+                                      .OrderBy(l => l.UrlPath) //Sorterar i namnordning på alla URLer.
+                                      .OrderByDescending(l => l.ErrorCode) //Sorterar efter ErrorCode , med högst överst.
+                                      .ToList(); //Skriver ut det som en Lista. 
 }
 
 @*<p>Välj en dag att visa:</p>

@@ -47,7 +47,7 @@ var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m 
 if (sub1Menu != null && sub1Menu.Count > 0)
 {
 if (@headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
-{ <a style="cursor: pointer;" title="@headItem.MenuText">@headItem.MenuText</a> }
+{ <a href="./Bilder/Fåglar" title="@headItem.MenuText">@headItem.MenuText</a> }
 else
 { <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
 <ul>
