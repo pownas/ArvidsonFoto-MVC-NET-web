@@ -60,10 +60,10 @@ namespace ArvidsonFoto.Controllers
             return RedirectToActionPermanent("Index", "Info");
         }
 
-        [Route("/GB.asp")]
         [Route("/Info/GB")]
         [Route("/Info/Gstbok")]
         [Route("/Info/Gastbok")]
+        //[Route("/GB.asp")] //Tar bort denna routern för att slippa gamla spammers. 
         public RedirectToActionResult RedirectToInfoGästbok()
         {
             //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
