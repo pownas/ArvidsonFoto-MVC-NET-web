@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
@@ -57,13 +56,12 @@ namespace ArvidsonFoto.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputModel inputModel)
         {
+            Log.Information("A user trying to post to the Guestbook...");
             if (ModelState.IsValid)
             {
                 inputModel.DisplayErrorPublish = false;
                 try
                 {
-                    Log.Information("User trying to post to Guestbook...");
-
                     string homePage = "";
                     if(inputModel.Homepage is not null) {
                         homePage = inputModel.Homepage.Replace("https://", "");
@@ -85,8 +83,8 @@ namespace ArvidsonFoto.Controllers
                         GbText = inputModel.Message,
                         GbDate = DateTime.Now
                     };
-                    Log.Information("User GuestBook-post: " + postToPublish.GbId + " Name: " + postToPublish.GbName + " Email: " + postToPublish.GbEmail + " Homepage:" + postToPublish.GbHomepage);
-                    Log.Information("GB-Message: \n" + postToPublish.GbText);
+                    Log.Fatal("User GuestBook-post: " + postToPublish.GbId + " Name: " + postToPublish.GbName + " Email: " + postToPublish.GbEmail + " Homepage:" + postToPublish.GbHomepage);
+                    Log.Fatal("GB-Message: \n" + postToPublish.GbText);
                     
                     if (_guestbookService.CreateGBpost(postToPublish)) 
                     {
@@ -104,6 +102,10 @@ namespace ArvidsonFoto.Controllers
             }
             else
             {
+                //SKRIVS INTE UT???
+                Log.Fatal($"Name: '{inputModel.Name}' Email: '{inputModel.Email}' Homepage: '{inputModel.Homepage}'"); //SKRIVS INTE UT???
+                Log.Fatal($"GB-Message:\n {inputModel.Message}"); //SKRIVS INTE UT???
+                Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'."); //SKRIVS INTE UT???
                 inputModel.DisplayPublished = false;
             }
             return RedirectToAction("Gästbok", inputModel);
