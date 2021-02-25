@@ -155,27 +155,46 @@ body {
 /* ----------end of glightbox config------------ */
 
 /* ---------- Gallery-fix på mobil ------------- */
-.thumb-img-startpage { min-width: 5.8rem; }
-.thumb-figcaption-startpage { max-width: 6.1rem; }
+.thumb-figcaption-startpage { width: 9rem; }
+.thumb-figcaption-gallery { width: 10.4rem; }
 
-.thumb-img-gallery{ min-width: 8rem; }
-.thumb-figcaption-gallery { 
-    min-width: 4rem;
-    max-width: 9rem;
-}
 .thumb-a-class { padding: inherit; }
+.thumb-img-startpage { min-width: 5.8rem; }
+.thumb-img-gallery{ min-width: 8rem; }
 
-@media (max-width: 380px){
+@media (max-width: 1200px) {
+    .thumb-figcaption-startpage { width: 6.9rem; }
+    .thumb-figcaption-gallery { width: 8.3rem; }
+}
+
+@media (max-width: 630px) {
+    .thumb-figcaption-startpage { width: 6rem; }
+}
+
+@media (max-width: 575px) {
+    .thumb-figcaption-startpage { width: 8.5rem; }
+}
+
+@media (max-width: 450px) {
+    .thumb-figcaption-startpage { width: 7rem; }
+    .thumb-figcaption-gallery { width: 6rem; }
+}
+
+@media (max-width: 404px) {
+    .thumb-figcaption-startpage { width: 4rem; }
+    .thumb-figcaption-gallery { width: 4.5rem; }
+
+    .thumb-a-class { padding: 1em 5px; }
     .thumb-img-startpage { min-width: 4rem; }
     .thumb-img-gallery{ min-width: 4rem; }
-    .thumb-a-class { padding: 1em 5px; }
 }
-@media (max-width: 320px) {
-    .thumb-figcaption-startpage { max-width: 4.5rem; }
-    .thumb-figcaption-gallery { 
-        min-width: 2rem;
-        max-width: 4.5rem;
 
-    }
+@media (max-width: 240px) {
+    .thumb-figcaption-startpage { width: 3rem; }
+    .thumb-figcaption-gallery { width: 3rem; }
+
+    .thumb-a-class { padding: 0.5em 2px; }
+    .thumb-img-startpage { min-width: 2.5rem; }
+    .thumb-img-gallery{ min-width: 2.5rem; }
 }
 /* -------- End Gallery-fix på mobil ------------ */
