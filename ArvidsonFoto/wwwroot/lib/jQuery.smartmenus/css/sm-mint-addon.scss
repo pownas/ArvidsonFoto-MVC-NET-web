@@ -42,7 +42,7 @@
 }
 
 /* färger på mobile-nav */
-@media (max-width: 769px) {
+@media (max-width: 767px) {
     .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active {
         color: #ccc;
         background: #333
@@ -54,7 +54,6 @@
 
     .sm-mint ul {
         background: rgba(200, 200, 200, 0.20);
-        
     }
 }
 

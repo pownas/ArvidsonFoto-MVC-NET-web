@@ -36,11 +36,6 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-        [Route("GB.asp")]
-        [Route("/[controller]/GB")]
-        [Route("/[controller]/Gstbok")]
-        [Route("/[controller]/Gastbok")]
-        [Route("/[controller]/Gästbok")]
         public IActionResult Gästbok(GuestbookInputModel inputModel)
         {
             ViewData["Title"] = "Gästbok";
@@ -189,9 +184,6 @@ namespace ArvidsonFoto.Controllers
             }
         }
 
-        [Route("/Kontakta")]
-        [Route("/[controller]/Contact")]
-        [Route("/[controller]/Kontakta")]
         public IActionResult Kontakta(ContactFormModel contactFormModel)
         {
             ViewData["Title"] = "Kontaktinformation";
@@ -211,10 +203,6 @@ namespace ArvidsonFoto.Controllers
             return View(contactFormModel);
         }
 
-        [Route("/Köp_av_bilder")]
-        [Route("/[controller]/Kp_av_bilder")]
-        [Route("/[controller]/Kop_av_bilder")]
-        [Route("/[controller]/Köp_av_bilder")]
         public IActionResult Köp_av_bilder(ContactFormModel contactFormModel, string imgId)
         {
             ViewData["Title"] = "Köp av bilder";
@@ -256,10 +244,6 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-
-        [Route("sitemap.asp")]
-        [Route("/Sidkarta")]
-        [Route("/[controller]/Sidkarta")]
         public IActionResult Sidkarta()
         {
             ViewData["Title"] = "Sidkarta";
@@ -267,20 +251,11 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-        [Route("copyright.asp")]
-        [Route("/Copyright")]
-        [Route("/[controller]/Copyright")]
         public IActionResult Copyright()
         {
             ViewData["Title"] = "Copyright";
             _pageCounterService.AddPageCount("Copyright");
             return View();
         }
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }

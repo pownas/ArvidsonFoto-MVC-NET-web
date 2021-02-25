@@ -64,7 +64,7 @@ namespace ArvidsonFoto.Services
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
             if(category is null)
             {
-                Log.Warning("Could not find category: " + categoryName);
+                Log.Warning("Could not find category: '" + categoryName + "'");
             }
             return category;
         }
