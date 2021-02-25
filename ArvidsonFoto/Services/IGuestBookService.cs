@@ -11,6 +11,8 @@ namespace ArvidsonFoto.Services
 
         bool DeleteGbPost(int gbId);
 
+        int GetCountOfUnreadPosts();
+
         int GetLastGbId();
         
         List<TblGb> GetAll();

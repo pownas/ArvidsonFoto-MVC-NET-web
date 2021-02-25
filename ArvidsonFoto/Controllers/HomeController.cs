@@ -7,6 +7,7 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -36,7 +37,13 @@ namespace ArvidsonFoto.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var viewModel = new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
+
+            var url = Url.ActionContext.HttpContext;
+            viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
+
+            return View(viewModel);
         }
     }
 }

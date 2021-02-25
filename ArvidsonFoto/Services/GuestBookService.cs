@@ -78,6 +78,21 @@ namespace ArvidsonFoto.Services
             return succeeded;
         }
 
+        public int GetCountOfUnreadPosts()
+        {
+            int postCount = 0;
+            try
+            {
+                postCount = _entityContext.TblGbs.Count(gb => gb.GbReadPost == null || gb.GbReadPost.Equals(false));
+            }
+            catch (Exception ex)
+            {
+                postCount = 0;
+                Log.Error("Error when counting Unread GB-posts. Error-message: " + ex.Message);
+            }
+            return postCount;
+        }
+
         public int GetLastGbId()
         {
             int idToReturn = _entityContext.TblGbs.Max(gb => gb.GbId);
