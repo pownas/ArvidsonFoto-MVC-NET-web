@@ -26,18 +26,18 @@
   //}
 
 
-  //, //Sätt denna som enable för att generera en ny ./wwwroot/lib/jQuery.smartmenus/css/sm-mint/sm-mint-addon.min.css
-  //{
-  //  "outputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.css",
-  //  "inputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.scss",
-  //  "minify": {
-  //    "enabled": true
-  //  },
-  //  "includeInProject": true,
-  //  "options": {
-  //    "sourceMap": true
-  //  }
-  //}
+  , //Sätt denna som enable för att generera en ny ./wwwroot/lib/jQuery.smartmenus/css/sm-mint/sm-mint-addon.min.css
+  {
+    "outputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.css",
+    "inputFile": "./wwwroot/lib/jQuery.smartmenus/css/sm-mint-addon.scss",
+    "minify": {
+      "enabled": true
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": true
+    }
+  }
 
 
 ]
