@@ -100,14 +100,35 @@
                 </tbody>
             </table>
         </p>
+        @*<p>
+            Visa alla loggar // 
+            public bool ShowAllLogs { get; set; } //ShowAllLogs , borde vara en prop på user-settings-nivå
+        </p>*@
         <p>Här nedan visas loggboken från hemsidan:</p>
         @foreach (var line in Model.LogBook)
         {
-            string lineColor = "";
-            lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;
-            lineColor = line.Contains("[WRN]") ? "bg-warning text-dark" : lineColor;
-            lineColor = line.Contains("[ERR]") ? "bg-danger" : lineColor;
-        <p class="mb-1 @lineColor">@line</p>
+            //if (ShowAllLogs || ShowInLogBook(line)) {
+            if (ShowInLogBook(line))
+            {
+                string lineColor = "";
+                lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;
+                lineColor = line.Contains("[WRN]") ? "bg-warning text-dark" : lineColor;
+                lineColor = line.Contains("[ERR]") ? "bg-danger" : lineColor;
+                <p class="text-break mb-1 @lineColor">@line</p>
+            }
         }
     </div>
 </div>
+@{
+    static bool ShowInLogBook(string line)
+    {
+        bool show = true;
+
+        if (line.Contains("/images/gallery"))
+            show = false;
+        if (line.Contains("to page: /Senast/Fotograferad"))
+            show = false;
+
+        return show;
+    }
+}

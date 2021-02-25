@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using System;
 using System.Globalization;
 
 namespace ArvidsonFoto
@@ -41,4 +43,26 @@ namespace ArvidsonFoto
             return replaceAAO;
         }
     }
+
+    public static class HttpRequestExtensions
+    {
+        public static string GetRawUrl(this HttpContext httpContext)
+        {
+            var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
+            return requestFeature.RawTarget.ToString();
+        }
+    }
+
+    ////Original-Code above from: https://stackoverflow.com/a/38747631/14036841
+    //public static class HttpRequestExtensions
+    //{
+    //    public static Uri GetRawUrl(this HttpRequest request)
+    //    {
+    //        var httpContext = request.HttpContext;
+
+    //        var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
+
+    //        return new Uri(requestFeature.RawTarget);
+    //    }
+    //}
 }

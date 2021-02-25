@@ -6,7 +6,8 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+//using System.Diagnostics;
+using Serilog;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -23,6 +24,7 @@ namespace ArvidsonFoto.Controllers
             _pageCounterService = new PageCounterService(context);
         }
 
+        [Route("Bilder/[controller]/{sortOrder}")]
         [Route("[controller]/{sortOrder}")]
         public IActionResult Index(string sortOrder, int? sida)
         {
@@ -62,11 +64,15 @@ namespace ArvidsonFoto.Controllers
             }
             else
             {
+                var url = Url.ActionContext.HttpContext;
+                string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+                Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
+
                 return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
             }
 
             viewModel.SelectedCategory = new TblMenu() { MenuText = sortOrder }; //Lägger till en SelectedCategory, så det inte blir tolkat som startsidan. 
-            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
+            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
             viewModel.CurrentUrl = "/Senast/" + sortOrder;
@@ -76,16 +82,20 @@ namespace ArvidsonFoto.Controllers
 
         [Route("latest.asp")]
         [Route("bild_kalender.asp")]
+        [Route("Bilder/[controller]")]
         [Route("[controller]")]
         public IActionResult Index()
         {
+            var url = Url.ActionContext.HttpContext;
+            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

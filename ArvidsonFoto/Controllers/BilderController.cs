@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
@@ -28,7 +28,8 @@ namespace ArvidsonFoto.Controllers
         [Route("/[controller]/{subLevel1}/{subLevel2}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
         [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, int? sida)
+        [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
+        public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, string subLevel5ImageName, int? sida)
         {
             GalleryViewModel viewModel = new GalleryViewModel();
             int pageSize = 48;
@@ -51,26 +52,31 @@ namespace ArvidsonFoto.Controllers
             if (subLevel4 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
-                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
                 viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
             }
             else if (subLevel3 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
-                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
                 viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
             }
             else if (subLevel2 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
-                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
                 viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
             }
             else if (subLevel1 is not null)
             {
                 viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
-                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
+                viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
                 viewModel.CurrentUrl = "/Bilder/" + subLevel1;
+            }
+
+            if (subLevel5ImageName is not null)
+            {
+                Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
             }
 
             _pageCounterService.AddPageCount("Bilder");
@@ -80,10 +86,10 @@ namespace ArvidsonFoto.Controllers
             }
             catch(Exception ex)
             {
-                Log.Warning("Couldn't add pagecount for the page: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
+                Log.Fatal("User navigated to strange URL: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
             }
 
-            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageUpdate).ToList();
+            viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
             viewModel.CurrentPage = (int)sida;
 
@@ -94,11 +100,16 @@ namespace ArvidsonFoto.Controllers
         [Route("gallery.asp")]
         public IActionResult Bilder(int? ID)
         {
+            var url = Url.ActionContext.HttpContext;
+            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+
             if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
             {
-                return Redirect("/Bilder/" + _categoryService.GetNameById(ID));
+                string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
+                Log.Information($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
+                return Redirect(redirectUrl);
             }
-
+            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
             return Redirect("/Senast/Fotograferad");
         }
 
@@ -136,10 +147,10 @@ namespace ArvidsonFoto.Controllers
             return View(viewModel);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

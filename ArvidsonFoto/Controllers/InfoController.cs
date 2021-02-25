@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ArvidsonFoto.Data;
@@ -190,6 +190,7 @@ namespace ArvidsonFoto.Controllers
         }
 
         [Route("/Kontakta")]
+        [Route("/[controller]/Contact")]
         [Route("/[controller]/Kontakta")]
         public IActionResult Kontakta(ContactFormModel contactFormModel)
         {
@@ -266,6 +267,7 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
+        [Route("copyright.asp")]
         [Route("/Copyright")]
         [Route("/[controller]/Copyright")]
         public IActionResult Copyright()
@@ -275,10 +277,10 @@ namespace ArvidsonFoto.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

@@ -14,10 +14,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="Sök" method="get" class="form-inline my-2 my-lg-0">
-    <input name="s" class="form-control mr-sm-2" type="search" placeholder="Sök efter..." aria-label="Sök ruta">
-    <button class="btn btn-light btn-outline-primary my-2 my-sm-0" type="submit">Sök</button>
-</form>
+<partial name="_SearchBar" />
 
 @if (Model.DisplayImagesList is not null && Model.DisplayImagesList.Count > 0) //Kör Continue, för att komma förbi try/catch i Debug-läget...
 {
