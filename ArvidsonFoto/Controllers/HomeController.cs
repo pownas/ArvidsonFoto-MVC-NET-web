@@ -41,9 +41,28 @@ namespace ArvidsonFoto.Controllers
 
             var url = Url.ActionContext.HttpContext;
             viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
+
+            if(LogErrorUrlPost(viewModel.VisitedUrl))
+                Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
+
+            if (viewModel.VisitedUrl is null)
+                ViewData["Title"] = "Error";
+            else if (viewModel.VisitedUrl.ToLower().StartsWith("/images/gallery"))
+                ViewData["Title"] = "Error 301 - Old image Url";
+            else
+                ViewData["Title"] = "Error 404 - Page not found";
 
             return View(viewModel);
+        }
+
+        private bool LogErrorUrlPost(string visitedUrl)
+        {
+            bool logThisPost = true;
+
+            if(visitedUrl.StartsWith("/images/gallery"))
+                logThisPost = false;
+
+            return logThisPost;
         }
     }
 }
