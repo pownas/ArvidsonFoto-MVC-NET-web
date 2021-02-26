@@ -135,11 +135,17 @@
 
         if (line.Contains("/images/gallery"))
             show = false;
+        if (line.Contains("/img/gallery"))
+            show = false;
         if (line.Contains("to page: /Senast/Fotograferad"))
             show = false;
         if (line.Contains("Redirect from page: "))
             show = false;
         if (line.Contains("/Bilder/"))
+            show = false;
+        if (line.Contains("/GB.asp"))
+            show = false;
+        if (line.Contains("/code/"))
             show = false;
 
         return show;
