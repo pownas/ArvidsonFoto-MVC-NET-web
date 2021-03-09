@@ -88,7 +88,7 @@ namespace ArvidsonFoto.Controllers
                     
                     if (_guestbookService.CreateGBpost(postToPublish)) 
                     {
-                        Log.Information("GB-post above, published OK.");
+                        Log.Information("GB-post, published OK.");
                         inputModel = new GuestbookInputModel();
                         inputModel.DisplayPublished = true;
                     }
@@ -152,7 +152,7 @@ namespace ArvidsonFoto.Controllers
                         client.Authenticate(svc_smtpadress, svc_smtppwd);
                         client.Send(message);
                         client.Disconnect(true);
-                        Log.Information("Email above, sent OK.");
+                        Log.Information("Email, sent OK.");
                     }
 
                     contactFormModel = new ContactFormModel() {
