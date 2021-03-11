@@ -105,17 +105,22 @@
                 </tbody>
             </table>
         </p>
-        @*<p>
-            Visa alla loggar //
-            public bool ShowAllLogs { get; set; } //ShowAllLogs , borde vara en prop på user-settings-nivå
-        </p>*@
+        <p>
+            @if (Model.ShowAllLogs)
+            {
+                <a href="./UploadAdmin/DisableShowAllLogs?date=@Model.DateShown" class="btn btn-outline-danger">Dölj filtrerade loggar</a>
+            }
+            else
+            {
+                <a href="./UploadAdmin/EnableShowAllLogs?date=@Model.DateShown" class="btn btn-success">Visa alla loggar</a>
+            }
+        </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
         @{
             int lineCounter = 0;
             foreach (var line in Model.LogBook)
             {
-                //if (ShowAllLogs || ShowInLogBook(line)) {
-                if (ShowInLogBook(line))
+                if (Model.ShowAllLogs || FilterLogBook(line))
                 {
                     lineCounter++;
                     string lineColor = "";
@@ -134,7 +139,7 @@
     </div>
 </div>
 @{
-    static bool ShowInLogBook(string line)
+    static bool FilterLogBook(string line)
     {
         bool show = true;
 
