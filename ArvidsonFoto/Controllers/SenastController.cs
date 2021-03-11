@@ -40,7 +40,8 @@ namespace ArvidsonFoto.Controllers
             if (sortOrder.Equals("Per kategori"))
             {
                 ViewData["Title"] = "Per kategori";
-                _pageCounterService.AddPageCount("Senast-Per kategori");
+                if (User.Identity.IsAuthenticated is false)
+                    _pageCounterService.AddPageCount("Senast-Per kategori");
                 List<TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
                 viewModel.AllImagesList = new List<TblImage>();
                 foreach (var category in categories)
@@ -51,13 +52,15 @@ namespace ArvidsonFoto.Controllers
             else if (sortOrder.Equals("Uppladdad"))
             {
                 ViewData["Title"] = "Uppladdad";
-                _pageCounterService.AddPageCount("Senast-Uppladdad");
+                if (User.Identity.IsAuthenticated is false)
+                    _pageCounterService.AddPageCount("Senast-Uppladdad");
                 viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageUpdate).ToList();
             }
             else if (sortOrder.Equals("Fotograferad"))
             {
                 ViewData["Title"] = "Fotograferad";
-                _pageCounterService.AddPageCount("Senast-Fotograferad");
+                if (User.Identity.IsAuthenticated is false)
+                    _pageCounterService.AddPageCount("Senast-Fotograferad");
                 viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageDate).ToList();
             }
             else
