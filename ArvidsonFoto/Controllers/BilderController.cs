@@ -111,7 +111,7 @@ namespace ArvidsonFoto.Controllers
                 return RedirectPermanent(redirectUrl);
             }
             //Log.Fatal($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
-            return Redirect("/Senast/Fotograferad");
+            return Redirect("./Senast/Fotograferad");
         }
 
         [Route("/Sök")]
