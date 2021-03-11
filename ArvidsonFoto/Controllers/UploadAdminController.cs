@@ -304,31 +304,20 @@ namespace ArvidsonFoto.Controllers
         }
 
         /// <summary>
-        /// Funktion som aktiverar alla Loggar. Kanske dock borde ligga i AccountManagement annars...
+        /// Funktion som aktiverar/inaktiverar alla Loggar. Kanske dock borde ligga i AccountManagement annars...
         /// </summary>
-        [Route("[controller]/EnableShowAllLogs")]
-        public async Task<IActionResult> EnableShowAllLogs(string date)
+        [Route("[controller]/ToggleShowAllLogs")]
+        public async Task<IActionResult> ToggleShowAllLogs(string date)
         {
             if (string.IsNullOrWhiteSpace(date))
                 date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
 
             var user = await _userManager.GetUserAsync(User);
-            user.ShowAllLogs = true;
-            await _userManager.UpdateAsync(user);
-            return RedirectToAction("VisaLoggboken", new { datum = date });
-        }
+            if (user.ShowAllLogs)
+                user.ShowAllLogs = false;
+            else
+                user.ShowAllLogs = true;
 
-        /// <summary>
-        /// Funktion som inaktiverar alla Loggar. Kanske dock borde ligga i AccountManagement annars...
-        /// </summary>
-        [Route("[controller]/DisableShowAllLogs")]
-        public async Task<IActionResult> DisableShowAllLogs(string date)
-        {
-            if (string.IsNullOrWhiteSpace(date))
-                date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-
-            var user = await _userManager.GetUserAsync(User);
-            user.ShowAllLogs = false;
             await _userManager.UpdateAsync(user);
             return RedirectToAction("VisaLoggboken", new { datum = date });
         }

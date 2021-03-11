@@ -108,11 +108,15 @@
         <p>
             @if (Model.ShowAllLogs)
             {
-                <a href="./UploadAdmin/DisableShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")" class="btn btn-outline-danger">Dölj filtrerade loggar</a>
+                <a class="btn btn-outline-danger" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
+                    Dölj filtrerade loggar
+                </a>
             }
             else
             {
-                <a href="./UploadAdmin/EnableShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")" class="btn btn-success">Visa alla loggar</a>
+                <a class="btn btn-success" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
+                    Visa alla loggar
+                </a>
             }
         </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
