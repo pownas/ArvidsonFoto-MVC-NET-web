@@ -161,7 +161,7 @@ namespace ArvidsonFoto.Controllers
 
             int imagesPerPage = 25;
             if (sida is null || sida < 1)
-                sida = 0;
+                sida = 1;
 
             List<TblImage> displayTblImages = new List<TblImage>();
 
@@ -173,7 +173,7 @@ namespace ArvidsonFoto.Controllers
             };
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
             displayTblImages = viewModel.AllImagesList
-                                        .Skip(viewModel.CurrentPage * imagesPerPage)
+                                        .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                         .Take(imagesPerPage)
                                         .ToList();
             viewModel.DisplayImagesList = new List<UploadImageInputModel>();
