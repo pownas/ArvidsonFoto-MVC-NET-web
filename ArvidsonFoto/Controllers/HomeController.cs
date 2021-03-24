@@ -23,7 +23,8 @@ namespace ArvidsonFoto.Controllers
         public IActionResult Index()
         {
             ViewData["Title"] = "Startsidan";
-            _pageCounterService.AddPageCount("Startsidan");
+            if (User.Identity.IsAuthenticated is false)
+                _pageCounterService.AddPageCount("Startsidan");
             var viewModel = new GalleryViewModel();
             return View(viewModel);
         }

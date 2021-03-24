@@ -35,11 +35,11 @@ namespace ArvidsonFoto.Controllers
         [Route("/Latest.asp")]
         [Route("/Bild_kalender.asp")]
         [Route("/Bilder/Senast")]
-        [Route("/Bilder/Senast/{sortOrder}")]
+        [Route("/Bilder/Senast/{sortering}")]
         [Route("/Senast")]
         [Route("/Senast/Index.html")]
         [Route("/Senast/Default.asp")]
-        public RedirectToActionResult RedirectToSenast()
+        public RedirectToActionResult RedirectToSenast(string sortering)
         {
             ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
             //var url = Url.ActionContext.HttpContext;

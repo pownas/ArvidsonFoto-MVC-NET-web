@@ -9,6 +9,8 @@ namespace ArvidsonFoto.Models
 
         public List<string> LogBook { get; set; }
 
+        public bool ShowAllLogs { get; set; }
+
         public DateTime DateShown { get; set; }
     }
 }

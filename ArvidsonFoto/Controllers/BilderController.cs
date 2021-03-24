@@ -79,14 +79,17 @@ namespace ArvidsonFoto.Controllers
                 Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
             }
 
-            _pageCounterService.AddPageCount("Bilder");
-            try
+            if(User.Identity.IsAuthenticated is false)
             {
-                _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
-            }
-            catch(Exception ex)
-            {
-                Log.Fatal("User navigated to strange URL: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
+                _pageCounterService.AddPageCount("Bilder");
+                try
+                {
+                    _categoryService.AddPageCount(viewModel.SelectedCategory); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+                }
+                catch(Exception ex)
+                {
+                    Log.Fatal("User navigated to strange URL: "+ viewModel.CurrentUrl + ". Error-message: "+ex.Message);
+                }
             }
 
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
@@ -111,13 +114,14 @@ namespace ArvidsonFoto.Controllers
                 return RedirectPermanent(redirectUrl);
             }
             //Log.Fatal($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
-            return Redirect("/Senast/Fotograferad");
+            return Redirect("./Senast/Fotograferad");
         }
 
         [Route("/Sök")]
         public IActionResult Sök(string s)
         {
-            _pageCounterService.AddPageCount("Sök");
+            if (User.Identity.IsAuthenticated is false)
+                _pageCounterService.AddPageCount("Sök");
 
             GalleryViewModel viewModel = new GalleryViewModel();
             if (s is null) //Besöker sidan utan att skrivit in någon sökning

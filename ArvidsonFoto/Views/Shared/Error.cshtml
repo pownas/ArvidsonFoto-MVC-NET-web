@@ -25,7 +25,7 @@
     Go back to the startpage: <a href="/">ArvidsonFoto.se</a>.
 </p>
 
-@if (Model.VisitedUrl.ToLower().StartsWith("/images/gallery"))
+@if (Model.VisitedUrl.ToLower().StartsWith("/images/gallery") || Model.VisitedUrl.ToLower().StartsWith(("/img/gallery")))
 {
     string url = Model.VisitedUrl;
     string[] splittedUrl = url.Split("/");
@@ -33,7 +33,7 @@
     foreach (var splitt in splittedUrl)
     {
         //Sökvägen ska inte innehålla: '/images/gallery/' eller '/images/gallery-thumb/' 
-        if (splitt.Equals("images") is false && splitt.Equals("gallery") is false && splitt.Equals("gallery-thumb") is false && string.IsNullOrWhiteSpace(splitt) is false)
+        if (splitt.Equals("images") is false && splitt.Equals("img") is false && splitt.Equals("gallery") is false && splitt.Equals("gallery-thumb") is false && string.IsNullOrWhiteSpace(splitt) is false)
             currentUrl += "/" + splitt;
     }
 
