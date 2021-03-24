@@ -64,6 +64,12 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
+
+            var url = Url.ActionContext.HttpContext;
+            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+
+            Log.Warning($"A user visited UploadAdmin-login page via URL: {visitedUrl}.");
+
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 

@@ -8,6 +8,8 @@ using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using ArvidsonFoto.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArvidsonFoto.Controllers
 {
@@ -18,12 +20,14 @@ namespace ArvidsonFoto.Controllers
         private IImageService _imageService;
         private ICategoryService _categoryService;
         private IGuestBookService _guestBookService;
+        private readonly UserManager<ArvidsonFotoUser> _userManager;
 
-        public UploadAdminController(ArvidsonFotoDbContext context)
+        public UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager)
         {
             _imageService = new ImageService(context);
             _categoryService = new CategoryService(context);
             _guestBookService = new GuestBookService(context);
+            _userManager = userManager;
         }
         
         public IActionResult Index()
@@ -161,7 +165,7 @@ namespace ArvidsonFoto.Controllers
 
             int imagesPerPage = 25;
             if (sida is null || sida < 1)
-                sida = 0;
+                sida = 1;
 
             List<TblImage> displayTblImages = new List<TblImage>();
 
@@ -173,7 +177,7 @@ namespace ArvidsonFoto.Controllers
             };
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
             displayTblImages = viewModel.AllImagesList
-                                        .Skip(viewModel.CurrentPage * imagesPerPage)
+                                        .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                         .Take(imagesPerPage)
                                         .ToList();
             viewModel.DisplayImagesList = new List<UploadImageInputModel>();
@@ -281,7 +285,7 @@ namespace ArvidsonFoto.Controllers
 
         /// <summary>Laddar sidan "Läs loggboken" , men heter visa för att slippa ä i Läs</summary>
         /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
-        public IActionResult VisaLoggboken(DateTime datum)
+        public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
         {
             ViewData["Title"] = "Läser loggboken för: "+datum.ToString("yyyy-MM-dd dddd");
 
@@ -293,9 +297,30 @@ namespace ArvidsonFoto.Controllers
             viewModel.LogBook = logReader.ReadData(appLogFile);
             viewModel.DateShown = datum;
 
+            var user = await _userManager.GetUserAsync(User);
+            viewModel.ShowAllLogs = user.ShowAllLogs;
+
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Funktion som aktiverar/inaktiverar alla Loggar. Kanske dock borde ligga i AccountManagement annars...
+        /// </summary>
+        [Route("[controller]/ToggleShowAllLogs")]
+        public async Task<IActionResult> ToggleShowAllLogs(string date)
+        {
+            if (string.IsNullOrWhiteSpace(date))
+                date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user.ShowAllLogs)
+                user.ShowAllLogs = false;
+            else
+                user.ShowAllLogs = true;
+
+            await _userManager.UpdateAsync(user);
+            return RedirectToAction("VisaLoggboken", new { datum = date });
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

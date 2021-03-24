@@ -4,6 +4,11 @@
 }
 @{
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.VisaLoggboken;
+
+    ViewData["Title"] = ViewData["Title"].ToString().Replace("mandag", "måndag");
+    ViewData["Title"] = ViewData["Title"].ToString().Replace("tirsdag", "tisdag");
+    ViewData["Title"] = ViewData["Title"].ToString().Replace("lørdag", "lördag");
+    ViewData["Title"] = ViewData["Title"].ToString().Replace("søndag", "söndag");
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -100,17 +105,26 @@
                 </tbody>
             </table>
         </p>
-        @*<p>
-            Visa alla loggar //
-            public bool ShowAllLogs { get; set; } //ShowAllLogs , borde vara en prop på user-settings-nivå
-        </p>*@
+        <p>
+            @if (Model.ShowAllLogs)
+            {
+                <a class="btn btn-outline-danger" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
+                    Dölj filtrerade loggar
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-success" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
+                    Visa alla loggar
+                </a>
+            }
+        </p>
         <p>Här nedan visas loggboken från hemsidan:</p>
         @{
             int lineCounter = 0;
             foreach (var line in Model.LogBook)
             {
-                //if (ShowAllLogs || ShowInLogBook(line)) {
-                if (ShowInLogBook(line))
+                if (Model.ShowAllLogs || FilterLogBook(line))
                 {
                     lineCounter++;
                     string lineColor = "";
@@ -129,17 +143,27 @@
     </div>
 </div>
 @{
-    static bool ShowInLogBook(string line)
+    static bool FilterLogBook(string line)
     {
         bool show = true;
 
         if (line.Contains("/images/gallery"))
+            show = false;
+        if (line.Contains("/img/gallery"))
             show = false;
         if (line.Contains("to page: /Senast/Fotograferad"))
             show = false;
         if (line.Contains("Redirect from page: "))
             show = false;
         if (line.Contains("/Bilder/"))
+            show = false;
+        if (line.Contains("/GB.asp"))
+            show = false;
+        if (line.Contains("/code/"))
+            show = false;
+        if (line.Contains("/apple-"))
+            show = false;
+        if (line.Contains("/wp-"))
             show = false;
 
         return show;

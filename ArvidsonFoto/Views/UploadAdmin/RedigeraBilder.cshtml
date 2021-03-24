@@ -45,11 +45,11 @@
             <thead>
                 <tr>
                     <th scope="col">Bild</th>
-                    <th scope="col">HuvudFamilj</th>
-                    <th scope="col">Familj</th>
-                    <th scope="col">Art</th>
-                    <th scope="col">Fotodatum</th>
                     <th scope="col">Bildnamn</th>
+                    <th scope="col">Art</th>
+                    <th scope="col">Familj</th>
+                    <th scope="col">HuvudFamilj</th>
+                    <th scope="col">Fotodatum</th>
                     <th scope="col">Beskrivning</th>
                     <th scope="col">Redigera</th>
                 </tr>
@@ -62,20 +62,20 @@
                         string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
                         <tr>
                             <th scope="row"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="80" height="80" title="@image.ImageArtNamn"></th>
-                            <td>@image.ImageHuvudfamiljNamn</td>
-                            <td>@image.ImageFamiljNamn</td>
-                            <td>@image.ImageArtNamn</td>
-                            <td>@image.ImageDate.ToString("yyyy-MM-dd")</td>
                             <td>@image.ImageUrl</td>
+                            <td>@image.ImageArtNamn</td>
+                            <td>@image.ImageFamiljNamn</td>
+                            <td>@image.ImageHuvudfamiljNamn</td>
+                            <td>@image.ImageDate.ToString("yyyy-MM-dd")</td>
                             <td>@image.ImageDescription</td>
                             <td>
                                 <p class="m-0 mb-3">
-                                    <button title="Ändra" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-toggle="modal" data-target="#EditImage-@image.ImageId">
+                                    <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-toggle="modal" data-target="#EditImage-@image.ImageId">
                                         <i class="bi bi-pencil-square mr-2"></i> Ändra
                                     </button>
                                 </p>
                                 <p class="m-0">
-                                    <button title="Radera" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
+                                    <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
                                         <i class="bi bi-trash mr-2"></i> Radera
                                     </button>
                                 </p>
