@@ -1,0 +1,1 @@
+# jquery.validate.unobtrusive (Unobtrusive validation support library for jQuery and jQuery Validate) v3.2.11 (included with ASP.NET default template)
