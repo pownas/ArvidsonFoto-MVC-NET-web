@@ -125,7 +125,7 @@ namespace ArvidsonFoto.Services
         {
             List<TblPageCounter> listToReturn = new List<TblPageCounter>();
             var listOfPages = _entityContext.TblPageCounter
-                                            .Where(p => p.PicturePage == false)
+                                            //.Where(p => p.PicturePage == false) //För att bara se sidor och inte bild-kategorier...
                                             .Select(p => p.PageName)
                                             .Distinct()
                                             .ToList();
