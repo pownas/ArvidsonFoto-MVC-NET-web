@@ -6,7 +6,7 @@ namespace ArvidsonFoto.Services
 {
     public interface ICategoryService
     {
-        void AddPageCount(TblMenu categoryToUpdate);
+        //void AddPageCount(TblMenu categoryToUpdate);
 
         bool AddCategory(TblMenu category);
         

@@ -17,23 +17,23 @@ namespace ArvidsonFoto.Services
             _entityContext = context;
         }
 
-        /// <summary>
-        /// Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
-        /// </summary>
-        /// <param name="categoryToUpdate">Den kategorin som ska uppdateras med MenuPagecounter och MenuLastshowdate.</param>
-        public void AddPageCount(TblMenu categoryToUpdate)
-        {
-            if(categoryToUpdate is not null)
-            {
-                categoryToUpdate.MenuPagecounter += 1;
-                categoryToUpdate.MenuLastshowdate = DateTime.Now;
-                _entityContext.SaveChanges();
-            }
-            else
-            {
-                throw new NullReferenceException("Null when trying to update MenuPagecounter.");
-            }
-        }
+        ///// <summary>
+        ///// Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+        ///// </summary>
+        ///// <param name="categoryToUpdate">Den kategorin som ska uppdateras med MenuPagecounter och MenuLastshowdate.</param>
+        //public void AddPageCount(TblMenu categoryToUpdate)
+        //{
+        //    if(categoryToUpdate is not null)
+        //    {
+        //        categoryToUpdate.MenuPagecounter += 1;
+        //        categoryToUpdate.MenuLastshowdate = DateTime.Now;
+        //        _entityContext.SaveChanges();
+        //    }
+        //    else
+        //    {
+        //        throw new NullReferenceException("Null when trying to update MenuPagecounter.");
+        //    }
+        //}
 
         public bool AddCategory(TblMenu category)
         {

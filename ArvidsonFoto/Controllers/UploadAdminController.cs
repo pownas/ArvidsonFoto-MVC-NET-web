@@ -144,9 +144,9 @@ namespace ArvidsonFoto.Controllers
                 TblMenu newCategory = new TblMenu() {
                     MenuText = inputModel.MenuText,
                     MenuId = _categoryService.GetLastId() + 1,
-                    MenuMainId = inputModel.MainMenuId,
-                    MenuLastshowdate = DateTime.Now,
-                    MenuPagecounter = 0
+                    MenuMainId = inputModel.MainMenuId
+                    //MenuLastshowdate = DateTime.Now, //Ligger nu i tbl_PageCounter...
+                    //MenuPagecounter = 0 //Ligger nu i tbl_PageCounter...
                 };
 
                 if (_categoryService.AddCategory(newCategory))

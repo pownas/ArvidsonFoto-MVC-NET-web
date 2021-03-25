@@ -2,9 +2,22 @@
 @inject ICategoryService _categoryService
 @inject IPageCounterService _pageCounterService
 @{
-    List<TblMenu> allCategories = _categoryService.GetAll().OrderByDescending(c => c.MenuPagecounter).ToList();
-    List<TblMenu> shownCategories = allCategories.Take(10).ToList();
-    List<TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"));
+    List<TblPageCounter> top10Categories = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), true)
+                                                              .OrderByDescending(c => c.PageViews)
+                                                              .Take(10)
+                                                              .ToList();
+    //List<TblMenu> allCategories = _categoryService.GetAll();
+    //List<TblMenu> shownCategories = new List<TblMenu>();
+    List<TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false);
+
+    //foreach (var top10item in top10Categories)
+    //{
+    //    foreach (var category in allCategories)
+    //    {
+    //        if (top10item.CategoryId == category.Id)
+    //            shownCategories.Add(category);
+    //    }
+    //}
 }
 <h2>Sidvisningar</h2>
 
@@ -39,12 +52,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var category in shownCategories)
+        @foreach (var category in top10Categories)
         {
             <tr>
-                <th scope="row">@category.MenuPagecounter</th>
-                <td>@category.MenuText</td>
-                <td>@category.MenuLastshowdate</td>
+                <th scope="row">@category.PageViews</th>
+                <td>@category.PageName</td>
+                <td>@category.LastShowDate</td>
             </tr>
         }
     </tbody>

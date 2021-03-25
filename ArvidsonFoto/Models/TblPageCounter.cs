@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArvidsonFoto.Models
 {
@@ -14,6 +11,12 @@ namespace ArvidsonFoto.Models
 
         /// <summary> Sidans namn </summary>
         public string PageName { get; set; }
+
+        /// <summary> Categori Id som uppdateras </summary>
+        public int CategoryId { get; set; }
+
+        /// <summary> Kollar om det är från /Bilder/ eller inte </summary>
+        public bool PicturePage { get; set; }
 
         /// <summary> Innehåller månaden som sidan visades, exempel: "2021-03" </summary>
         public string MonthViewed { get; set; }

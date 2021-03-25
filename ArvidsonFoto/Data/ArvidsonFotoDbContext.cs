@@ -116,15 +116,15 @@ namespace ArvidsonFoto.Data
                 entity.Property(e => e.MenuId)
                     .HasColumnName("menu_ID");
 
-                entity.Property(e => e.MenuLastshowdate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("menu_lastshowdate");
+                //entity.Property(e => e.MenuLastshowdate)
+                //    .HasColumnType("datetime")
+                //    .HasColumnName("menu_lastshowdate");
 
                 entity.Property(e => e.MenuMainId)
                     .HasColumnName("menu_mainID");
 
-                entity.Property(e => e.MenuPagecounter)
-                    .HasColumnName("menu_pagecounter");
+                //entity.Property(e => e.MenuPagecounter)
+                //    .HasColumnName("menu_pagecounter");
 
                 entity.Property(e => e.MenuText)
                     .HasMaxLength(50)
@@ -157,6 +157,13 @@ namespace ArvidsonFoto.Data
                 entity.Property(e => e.LastShowDate)
                     .HasColumnType("datetime")
                     .HasColumnName("PageCounter_LastShowDate");
+
+                entity.Property(e => e.PicturePage)
+                    .HasColumnType("bit")
+                    .HasColumnName("PageCounter_PicturePage");
+
+                entity.Property(e => e.CategoryId)
+                    .HasColumnName("PageCounter_CategoryId");
 
                 entity.HasKey("Id");
             });
