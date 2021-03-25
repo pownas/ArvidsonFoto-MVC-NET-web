@@ -96,19 +96,6 @@ namespace ArvidsonFoto.Services
             {
                 Log.Error("Error while updating PageCounter for the CategoryId: " + categoryId + ". Error-message: " + ex.Message);
             }
-
-
-            //if (categoryId is not 0)
-            //{
-            //    categoryId.MenuPagecounter += 1;
-            //    categoryToUpdate.MenuLastshowdate = DateTime.Now;
-            //    _entityContext.SaveChanges();
-            //}
-            //else
-            //{
-            //    throw new NullReferenceException("No ID was sent when trying to update CategoryPagecounter.");
-            //}
-
         }
 
         public List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage)
@@ -143,6 +130,7 @@ namespace ArvidsonFoto.Services
                 listToReturn.Add(aCountedPage);
             }
 
+            //Tidigare SQL-frågan som delats upp i PageViews och LastShowDate ovan...
             //var SQLquery = "SELECT SUM(PageCounter_Views) AS PageCounter_Views, PageCounter_Name, MAX(PageCounter_LastShowDate) AS PageCounter_LastShowDate FROM tbl_PageCounter GROUP BY PageCounter_Name ORDER BY PageCounter_Views DESC";
             //var groupedList = _entityContext.TblPageCounter.FromSqlRaw(SQLquery).ToList();
 

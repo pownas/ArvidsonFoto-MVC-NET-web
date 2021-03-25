@@ -22,7 +22,10 @@ namespace ArvidsonFoto.Services
         /// <returns></returns>
         List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage);
 
+        /// <summary> Hämtar alla Sidvisningar per sida och Kategori... </summary>
+        /// <returns></returns>
         List<TblPageCounter> GetAllPageCountsGroupedByPageCount();
+
 
         List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount();
     }

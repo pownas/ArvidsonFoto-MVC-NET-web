@@ -6,18 +6,8 @@
                                                               .OrderByDescending(c => c.PageViews)
                                                               .Take(10)
                                                               .ToList();
-    //List<TblMenu> allCategories = _categoryService.GetAll();
-    //List<TblMenu> shownCategories = new List<TblMenu>();
     List<TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false);
 
-    //foreach (var top10item in top10Categories)
-    //{
-    //    foreach (var category in allCategories)
-    //    {
-    //        if (top10item.CategoryId == category.Id)
-    //            shownCategories.Add(category);
-    //    }
-    //}
 }
 
 <h4>Sidvisningar per sida, denna månaden (@(DateTime.Now.ToString("yyyy-MM")))</h4>

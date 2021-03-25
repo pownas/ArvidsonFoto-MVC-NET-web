@@ -83,7 +83,6 @@ namespace ArvidsonFoto.Controllers
             {   //Räkar upp sidvisningar om användaren inte är inloggad: 
                 _pageCounterService.AddPageCount("Bilder"); //Räkar upp att sidan "Bilder" besöks. 
                 _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.Id, viewModel.SelectedCategory.MenuText); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
-                //_categoryService.AddPageCount(viewModel.SelectedCategory); //Förra räknaren...
             }
 
             viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();

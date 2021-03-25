@@ -116,15 +116,8 @@ namespace ArvidsonFoto.Data
                 entity.Property(e => e.MenuId)
                     .HasColumnName("menu_ID");
 
-                //entity.Property(e => e.MenuLastshowdate)
-                //    .HasColumnType("datetime")
-                //    .HasColumnName("menu_lastshowdate");
-
                 entity.Property(e => e.MenuMainId)
                     .HasColumnName("menu_mainID");
-
-                //entity.Property(e => e.MenuPagecounter)
-                //    .HasColumnName("menu_pagecounter");
 
                 entity.Property(e => e.MenuText)
                     .HasMaxLength(50)

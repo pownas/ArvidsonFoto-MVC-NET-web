@@ -13,8 +13,5 @@ namespace ArvidsonFoto.Models
         public string MenuText { get; set; }
         public string MenuUrltext { get; set; }
         //public string MenuEngtext { get; set; }
-
-        //public DateTime? MenuLastshowdate { get; set; }
-        //public int? MenuPagecounter { get; set; }
     }
 }
