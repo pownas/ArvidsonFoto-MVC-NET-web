@@ -1,0 +1,35 @@
+﻿@*
+@inject NavigationManager _NavigationManager
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+@if (cultures is not null)
+{
+<form class="form-inline">
+    <select class="form-control mr-2" @bind="selectedCulture">
+        <option>Select...</option>
+        @foreach (var culture in cultures)
+        {
+            <option value="@culture.Key">@culture.Value</option>
+        }
+    </select>
+    <button class="btn btn-primary" @onclick="RequestCultureChange">Change language</button>
+</form>
+}
+
+@{ 
+    private string selectedCulture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+    private Dictionary<string, string> cultures;
+
+    protected override void OnInitialized()
+    {
+        cultures = Configuration.GetSection("Cultures").GetChildren().ToDictionary(x => x.Key, x => x.Value);
+    }
+
+    private void RequestCultureChange()
+    {
+        var uri = new Uri(_NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        var query = $"?culture={Uri.EscapeDataString(selectedCulture)}&redirectUri={Uri.EscapeDataString(uri)}";
+        _NavigationManager.NavigateTo("/Culture/SetCulture" + query, forceLoad: true);
+    }
+}*@
