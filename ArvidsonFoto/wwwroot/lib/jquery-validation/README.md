@@ -1,0 +1,1 @@
+# jquery-validation (jQuery Validation Plugin) v1.17.0 (included with ASP.NET default template)
