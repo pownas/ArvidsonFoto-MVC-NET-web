@@ -19,9 +19,9 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore ./src/CommunicationApp.sln
+      run: dotnet restore ./ArvidsonFoto-MVC-NET5.sln
     - name: Build
-      run: dotnet build --no-restore ./src/CommunicationApp.sln
+      run: dotnet build --no-restore ./ArvidsonFoto-MVC-NET5.sln
     - name: Update database
       run: |
             dotnet tool install --global dotnet-ef
