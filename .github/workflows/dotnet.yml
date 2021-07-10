@@ -22,12 +22,12 @@ jobs:
       run: dotnet restore ./ArvidsonFoto-MVC-NET5.sln
     - name: Build
       run: dotnet build --no-restore ./ArvidsonFoto-MVC-NET5.sln
-    # - name: Update database
-    #  run: |
-    #        dotnet tool install --global dotnet-ef
-    #        dotnet tool restore
-    #        dotnet ef database update -p ./ArvidsonFoto/ArvidsonFoto.csproj --context ArvidsonFotoDbContext
-    #  env:
-    #    ASPNETCORE_ENVIRONMENT: Development
+    - name: Update database
+      run: |
+            dotnet tool install --global dotnet-ef
+            dotnet tool restore
+            dotnet ef database update -p ./ArvidsonFoto/ArvidsonFoto.csproj -c ArvidsonFotoDbContext
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
     - name: Test
       run: dotnet test --no-build --verbosity normal ./ArvidsonFoto-MVC-NET5.sln
