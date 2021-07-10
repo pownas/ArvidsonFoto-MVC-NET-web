@@ -1,0 +1,33 @@
+name: .NET5-Windows
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET SDK v5.0.x
+    # (Latest: .NET v5.0.7) - See version info: https://dotnet.microsoft.com/download/dotnet/5.0 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore ./ArvidsonFoto-MVC-NET5.sln
+    - name: Build
+      run: dotnet build --no-restore ./ArvidsonFoto-MVC-NET5.sln
+    # - name: Update database
+    #  run: |
+    #        dotnet tool install --global dotnet-ef
+    #        dotnet tool restore
+    #        dotnet ef database update -p ./ArvidsonFoto/ArvidsonFoto.csproj --context ArvidsonFotoDbContext
+    #  env:
+    #    ASPNETCORE_ENVIRONMENT: Development
+    - name: Test
+      run: dotnet test --no-build --verbosity normal ./ArvidsonFoto-MVC-NET5.sln
