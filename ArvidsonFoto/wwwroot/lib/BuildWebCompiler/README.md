@@ -1,4 +1,4 @@
-﻿## Web Compiler
+﻿## Web Compiler v1.12.405 (downloaded 2021-01-25)
 
 A Visual Studio extension that compiles LESS, Sass Stylus, JSX, ES6 and CoffeeScript
 files.

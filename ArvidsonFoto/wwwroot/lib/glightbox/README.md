@@ -1,4 +1,4 @@
-# GLightbox
+# GLightbox v3.0.7 (downloaded 2021-01-20)
 
 GLightbox is a pure javascript lightbox. It can display images, iframes, inline content and videos with optional autoplay for YouTube, Vimeo and even self hosted videos.
 
