@@ -3,7 +3,7 @@
     List<TblMenu> categories;
     categories = _categoryService.GetAll();
 }
-<nav class="main-nav" role="navigation">
+<nav class="main-nav">
     <input id="main-menu-state" type="checkbox" />@* Hamburger-meny knappen skrivs ut här:  *@
     <label class="main-menu-btn" for="main-menu-state">
         <span class="main-menu-btn-icon"></span> Växla menyns synlighet
@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
                 <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> Uppladdad</a></li>
-                <li><a href="./Senast/Per kategori"><i class="bi bi-grid-3x3-gap"></i> Per kategori</a></li>
+                <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> Per kategori</a></li>
                 @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
             </ul>
         </li>
@@ -47,9 +47,9 @@ var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m 
 if (sub1Menu != null && sub1Menu.Count > 0)
 {
 if (@headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
-{ <a href="./Bilder/Fåglar" title="@headItem.MenuText">@headItem.MenuText</a> }
+{ <a href="./Bilder/Fåglar">@headItem.MenuText</a> }
 else
-{ <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)">@headItem.MenuText</a> }
 <ul>
 @foreach (var sub1Item in sub1Menu)
 {
@@ -58,7 +58,7 @@ else
 var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub2Menu != null && sub2Menu.Count > 0)
 {
-<a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)">@sub1Item.MenuText</a>
 <ul>
 @foreach (var sub2Item in sub2Menu)
 {
@@ -67,32 +67,32 @@ if (sub2Menu != null && sub2Menu.Count > 0)
 var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub3Menu != null && sub3Menu.Count > 0)
 {
-<a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)">@sub2Item.MenuText</a>
 <ul>
 @foreach (var sub3Item in sub3Menu)
 {
 <li>
-<a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText/@sub3Item.MenuText" title="@sub3Item.MenuText">@sub3Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)">@sub3Item.MenuText</a>
 </li>
 }
 </ul>
 }
 else
-{ <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a> }
-}
-</li>
-}
-</ul>
-}
-else
-{ <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a> }
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)">@sub2Item.MenuText</a> }
 }
 </li>
 }
 </ul>
 }
 else
-{ <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)">@sub1Item.MenuText</a> }
+}
+</li>
+}
+</ul>
+}
+else
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)">@headItem.MenuText</a> }
 }
 </li>
 }
