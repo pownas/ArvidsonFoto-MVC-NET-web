@@ -36,6 +36,7 @@ namespace ArvidsonFoto
             replaceAAO = replaceAAO.Replace("Ã¥", "å");
             replaceAAO = replaceAAO.Replace("Ã¤", "ä");
             replaceAAO = replaceAAO.Replace("Ã¶", "ö");
+            replaceAAO = replaceAAO.Replace("%C3%83%C2%B6", "ö");
             replaceAAO = replaceAAO.Replace("Ã…", "Å");
             replaceAAO = replaceAAO.Replace("Ã„", "Ä");
             replaceAAO = replaceAAO.Replace("Ã–", "Ö");
