@@ -6,6 +6,17 @@
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.Statistik;
 
     List<TblPageCounter> allPagesCounts = _pageCounterService.GetAllPageCountsGroupedByPageCount();
+
+    List<TblPageCounter>[] listOfMonthPageCounts = new List<TblPageCounter>[5];
+    List<TblPageCounter> monthPagesList = new();
+
+    for (var i = 0; i < listOfMonthPageCounts.Length; i++)
+    {
+        monthPagesList = _pageCounterService.GetMonthCount(DateTime.Now.AddMonths(-i).ToString("yyyy-MM"), false);
+        listOfMonthPageCounts[i].AddRange(monthPagesList);
+    }
+
+    Console.Write(listOfMonthPageCounts);
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
