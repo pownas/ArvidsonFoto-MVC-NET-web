@@ -1,33 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArvidsonFoto.Areas.Identity.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
-namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage
+namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
+
+[Authorize]
+public class ShowRecoveryCodesModel : PageModel
 {
-    [Authorize]
-    public class ShowRecoveryCodesModel : PageModel
+    [TempData]
+    public string[] RecoveryCodes { get; set; }
+
+    [TempData]
+    public string StatusMessage { get; set; }
+
+    public IActionResult OnGet()
     {
-        [TempData]
-        public string[] RecoveryCodes { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
-
-        public IActionResult OnGet()
+        if (RecoveryCodes == null || RecoveryCodes.Length == 0)
         {
-            if (RecoveryCodes == null || RecoveryCodes.Length == 0)
-            {
-                return RedirectToPage("./TwoFactorAuthentication");
-            }
-
-            return Page();
+            return RedirectToPage("./TwoFactorAuthentication");
         }
+
+        return Page();
     }
 }
