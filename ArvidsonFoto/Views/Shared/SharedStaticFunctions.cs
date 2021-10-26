@@ -34,13 +34,24 @@ namespace ArvidsonFoto
         public static string ReplaceAAO(string replaceAAO)
         {
             replaceAAO = replaceAAO.Replace("Ã¥", "å");
+            replaceAAO = replaceAAO.Replace("&#xE5;", "å");
             replaceAAO = replaceAAO.Replace("Ã¤", "ä");
+            replaceAAO = replaceAAO.Replace("&#xE4;", "ä");
             replaceAAO = replaceAAO.Replace("Ã¶", "ö");
+            replaceAAO = replaceAAO.Replace("%C3%83%C2%B6", "ö");
+            replaceAAO = replaceAAO.Replace("&#xF6;", "ö");
             replaceAAO = replaceAAO.Replace("Ã…", "Å");
             replaceAAO = replaceAAO.Replace("Ã„", "Ä");
             replaceAAO = replaceAAO.Replace("Ã–", "Ö");
             
             return replaceAAO;
+        }
+
+        public static string ReplaceUrlText(string urlText)
+        {
+            urlText = urlText.Replace(" ", "%20");
+
+            return urlText;
         }
     }
 
