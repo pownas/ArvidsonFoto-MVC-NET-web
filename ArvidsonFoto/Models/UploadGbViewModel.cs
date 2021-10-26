@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ArvidsonFoto.Models;
 
-namespace ArvidsonFoto.Models
+public class UploadGbViewModel
 {
-    public class UploadGbViewModel
-    {
-        public string UpdatedId { get; set; }
-        public string DisplayMessage { get; set; }
-    }
+    public string UpdatedId { get; set; }
+    public string DisplayMessage { get; set; }
 }
