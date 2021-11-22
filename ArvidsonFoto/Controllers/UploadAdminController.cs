@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics;
+
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]

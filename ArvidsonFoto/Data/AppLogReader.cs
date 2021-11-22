@@ -1,5 +1,4 @@
-﻿using System.IO;
-namespace ArvidsonFoto.Data;
+﻿namespace ArvidsonFoto.Data;
 
 public class AppLogReader
 {
