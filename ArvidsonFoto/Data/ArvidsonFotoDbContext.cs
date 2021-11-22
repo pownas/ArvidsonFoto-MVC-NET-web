@@ -158,6 +158,10 @@ public partial class ArvidsonFotoDbContext : DbContext
             entity.HasKey("Id");
         });
 
+
+        ///Kommentera bort denna raden för att göra en initial Databas Seed
+        //modelBuilder.SeedDatabase();
+
         OnModelCreatingPartial(modelBuilder);
     }
 
