@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework> <!-- .Net-versionen som körs i programmet (net5.0 , är ifrån november 2020) -->
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
     <LangVersion>10</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
