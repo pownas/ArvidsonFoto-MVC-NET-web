@@ -59,11 +59,11 @@
 
 @if (Model.SelectedCategory is not null) //Mest för att det ska gå att se vilket ID som är valt på sidan...
 {
-    <h1 id="MenuId-@Model.SelectedCategory.MenuId">@ViewData["Title"]</h1>
+    <h2 id="MenuId-@Model.SelectedCategory.MenuId">@ViewData["Title"]</h2>
 }
 else
 {
-    <h1>@ViewData["Title"]</h1>
+    <h2>@ViewData["Title"]</h2>
 
     if(ViewData["Title"].Equals("Bilder-sidan hittades inte"))
         Log.Fatal("Could not show the Image-URL: '" + currentUrl + "'");
