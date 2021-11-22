@@ -14,7 +14,7 @@ public static class DbSeederExtension
         TblMenu menu2 = new() { Id = 2, MenuId = 2, MenuMainId = 0, MenuText = "Däggdjur", MenuUrltext = "Daggdjur" };
         TblMenu menu3 = new() { Id = 3, MenuId = 3, MenuMainId = 0, MenuText = "Kräldjur", MenuUrltext = "Kraldjur" };
         TblMenu menu4 = new() { Id = 4, MenuId = 4, MenuMainId = 0, MenuText = "Insekter", MenuUrltext = "Insekter" };
-        TblMenu menu5 = new() { Id = 5, MenuId = 5, MenuMainId = 0, MenuText = "Vaxter", MenuUrltext = "Vaxter" };
+        TblMenu menu5 = new() { Id = 5, MenuId = 5, MenuMainId = 0, MenuText = "Växter", MenuUrltext = "Vaxter" };
         TblMenu menu6 = new() { Id = 6, MenuId = 6, MenuMainId = 0, MenuText = "Landskap", MenuUrltext = "Landskap" };
         TblMenu menu7 = new() { Id = 7, MenuId = 7, MenuMainId = 0, MenuText = "Årstider", MenuUrltext = "Arstider" };
         TblMenu menu8 = new() { Id = 8, MenuId = 8, MenuMainId = 0, MenuText = "Resor", MenuUrltext = "Resor" };
