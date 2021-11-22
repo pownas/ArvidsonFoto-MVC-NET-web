@@ -14,22 +14,9 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        //Lägger till databaskoppling för IdentityContext (görs dock i /Areas/Identity/IdentityHostingStartup.cs ):
-        //services.AddDbContext<ApplicationDbContext>(options =>
-        //    options.UseSqlServer(
-        //        Configuration.GetConnectionString("DefaultConnection")));
-
-
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        //Lägger till IdentityUser ( som ska kunna användas för inloggning,  görs dock i /Areas/Identity/IdentityHostingStartup.cs ):
-        //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-        //    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
-        //services.AddControllersWithViews();
-
-        //Lägger till Databaskoppling för appen: 
+        //Lägger till Databaskoppling för appen (Identity kopplas i: /Areas/Identity/IdentityHostingStartup.cs): 
         services.AddDbContext<ArvidsonFotoDbContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
