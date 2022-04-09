@@ -76,6 +76,11 @@ else
 
             imgHref += "/" + imgTitle;
 
+            if(img.Name is not null)
+            {
+                imgTitle = img.Name;
+            }
+
             string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
 
             string imgName = img.ImageUrl + ".jpg";
