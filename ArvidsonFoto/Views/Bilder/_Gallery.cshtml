@@ -3,7 +3,7 @@
 @inject ICategoryService _categoryService
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model?.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<TblImage> imageList = Model!.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
 
     int imageCount = 0;
     if (imageList is not null)
@@ -11,7 +11,7 @@
 
     //Kontroll om det är startsidan eller ej...
     bool startsidan = false;
-    if (imageCount.Equals(12) && Model.SelectedCategory is null || Model.SelectedCategory is null)
+    if (imageCount.Equals(12) && Model!.SelectedCategory is null || Model!.SelectedCategory is null)
         startsidan = true;
 
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
@@ -23,7 +23,7 @@
 
 @if (imageList is null || imageList.Count.Equals(0))
 {
-    if (ViewData["Title"].Equals("Fåglar"))
+    if (ViewData["Title"]!.Equals("Fåglar"))
     {
         <p class="m-4">Välj en fågel-kategori här ovanför ⤴</p>
     }

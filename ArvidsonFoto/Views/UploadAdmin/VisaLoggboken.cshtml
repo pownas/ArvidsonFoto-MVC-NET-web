@@ -29,7 +29,7 @@
         <p>Välj en dag att visa:</p>
         <p>
             @{ //Start på kalender-vy
-                var getDate = Model.DateShown;
+                var getDate = Model!.DateShown;
 
                 var firstDayOfTheMonth = new DateTime(getDate.Year, getDate.Month, 1);
                 var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddDays(-1);

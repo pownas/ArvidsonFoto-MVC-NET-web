@@ -1,6 +1,6 @@
 ﻿@model GalleryViewModel
 
-@if (Model.AllImagesList.Count > 0)
+@if (Model!.AllImagesList.Count > 0)
 {
     <p class="text-center">
         Antal @if (Model.SelectedCategory.MenuText.Equals("Per kategori"))

@@ -40,7 +40,7 @@ public class GuestBookService : IGuestBookService
         try
         {
             TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
-            gb.GbReadPost = true;
+            gb!.GbReadPost = true;
             _entityContext.SaveChanges();
             succeeded = true;
         }
@@ -58,7 +58,7 @@ public class GuestBookService : IGuestBookService
         try
         {
             TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
-            _entityContext.TblGbs.Remove(gb);
+            _entityContext.TblGbs.Remove(gb!);
             _entityContext.SaveChanges();
             succeeded = true;
         }

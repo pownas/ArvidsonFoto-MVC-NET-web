@@ -29,7 +29,7 @@ public class CategoryService : ICategoryService
     public int GetLastId()
     {
         int highestID = -1;
-        highestID = _entityContext.TblMenus.OrderBy(c => c.MenuId).LastOrDefault().MenuId;
+        highestID = _entityContext.TblMenus.OrderBy(c => c.MenuId).LastOrDefault()!.MenuId;
         return highestID;
     }
 

@@ -26,7 +26,7 @@
 <div id="page-content" class="brodtext">
     <form class="form-horizontal" asp-action="PostToGb" method="post">
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
-        @if (Model.DisplayErrorPublish)
+        @if (Model!.DisplayErrorPublish)
         {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
         @if (Model.DisplayPublished)
         {<div class="ml-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
@@ -89,7 +89,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text text-dark">
-                                @if(gbPost.GbName.Equals("Jonas Arvidson (Webmaster)"))
+                                @if(gbPost.GbName!.Equals("Jonas Arvidson (Webmaster)"))
                                 {
                                     @HttpUtility.HtmlEncode(gbPost.GbText.Replace("<br>", "\n"))
                                 }

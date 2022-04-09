@@ -60,7 +60,7 @@ public class ImageService : IImageService
         try
         {
             TblImage image = _entityContext.TblImages.FirstOrDefault(i => i.ImageId == imgId);
-            _entityContext.TblImages.Remove(image);
+            _entityContext.TblImages.Remove(image!);
             _entityContext.SaveChanges();
             succeeded = true;
         }
@@ -74,7 +74,7 @@ public class ImageService : IImageService
     public int GetImageLastId()
     {
         int highestID = -1;
-        highestID = _entityContext.TblImages.OrderBy(i => i.ImageId).LastOrDefault().ImageId;
+        highestID = _entityContext.TblImages.OrderBy(i => i.ImageId).LastOrDefault()!.ImageId;
         return highestID;
     }
 
@@ -85,7 +85,7 @@ public class ImageService : IImageService
         {
             int blamesId = _entityContext.TblMenus
                                          .Where(m => m.MenuText.Equals("Blåmes"))
-                                         .FirstOrDefault()
+                                         .FirstOrDefault()!
                                          .MenuId;
 
             image = _entityContext.TblImages
