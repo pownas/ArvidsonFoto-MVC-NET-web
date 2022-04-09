@@ -1,5 +1,4 @@
 ﻿#nullable disable
-
 namespace ArvidsonFoto.Models;
 
 public partial class TblImage
@@ -14,9 +13,7 @@ public partial class TblImage
     public string ImageDescription { get; set; }
     public DateTime ImageUpdate { get; set; }
 
-    /// <summary>
-    /// Inte något fält i databasen, men kan sättas ett namn, om det är en kategori som sökts fram.
-    /// </summary>
+    /// <summary>Inte något fält i databasen, men kan sättas ett namn, om det är en kategori som sökts fram. </summary>
     [NotMapped]
     public string Name { get; set; }
 }

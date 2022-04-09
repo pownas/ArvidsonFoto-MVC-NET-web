@@ -81,7 +81,6 @@ public class ImageService : IImageService
     public TblImage GetOneImageFromCategory(int category)
     {
         TblImage image;
-
         if (category.Equals(1)) //Om man söker fram Id = 1 (Fåglar) , så ska Id för Blåmes hittas och visas bilden för istället. 
         {
             int blamesId = _entityContext.TblMenus
@@ -141,5 +140,4 @@ public class ImageService : IImageService
                               .FirstOrDefault();
         return image;
     }
-
 }
