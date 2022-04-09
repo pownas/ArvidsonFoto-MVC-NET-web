@@ -1,4 +1,5 @@
-﻿@model GuestbookInputModel
+﻿@using System.Web
+@model GuestbookInputModel
 
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
@@ -90,7 +91,7 @@
                             <p class="card-text text-dark">
                                 @if(gbPost.GbName.Equals("Jonas Arvidson (Webmaster)"))
                                 {
-                                    @HttpUtility.HtmlEncoder(gbPost.GbText.Replace("<br>", "\n"))
+                                    @HttpUtility.HtmlEncode(gbPost.GbText.Replace("<br>", "\n"))
                                 }
                                 else
                                 {
