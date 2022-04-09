@@ -5,7 +5,7 @@ namespace ArvidsonFoto.Services;
 public class ImageService : IImageService
 {
     // Databas koppling
-    private readonly ArvidsonFotoDbContext _entityContext;
+    private readonly ArvidsonFotoDbContext _entityContext = null!;
     public ImageService(ArvidsonFotoDbContext context)
     {
         _entityContext = context;

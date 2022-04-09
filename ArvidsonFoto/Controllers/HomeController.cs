@@ -13,7 +13,7 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         ViewData["Title"] = "Startsidan";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
         var viewModel = new GalleryViewModel();
         return View(viewModel);

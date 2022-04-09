@@ -21,7 +21,7 @@ public class InfoController : Controller
     public IActionResult Index()
     {
         ViewData["Title"] = "Info";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Info");
         return View();
     }
@@ -29,7 +29,7 @@ public class InfoController : Controller
     public IActionResult Gästbok(GuestbookInputModel inputModel)
     {
         ViewData["Title"] = "Gästbok";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Gästbok");
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
@@ -184,7 +184,7 @@ public class InfoController : Controller
     public IActionResult Kontakta(ContactFormModel contactFormModel)
     {
         ViewData["Title"] = "Kontaktinformation";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Kontaktinformation");
 
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
@@ -205,7 +205,7 @@ public class InfoController : Controller
     public IActionResult Köp_av_bilder(ContactFormModel contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Köp av bilder");
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
@@ -240,7 +240,7 @@ public class InfoController : Controller
     public IActionResult Om_mig()
     {
         ViewData["Title"] = "Om mig, Torbjörn Arvidson";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Om mig");
         return View();
     }
@@ -248,7 +248,7 @@ public class InfoController : Controller
     public IActionResult Sidkarta()
     {
         ViewData["Title"] = "Sidkarta";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Sidkarta");
         return View();
     }
@@ -256,7 +256,7 @@ public class InfoController : Controller
     public IActionResult Copyright()
     {
         ViewData["Title"] = "Copyright";
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Copyright");
         return View();
     }

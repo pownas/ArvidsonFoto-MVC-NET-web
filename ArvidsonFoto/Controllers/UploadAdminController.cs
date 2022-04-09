@@ -234,7 +234,7 @@ public class UploadAdminController : Controller
 
     public IActionResult MarkGbPostAsRead(int gbId)
     {
-        if (User.Identity.IsAuthenticated)
+        if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.ReadGbPost(gbId))
             {
@@ -246,7 +246,7 @@ public class UploadAdminController : Controller
 
     public IActionResult DeleteGbPost(int gbId)
     {
-        if (User.Identity.IsAuthenticated)
+        if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.DeleteGbPost(gbId))
             {
@@ -258,7 +258,7 @@ public class UploadAdminController : Controller
 
     public IActionResult DeleteImage(int imgId)
     {
-        if (User.Identity.IsAuthenticated)
+        if (User?.Identity?.IsAuthenticated is true)
         {
             if (_imageService.DeleteImgId(imgId))
             {

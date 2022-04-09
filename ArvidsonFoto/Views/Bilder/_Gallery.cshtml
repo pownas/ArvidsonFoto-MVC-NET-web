@@ -3,7 +3,7 @@
 @inject ICategoryService _categoryService
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<TblImage> imageList = Model?.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
 
     int imageCount = 0;
     if (imageList is not null)
@@ -92,7 +92,7 @@ else
             {
                 <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                     <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
-                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
+                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
                         <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                     </a>
                 </figure>
@@ -102,7 +102,7 @@ else
                 <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                     <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
 Tryck för att förstora">
-                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
+                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
 Tryck för att förstora">
                         <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                     </a>

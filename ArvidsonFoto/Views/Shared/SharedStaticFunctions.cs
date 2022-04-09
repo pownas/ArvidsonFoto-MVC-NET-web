@@ -58,7 +58,7 @@ public static class HttpRequestExtensions
     public static string GetRawUrl(this HttpContext httpContext)
     {
         var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
-        return requestFeature.RawTarget.ToString();
+        return requestFeature?.RawTarget.ToString();
     }
 }
 
