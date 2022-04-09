@@ -1,4 +1,5 @@
-﻿@model GuestbookInputModel
+﻿@using System.Web
+@model GuestbookInputModel
 
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
@@ -20,12 +21,12 @@
     </ol>
 </nav>
 
-<h1><i class="bi bi-book"></i> @ViewData["Title"]</h1>
+<h2><i class="bi bi-book"></i> @ViewData["Title"]</h2>
 
 <div id="page-content" class="brodtext">
     <form class="form-horizontal" asp-action="PostToGb" method="post">
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
-        @if (Model.DisplayErrorPublish)
+        @if (Model!.DisplayErrorPublish)
         {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
         @if (Model.DisplayPublished)
         {<div class="ml-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
@@ -87,7 +88,17 @@
                         {@("Anonym användare")}
                         </div>
                         <div class="card-body">
-                            <p class="card-text text-dark">@gbPost.GbText</p>
+                            <p class="card-text text-dark">
+                                @if(gbPost.GbName!.Equals("Jonas Arvidson (Webmaster)"))
+                                {
+                                    @HttpUtility.HtmlEncode(gbPost.GbText.Replace("<br>", "\n"))
+                                }
+                                else
+                                {
+                                    @gbPost.GbText.Replace("<br>", "\n")
+                                }
+                                
+                            </p>
                         </div>
                         <div class="card-footer text-muted row">
                             <div class="text-left col-6">

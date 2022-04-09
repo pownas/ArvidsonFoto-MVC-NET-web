@@ -14,23 +14,21 @@
     <header>
         <partial name="_NavBar" />
     </header>
-    <main class="container-md pb-3">
+    <main class="container-md pb-5">
         @RenderBody()
     </main>
-    <footer class="footer overridden-footer border-top">
+    <footer class="footer overridden-footer">
         <div class="container">
             <partial name="_Footer" />
         </div>
     </footer>
-    <section id="Scripts">
-        <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 -->*@
-        <script src="lib/bootstrap/js/bootstrap.min.js"></script> @*<!-- version: 4.5.3-dist -->*@
-        <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
-        <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
-        <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
-        <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
-        <script src="js/site.js"></script>
-        @await RenderSectionAsync("Scripts", required: false)
-    </section>
+    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 -->*@
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script> @*<!-- version: 4.5.3-dist -->*@
+    <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
+    <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
+    <script src="js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

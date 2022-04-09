@@ -3,7 +3,7 @@
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
     @{
-        int pageImgCount = Model.AllImagesList is not null ? Model.AllImagesList.Count : 0;
+        int pageImgCount = Model!.AllImagesList is not null ? Model.AllImagesList.Count : 0;
     }
     <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st" />
     @*<meta name="keywords" content="Bilder, Djur, Natur"> <!-- Här ska det sedan in sökord som ska också in i databasen och hämtas därifrån -->*@
@@ -16,18 +16,18 @@
     List<TblMenu> subCategories = new List<TblMenu>();
     try
     {
-        subCategories = _categoryService.GetSubsList(Model.SelectedCategory.MenuId)
+        subCategories = _categoryService.GetSubsList(Model!.SelectedCategory.MenuId)
                                         .OrderBy(c => c.MenuText)
                                         .ToList();
 
         if (Model.SelectedCategory.MenuText.Length > 0 || Model.SelectedCategory is null)
-            ViewData["Title"] = Model.SelectedCategory.MenuText;
+            ViewData["Title"] = Model.SelectedCategory!.MenuText;
         else
             ViewData["Title"] = "Ingen kategori skickades med...";
     }
     catch (Exception ex)
     {
-        Model.ErrorMessage = ex.Message;
+        Model!.ErrorMessage = ex.Message;
         //Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
     }
@@ -59,13 +59,13 @@
 
 @if (Model.SelectedCategory is not null) //Mest för att det ska gå att se vilket ID som är valt på sidan...
 {
-    <h1 id="MenuId-@Model.SelectedCategory.MenuId">@ViewData["Title"]</h1>
+    <h2 id="MenuId-@Model.SelectedCategory.MenuId">@ViewData["Title"]</h2>
 }
 else
 {
-    <h1>@ViewData["Title"]</h1>
+    <h2>@ViewData["Title"]</h2>
 
-    if(ViewData["Title"].Equals("Bilder-sidan hittades inte"))
+    if(ViewData["Title"]!.Equals("Bilder-sidan hittades inte"))
         Log.Fatal("Could not show the Image-URL: '" + currentUrl + "'");
 }
 

@@ -18,7 +18,7 @@
     </ol>
 </nav>
 
-<h1 class="offset-md-4"><i class="bi bi-book-half mr-2"></i>@ViewData["Title"]</h1>
+<h2 class="offset-md-4"><i class="bi bi-book-half mr-2"></i>@ViewData["Title"]</h2>
 
 <div class="row">
     <nav class="nav nav-pills col-12 col-md-4 p-0">
@@ -27,7 +27,7 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        @if (Model.DisplayMessage.Equals("ErrorGbDelete"))
+        @if (Model!.DisplayMessage.Equals("ErrorGbDelete"))
         {
             <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid raderade av GB-inlägget med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
         }

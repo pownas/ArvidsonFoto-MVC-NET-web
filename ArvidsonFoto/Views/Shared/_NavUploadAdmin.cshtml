@@ -7,8 +7,8 @@
     @inject IGuestBookService _guestBookService
     int countOfUnreadGbPosts = _guestBookService.GetCountOfUnreadPosts();
 
-    string username = User.Identity.Name;
-    string[] splittedUser = username.Split("@");
+    string username = User.Identity!.Name;
+    string[] splittedUser = username!.Split("@");
     username = splittedUser[0];
 
     <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)"><i class="bi bi-cloud-upload"></i> Upload Admin</a>

@@ -3,7 +3,7 @@
 @inject ICategoryService _categoryService
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<TblImage> imageList = Model!.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
 
     int imageCount = 0;
     if (imageList is not null)
@@ -11,7 +11,7 @@
 
     //Kontroll om det är startsidan eller ej...
     bool startsidan = false;
-    if (imageCount.Equals(12) && Model.SelectedCategory is null || Model.SelectedCategory is null)
+    if (imageCount.Equals(12) && Model!.SelectedCategory is null || Model!.SelectedCategory is null)
         startsidan = true;
 
     //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
@@ -23,7 +23,7 @@
 
 @if (imageList is null || imageList.Count.Equals(0))
 {
-    if (ViewData["Title"].Equals("Fåglar"))
+    if (ViewData["Title"]!.Equals("Fåglar"))
     {
         <p class="m-4">Välj en fågel-kategori här ovanför ⤴</p>
     }
@@ -76,6 +76,11 @@ else
 
             imgHref += "/" + imgTitle;
 
+            if(img.Name is not null)
+            {
+                imgTitle = img.Name;
+            }
+
             string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
 
             string imgName = img.ImageUrl + ".jpg";
@@ -86,8 +91,8 @@ else
             if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
             {
                 <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                    <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle">
-                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle">
+                    <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
+                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
                         <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                     </a>
                 </figure>
@@ -95,16 +100,16 @@ else
             else
             {
                 <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                    <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle
+                    <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
 Tryck för att förstora">
-                        <img src="@imgThumbSrc" alt="@imgTitle" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle
+                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle@imgDesc
 Tryck för att förstora">
                         <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                     </a>
                 </figure>
 
                 <div class="glightbox-desc row @customDesc">
-                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
                     <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Köp_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
                 </div>
             }

@@ -1,25 +1,20 @@
-﻿using System;
-using ArvidsonFoto.Models;
-using System.Collections.Generic;
+﻿namespace ArvidsonFoto.Services;
 
-namespace ArvidsonFoto.Services
+public interface ICategoryService
 {
-    public interface ICategoryService
-    {
-        bool AddCategory(TblMenu category);
-        
-        int GetLastId();
-        
-        int GetIdByName(string categoryName);
+    bool AddCategory(TblMenu category);
 
-        string GetNameById(int? id);
+    int GetLastId();
 
-        public TblMenu GetById(int? id);
+    int GetIdByName(string categoryName);
 
-        TblMenu GetByName(string categoryName);
+    string GetNameById(int? id);
 
-        List<TblMenu> GetAll();
-        
-        List<TblMenu> GetSubsList(int categoryID);
-    }
+    public TblMenu GetById(int? id);
+
+    TblMenu GetByName(string categoryName);
+
+    List<TblMenu> GetAll();
+
+    List<TblMenu> GetSubsList(int categoryID);
 }
