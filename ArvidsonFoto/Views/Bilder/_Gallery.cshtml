@@ -3,7 +3,7 @@
 @inject ICategoryService _categoryService
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<TblImage> imageList = Model?.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
 
     int imageCount = 0;
     if (imageList is not null)

@@ -68,7 +68,7 @@ public class BilderController : Controller
             Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
         }
 
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
         {   //Räkar upp sidvisningar om användaren inte är inloggad: 
             _pageCounterService.AddPageCount("Bilder"); //Räkar upp att sidan "Bilder" besöks. 
             _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.Id, viewModel.SelectedCategory.MenuText); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
@@ -102,7 +102,7 @@ public class BilderController : Controller
     [Route("/Sök")]
     public IActionResult Sök(string s)
     {
-        if (User.Identity.IsAuthenticated is false)
+        if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Sök");
 
         GalleryViewModel viewModel = new GalleryViewModel();

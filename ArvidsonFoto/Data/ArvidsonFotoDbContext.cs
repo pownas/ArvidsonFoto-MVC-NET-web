@@ -15,10 +15,10 @@ public partial class ArvidsonFotoDbContext : DbContext
     {
     }
 
-    public virtual DbSet<TblGb> TblGbs { get; set; }
-    public virtual DbSet<TblImage> TblImages { get; set; }
-    public virtual DbSet<TblMenu> TblMenus { get; set; }
-    public virtual DbSet<TblPageCounter> TblPageCounter { get; set; }
+    public virtual DbSet<TblGb> TblGbs { get; set; } = null!;
+    public virtual DbSet<TblImage> TblImages { get; set; } = null!;
+    public virtual DbSet<TblMenu> TblMenus { get; set; } = null!;
+    public virtual DbSet<TblPageCounter> TblPageCounter { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

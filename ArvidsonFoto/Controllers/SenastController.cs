@@ -30,7 +30,7 @@ public class SenastController : Controller
         if (sortOrder.Equals("Per kategori"))
         {
             ViewData["Title"] = "Per kategori";
-            if (User.Identity.IsAuthenticated is false)
+            if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Per kategori");
             List<TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
             viewModel.AllImagesList = new List<TblImage>();
@@ -44,14 +44,14 @@ public class SenastController : Controller
         else if (sortOrder.Equals("Uppladdad"))
         {
             ViewData["Title"] = "Uppladdad";
-            if (User.Identity.IsAuthenticated is false)
+            if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
             viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageUpdate).ToList();
         }
         else if (sortOrder.Equals("Fotograferad"))
         {
             ViewData["Title"] = "Fotograferad";
-            if (User.Identity.IsAuthenticated is false)
+            if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
             viewModel.AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageDate).ToList();
         }
