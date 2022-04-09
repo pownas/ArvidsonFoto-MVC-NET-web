@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace ArvidsonFoto;
+﻿namespace ArvidsonFoto;
 
 public class Program
 {
