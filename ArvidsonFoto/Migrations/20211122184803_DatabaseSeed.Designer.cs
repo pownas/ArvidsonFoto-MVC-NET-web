@@ -4,6 +4,7 @@ using ArvidsonFoto.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArvidsonFoto.Migrations
 {
     [DbContext(typeof(ArvidsonFotoDbContext))]
-    partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211122184803_DatabaseSeed")]
+    partial class DatabaseSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -36,7 +36,9 @@ public class SenastController : Controller
             viewModel.AllImagesList = new List<TblImage>();
             foreach (var category in categories)
             {
-                viewModel.AllImagesList.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+                TblImage image = _imageService.GetOneImageFromCategory(category.MenuId);
+                image.Name = category.MenuText;
+                viewModel.AllImagesList.Add(image);
             }
         }
         else if (sortOrder.Equals("Uppladdad"))

@@ -81,11 +81,15 @@ public class ImageService : IImageService
     public TblImage GetOneImageFromCategory(int category)
     {
         TblImage image;
-
-        if (category.Equals(1))
+        if (category.Equals(1)) //Om man söker fram Id = 1 (Fåglar) , så ska Id för Blåmes hittas och visas bilden för istället. 
         {
+            int blamesId = _entityContext.TblMenus
+                                         .Where(m => m.MenuText.Equals("Blåmes"))
+                                         .FirstOrDefault()
+                                         .MenuId;
+
             image = _entityContext.TblImages
-                                  .Where(i => i.ImageArt.Equals(54))
+                                  .Where(i => i.ImageArt.Equals(blamesId))
                                   .OrderByDescending(i => i.ImageUpdate)
                                   .FirstOrDefault();
         }
@@ -136,5 +140,4 @@ public class ImageService : IImageService
                               .FirstOrDefault();
         return image;
     }
-
 }
