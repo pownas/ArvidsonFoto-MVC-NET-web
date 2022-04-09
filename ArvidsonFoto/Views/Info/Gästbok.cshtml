@@ -87,7 +87,17 @@
                         {@("Anonym användare")}
                         </div>
                         <div class="card-body">
-                            <p class="card-text text-dark">@gbPost.GbText</p>
+                            <p class="card-text text-dark">
+                                @if(gbPost.GbName.Equals("Jonas Arvidson (Webmaster)"))
+                                {
+                                    @HttpUtility.HtmlEncoder(gbPost.GbText.Replace("<br>", "\n"))
+                                }
+                                else
+                                {
+                                    @gbPost.GbText.Replace("<br>", "\n")
+                                }
+                                
+                            </p>
                         </div>
                         <div class="card-footer text-muted row">
                             <div class="text-left col-6">
