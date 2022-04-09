@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework> <!-- .Net-versionen som körs i programmet (net5.0 , är ifrån november 2020) -->
+    <TargetFramework>net6.0</TargetFramework> <!-- .Net-versionen som körs i programmet (net5.0 , är ifrån november 2020) -->
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
+    <LangVersion>10</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BuildWebCompiler" Version="1.12.405" /> <!-- Används för att kompilera scss-filer till css -->
-    <PackageReference Include="MailKit" Version="2.10.1" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
-    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" /> --><!-- Används för scaffolding av kod till Identity-sidorna -->
-    <PackageReference Include="MimeKit" Version="2.10.1" /> <!-- Används för kryptering av skicka mail -->
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.2" /> <!-- Osäker vart denna används... -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" /> <!-- Används för inloggning på sidan -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.2" /> <!-- Används som utökning av inloggningens UI  -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" /> <!-- Används för Databas-anrop -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2"> <!-- Osäker om denna verkligen används, men annars för DB-anrop -->
+    <PackageReference Include="MailKit" Version="2.15.0" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
+    <PackageReference Include="MimeKit" Version="2.15.1" /> <!-- Används för kryptering av skicka mail -->
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" /> <!-- Osäker vart denna används... -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" /> <!-- Används för inloggning på sidan -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" /> <!-- Används som utökning av inloggningens UI  -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" /> <!-- Används för Databas-anrop -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0"> <!-- Osäker om denna verkligen används, men annars för DB-anrop -->
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Serilog" Version="2.10.0" /> <!-- Används för loggning -->
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" /> <!-- Används för loggning till fil -->
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" /> <!-- Används för loggning till fil -->
   </ItemGroup>
 
   <ItemGroup>

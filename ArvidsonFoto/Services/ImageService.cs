@@ -1,148 +1,143 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using Serilog;
+﻿using System.Data;
 
-namespace ArvidsonFoto.Services
+namespace ArvidsonFoto.Services;
+
+public class ImageService : IImageService
 {
-    public class ImageService : IImageService
+    // Databas koppling
+    private readonly ArvidsonFotoDbContext _entityContext;
+    public ImageService(ArvidsonFotoDbContext context)
     {
-        // Databas koppling
-        private readonly ArvidsonFotoDbContext _entityContext;
-        public ImageService(ArvidsonFotoDbContext context)
+        _entityContext = context;
+    }
+
+    public bool AddImage(TblImage image)
+    {
+        bool success; //default är false
+        try
         {
-            _entityContext = context;
+            _entityContext.TblImages.Add(image);
+            _entityContext.SaveChanges();
+            success = true;
         }
-
-        public bool AddImage(TblImage image)
+        catch (Exception ex)
         {
-            bool success; //default är false
-            try
-            {
-                _entityContext.TblImages.Add(image);
-                _entityContext.SaveChanges();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
+            string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
 
-                Log.Warning(ErrorMessage);
-                throw new Exception(ErrorMessage);
-            }
-            return success;
+            Log.Warning(ErrorMessage);
+            throw new Exception(ErrorMessage);
         }
+        return success;
+    }
 
-        public bool UpdateImage(UploadImageInputModel updatedImage)
+    public bool UpdateImage(UploadImageInputModel updatedImage)
+    {
+        bool success; //default är false
+        try
         {
-            bool success; //default är false
-            try
-            {
-                TblImage imageToEdit = GetById(updatedImage.ImageId);
+            TblImage imageToEdit = GetById(updatedImage.ImageId);
 
-                imageToEdit.ImageUrl = updatedImage.ImageUrl; //Filnamn
-                imageToEdit.ImageDate = updatedImage.ImageDate; //Fotodatum
-                imageToEdit.ImageDescription = updatedImage.ImageDescription; //Beskrivning
+            imageToEdit.ImageUrl = updatedImage.ImageUrl; //Filnamn
+            imageToEdit.ImageDate = updatedImage.ImageDate; //Fotodatum
+            imageToEdit.ImageDescription = updatedImage.ImageDescription; //Beskrivning
 
-                _entityContext.SaveChanges();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
-
-                Log.Warning(ErrorMessage);
-                throw new Exception(ErrorMessage);
-            }
-            return success;
+            _entityContext.SaveChanges();
+            success = true;
         }
-
-        public bool DeleteImgId(int imgId)
+        catch (Exception ex)
         {
-            bool succeeded = false; //verkar som det måste heta "success" för att defaulta till false. För det går inte att ta bort false tilldelningen.
-            try
-            {
-                TblImage image = _entityContext.TblImages.FirstOrDefault(i => i.ImageId == imgId);
-                _entityContext.TblImages.Remove(image);
-                _entityContext.SaveChanges();
-                succeeded = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
-            }
-            return succeeded;
+            string ErrorMessage = "Fel vid länkning av bild. Felmeddelande: " + ex.Message;
+
+            Log.Warning(ErrorMessage);
+            throw new Exception(ErrorMessage);
         }
+        return success;
+    }
 
-        public int GetImageLastId()
+    public bool DeleteImgId(int imgId)
+    {
+        bool succeeded = false; //verkar som det måste heta "success" för att defaulta till false. För det går inte att ta bort false tilldelningen.
+        try
         {
-            int highestID = -1;
-            highestID = _entityContext.TblImages.OrderBy(i => i.ImageId).LastOrDefault().ImageId;
-            return highestID;
+            TblImage image = _entityContext.TblImages.FirstOrDefault(i => i.ImageId == imgId);
+            _entityContext.TblImages.Remove(image);
+            _entityContext.SaveChanges();
+            succeeded = true;
         }
-
-        public TblImage GetOneImageFromCategory(int category)
+        catch (Exception ex)
         {
-            TblImage image;
-
-            if (category.Equals(1))
-            {
-                image = _entityContext.TblImages
-                                      .Where(i => i.ImageArt.Equals(54))
-                                      .OrderByDescending(i => i.ImageUpdate)
-                                      .FirstOrDefault();
-            }
-            else
-            {
-                image = _entityContext.TblImages
-                                      .Where(i => i.ImageArt.Equals(category) 
-                                               || i.ImageFamilj.Equals(category) 
-                                               || i.ImageHuvudfamilj.Equals(category))
-                                      .OrderByDescending(i => i.ImageUpdate)
-                                      .FirstOrDefault();
-            }
-            return image;
+            Log.Error("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
         }
+        return succeeded;
+    }
 
-        public List<TblImage> GetAll()
-        {
-            List<TblImage> images = _entityContext.TblImages.ToList();
-            return images;
-        }
+    public int GetImageLastId()
+    {
+        int highestID = -1;
+        highestID = _entityContext.TblImages.OrderBy(i => i.ImageId).LastOrDefault().ImageId;
+        return highestID;
+    }
 
-        /// <summary> Används på startsidan för random antal av bilder. </summary>
-        /// <param name="count">Antal bilder som ska plockas ifrån databasen</param>
-        /// <returns>"count" antal bilder ifrån databasen</returns>
-        public List<TblImage> GetRandomNumberOfImages(int count)
+    public TblImage GetOneImageFromCategory(int category)
+    {
+        TblImage image;
+        if (category.Equals(1)) //Om man söker fram Id = 1 (Fåglar) , så ska Id för Blåmes hittas och visas bilden för istället. 
         {
-            List<TblImage> images = _entityContext.TblImages
-                                   .OrderBy(r => Guid.NewGuid()) //Här gör jag en random med hjälp av en ny GUID som random nummer.
-                                   .Take(count)
-                                   .ToList();
-            return images;
-        }
+            int blamesId = _entityContext.TblMenus
+                                         .Where(m => m.MenuText.Equals("Blåmes"))
+                                         .FirstOrDefault()
+                                         .MenuId;
 
-        public List<TblImage> GetAllImagesByCategoryID(int categoryID)
-        {
-            List<TblImage> images = _entityContext.Set<TblImage>()
-                                   .Where(i => i.ImageArt == categoryID 
-                                            || i.ImageFamilj == categoryID 
-                                            || i.ImageHuvudfamilj == categoryID)
-                                   .ToList();
-            return images;
-        }
-
-        public TblImage GetById(int imageId)
-        {
-            TblImage image = _entityContext.TblImages
-                                  .Where(i => i.ImageId.Equals(imageId))
+            image = _entityContext.TblImages
+                                  .Where(i => i.ImageArt.Equals(blamesId))
+                                  .OrderByDescending(i => i.ImageUpdate)
                                   .FirstOrDefault();
-            return image;
         }
+        else
+        {
+            image = _entityContext.TblImages
+                                  .Where(i => i.ImageArt.Equals(category)
+                                           || i.ImageFamilj.Equals(category)
+                                           || i.ImageHuvudfamilj.Equals(category))
+                                  .OrderByDescending(i => i.ImageUpdate)
+                                  .FirstOrDefault();
+        }
+        return image;
+    }
 
+    public List<TblImage> GetAll()
+    {
+        List<TblImage> images = _entityContext.TblImages.ToList();
+        return images;
+    }
+
+    /// <summary> Används på startsidan för random antal av bilder. </summary>
+    /// <param name="count">Antal bilder som ska plockas ifrån databasen</param>
+    /// <returns>"count" antal bilder ifrån databasen</returns>
+    public List<TblImage> GetRandomNumberOfImages(int count)
+    {
+        List<TblImage> images = _entityContext.TblImages
+                               .OrderBy(r => Guid.NewGuid()) //Här gör jag en random med hjälp av en ny GUID som random nummer.
+                               .Take(count)
+                               .ToList();
+        return images;
+    }
+
+    public List<TblImage> GetAllImagesByCategoryID(int categoryID)
+    {
+        List<TblImage> images = _entityContext.Set<TblImage>()
+                               .Where(i => i.ImageArt == categoryID
+                                        || i.ImageFamilj == categoryID
+                                        || i.ImageHuvudfamilj == categoryID)
+                               .ToList();
+        return images;
+    }
+
+    public TblImage GetById(int imageId)
+    {
+        TblImage image = _entityContext.TblImages
+                              .Where(i => i.ImageId.Equals(imageId))
+                              .FirstOrDefault();
+        return image;
     }
 }

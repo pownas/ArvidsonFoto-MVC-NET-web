@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ArvidsonFoto.Models;
 
-namespace ArvidsonFoto.Models
+public class UploadImageViewModel
 {
-    public class UploadImageViewModel
-    {
-        public TblMenu SelectedCategory { get; set; }
+    public TblMenu SelectedCategory { get; set; }
 
-        public List<TblMenu> SubCategories { get; set; }
+    public List<TblMenu> SubCategories { get; set; }
 
-        public UploadImageInputModel ImageInputModel { get; set; }
+    public UploadImageInputModel ImageInputModel { get; set; }
 
-        public string CurrentUrl { get; set; }
-    }
+    public string CurrentUrl { get; set; }
 }
