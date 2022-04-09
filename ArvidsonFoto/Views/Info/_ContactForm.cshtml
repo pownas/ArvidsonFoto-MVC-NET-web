@@ -3,7 +3,7 @@
 @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
 <form method="post" asp-action="SendMessage" asp-route-Page="@Model.ReturnPageUrl">
     <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
-    @if (Model.DisplayErrorSending)
+    @if (Model!.DisplayErrorSending)
     {
         <div class="alert alert-danger alert-dismissible fade show ml-3 col-11 col-md-8 col-lg-9" role="alert">
             <strong>Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
