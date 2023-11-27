@@ -21,7 +21,7 @@ För att skapa någon ny migration om en data-modell ändras på, kör kommandot
   
   
 ## Fel vid körning med EF-core
-Om du får ett felmeddelande när du kör: ```dotnet ef database update```, som säger:  
+Om du får ett felmeddelande när du kör: ```dotnet-ef database update```, som säger:  
 ```
 Could not execute because the specified command or file was not found.
 Possible reasons for this include: 
