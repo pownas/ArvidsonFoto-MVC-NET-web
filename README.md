@@ -6,7 +6,8 @@
 ## Instruktion för att starta webbsidan lokalt
 För att starta webbsidan så är det några steg man behöver genomföra. 
 1. Kommentera bort ```modelBuilder.InitialDatabaseSeed();``` (ca rad 163) i **[/ArvidsonFoto/Data/ArvidsonFotoDbContext.cs](https://github.com/pownas/ArvidsonFoto-MVC-NET6/blob/main/ArvidsonFoto/Data/ArvidsonFotoDbContext.cs#L163)** , för att kunna skapa en ny databas med dess tillhörande data. 
-2. Kör entityframework databas uppdateringar: 
+2. Kör entityframework databas uppdateringar:
+  
 ```dotnet-ef database update --context ArvidsonFotoDbContext```
   
 ```dotnet-ef database update --context ArvidsonFotoIdentityContext```
@@ -17,6 +18,7 @@ För att starta webbsidan så är det några steg man behöver genomföra.
   
 ## Skapa nya Migrations
 För att skapa någon ny migration om en data-modell ändras på, kör kommandot: 
+  
 ```dotnet-ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
   
   
