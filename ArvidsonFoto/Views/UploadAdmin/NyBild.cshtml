@@ -23,7 +23,7 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du länka till en ny bild på hemsidan:</p>
-        @if (Model.ImageInputModel.ImageCreated)
+        @if (Model!.ImageInputModel.ImageCreated)
         {
             <h5 class="alert alert-success bg-success text-dark">Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(Model.ImageInputModel.ImageArt), @Model.ImageInputModel.ImageUrl</span></h5>
         }

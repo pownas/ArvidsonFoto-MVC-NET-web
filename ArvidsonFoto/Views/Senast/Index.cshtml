@@ -9,8 +9,8 @@
 
 @{
     string classIcon = "bi-camera";
-    classIcon = ViewData["Title"].Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
-    classIcon = ViewData["Title"].Equals("Per kategori") ? "bi-grid-3x3-gap" : classIcon;
+    classIcon = ViewData["Title"]!.Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
+    classIcon = ViewData["Title"]!.Equals("Per kategori") ? "bi-grid-3x3-gap" : classIcon;
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -22,14 +22,14 @@
 
 <h2>Senast - @ViewData["Title"] <i class="bi @classIcon"></i></h2>
 
-@if (ViewData["Title"].Equals("Per kategori"))
+@if (ViewData["Title"]!.Equals("Per kategori"))
 {
     <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
 <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
-@if (ViewData["Title"].Equals("Per kategori"))
+@if (ViewData["Title"]!.Equals("Per kategori"))
 {
     <div class="row justify-content-center mt-4">
         <div class="col-12 text-center">

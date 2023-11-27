@@ -23,7 +23,7 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du lägga till en ny kategori på hemsidan:</p>
-        @if (Model.CategoryCreated)
+        @if (Model!.CategoryCreated)
         {
             <h5 class="alert alert-success bg-success text-dark">Skapat nya kategorin: <span class="text-light">@Model.MenuText</span></h5>
         }
