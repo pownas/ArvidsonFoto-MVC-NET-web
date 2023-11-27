@@ -1,7 +1,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET6?style=flat-square&cacheSeconds=86400)
 
-# ArvidsonFoto-MVC-NET6
- Ombyggnation av ArvidsonFoto med MVC och .NET5 (uppgraderad till .NET6)
+# ArvidsonFoto-MVC-NET8
+ Ombyggnation av ArvidsonFoto med MVC och .NET8 (uppgraderad från .NET5 till .NET6 till .NET8)
 
 ## Instruktion för att starta webbsidan lokalt
 För att starta webbsidan så är det några steg man behöver genomföra. 
