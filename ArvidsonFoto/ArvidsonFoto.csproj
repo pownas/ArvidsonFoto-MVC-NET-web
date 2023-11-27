@@ -4,8 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
     <ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>warnings</Nullable>
-	<StartupObject></StartupObject>
+	  <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
