@@ -22,6 +22,9 @@ public static class UploadAdminNavPages
     public static string Statistik => "Statistik";
     public static string StatistikNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, Statistik);
 
+    public static string FacebookUpload => "FacebookUpload";
+    public static string FacebookUploadNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, FacebookUpload);
+
     public static string VisaLoggboken => "VisaLoggboken";
     public static string VisaLoggbokenNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, VisaLoggboken);
 

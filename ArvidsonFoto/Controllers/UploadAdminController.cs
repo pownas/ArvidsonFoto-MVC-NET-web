@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers;
 
-[Authorize]
+//[Authorize]
 public class UploadAdminController : Controller
 {
 
@@ -311,6 +311,15 @@ public class UploadAdminController : Controller
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
+    }
+
+    [Route("[controller]/FacebookUpload")]
+    public async Task<IActionResult> FacebookUpload()
+    {
+        ViewData["Title"] = "Ladda upp till facebook";
+        //Visa bilder 
+
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
