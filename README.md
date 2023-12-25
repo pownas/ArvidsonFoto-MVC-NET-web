@@ -16,13 +16,25 @@ För att starta webbsidan så är det några steg man behöver genomföra.
   
 ## Skapa nya Migrations
 För att skapa någon ny migration om en data-modell ändras på, kör kommandot: 
-```dotnet ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
-
+```dotnet-ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
+  
+  
+## Fel vid körning med EF-core
+Om du får ett felmeddelande när du kör: ```dotnet-ef database update```, som säger:  
+```
+Could not execute because the specified command or file was not found.
+Possible reasons for this include: 
+  * You misspelled a build-in dotnet command.
+  * You intended to execute a .NET program , but dotnet-ef does not exist.
+  * You intended to run a global tool, but dotnet-prefixed executable with this name could not be found on the PATH.
+```  
+  
+Då behöver du installera dotnet-ef CLI (dotnet entity framework), som installeras via kommandot:  
+```dotnet tool install --global dotnet-ef```
 
 ## Uppdatera entityframework till senaste versionen
-För att uppdatera entityframework till senaste versionen, kör kommandot: 
+Uppdatera din dotnet-ef till version 8.0.0 eller högre med kommandot:  
 ```dotnet tool update --global dotnet-ef```
-
 
 ## Systemdokumentation
 ![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET8/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
