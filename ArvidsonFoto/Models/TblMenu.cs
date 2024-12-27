@@ -4,7 +4,7 @@ namespace ArvidsonFoto.Models;
 /// <summary>
 /// Tabellen Menu (databas record)
 /// </summary>
-public partial class TblMenu
+public partial class TblMenu()
 {
     /// <summary>
     /// Tabell id

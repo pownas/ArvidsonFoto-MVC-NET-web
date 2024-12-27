@@ -4,7 +4,7 @@ namespace ArvidsonFoto.Models;
 /// <summary>
 /// Tabellen Gb - GästBoken (databas record)
 /// </summary>
-public partial class TblGb
+public partial class TblGb()
 {
     /// <summary>
     /// Tabellens databas Id

@@ -7,7 +7,7 @@ namespace ArvidsonFoto.Models;
 /// <remarks>
 /// Information om en bild i databasen.
 /// </remarks>
-public partial class TblImage
+public partial class TblImage()
 {
     /// <summary>
     /// Tabellens Id

@@ -6,7 +6,7 @@
 /// <remarks>
 /// för att hålla koll på hur många gånger en sida har visats.
 /// </remarks>
-public class TblPageCounter
+public class TblPageCounter()
 {
     public int Id { get; set; }
 
