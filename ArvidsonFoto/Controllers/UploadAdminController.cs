@@ -288,7 +288,7 @@ public class UploadAdminController : Controller
         viewModel.LogBook = logReader.ReadData(appLogFile);
         viewModel.DateShown = datum;
 
-        var user = await _userManager.GetUserAsync(User);
+        ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         viewModel.ShowAllLogs = user.ShowAllLogs;
 
         return View(viewModel);
@@ -303,7 +303,7 @@ public class UploadAdminController : Controller
         if (string.IsNullOrWhiteSpace(date))
             date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
 
-        var user = await _userManager.GetUserAsync(User);
+        ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         if (user.ShowAllLogs)
             user.ShowAllLogs = false;
         else

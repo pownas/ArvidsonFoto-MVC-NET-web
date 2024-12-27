@@ -98,7 +98,9 @@ public class EnableAuthenticatorModel : PageModel
         if (await _userManager.CountRecoveryCodesAsync(user) == 0)
         {
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+#pragma warning disable CS8604 // Possible null reference argument.
             RecoveryCodes = recoveryCodes.ToArray();
+#pragma warning restore CS8604 // Possible null reference argument.
             return RedirectToPage("./ShowRecoveryCodes");
         }
         else
