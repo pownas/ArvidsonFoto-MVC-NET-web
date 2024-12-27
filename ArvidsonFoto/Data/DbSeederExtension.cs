@@ -1,9 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 namespace ArvidsonFoto.Data;
 
+/// <summary>
+/// Database Seeder Extension
+/// </summary>
+/// <remarks>
+/// Används för att skapa upp test-data lokalt till databasen.
+/// </remarks>
 public static class DbSeederExtension
 {
-    /// <summary>En extensionmetod skapad via 'DbSeederExtension.cs' , som skapar upp test-data till databasen.</summary>
+    /// <summary>
+    /// En extensionmetod skapad via 'DbSeederExtension.cs'
+    /// </summary>
+    /// <remarks>
+    /// Skapar upp den test-data till databasen via Entity Framework Core för att kunna starta applikationen lokalt.
+    /// </remarks>
     public static void InitialDatabaseSeed(this ModelBuilder modelBuilder)
     {
         TblGb gb1 = new() { Id = 1, GbId = 1, GbDate = new DateTime(2021, 11, 22), GbEmail = "pownas@outlook.com", 

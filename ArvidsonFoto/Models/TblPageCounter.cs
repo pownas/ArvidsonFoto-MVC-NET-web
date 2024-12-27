@@ -1,6 +1,12 @@
 ﻿namespace ArvidsonFoto.Models;
 
-public class TblPageCounter
+/// <summary>
+/// Sidvisningsräknare (Tabellen PageCounter databas record)
+/// </summary>
+/// <remarks>
+/// för att hålla koll på hur många gånger en sida har visats.
+/// </remarks>
+public class TblPageCounter()
 {
     public int Id { get; set; }
 
