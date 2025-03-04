@@ -6,21 +6,12 @@ using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class UploadAdminController : Controller
+public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager) : Controller
 {
-
-    private IImageService _imageService;
-    private ICategoryService _categoryService;
-    private IGuestBookService _guestBookService;
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-
-    public UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager)
-    {
-        _imageService = new ImageService(context);
-        _categoryService = new CategoryService(context);
-        _guestBookService = new GuestBookService(context);
-        _userManager = userManager;
-    }
+    internal IImageService _imageService = new ImageService(context);
+    internal ICategoryService _categoryService = new CategoryService(context);
+    internal IGuestBookService _guestBookService = new GuestBookService(context);
+    internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
 
     public IActionResult Index()
     {

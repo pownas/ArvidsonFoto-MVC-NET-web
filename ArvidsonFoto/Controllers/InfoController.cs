@@ -3,20 +3,12 @@ using MailKit.Security;
 using MimeKit;
 namespace ArvidsonFoto.Controllers;
 
-public class InfoController : Controller
+public class InfoController(ArvidsonFotoDbContext context) : Controller
 {
-    private ICategoryService _categoryService;
-    private IImageService _imageService;
-    private IGuestBookService _guestbookService;
-    private IPageCounterService _pageCounterService;
-
-    public InfoController(ArvidsonFotoDbContext context)
-    {
-        _categoryService = new CategoryService(context);
-        _imageService = new ImageService(context);
-        _guestbookService = new GuestBookService(context);
-        _pageCounterService = new PageCounterService(context);
-    }
+    internal ICategoryService _categoryService = new CategoryService(context);
+    internal IImageService _imageService = new ImageService(context);
+    internal IGuestBookService _guestbookService = new GuestBookService(context);
+    internal IPageCounterService _pageCounterService = new PageCounterService(context);
 
     public IActionResult Index()
     {

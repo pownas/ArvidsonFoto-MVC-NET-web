@@ -1,6 +1,6 @@
 ﻿namespace ArvidsonFoto.Controllers;
 
-public class RedirectRouterController : Controller
+public class RedirectRouterController() : Controller
 {
     [Route("/Index.html")]
     [Route("/Default.asp")]
@@ -12,7 +12,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To startpage: /");
 
-        return RedirectToActionPermanent("Index", "Home");
+        return RedirectToActionPermanent(actionName: nameof(HomeController.Index), controllerName: nameof(HomeController).Replace("Controller", ""));
     }
 
     [Route("/Sk")]
@@ -26,7 +26,7 @@ public class RedirectRouterController : Controller
         //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
 
-        return RedirectToActionPermanent("Sök", "Bilder");
+        return RedirectToActionPermanent(actionName: nameof(BilderController.Search), controllerName: nameof(BilderController).Replace("Controller", ""));
     }
 
     [Route("/Latest.asp")]
@@ -43,7 +43,7 @@ public class RedirectRouterController : Controller
         //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Senast/Fotograferad");
 
-        return RedirectToActionPermanent("Index", "Senast", new { sortOrder = "Fotograferad" });
+        return RedirectToActionPermanent(actionName: nameof(SenastController.Index), controllerName: nameof(SenastController).Replace("Controller", ""), routeValues: new { sortOrder = "Fotograferad" });
     }
 
     [Route("/Info.asp")]
@@ -54,7 +54,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info");
 
-        return RedirectToActionPermanent("Index", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Index), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Info/GB")]
@@ -68,7 +68,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Gästbok");
 
-        return RedirectToActionPermanent("Gästbok", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Gästbok), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Kontakta.asp")]
@@ -81,7 +81,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Kontakta");
 
-        return RedirectToActionPermanent("Kontakta", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Kontakta), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Kop.asp")]
@@ -95,7 +95,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Köp_av_bilder");
 
-        return RedirectToActionPermanent("Köp_av_bilder", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Köp_av_bilder), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Om.asp")]
@@ -107,7 +107,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Om_mig");
 
-        return RedirectToActionPermanent("Om_mig", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Om_mig), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Sitemap.txt")]
@@ -120,7 +120,7 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Sidkarta");
 
-        return RedirectToActionPermanent("Sidkarta", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Sidkarta), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Copyright.asp")]
@@ -132,6 +132,6 @@ public class RedirectRouterController : Controller
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Copyright");
 
-        return RedirectToActionPermanent("Copyright", "Info");
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Copyright), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 }

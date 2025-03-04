@@ -1,17 +1,10 @@
 ﻿namespace ArvidsonFoto.Controllers;
 
-public class BilderController : Controller
+public class BilderController(ArvidsonFotoDbContext context) : Controller
 {
-    internal IImageService _imageService;
-    internal ICategoryService _categoryService;
-    internal IPageCounterService _pageCounterService;
-
-    public BilderController(ArvidsonFotoDbContext context)
-    {
-        _imageService = new ImageService(context);
-        _categoryService = new CategoryService(context);
-        _pageCounterService = new PageCounterService(context);
-    }
+    internal IImageService _imageService = new ImageService(context);
+    internal ICategoryService _categoryService = new CategoryService(context);
+    internal IPageCounterService _pageCounterService = new PageCounterService(context);
 
     [Route("/[controller]/{subLevel1}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}")]
@@ -105,14 +98,14 @@ public class BilderController : Controller
     public IActionResult Search(string s)
     {
         if (User?.Identity?.IsAuthenticated is false)
-            _pageCounterService.AddPageCount("Sök");
+            _pageCounterService.AddPageCount("search");
 
         GalleryViewModel viewModel = new GalleryViewModel();
         if (s is null) //Besöker sidan utan att skrivit in någon sökning
         {
             ViewData["Title"] = "Sök bland bild-kategorierna";
         }
-        else //Annars, om man skickar med en söksträng likt: /Sök?s=SöktText
+        else //Annars, om man skickar med en söksträng likt: /search?s=SöktText
         {
             Log.Information("En användare sökte efter: '" + s + "'"); //Borde logga i databas eller separat sök-fil... 
             ViewData["Title"] = "Söker efter: " + s;
