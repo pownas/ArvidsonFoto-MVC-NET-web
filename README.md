@@ -1,7 +1,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET8?style=flat-square&cacheSeconds=86400)
 
 # ArvidsonFoto-MVC-NET8
- Ombyggnation av ArvidsonFoto med MVC och .NET8 (uppgraderad från .NET5 till .NET6 till .NET8)
+ Ombyggnation av ArvidsonFoto med MVC och .NET9 (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9)
   
   
 ## Instruktion för att starta webbsidan lokalt
@@ -33,7 +33,7 @@ Då behöver du installera dotnet-ef CLI (dotnet entity framework), som installe
 ```dotnet tool install --global dotnet-ef```
 
 ## Uppdatera entityframework till senaste versionen
-Uppdatera din dotnet-ef till version 8.0.0 eller högre med kommandot:  
+Uppdatera din dotnet-ef till version 9.0.0 eller högre med kommandot:  
 ```dotnet tool update --global dotnet-ef```
 
 ## Systemdokumentation

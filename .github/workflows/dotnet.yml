@@ -1,4 +1,4 @@
-name: .NET8-Windows
+name: .NET9-Windows
 
 on:
   push:
@@ -13,11 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET SDK v8.0.x
+    - name: Setup .NET SDK v9.0.x
     # (Latest: .NET v8.0.0) - See version info: https://dotnet.microsoft.com/download/dotnet/8.0 
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore ./ArvidsonFoto-MVC-NET8.sln
     - name: Build
