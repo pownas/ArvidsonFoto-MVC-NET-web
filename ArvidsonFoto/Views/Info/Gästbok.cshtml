@@ -24,7 +24,7 @@
 <h2><i class="bi bi-book"></i> @ViewData["Title"]</h2>
 
 <div id="page-content" class="brodtext">
-    <form class="form-horizontal" asp-action="PostToGb" method="post">
+    <form class="form-horizontal" asp-action="@(nameof(InfoController.PostToGb))" method="post">
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
         @if (Model!.DisplayErrorPublish)
         {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}

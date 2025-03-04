@@ -27,7 +27,7 @@
         {
             <h5 class="alert alert-success bg-success text-dark">Skapat nya kategorin: <span class="text-light">@Model.MenuText</span></h5>
         }
-        <form method="post" asp-action="CreateCategory">
+        <form method="post" asp-action="@(nameof(UploadAdminController.CreateCategory))">
             @Html.AntiForgeryToken()
             <div class="form-group col-md-6">
                 <label asp-for="MainMenuId">Vart ska kategorin ligga under?</label>
