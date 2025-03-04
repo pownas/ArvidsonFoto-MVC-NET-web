@@ -2,9 +2,9 @@
 
 public class BilderController : Controller
 {
-    private IImageService _imageService;
-    private ICategoryService _categoryService;
-    private IPageCounterService _pageCounterService;
+    internal IImageService _imageService;
+    internal ICategoryService _categoryService;
+    internal IPageCounterService _pageCounterService;
 
     public BilderController(ArvidsonFotoDbContext context)
     {
@@ -86,8 +86,8 @@ public class BilderController : Controller
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
     {
-        var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        var url = Url.ActionContext.HttpContext ?? null;
+        string visitedUrl = HttpRequestExtensions.GetRawUrl(url) ?? "";
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
@@ -99,8 +99,10 @@ public class BilderController : Controller
         return Redirect("./Senast/Fotograferad");
     }
 
+    [Route("/search")]
     [Route("/Sök")]
-    public IActionResult Sök(string s)
+    [Route("/sok")]
+    public IActionResult Search(string s)
     {
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Sök");
