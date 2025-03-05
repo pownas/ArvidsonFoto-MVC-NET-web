@@ -1,17 +1,10 @@
 ﻿namespace ArvidsonFoto.Controllers;
 
-public class SenastController : Controller
+public class SenastController(ArvidsonFotoDbContext context) : Controller
 {
-    private IImageService _imageService;
-    private ICategoryService _categoryService;
-    private IPageCounterService _pageCounterService;
-
-    public SenastController(ArvidsonFotoDbContext context)
-    {
-        _imageService = new ImageService(context);
-        _categoryService = new CategoryService(context);
-        _pageCounterService = new PageCounterService(context);
-    }
+    internal IImageService _imageService = new ImageService(context);
+    internal ICategoryService _categoryService = new CategoryService(context);
+    internal IPageCounterService _pageCounterService = new PageCounterService(context);
 
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)

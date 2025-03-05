@@ -7,7 +7,7 @@
     TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
 }
 
-<form method="post" asp-controller="UploadAdmin" asp-action="EditImageLink">
+<form method="post" asp-controller="UploadAdmin" asp-action="@(nameof(UploadAdminController.EditImageLink))">
     <div class="modal-body">
         <p class="text-center"><img src="@imgThumbSrc" alt="@Model.ImageArtNamn" width="120" height="120" title="@Model.ImageArtNamn"></p>
 

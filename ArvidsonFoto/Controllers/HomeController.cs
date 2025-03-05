@@ -1,14 +1,9 @@
 ﻿using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 
-public class HomeController : Controller
+public class HomeController(ArvidsonFotoDbContext context) : Controller
 {
-    private IPageCounterService _pageCounterService;
-
-    public HomeController(ArvidsonFotoDbContext context)
-    {
-        _pageCounterService = new PageCounterService(context);
-    }
+    internal IPageCounterService _pageCounterService = new PageCounterService(context);
 
     public IActionResult Index()
     {

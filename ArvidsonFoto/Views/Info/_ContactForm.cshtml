@@ -1,7 +1,7 @@
 ﻿@model ContactFormModel
 
 @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
-<form method="post" asp-action="SendMessage" asp-route-Page="@Model.ReturnPageUrl">
+<form method="post" asp-action="@(nameof(InfoController.SendMessage))" asp-route-Page="@Model.ReturnPageUrl">
     <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
     @if (Model!.DisplayErrorSending)
     {

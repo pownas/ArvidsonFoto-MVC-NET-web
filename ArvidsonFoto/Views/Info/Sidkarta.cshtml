@@ -4,8 +4,7 @@
 
 @inject ICategoryService _categoryService
 @{
-    List<TblMenu> categories;
-    categories = _categoryService.GetAll();
+    List<TblMenu> categories = _categoryService.GetAll();
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
@@ -178,7 +177,7 @@
             @*<partial name="_LoginPartial" />*@
         </ul>
     </li>
-    <li><i class="bi bi-arrow-return-right"></i> <a href="./Sök" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+    <li><i class="bi bi-arrow-return-right"></i> <a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
     @*<li><a href="./?log=out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logga ut</a></li> <!-- Kräver inloggning --> *@
 </ul>
 
