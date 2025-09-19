@@ -29,6 +29,24 @@ public class Startup
 
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
+
+        // WebOptimizer för SCSS kompilering och CSS/JS minifiering
+        services.AddWebOptimizer(pipeline =>
+        {
+            // Kompilera SCSS till CSS och minifiera
+            pipeline.AddScssBundle("/css/site.css", "wwwroot/css/site.scss")
+                .UseContentRoot();
+
+            // Minifiera JavaScript filer
+            pipeline.AddJavaScriptBundle("/js/site.min.js", "wwwroot/js/site.js")
+                .UseContentRoot();
+
+            pipeline.AddJavaScriptBundle("/js/contactform.min.js", "wwwroot/js/ContactForm.js")
+                .UseContentRoot();
+
+            pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
+                .UseContentRoot();
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +66,10 @@ public class Startup
             app.UseHsts();
         }
         app.UseHttpsRedirection();
+
+        // WebOptimizer middleware - lägg till före UseStaticFiles
+        app.UseWebOptimizer();
+        
         app.UseStaticFiles();
 
         app.UseRouting();
