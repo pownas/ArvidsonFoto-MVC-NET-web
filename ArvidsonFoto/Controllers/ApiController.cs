@@ -237,21 +237,136 @@ public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
         }
     }
 
-    // GET: api/image/{filename}
+    // GET: api/image/{imageId} - Get image by database ID with proper category path
+    [HttpGet("image/{imageId:int}")]
+    public IActionResult GetImageById(int imageId, bool thumbnail = false)
+    {
+        try
+        {
+            // Get image from database
+            var images = _imageService.GetAll();
+            var image = images.FirstOrDefault(i => i.ImageId == imageId);
+            
+            if (image == null)
+                return NotFound(new { error = "Image not found", imageId });
+
+            // Build the hierarchical path just like in _Gallery.cshtml
+            var imagePath = BuildImagePath(image, thumbnail);
+            
+            if (!System.IO.File.Exists(imagePath))
+                return NotFound(new { error = "Image file not found", path = imagePath });
+
+            return ServeImageFile(imagePath);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "Failed to retrieve image", message = ex.Message });
+        }
+    }
+
+    // GET: api/image/by-url/{imageUrl} - Get image by URL filename
+    [HttpGet("image/by-url/{imageUrl}")]
+    public IActionResult GetImageByUrl(string imageUrl, bool thumbnail = false)
+    {
+        try
+        {
+            // Find image by URL in database
+            var images = _imageService.GetAll();
+            var image = images.FirstOrDefault(i => i.ImageUrl.Equals(imageUrl, StringComparison.OrdinalIgnoreCase));
+            
+            if (image == null)
+                return NotFound(new { error = "Image not found", imageUrl });
+
+            // Build the hierarchical path
+            var imagePath = BuildImagePath(image, thumbnail);
+            
+            if (!System.IO.File.Exists(imagePath))
+                return NotFound(new { error = "Image file not found", path = imagePath });
+
+            return ServeImageFile(imagePath);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "Failed to retrieve image", message = ex.Message });
+        }
+    }
+
+    // GET: api/image/{filename} - Legacy method for direct file access
     [HttpGet("image/{filename}")]
     public IActionResult GetImage(string filename)
     {
-        var filePath = Path.Combine(_imagesPath, filename);
+        // Check if this is a request for a database image by removing extensions
+        var baseFilename = Path.GetFileNameWithoutExtension(filename);
+        var isThumbnail = filename.Contains(".thumb.");
 
-        if (!System.IO.File.Exists(filePath))
-            return NotFound();
+        // Try to find image in database first
+        var images = _imageService.GetAll();
+        var image = images.FirstOrDefault(i => i.ImageUrl.Equals(baseFilename, StringComparison.OrdinalIgnoreCase));
+        
+        if (image != null)
+        {
+            // Found in database, use hierarchical path
+            var imagePath = BuildImagePath(image, isThumbnail);
+            
+            if (System.IO.File.Exists(imagePath))
+                return ServeImageFile(imagePath);
+        }
 
-        var ext = Path.GetExtension(filename).ToLowerInvariant();
+        // Fallback to direct file access in wwwroot/Bilder
+        var fallbackPath = Path.Combine(_imagesPath, filename);
+        
+        if (!System.IO.File.Exists(fallbackPath))
+            return NotFound(new { error = "Image file not found", filename });
+
+        return ServeImageFile(fallbackPath);
+    }
+
+    // Helper method to build image path like in _Gallery.cshtml
+    private string BuildImagePath(TblImage image, bool thumbnail = false)
+    {
+        // Start with base images path
+        var pathParts = new List<string> { _imagesPath };
+
+        // Add hierarchical category structure
+        if (image.ImageHuvudfamilj.HasValue)
+        {
+            var huvudfamilj = _categoryService.GetNameById(image.ImageHuvudfamilj.Value);
+            if (!string.IsNullOrEmpty(huvudfamilj))
+                pathParts.Add(huvudfamilj);
+        }
+
+        if (image.ImageFamilj.HasValue)
+        {
+            var familj = _categoryService.GetNameById(image.ImageFamilj.Value);
+            if (!string.IsNullOrEmpty(familj))
+                pathParts.Add(familj);
+        }
+
+        // Add art (species) category
+        var art = _categoryService.GetNameById(image.ImageArt);
+        if (!string.IsNullOrEmpty(art))
+            pathParts.Add(art);
+
+        // Add filename with appropriate extension
+        var filename = thumbnail ? 
+            $"{image.ImageUrl}.thumb.jpg" : 
+            $"{image.ImageUrl}.jpg";
+        pathParts.Add(filename);
+
+        return Path.Combine(pathParts.ToArray());
+    }
+
+    // Helper method to serve image files with proper content type
+    // Helper method to serve image files with proper content type
+    private IActionResult ServeImageFile(string filePath)
+    {
+        var ext = Path.GetExtension(filePath).ToLowerInvariant();
         var contentType = ext switch
         {
             ".jpg" or ".jpeg" => "image/jpeg",
             ".png" => "image/png",
             ".gif" => "image/gif",
+            ".webp" => "image/webp",
             _ => "application/octet-stream"
         };
 
