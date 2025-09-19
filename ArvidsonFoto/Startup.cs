@@ -47,9 +47,8 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
 
-        // OpenAPI/Swagger konfiguration för API-dokumentation
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        // OpenAPI konfiguration för API-dokumentation (använder .NET 10 inbyggt stöd)
+        services.AddOpenApi();
 
         // Konfigurera JavaScript engine för SCSS kompilering
         services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
@@ -97,18 +96,6 @@ public class Startup
             app.UseDeveloperExceptionPage();
             app.UseMigrationsEndPoint();
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-            
-            // Swagger UI/OpenAPI middleware - endast i development
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "api/{documentName}/openapi.json";
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/api/v1/openapi.json", "ArvidsonFoto API v1");
-                c.RoutePrefix = "api"; // Gör API-dokumentationen tillgänglig på /api
-                c.DocumentTitle = "ArvidsonFoto API Documentation";
-            });
         }
         else
         {
@@ -140,6 +127,12 @@ public class Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
+            
+            // Native .NET 10 OpenAPI endpoint - endast i development
+            if (env.IsDevelopment())
+            {
+                endpoints.MapOpenApi("/api/openapi.json");
+            }
         });
     }
 }
