@@ -1,13 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Common">
     <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>warnings</Nullable>
+    <LangVersion>latest</LangVersion>
+    <!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
+    <CompileScss>true</CompileScss>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Label="AssemblyInfo">
+    <RootNamespace>ArvidsonFoto</RootNamespace>
+    <AssemblyName>ArvidsonFoto</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <Version>3.10.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup Label="PackageReferences">
     <PackageReference Include="Azure.Identity" Version="1.16.0" />
     <PackageReference Include="MailKit" Version="4.13.0" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
     <PackageReference Include="MimeKit" Version="4.13.0" /> <!-- Används för kryptering av skicka mail -->
@@ -25,7 +35,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.136" /> <!-- För SCSS kompilering -->
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Folders">
     <Folder Include="logs\" /> <!-- Mapp dit jag styrt att Serilog, ska lägga sina .log-filer -->
     <Folder Include="Migrations\" />
   </ItemGroup>
