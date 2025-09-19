@@ -139,6 +139,7 @@ public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
             {
                 id = img.ImageId,
                 url = img.ImageUrl,
+                title = img.ImageArt,
                 description = img.ImageDescription,
                 date = img.ImageDate,
                 imageUrl = $"/api/image/{img.ImageUrl}",
