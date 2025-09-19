@@ -20,10 +20,13 @@ public class Startup
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         //Lägger till Databaskoppling för appen (Identity kopplas i: /Areas/Identity/IdentityHostingStartup.cs): 
-        if (Environment.GetEnvironmentVariable("CODESPACES") != null || 
-            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null)
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+                           Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
+                           Configuration.GetConnectionString("UseInMemoryDatabase") == "true";
+
+        if (useInMemoryDb)
         {
-            // Använd In-Memory databas i Codespaces
+            // Använd In-Memory databas i Codespaces eller när konfigurerat
             services.AddDbContext<ArvidsonFotoDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
         }
@@ -70,9 +73,12 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        // Seed in-memory database if running in Codespaces
-        if (Environment.GetEnvironmentVariable("CODESPACES") != null || 
-            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null)
+        // Seed in-memory database if using in-memory database
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+                           Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
+                           Configuration.GetConnectionString("UseInMemoryDatabase") == "true";
+
+        if (useInMemoryDb)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
