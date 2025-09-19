@@ -20,9 +20,20 @@ public class Startup
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         //Lägger till Databaskoppling för appen (Identity kopplas i: /Areas/Identity/IdentityHostingStartup.cs): 
-        services.AddDbContext<ArvidsonFotoDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+        if (Environment.GetEnvironmentVariable("CODESPACES") != null || 
+            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null)
+        {
+            // Använd In-Memory databas i Codespaces
+            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
+        }
+        else
+        {
+            // Använd SQL Server lokalt
+            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+        }
 
         //Lägger till Services:
         services.AddScoped<ICategoryService, CategoryService>();

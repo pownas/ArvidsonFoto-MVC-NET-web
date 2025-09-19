@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0-rc.1.25451.107" /> <!-- Används för inloggning på sidan -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.0-rc.1.25451.107" /> <!-- Används som utökning av inloggningens UI  -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.1.25451.107" /> <!-- Används för Databas-anrop -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0-rc.1.25451.107" /> <!-- In-memory databas för utveckling -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.1.25451.107"> <!-- Osäker om denna verkligen används, men annars för DB-anrop -->
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
