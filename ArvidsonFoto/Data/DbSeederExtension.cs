@@ -185,4 +185,28 @@ public static class DbSeederExtension
 
         modelBuilder.Entity<TblImage>().HasData(DbSeed_Tbl_Image);
     }
+
+    /// <summary>
+    /// Seeds the in-memory database with test data
+    /// </summary>
+    /// <remarks>
+    /// Används för att seeda in-memory databasen med test-data när applikationen körs i Codespaces eller utvecklingsmiljö
+    /// </remarks>
+    public static void SeedInMemoryDatabase(this ArvidsonFotoDbContext context)
+    {
+        // Kontrollera om databasen redan har data
+        if (context.TblGbs.Any() || context.TblMenus.Any() || context.TblImages.Any())
+        {
+            return; // Databasen är redan seedand
+        }
+
+        // Lägg till test-data
+        context.TblGbs.AddRange(DbSeed_Tbl_Gb);
+        context.TblMenus.AddRange(DbSeed_Tbl_Menu);
+        context.TblPageCounter.AddRange(DbSeed_Tbl_PageCounter);
+        context.TblImages.AddRange(DbSeed_Tbl_Image);
+
+        // Spara ändringar
+        context.SaveChanges();
+    }
 }

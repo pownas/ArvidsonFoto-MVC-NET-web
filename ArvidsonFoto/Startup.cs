@@ -70,6 +70,18 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        // Seed in-memory database if running in Codespaces
+        if (Environment.GetEnvironmentVariable("CODESPACES") != null || 
+            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoDbContext>();
+                context.Database.EnsureCreated();
+                context.SeedInMemoryDatabase();
+            }
+        }
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
