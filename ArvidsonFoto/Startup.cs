@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using JavaScriptEngineSwitcher.Core;
+using JavaScriptEngineSwitcher.V8;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 
 namespace ArvidsonFoto;
 
@@ -29,6 +32,10 @@ public class Startup
 
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
+
+        // Konfigurera JavaScript engine för SCSS kompilering
+        services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+                .AddV8();
 
         // WebOptimizer för SCSS kompilering och CSS/JS minifiering
         services.AddWebOptimizer(pipeline =>
@@ -65,7 +72,12 @@ public class Startup
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        app.UseHttpsRedirection();
+        
+        // Only use HTTPS redirection in production, not in development/Codespaces
+        if (!env.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
 
         // WebOptimizer middleware - lägg till före UseStaticFiles
         app.UseWebOptimizer();
