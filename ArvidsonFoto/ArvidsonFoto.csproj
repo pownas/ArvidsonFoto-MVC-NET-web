@@ -36,6 +36,8 @@
     <PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.136" /> <!-- För SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.29.0" /> <!-- JavaScript engine för SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.19.0" /> <!-- DI för JS engine -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" /> <!-- OpenAPI support -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" /> <!-- Swagger UI för API dokumentation -->
   </ItemGroup>
 
   <ItemGroup Label="Folders">

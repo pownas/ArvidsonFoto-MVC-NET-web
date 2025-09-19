@@ -47,6 +47,10 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
 
+        // OpenAPI/Swagger konfiguration
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
         // Konfigurera JavaScript engine för SCSS kompilering
         services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
                 .AddV8();
@@ -93,6 +97,14 @@ public class Startup
             app.UseDeveloperExceptionPage();
             app.UseMigrationsEndPoint();
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+            
+            // Swagger UI middleware - endast i development
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ArvidsonFoto API v1");
+                c.RoutePrefix = "api"; // Gör Swagger tillgänglig på /api
+            });
         }
         else
         {

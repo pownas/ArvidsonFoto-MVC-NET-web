@@ -1,15 +1,26 @@
 namespace ArvidsonFoto.Controllers;
 
+/// <summary>
+/// API för ArvidsonFoto bildgalleri med hierarkiska kategorier
+/// </summary>
 [ApiController]
 [Route("api")]
+[Produces("application/json")]
 public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
 {
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
     private readonly IImageService _imageService = new ImageService(context);
     private readonly ICategoryService _categoryService = new CategoryService(context);
 
-    // GET: api/images
+    /// <summary>
+    /// Hämtar alla bildfilnamn från bildkatalogen
+    /// </summary>
+    /// <returns>Lista med bildfilnamn</returns>
+    /// <response code="200">Returnerar listan med bilder</response>
+    /// <response code="404">Bildkatalogen hittades inte</response>
     [HttpGet("images")]
+    [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<IEnumerable<string>> GetImages()
     {
         if (!Directory.Exists(_imagesPath))
@@ -27,22 +38,55 @@ public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
         return Ok(images);
     }
 
-    // GET: api/bilder/{subLevel1}
+    /// <summary>
+    /// Hämtar bilder från en huvudkategori (första nivån)
+    /// </summary>
+    /// <param name="subLevel1">Huvudkategorins namn</param>
+    /// <param name="page">Sidnummer för paginering (standard: 1)</param>
+    /// <param name="pageSize">Antal bilder per sida (standard: 48)</param>
+    /// <returns>Bilder från den angivna kategorin</returns>
+    /// <response code="200">Returnerar bilder från kategorin</response>
+    /// <response code="404">Kategorin hittades inte</response>
     [HttpGet("bilder/{subLevel1}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<object> GetImagesByCategory(string subLevel1, int page = 1, int pageSize = 48)
     {
         return GetImagesFromCategory(subLevel1, null, null, null, page, pageSize);
     }
 
-    // GET: api/bilder/{subLevel1}/{subLevel2}
+    /// <summary>
+    /// Hämtar bilder från en underkategori (andra nivån)
+    /// </summary>
+    /// <param name="subLevel1">Huvudkategorins namn</param>
+    /// <param name="subLevel2">Underkategorins namn</param>
+    /// <param name="page">Sidnummer för paginering (standard: 1)</param>
+    /// <param name="pageSize">Antal bilder per sida (standard: 48)</param>
+    /// <returns>Bilder från den angivna underkategorin</returns>
+    /// <response code="200">Returnerar bilder från underkategorin</response>
+    /// <response code="404">Underkategorin hittades inte</response>
     [HttpGet("bilder/{subLevel1}/{subLevel2}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<object> GetImagesBySubCategory2(string subLevel1, string subLevel2, int page = 1, int pageSize = 48)
     {
         return GetImagesFromCategory(subLevel1, subLevel2, null, null, page, pageSize);
     }
 
-    // GET: api/bilder/{subLevel1}/{subLevel2}/{subLevel3}
+    /// <summary>
+    /// Hämtar bilder från en tredje nivå-kategori
+    /// </summary>
+    /// <param name="subLevel1">Huvudkategorins namn</param>
+    /// <param name="subLevel2">Underkategorins namn</param>
+    /// <param name="subLevel3">Tredje nivåns kategorins namn</param>
+    /// <param name="page">Sidnummer för paginering (standard: 1)</param>
+    /// <param name="pageSize">Antal bilder per sida (standard: 48)</param>
+    /// <returns>Bilder från den angivna tredje nivå-kategorin</returns>
+    /// <response code="200">Returnerar bilder från tredje nivå-kategorin</response>
+    /// <response code="404">Tredje nivå-kategorin hittades inte</response>
     [HttpGet("bilder/{subLevel1}/{subLevel2}/{subLevel3}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<object> GetImagesBySubCategory3(string subLevel1, string subLevel2, string subLevel3, int page = 1, int pageSize = 48)
     {
         return GetImagesFromCategory(subLevel1, subLevel2, subLevel3, null, page, pageSize);
@@ -238,8 +282,20 @@ public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
         }
     }
 
-    // GET: api/image/{imageId} - Get image by database ID with proper category path
+    /// <summary>
+    /// Hämtar en bild baserat på database-ID med korrekt hierarkisk sökväg
+    /// </summary>
+    /// <param name="imageId">Bildens ID i databasen</param>
+    /// <param name="thumbnail">True för att hämta miniatyrbild (standard: false)</param>
+    /// <returns>Bildfilen</returns>
+    /// <response code="200">Returnerar bildfilen</response>
+    /// <response code="404">Bilden hittades inte</response>
+    /// <response code="500">Serverfel</response>
     [HttpGet("image/{imageId:int}")]
+    [Produces("image/jpeg", "image/png", "image/gif", "image/webp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetImageById(int imageId, bool thumbnail = false)
     {
         try
@@ -265,8 +321,20 @@ public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
         }
     }
 
-    // GET: api/image/by-url/{imageUrl} - Get image by URL filename
+    /// <summary>
+    /// Hämtar en bild baserat på filnamn (URL) med korrekt hierarkisk sökväg
+    /// </summary>
+    /// <param name="imageUrl">Bildens filnamn (utan filändelse)</param>
+    /// <param name="thumbnail">True för att hämta miniatyrbild (standard: false)</param>
+    /// <returns>Bildfilen</returns>
+    /// <response code="200">Returnerar bildfilen</response>
+    /// <response code="404">Bilden hittades inte</response>
+    /// <response code="500">Serverfel</response>
     [HttpGet("image/by-url/{imageUrl}")]
+    [Produces("image/jpeg", "image/png", "image/gif", "image/webp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetImageByUrl(string imageUrl, bool thumbnail = false)
     {
         try
