@@ -11,7 +11,7 @@ namespace ArvidsonFoto.Core.Migrations;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-[DbContext(typeof(ArvidsonFotoDbContext))]
+[DbContext(typeof(ArvidsonFotoCoreDbContext))]
 [Migration("20210208214305_SkapatTabeller")]
 partial class SkapatTabeller
 {

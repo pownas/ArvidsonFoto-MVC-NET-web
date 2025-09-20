@@ -5,6 +5,7 @@ using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto;
 
@@ -32,11 +33,16 @@ public class Startup
             // Använd In-Memory databas i Codespaces eller när konfigurerat
             services.AddDbContext<ArvidsonFotoDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
+            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
+                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
         }
         else
         {
             // Använd SQL Server lokalt
             services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
         }

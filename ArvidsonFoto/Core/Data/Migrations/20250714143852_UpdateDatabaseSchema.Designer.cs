@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ArvidsonFoto.Core.Migrations
 {
-    [DbContext(typeof(ArvidsonFotoDbContext))]
+    [DbContext(typeof(ArvidsonFotoCoreDbContext))]
     [Migration("20250714143852_UpdateDatabaseSchema")]
     partial class UpdateDatabaseSchema
     {

@@ -38,13 +38,27 @@ Uppdatera din dotnet-ef till version 10.0.0 eller högre med kommandot:
 
 Eller via CURL: 
 ```sh
-  log_info "Installing .NET 9 SDK using Microsoft's installation script..."
-  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 9.0
+  Write-Host "Installing .NET 10 SDK using Microsoft's installation script..."
+  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 10.0
     
-  log_info "Configuring PATH for .NET..."
+  Write-Host "Configuring PATH for .NET..."
   export PATH="$HOME/.dotnet:$PATH"
   echo 'export PATH="$HOME/.dotnet:$PATH"' >> ~/.bashrc
 ```
+
+## Installera developer-certifikat
+Om du får felmeddelande när du kör webbsidan lokalt, som säger:  
+```
+Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found.
+```
+Då behöver du installera ett developer-certifikat med kommandot:  
+```ps
+# Rensa bort alla gamla certifikat
+dotnet dev-certs https --clean
+# Installera ASP.NET Core HTTPS development certifikat
+dotnet dev-certs https --trust
+```
+
 
 ## Systemdokumentation
 ![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)

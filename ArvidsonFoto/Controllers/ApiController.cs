@@ -6,7 +6,7 @@
 //[ApiController]
 //[Route("api")]
 //[Produces("application/json")]
-//public class ApiController(ArvidsonFotoDbContext context) : ControllerBase
+//public class ApiController(ArvidsonFotoCoreDbContext context) : ControllerBase
 //{
 //    private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
 //    private readonly IImageService _imageService = new ImageService(context);

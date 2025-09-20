@@ -10,7 +10,7 @@ namespace ArvidsonFoto.Core.Data;
 /// Denna klass innehåller extensionmetoder för att skapa initial testdata
 /// i databasen via Entity Framework Core ModelBuilder.
 /// </remarks>
-public static class ArvidsonFotoDbSeeder
+public static class ArvidsonFotoCoreDbSeeder
 {
     #region Guestbook data
 
@@ -524,7 +524,7 @@ public static class ArvidsonFotoDbSeeder
     #region Initialization of the database
 
     /// <summary>
-    /// En extensionmetod skapad via 'ArvidsonFotoDbSeeder.cs' , som skapar upp test-data till databasen.
+    /// En extensionmetod skapad via 'ArvidsonFotoCoreDbSeeder.cs' , som skapar upp test-data till databasen.
     /// </summary>
     public static void InitialDatabaseSeed(this ModelBuilder modelBuilder)
     {

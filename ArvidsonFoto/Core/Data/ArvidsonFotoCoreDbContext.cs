@@ -12,20 +12,20 @@ namespace ArvidsonFoto.Core.Data;
 /// Denna klass representerar en Entity Framework Core-databaskontext som innehåller
 /// DbSet-egenskaper för alla huvudentiteter i applikationen.
 /// </remarks>
-public partial class ArvidsonFotoDbContext : DbContext
+public partial class ArvidsonFotoCoreDbContext : DbContext
 {
     /// <summary>
-    /// Initierar en ny instans av ArvidsonFotoDbContext.
+    /// Initierar en ny instans av ArvidsonFotoCoreDbContext.
     /// </summary>
-    public ArvidsonFotoDbContext()
+    public ArvidsonFotoCoreDbContext()
     {
     }
 
     /// <summary>
-    /// Initierar en ny instans av ArvidsonFotoDbContext med specificerade alternativ.
+    /// Initierar en ny instans av ArvidsonFotoCoreDbContext med specificerade alternativ.
     /// </summary>
     /// <param name="options">Databaskontext-alternativ</param>
-    public ArvidsonFotoDbContext(DbContextOptions<ArvidsonFotoDbContext> options)
+    public ArvidsonFotoCoreDbContext(DbContextOptions<ArvidsonFotoCoreDbContext> options)
         : base(options)
     {
     }

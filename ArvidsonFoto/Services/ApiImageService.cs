@@ -14,13 +14,13 @@ namespace ArvidsonFoto.Services;
 /// It includes methods for retrieving images by category, fetching random images, and managing image metadata. This
 /// service is designed to handle common image-related operations for the application.</remarks>
 /// <param name="logger">Logging for the service.</param>
-/// <param name="dbContext"><see cref="ArvidsonFotoDbContext"/> instance used to interact with the database.</param>
+/// <param name="dbContext"><see cref="ArvidsonFotoCoreDbContext"/> instance used to interact with the database.</param>
 /// <param name="_configuration"><see cref="IConfiguration"/> instance used to access application settings, such as feature flags.</param>
 /// <param name="categoryService">The category service for category path operations.</param>
-public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoDbContext dbContext, IConfiguration _configuration, IApiCategoryService apiCategoryService) : IApiImageService
+public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDbContext dbContext, IConfiguration _configuration, IApiCategoryService apiCategoryService) : IApiImageService
 {
-    /// <summary> Databas koppling: <see cref="ArvidsonFotoDbContext"/> </summary>
-    private readonly ArvidsonFotoDbContext _entityContext = dbContext;
+    /// <summary> Databas koppling: <see cref="ArvidsonFotoCoreDbContext"/> </summary>
+    private readonly ArvidsonFotoCoreDbContext _entityContext = dbContext;
 
     /// <summary> Värde när <see cref="ImageDto"/> inte hittats </summary>
     private static ImageDto DefaultImageDtoNotFound { get; } = new()

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ArvidsonFoto.Core.Migrations
 {
-    [DbContext(typeof(ArvidsonFotoDbContext))]
+    [DbContext(typeof(ArvidsonFotoCoreDbContext))]
     partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

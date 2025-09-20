@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ArvidsonFoto.Core.Migrations;
 
-[DbContext(typeof(ArvidsonFotoDbContext))]
+[DbContext(typeof(ArvidsonFotoCoreDbContext))]
 [Migration("20211122184803_DatabaseSeed")]
 partial class DatabaseSeed
 {

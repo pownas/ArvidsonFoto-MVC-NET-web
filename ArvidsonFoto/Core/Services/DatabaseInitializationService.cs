@@ -106,7 +106,7 @@ public class DatabaseInitializationService
     }
 
     /// <summary>
-    /// Initializes the main application database (ArvidsonFotoDbContext) with schema and seed data.
+    /// Initializes the main application database (ArvidsonFotoCoreDbContext) with schema and seed data.
     /// </summary>
     private static async Task InitializeMainDatabaseAsync(IServiceProvider services, Microsoft.Extensions.Logging.ILogger logger)
     {
@@ -114,7 +114,7 @@ public class DatabaseInitializationService
         try
         {
             logger.LogInformation("🔧 Getting ArvidsonFotoDbContext from services...");
-            var context = services.GetRequiredService<ArvidsonFotoDbContext>();
+            var context = services.GetRequiredService<ArvidsonFotoCoreDbContext>();
 
             logger.LogInformation("🔍 Checking database provider type...");
             // Only migrate if using a relational database provider (not in-memory)
@@ -242,7 +242,7 @@ public class DatabaseInitializationService
     /// Seeds the main database with initial data if it's empty.
     /// This method is idempotent - it checks for existing data before seeding.
     /// </summary>
-    private static async Task SeedMainDatabaseAsync(ArvidsonFotoDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
+    private static async Task SeedMainDatabaseAsync(ArvidsonFotoCoreDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
     {
         logger.LogInformation("🔍 Checking if database already contains data...");
 
@@ -272,10 +272,10 @@ public class DatabaseInitializationService
 
     /// <summary>
     /// Manually applies seed data to the database context.
-    /// This uses the ArvidsonFotoDbSeeder data but can limit quantities for faster testing.
+    /// This uses the ArvidsonFotoCoreDbSeeder data but can limit quantities for faster testing.
     /// When limiting images, ensures that all categories referenced by those images are also included.
     /// </summary>
-    private static async Task SeedDataManuallyAsync(ArvidsonFotoDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
+    private static async Task SeedDataManuallyAsync(ArvidsonFotoCoreDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
     {
         // Get configuration from DI container
         var configuration = services.GetService<IConfiguration>();
@@ -298,12 +298,12 @@ public class DatabaseInitializationService
         }
 
         // Add Guestbook entries (always add all - they're lightweight)
-        logger.LogInformation("Adding seed data for TblGb ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.GuestbookEntries.Count);
-        context.TblGbs.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.GuestbookEntries);
+        logger.LogInformation("Adding seed data for TblGb ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.GuestbookEntries.Count);
+        context.TblGbs.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.GuestbookEntries);
 
         // Smart seeding: When limiting data, ensure categories exist for all images
-        var allMenuCategories = ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.MenuCategories;
-        var allImages = ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.Images;
+        var allMenuCategories = ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.MenuCategories;
+        var allImages = ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.Images;
 
         List<TblMenu> menuCategoriesToSeed;
         List<TblImage> imagesToSeed;
@@ -400,8 +400,8 @@ public class DatabaseInitializationService
         context.TblImages.AddRange(imagesToSeed);
 
         // Add Page Counters (always add all - they're lightweight)
-        logger.LogInformation("Adding seed data for TblPageCounter ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.PageCounters.Count);
-        context.TblPageCounter.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoDbSeeder.PageCounters);
+        logger.LogInformation("Adding seed data for TblPageCounter ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.PageCounters.Count);
+        context.TblPageCounter.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.PageCounters);
 
         // Save all changes
         logger.LogInformation("💾 Saving seed data to database...");

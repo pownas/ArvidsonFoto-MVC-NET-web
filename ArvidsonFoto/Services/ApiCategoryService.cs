@@ -21,10 +21,10 @@ namespace ArvidsonFoto.Services;
 /// <param name="logger">Logging for the service.</param>
 /// <param name="dbContext">The database context used to interact with the database.</param>
 /// <param name="memoryCache">The memory cache instance for caching category data.</param>
-public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFotoDbContext dbContext, IMemoryCache memoryCache) : IApiCategoryService
+public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFotoCoreDbContext dbContext, IMemoryCache memoryCache) : IApiCategoryService
 {
-    /// <summary> Databas koppling: <see cref="ArvidsonFotoDbContext"/> </summary>
-    private readonly ArvidsonFotoDbContext _entityContext = dbContext;
+    /// <summary> Databas koppling: <see cref="ArvidsonFotoCoreDbContext"/> </summary>
+    private readonly ArvidsonFotoCoreDbContext _entityContext = dbContext;
 
     /// <summary> Memory cache for improved performance </summary>
     private readonly IMemoryCache _cache = memoryCache;

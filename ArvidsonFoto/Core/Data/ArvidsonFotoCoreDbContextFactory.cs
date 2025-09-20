@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace ArvidsonFoto.Core.Data;
 
 /// <summary>
-/// Design-time factory for ArvidsonFotoDbContext.
+/// Design-time factory for ArvidsonFotoCoreDbContext.
 /// This enables EF Core tools to create a DbContext instance at design time
 /// without requiring a running application.
 /// </summary>
-public class ArvidsonFotoDbContextFactory : IDesignTimeDbContextFactory<ArvidsonFotoDbContext>
+public class ArvidsonFotoCoreDbContextFactory : IDesignTimeDbContextFactory<ArvidsonFotoCoreDbContext>
 {
     /// <summary>
-    /// Skapar en instans av ArvidsonFotoDbContext för design-time operationer.
+    /// Skapar en instans av ArvidsonFotoCoreDbContext för design-time operationer.
     /// </summary>
     /// <param name="args">Kommandoradsargument som kan innehålla anslutningssträngar</param>
-    /// <returns>En konfigurerad ArvidsonFotoDbContext-instans</returns>
-    public ArvidsonFotoDbContext CreateDbContext(string[] args)
+    /// <returns>En konfigurerad ArvidsonFotoCoreDbContext-instans</returns>
+    public ArvidsonFotoCoreDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<ArvidsonFotoDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>();
 
         // Use a default connection string for design-time operations
         // This can be overridden by setting the ASPNETCORE_ENVIRONMENT variable
@@ -26,7 +26,7 @@ public class ArvidsonFotoDbContextFactory : IDesignTimeDbContextFactory<Arvidson
 
         optionsBuilder.UseSqlServer(connectionString);
 
-        return new ArvidsonFotoDbContext(optionsBuilder.Options);
+        return new ArvidsonFotoCoreDbContext(optionsBuilder.Options);
     }
 
     private static string GetConnectionString(string[] args)
