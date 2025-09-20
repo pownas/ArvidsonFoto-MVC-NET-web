@@ -15,6 +15,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 /// <inheritdoc cref="ImageApiController"/>
 [ApiController]
 [Route("api/image")]
+[Route("api/bild")]
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
     ArvidsonFotoDbContext entityContext,

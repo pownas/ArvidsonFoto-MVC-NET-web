@@ -15,6 +15,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 /// <inheritdoc cref="CategoryApiController"/>
 [ApiController]
 [Route("api/category")]
+[Route("api/kategori")]
 public class CategoryApiController(ILogger<CategoryApiController> logger,
     IApiCategoryService apiCategoryService) : ControllerBase
 {
