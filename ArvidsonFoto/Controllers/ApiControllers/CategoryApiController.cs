@@ -141,6 +141,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     [HttpGet("{categoryId}")]
+    [HttpGet("GetById/{categoryId}")]
     public IActionResult GetById(int categoryId = 13)
     {
         try

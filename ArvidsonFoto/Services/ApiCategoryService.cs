@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using System.Collections.Concurrent;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArvidsonFoto.Services;
 
@@ -135,7 +136,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-            return category.ToCategoryDto(categoryPath, lastImageFilename);
+            var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
         }
         catch (Exception ex)
         {

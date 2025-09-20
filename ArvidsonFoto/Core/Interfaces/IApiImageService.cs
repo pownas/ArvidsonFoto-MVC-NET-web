@@ -60,10 +60,15 @@ public interface IApiImageService
     /// <param name="categoryID">The category ID</param>
     /// <returns>A list of images in the category</returns>
     List<ImageDto> GetImagesByCategoryID(int categoryID);
+
     /// <summary>Räknar alla bilder</summary>
     /// <returns>Totalt antal bilder</returns>
-    int GetAllImagesCounted();
-    
+    int GetCountedAllImages();
+
+    /// <summary>Räknar alla bilder i en kategori</summary>
+    /// <returns>Antal med bilder i en specifik kategori</returns>
+    int GetCountedCategoryId(int categoryId);
+
     /// <summary>Tar bort en bild asynkront</summary>
     /// <param name="id">ID för bilden som ska tas bort</param>
     /// <returns>True om bilden togs bort framgångsrikt</returns>

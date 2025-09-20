@@ -16,7 +16,7 @@ public static class CategoryMappingExtensions
     /// <param name="lastImageFilename">Filename of the last image in the category, used to generate the UrlImage</param>
     /// <param name="baseUrl">Optional base URL for URL generation</param>
     /// <returns>A CategoryDto representation of the TblMenu</returns>
-    public static CategoryDto ToCategoryDto(this TblMenu menu, string categoryPath, string lastImageFilename, string baseUrl = "")
+    public static CategoryDto ToCategoryDto(this TblMenu menu, string categoryPath, string lastImageFilename, int? imageCounted = null, string baseUrl = "")
     {
         if (menu == null)
             return new CategoryDto();
@@ -35,7 +35,8 @@ public static class CategoryMappingExtensions
             UrlCategoryPathFull = categoryPath ?? menu.MenuUrlSegment ?? string.Empty, // This might need more complex logic for full paths
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             Description = string.Empty, // TblMenu doesn't have a description field
-            ParentCategoryId = menu.MenuParentCategoryId
+            ParentCategoryId = menu.MenuParentCategoryId,
+            ImageCount = imageCounted ?? -1,
         };
     }
 
