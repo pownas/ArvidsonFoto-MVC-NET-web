@@ -17,7 +17,7 @@ public class UploadNewCategoryModel
 
     /// <summary>Huvudmeny ID som den nya kategorin ska kopplas till</summary>
     [Required(ErrorMessage = "Välj en kategori att koppla den nya till")]
-    public int? MainMenuId { get; set; }
+    public int? MainMenuId { get; set; } = -1;
 
     /// <summary>Indikerar om kategorin har skapats framgångsrikt</summary>
     public bool CategoryCreated { get; set; }

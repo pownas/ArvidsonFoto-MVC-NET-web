@@ -8,17 +8,17 @@ public partial class TblMenu()
     /// <summary> Internt Databas-ID för en en meny kategori, används som primärnyckel. INTE att förväxla med MenuId som är en unik identifierare för varje meny kategori. </summary>
     /// <example>13</example>
     //[JsonPropertyName("Id")] // ColumnName in database
-    public int? Id { get; set; }
+    public int? Id { get; set; } = null;
 
     /// <summary> Meny kategorins Id, används som unik identifierare (ID) i koden. </summary>
     /// <example>13</example>
     //[JsonPropertyName("menu_ID")] // ColumnName in database
-    public int? MenuCategoryId { get; set; }
+    public int? MenuCategoryId { get; set; } = null;
 
     /// <summary> Meny kategorins huvudkategori Id (ParentId), används för att gruppera underkategorier. </summary>
     /// <example>12</example>
     //[JsonPropertyName("menu_mainID")] // ColumnName in database
-    public int? MenuParentCategoryId { get; set; }
+    public int? MenuParentCategoryId { get; set; } = null;
 
     /// <summary> Svenskt namn för menyn, används för att visa i UI. </summary>
     /// <remarks> Exempel: "Blåmes" </remarks>
@@ -36,5 +36,5 @@ public partial class TblMenu()
 
     /// <summary> Datumen då menyn uppdaterades senast. </summary>
     //[JsonPropertyName("menu_dateUpdated")] // ColumnName in database
-    public DateTime? MenuDateUpdated { get; set; } = DateTime.UtcNow;
+    public DateTime? MenuDateUpdated { get; set; } = DateTime.Now;
 }

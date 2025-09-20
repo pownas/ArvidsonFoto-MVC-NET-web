@@ -12,19 +12,19 @@ namespace ArvidsonFoto.Core.ViewModels;
 public class GalleryViewModel
 {
     /// <summary>Lista med bilder som ska visas på nuvarande sida</summary>
-    public List<ImageDto> DisplayImagesList { get; set; } = new List<ImageDto>();
+    public List<ImageDto> DisplayImagesList { get; set; } = [];
 
     /// <summary>Fullständig lista med alla bilder i kategorin</summary>
-    public List<ImageDto> AllImagesList { get; set; } = new List<ImageDto>();
+    public List<ImageDto> AllImagesList { get; set; } = [];
 
     /// <summary>Vald kategori för galleriet</summary>
-    public CategoryDto SelectedCategory { get; set; } = new CategoryDto();
+    public CategoryDto SelectedCategory { get; set; } = new();
 
     /// <summary>Totalt antal sidor i galleriet</summary>
-    public int TotalPages { get; set; }
+    public int TotalPages { get; set; } = -1;
     
     /// <summary>Aktuell sida som visas</summary>
-    public int CurrentPage { get; set; }
+    public int CurrentPage { get; set; } = -1;
     
     /// <summary>Aktuell URL för sidan</summary>
     public string CurrentUrl { get; set; } = string.Empty;

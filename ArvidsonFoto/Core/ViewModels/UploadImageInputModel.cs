@@ -62,5 +62,5 @@ public class UploadImageInputModel
     public bool ImageCreated { get; set; }
 
     /// <summary>Datum och tid när bilden senast uppdaterades</summary>
-    public DateTime ImageUpdate { get; set; }
+    public DateTime ImageUpdate { get; set; } = DateTime.Now;
 }

@@ -26,12 +26,12 @@ public class ImageDto()
     /// <summary> Datum och tid när bilden togs </summary>'
     /// <remarks> Datum och tid i ISO 8601 format, t.ex. "2021-11-22T16:21:00" </remarks>
     /// <example>2021-11-22T16:21:00</example>
-    public DateTime? DateImageTaken { get; set; }
+    public DateTime? DateImageTaken { get; set; } = null;
 
     /// <summary> Datum och tid när bilden laddades upp </summary>'
     /// <remarks> Datum och tid i ISO 8601 format, t.ex. "2021-11-23T16:21:00" </remarks>
     /// <example>2021-11-23T16:21:00</example>
-    public DateTime? DateUploaded { get; set; }
+    public DateTime? DateUploaded { get; set; } = null;
 
     /// <summary> Bildens beskrivning </summary>
     /// <remarks> Beskrivning av bilden, kan vara tom sträng. </remarks>

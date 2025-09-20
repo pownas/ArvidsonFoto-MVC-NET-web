@@ -44,7 +44,7 @@ public class CategoryDto()
     /// <summary> Datum och tid när kateorin uppdaterades senast </summary>'
     /// <remarks> Datum och tid i ISO 8601 format, t.ex. "2021-11-23T16:21:00" </remarks>
     /// <example>2021-11-23T16:21:00</example>
-    public DateTime? DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; } = null;
 
     ///// <summary> Kategori beskrivning </summary>
     ///// <remarks> Beskrivning av kategorin, kan vara tom sträng. </remarks>
@@ -54,7 +54,7 @@ public class CategoryDto()
     /// <summary> Huvudkategori ID (Parent ID) </summary>
     /// <remarks> Används för att gruppera underkategorier under en huvudkategori. Null för huvudkategorier. </remarks>
     /// <example>12</example>
-    public int? ParentCategoryId { get; set; }
+    public int? ParentCategoryId { get; set; } = null;
 
     /// <summary> Antal bilder i kategorin </summary>
     /// <remarks> Används för att visa antal bilder i kategorin. </remarks>

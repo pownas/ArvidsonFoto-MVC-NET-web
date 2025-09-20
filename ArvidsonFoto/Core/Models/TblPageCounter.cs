@@ -9,16 +9,16 @@
 public class TblPageCounter()
 {
     /// <summary> Internt Databas-ID för sid-räknaren, används som primärnyckel. </summary>
-    public int Id { get; set; }
+    public int Id { get; set; } = -1;
 
     /// <summary> Antal sidvisningar </summary>
-    public int PageViews { get; set; }
+    public int PageViews { get; set; } = -1;
 
     /// <summary> Sidans namn </summary>
     public string PageName { get; set; } = string.Empty;
 
     /// <summary> Categori Id som uppdateras </summary>
-    public int CategoryId { get; set; }
+    public int CategoryId { get; set; } = -1;
 
     /// <summary> Kollar om det är från /Bilder/ eller inte </summary>
     public bool PicturePage { get; set; }
@@ -27,5 +27,5 @@ public class TblPageCounter()
     public string MonthViewed { get; set; } = string.Empty;
 
     /// <summary> Datum när sidan senast visades </summary>
-    public DateTime LastShowDate { get; set; }
+    public DateTime LastShowDate { get; set; } = DateTime.MinValue;
 }

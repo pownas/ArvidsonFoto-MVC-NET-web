@@ -41,7 +41,7 @@ public class ContactFormModel
     public required string MessagePlaceholder { get; set; } = "";
 
     /// <summary>Datum och tid när formuläret skickades</summary>
-    public DateTime FormSubmitDate { get; set; }
+    public DateTime FormSubmitDate { get; set; } = DateTime.Now;
 
     /// <summary>Indikerar om e-post har skickats framgångsrikt</summary>
     public bool DisplayEmailSent { get; set; }

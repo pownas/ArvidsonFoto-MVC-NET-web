@@ -36,7 +36,7 @@ public class GuestbookInputModel
     public required string Message { get; set; }
 
     /// <summary>Datum och tid när formuläret skickades</summary>
-    public DateTime FormSubmitDate { get; set; }
+    public DateTime FormSubmitDate { get; set; } = DateTime.Now;
 
     /// <summary>Indikerar om inlägget har publicerats framgångsrikt</summary>
     public bool DisplayPublished { get; set; }

@@ -10,14 +10,14 @@
 public class UploadLogReaderViewModel
 {
     /// <summary>Lista över befintliga loggfiler</summary>
-    public List<string> ExistingLogFiles { get; set; } = new List<string>();
+    public List<string> ExistingLogFiles { get; set; } = [];
 
     /// <summary>Innehåll från loggfiler</summary>
-    public List<string> LogBook { get; set; } = new List<string>();
+    public List<string> LogBook { get; set; } = [];
 
     /// <summary>Indikerar om alla loggar ska visas</summary>
-    public bool ShowAllLogs { get; set; } = new bool();
+    public bool ShowAllLogs { get; set; }
 
     /// <summary>Datum för vilken dag som visas</summary>
-    public DateTime DateShown { get; set; } = new DateTime();
+    public DateTime DateShown { get; set; } = DateTime.Now;
 }

@@ -10,11 +10,11 @@
 public partial class TblGb()
 {
     /// <summary>Internt databas-ID för gästboksinlägg, används som primärnyckel</summary>
-    public int Id { get; set; }
+    public int Id { get; set; } = -1;
     
     /// <summary>Gästboksinlägg ID, används som unik identifierare</summary>
-    public int GbId { get; set; }
-    
+    public int GbId { get; set; } = -1;
+
     /// <summary>Namn på personen som skrev inlägget</summary>
     public string GbName { get; set; } = string.Empty;
     
@@ -26,9 +26,9 @@ public partial class TblGb()
     
     /// <summary>Innehåll i gästboksinlägget</summary>
     public string GbText { get; set; } = string.Empty;
-    
+
     /// <summary>Datum när inlägget skapades</summary>
-    public DateTime? GbDate { get; set; }
+    public DateTime? GbDate { get; set; } = DateTime.Now;
     
     /// <summary>Indikerar om inlägget har lästs/hanterats</summary>
     public bool? GbReadPost { get; set; }

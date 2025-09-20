@@ -13,13 +13,13 @@ namespace ArvidsonFoto.Core.ViewModels;
 public class UploadImageViewModel
 {
     /// <summary>Vald kategori för bilduppladdning</summary>
-    public TblMenu SelectedCategory { get; set; } = new TblMenu();
+    public TblMenu SelectedCategory { get; set; } = new();
 
     /// <summary>Lista över tillgängliga underkategorier</summary>
-    public List<TblMenu> SubCategories { get; set; } = new List<TblMenu>();
+    public List<TblMenu> SubCategories { get; set; } = [];
 
     /// <summary>Bilduppladdningsmodell med metadata</summary>
-    public UploadImageInputDto ImageInputModel { get; set; } = new UploadImageInputDto
+    public UploadImageInputDto ImageInputModel { get; set; } = new()
     {
         ImageHuvudfamiljNamn = "",
         ImageFamiljNamn = "",

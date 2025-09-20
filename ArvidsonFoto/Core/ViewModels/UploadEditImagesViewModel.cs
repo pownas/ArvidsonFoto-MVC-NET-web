@@ -13,16 +13,16 @@ namespace ArvidsonFoto.Core.ViewModels;
 public class UploadEditImagesViewModel
 {
     /// <summary>Lista med bilder som ska visas på nuvarande sida för redigering</summary>
-    public List<UploadImageInputDto> DisplayImagesList { get; set; } = new List<UploadImageInputDto>();
+    public List<UploadImageInputDto> DisplayImagesList { get; set; } = [];
     
     /// <summary>Fullständig lista med alla bilder från databasen</summary>
-    public List<TblImage> AllImagesList { get; set; } = new List<TblImage>();
+    public List<TblImage> AllImagesList { get; set; } = [];
 
     /// <summary>Totalt antal sidor i bildredigeraren</summary>
-    public int TotalPages { get; set; }
-    
+    public int TotalPages { get; set; } = -1;
+
     /// <summary>Aktuell sida som visas</summary>
-    public int CurrentPage { get; set; }
+    public int CurrentPage { get; set; } = -1;
     
     /// <summary>Aktuell URL för sidan</summary>
     public string CurrentUrl { get; set; } = string.Empty;
@@ -31,5 +31,5 @@ public class UploadEditImagesViewModel
     public string DisplayMessage { get; set; } = string.Empty;
     
     /// <summary>ID för den senast uppdaterade bilden</summary>
-    public int? UpdatedId { get; set; }
+    public int? UpdatedId { get; set; } = null;
 }
