@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.Models;
+
+namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
 /// Interface for page counter services providing page view tracking functionality.

@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.ApiResponses;
+using ArvidsonFoto.Core.DTOs;
 
 namespace ArvidsonFoto.Core.Interfaces;
 

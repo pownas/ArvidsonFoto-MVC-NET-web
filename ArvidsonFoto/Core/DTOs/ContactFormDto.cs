@@ -1,13 +1,15 @@
-namespace ArvidsonFoto.Core.ViewModels;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// ViewModel for contact form functionality.
+/// Data Transfer Object (DTO) for contact form submissions.
 /// </summary>
 /// <remarks>
 /// Contains all the necessary fields for a contact form including validation requirements,
 /// submission tracking, and display state management.
 /// </remarks>
-public class ContactFormModel
+public class ContactFormDto
 {
     /// <summary>Koden som behövs för att kunna skicka formuläret</summary>
     [Required(ErrorMessage = "Vänligen fyll i en kod")] //Standard meddelande: "The Code field is required."

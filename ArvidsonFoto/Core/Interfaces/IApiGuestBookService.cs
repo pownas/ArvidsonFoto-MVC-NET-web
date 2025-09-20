@@ -1,4 +1,6 @@
 ﻿
+using ArvidsonFoto.Core.Models;
+
 namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>

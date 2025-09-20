@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>

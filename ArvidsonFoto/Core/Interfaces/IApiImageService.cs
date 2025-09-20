@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.DTOs;
+
+namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
 /// Interface for image services

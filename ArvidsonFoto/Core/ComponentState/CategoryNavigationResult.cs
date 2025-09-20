@@ -1,3 +1,5 @@
+using ArvidsonFoto.Core.DTOs;
+
 namespace ArvidsonFoto.Core.ComponentState;
 
 /// <summary>

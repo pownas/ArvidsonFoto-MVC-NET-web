@@ -1,4 +1,7 @@
-﻿namespace ArvidsonFoto.Core.ViewModels;
+﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Models;
+
+namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>
 /// ViewModel for uploading and editing images functionality.

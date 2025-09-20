@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using ArvidsonFoto.Core.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Core.Services;
 
@@ -64,7 +65,7 @@ public class DatabaseInitializationService
     public static async Task InitializeDatabaseAsync(
         IServiceProvider serviceProvider,
         IHostEnvironment environment,
-        ILogger logger,
+        Microsoft.Extensions.Logging.ILogger logger,
         IConfiguration configuration)
     {
         // Only initialize database in development environment for security
@@ -107,7 +108,7 @@ public class DatabaseInitializationService
     /// <summary>
     /// Initializes the main application database (ArvidsonFotoDbContext) with schema and seed data.
     /// </summary>
-    private static async Task InitializeMainDatabaseAsync(IServiceProvider services, ILogger logger)
+    private static async Task InitializeMainDatabaseAsync(IServiceProvider services, Microsoft.Extensions.Logging.ILogger logger)
     {
         logger.LogInformation("🏁 Starting main database initialization...");
         try
@@ -154,7 +155,7 @@ public class DatabaseInitializationService
     /// Initializes the Identity database if the service is available.
     /// Supports both ArvidsonFotoIdentityContext and any other IdentityDbContext.
     /// </summary>
-    private static async Task InitializeIdentityDatabaseAsync(IServiceProvider services, ILogger logger)
+    private static async Task InitializeIdentityDatabaseAsync(IServiceProvider services, Microsoft.Extensions.Logging.ILogger logger)
     {
         try
         {
@@ -241,7 +242,7 @@ public class DatabaseInitializationService
     /// Seeds the main database with initial data if it's empty.
     /// This method is idempotent - it checks for existing data before seeding.
     /// </summary>
-    private static async Task SeedMainDatabaseAsync(ArvidsonFotoDbContext context, ILogger logger, IServiceProvider services)
+    private static async Task SeedMainDatabaseAsync(ArvidsonFotoDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
     {
         logger.LogInformation("🔍 Checking if database already contains data...");
 
@@ -274,7 +275,7 @@ public class DatabaseInitializationService
     /// This uses the ArvidsonFotoDbSeeder data but can limit quantities for faster testing.
     /// When limiting images, ensures that all categories referenced by those images are also included.
     /// </summary>
-    private static async Task SeedDataManuallyAsync(ArvidsonFotoDbContext context, ILogger logger, IServiceProvider services)
+    private static async Task SeedDataManuallyAsync(ArvidsonFotoDbContext context, Microsoft.Extensions.Logging.ILogger logger, IServiceProvider services)
     {
         // Get configuration from DI container
         var configuration = services.GetService<IConfiguration>();

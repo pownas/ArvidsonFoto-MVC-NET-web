@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
 /// Data Transfer Object (DTO) for uploading new categories.

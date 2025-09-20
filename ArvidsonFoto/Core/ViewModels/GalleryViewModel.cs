@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.ViewModels;
+﻿using ArvidsonFoto.Core.DTOs;
+
+namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>
 /// ViewModel for gallery display functionality.

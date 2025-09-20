@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.ApiResponses;
+﻿using ArvidsonFoto.Core.DTOs;
+
+namespace ArvidsonFoto.Core.ApiResponses;
 
 /// <summary>
 /// Represents the response for the main menu, including its categories and metadata about subcategories.
