@@ -2,6 +2,7 @@
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ArvidsonFoto.Controllers.ApiControllers;
@@ -78,6 +79,106 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
     {
         logger.LogInformation("Category - GetAll called.");
         return apiCategoryService.GetAll();
+    }
+
+    /// <summary>
+    /// Tests the multi-level category path resolution without returning images.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint is useful for testing the category path resolution logic.
+    /// </remarks>
+    /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
+    /// <returns>Information about the resolved category</returns>
+    [AllowAnonymous]
+    [HttpGet("/{*categoryPath}")]
+    [HttpGet("Bilder/{*categoryPath}")]
+    [HttpGet("ByPath/{*categoryPath}")]
+    [HttpGet("ByPath/Bilder/{*categoryPath}")]
+    [HttpGet("ByCategoryPath/{*categoryPath}")]
+    public IActionResult ByCategoryPath(string categoryPath)
+    {
+        categoryPath = Uri.UnescapeDataString(categoryPath);
+        try
+        {
+            if (string.IsNullOrEmpty(categoryPath))
+            {
+                return BadRequest("Category path cannot be empty");
+            }
+
+            logger.LogInformation("Image - TestCategoryPath called with path: {CategoryPath}", categoryPath);
+
+            // Split the path into segments
+            string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            if (segments.Length == 0)
+            {
+                return BadRequest("Invalid category path format");
+            }
+
+            // Start with the first segment and traverse the category hierarchy
+            int? currentCategoryId = null;
+            var pathInfo = new List<object>();
+
+            foreach (var segment in segments)
+            {
+                // If this is the first segment, find the main category
+                if (currentCategoryId == null)
+                {
+                    currentCategoryId = apiCategoryService.GetIdByName(segment);
+                    if (currentCategoryId <= 0)
+                    {
+                        return NotFound($"Category '{segment}' not found");
+                    }
+
+                    var category = apiCategoryService.GetById(currentCategoryId.Value);
+                    pathInfo.Add(new
+                    {
+                        Level = "Main",
+                        Name = category.Name,
+                        Id = category.CategoryId,
+                        UrlSegment = category.UrlCategoryPath?.ToLower()
+                    });
+                }
+                else
+                {
+                    // Find the child category under the current parent
+                    var children = apiCategoryService.GetChildrenByParentId(currentCategoryId.Value);
+                    var matchingChild = children.FirstOrDefault(c =>
+                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingChild == null)
+                    {
+                        return NotFound($"Category '{segment}' not found under parent category");
+                    }
+                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLower();
+
+
+                    currentCategoryId = matchingChild.CategoryId;
+                    pathInfo.Add(new
+                    {
+                        Level = $"Level {pathInfo.Count + 1}",
+                        Name = matchingChild.Name,
+                        Id = matchingChild.CategoryId,
+                        UrlSegment = matchingChild.UrlCategoryPath
+                    });
+                }
+            }
+
+            // Return information about the path resolution
+            return Ok(new
+            {
+                CategoryPath = categoryPath,
+                ResolvedSegments = segments.Length,
+                FinalCategoryId = currentCategoryId,
+                PathResolution = pathInfo
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error testing category path: {CategoryPath}", categoryPath);
+            return StatusCode(500, "An error occurred while processing the request");
+        }
     }
 
     /// <summary>

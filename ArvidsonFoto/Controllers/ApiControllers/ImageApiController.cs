@@ -307,7 +307,9 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
+    [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
+    [HttpGet("ByPath/Bilder/{*categoryPath}")]
     public IActionResult GetImagesByCategoryPath(
         string categoryPath, 
         [FromQuery] string sortBy = "uploaded", 
@@ -389,99 +391,6 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         catch (Exception ex)
         {
             logger.LogError(ex, "Error processing category path: {CategoryPath}", categoryPath);
-            return StatusCode(500, "An error occurred while processing the request");
-        }
-    }
-
-    /// <summary>
-    /// Tests the multi-level category path resolution without returning images.
-    /// </summary>
-    /// <remarks>
-    /// This endpoint is useful for testing the category path resolution logic.
-    /// </remarks>
-    /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
-    /// <returns>Information about the resolved category</returns>
-    [AllowAnonymous]
-    [HttpGet("ByCategoryPath/{*categoryPath}")]
-    public IActionResult ByCategoryPath(string categoryPath)
-    {
-        categoryPath = Uri.UnescapeDataString(categoryPath);
-        try
-        {
-            if (string.IsNullOrEmpty(categoryPath))
-            {
-                return BadRequest("Category path cannot be empty");
-            }
-            
-            logger.LogInformation("Image - TestCategoryPath called with path: {CategoryPath}", categoryPath);
-            
-            // Split the path into segments
-            string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            
-            if (segments.Length == 0)
-            {
-                return BadRequest("Invalid category path format");
-            }
-
-            // Start with the first segment and traverse the category hierarchy
-            int? currentCategoryId = null;
-            var pathInfo = new List<object>();
-            
-            foreach (var segment in segments)
-            {
-                // If this is the first segment, find the main category
-                if (currentCategoryId == null)
-                {
-                    currentCategoryId = categoryService.GetIdByName(segment);
-                    if (currentCategoryId <= 0)
-                    {
-                        return NotFound($"Category '{segment}' not found");
-                    }
-                    
-                    var category = categoryService.GetById(currentCategoryId.Value);
-                    pathInfo.Add(new { 
-                        Level = "Main", 
-                        Name = category.Name, 
-                        Id = category.CategoryId,
-                        UrlSegment = category.UrlCategoryPath?.ToLower()
-                    });
-                }
-                else
-                {
-                    // Find the child category under the current parent
-                    var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
-                    var matchingChild = children.FirstOrDefault(c => 
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) || 
-                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
-                    
-                    if (matchingChild == null)
-                    {
-                        return NotFound($"Category '{segment}' not found under parent category");
-                    }
-                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLower();
-
-
-                    currentCategoryId = matchingChild.CategoryId;
-                    pathInfo.Add(new { 
-                        Level = $"Level {pathInfo.Count + 1}", 
-                        Name = matchingChild.Name, 
-                        Id = matchingChild.CategoryId,
-                        UrlSegment = matchingChild.UrlCategoryPath
-                    });
-                }
-            }
-            
-            // Return information about the path resolution
-            return Ok(new { 
-                CategoryPath = categoryPath,
-                ResolvedSegments = segments.Length,
-                FinalCategoryId = currentCategoryId,
-                PathResolution = pathInfo
-            });
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error testing category path: {CategoryPath}", categoryPath);
             return StatusCode(500, "An error occurred while processing the request");
         }
     }
