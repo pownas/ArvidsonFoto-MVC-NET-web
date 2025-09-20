@@ -4,6 +4,7 @@ using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
+using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto;
 
@@ -40,11 +41,15 @@ public class Startup
                     Configuration.GetConnectionString("DefaultConnection")));
         }
 
-        //Lägger till Services:
+        // Lägger till Services för frontend:
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
+
+        // Lägger till Services för backend API: 
+        services.AddScoped<IApiCategoryService, ApiCategoryService>();
+        services.AddScoped<IApiImageService, ApiImageService>();
 
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
