@@ -44,4 +44,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ArvidsonFoto.Core\ArvidsonFoto.Core.csproj" />
+  </ItemGroup>
+
 </Project>
