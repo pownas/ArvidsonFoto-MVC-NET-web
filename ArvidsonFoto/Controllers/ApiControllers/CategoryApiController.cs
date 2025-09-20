@@ -1,32 +1,23 @@
-﻿using ArvidsonFoto.Api.Attributes;
+﻿using ArvidsonFoto.Core.Attributes;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ArvidsonFoto.Api.Controllers;
+namespace ArvidsonFoto.Controllers.ApiControllers;
 
 /// <summary>
 /// Provides endpoints for managing categories
 /// </summary>
-/// <remarks>The <see cref="CategoryController"/> class includes methods for adding, retrieving, and managing
+/// <remarks>The <see cref="CategoryApiController"/> class includes methods for adding, retrieving, and managing
 /// categories. Some endpoints require authentication, while others can be accessed anonymously. This controller
 /// interacts with the underlying database context and services to perform operations on category data.</remarks>
+/// <inheritdoc cref="CategoryApiController"/>
 [ApiController]
-[Route("api/[controller]")]
-public class CategoryController : ControllerBase
+[Route("api/category")]
+public class CategoryApiController(ILogger<CategoryApiController> logger,
+    IApiCategoryService apiCategoryService) : ControllerBase
 {
-    private readonly ILogger<CategoryController> _logger;
-    private readonly ICategoryService _categoryService;
-
-    /// <inheritdoc cref="CategoryController"/>
-    public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService)
-    {
-        _logger = logger;
-        _categoryService = categoryService;
-    }
-
     /// <summary>
     /// Adds a new category to the system.
     /// </summary>
@@ -57,12 +48,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var result = _categoryService.AddCategory(category);
+            var result = apiCategoryService.AddCategory(category);
             return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error adding category");
+            logger.LogError(ex, "Error adding category");
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while adding the category",
@@ -84,8 +75,8 @@ public class CategoryController : ControllerBase
     [SwaggerSecurityRequirement("api_key")]
     public List<CategoryDto> GetAll()
     {
-        _logger.LogInformation("Category - GetAll called.");
-        return _categoryService.GetAll();
+        logger.LogInformation("Category - GetAll called.");
+        return apiCategoryService.GetAll();
     }
 
     /// <summary>
@@ -100,8 +91,8 @@ public class CategoryController : ControllerBase
     [HttpGet("GetByName/{categoryName}")]
     public CategoryDto GetByName(string categoryName = "Blåmes")
     {
-        _logger.LogInformation("Category - GetByName called.");
-        return _categoryService.GetByName(categoryName);
+        logger.LogInformation("Category - GetByName called.");
+        return apiCategoryService.GetByName(categoryName);
     }
 
     /// <summary>
@@ -119,13 +110,13 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetAllPublicCached called");
-            var allCategories = _categoryService.GetAll();
+            logger.LogInformation("Category - GetAllPublicCached called");
+            var allCategories = apiCategoryService.GetAll();
             return Ok(allCategories ?? new List<CategoryDto>());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving all categories");
+            logger.LogError(ex, "Error retrieving all categories");
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving all categories",
@@ -153,7 +144,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetById called with ID: {CategoryId}", categoryId);
+            logger.LogInformation("Category - GetById called with ID: {CategoryId}", categoryId);
             
             if (categoryId <= 0)
             {
@@ -165,7 +156,7 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var category = _categoryService.GetById(categoryId);
+            var category = apiCategoryService.GetById(categoryId);
             
             if (category == null || category.CategoryId == -1)
             {
@@ -181,7 +172,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category with ID: {CategoryId}", categoryId);
+            logger.LogError(ex, "Error retrieving category with ID: {CategoryId}", categoryId);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category",
@@ -208,7 +199,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetSubsList called with ID: {CategoryId}", categoryId);
+            logger.LogInformation("Category - GetSubsList called with ID: {CategoryId}", categoryId);
             
             if (categoryId <= 0)
             {
@@ -220,12 +211,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var subcategories = _categoryService.GetChildrenByParentId(categoryId);
+            var subcategories = apiCategoryService.GetChildrenByParentId(categoryId);
             return Ok(subcategories ?? new List<CategoryDto>());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving subcategories for category ID: {CategoryId}", categoryId);
+            logger.LogError(ex, "Error retrieving subcategories for category ID: {CategoryId}", categoryId);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving subcategories",
@@ -249,14 +240,14 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetChildren called with ID: {CategoryId}", categoryId);
+            logger.LogInformation("Category - GetChildren called with ID: {CategoryId}", categoryId);
             
-            var children = _categoryService.GetChildrenByParentId(categoryId ?? 0);
+            var children = apiCategoryService.GetChildrenByParentId(categoryId ?? 0);
             return Ok(children ?? new List<CategoryDto>());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving children for category ID: {CategoryId}", categoryId);
+            logger.LogError(ex, "Error retrieving children for category ID: {CategoryId}", categoryId);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving child categories",
@@ -284,7 +275,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetNameById called with ID: {CategoryId}", categoryId);
+            logger.LogInformation("Category - GetNameById called with ID: {CategoryId}", categoryId);
             
             if (categoryId <= 0)
             {
@@ -296,7 +287,7 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var categoryName = _categoryService.GetNameById(categoryId);
+            var categoryName = apiCategoryService.GetNameById(categoryId);
 
             if (categoryName == "Not found" || string.IsNullOrEmpty(categoryName))
             {
@@ -312,7 +303,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category name for ID: {CategoryId}", categoryId);
+            logger.LogError(ex, "Error retrieving category name for ID: {CategoryId}", categoryId);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category name",
@@ -340,7 +331,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetIdByName called with name: {CategoryName}", categoryName);
+            logger.LogInformation("Category - GetIdByName called with name: {CategoryName}", categoryName);
             
             if (string.IsNullOrWhiteSpace(categoryName))
             {
@@ -352,12 +343,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var categoryId = _categoryService.GetIdByName(categoryName);
+            var categoryId = apiCategoryService.GetIdByName(categoryName);
             return Ok(categoryId);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category ID for name: {CategoryName}", categoryName);
+            logger.LogError(ex, "Error retrieving category ID for name: {CategoryName}", categoryName);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category ID",
@@ -383,13 +374,13 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetLastId called");
-            var lastId = _categoryService.GetLastId();
+            logger.LogInformation("Category - GetLastId called");
+            var lastId = apiCategoryService.GetLastId();
             return Ok(lastId);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving last category ID");
+            logger.LogError(ex, "Error retrieving last category ID");
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the last category ID",
@@ -412,13 +403,13 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetMainCategories called");
-            var mainCategories = _categoryService.GetMainCategories();
+            logger.LogInformation("Category - GetMainCategories called");
+            var mainCategories = apiCategoryService.GetMainCategories();
             return Ok(mainCategories ?? new List<CategoryDto>());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving main categories");
+            logger.LogError(ex, "Error retrieving main categories");
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving main categories",
@@ -443,7 +434,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetByUrlSegment called with: {UrlSegment}", urlSegment);
+            logger.LogInformation("Category - GetByUrlSegment called with: {UrlSegment}", urlSegment);
             
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
@@ -455,12 +446,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var category = _categoryService.GetByUrlSegment(urlSegment);
+            var category = apiCategoryService.GetByUrlSegment(urlSegment);
             return Ok(category);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category by URL segment: {UrlSegment}", urlSegment);
+            logger.LogError(ex, "Error retrieving category by URL segment: {UrlSegment}", urlSegment);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category",
@@ -487,7 +478,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetIdByUrlSegment called with: {UrlSegment}", urlSegment);
+            logger.LogInformation("Category - GetIdByUrlSegment called with: {UrlSegment}", urlSegment);
             
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
@@ -499,12 +490,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var categoryId = _categoryService.GetIdByUrlSegment(urlSegment);
+            var categoryId = apiCategoryService.GetIdByUrlSegment(urlSegment);
             return Ok(categoryId);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category ID by URL segment: {UrlSegment}", urlSegment);
+            logger.LogError(ex, "Error retrieving category ID by URL segment: {UrlSegment}", urlSegment);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category ID",
@@ -530,7 +521,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Category - GetByUrlSegmentWithFallback called with: {UrlSegment}", urlSegment);
+            logger.LogInformation("Category - GetByUrlSegmentWithFallback called with: {UrlSegment}", urlSegment);
             
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
@@ -542,12 +533,12 @@ public class CategoryController : ControllerBase
                 );
             }
 
-            var category = _categoryService.GetByUrlSegmentWithFallback(urlSegment);
+            var category = apiCategoryService.GetByUrlSegmentWithFallback(urlSegment);
             return Ok(category);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving category by URL segment with fallback: {UrlSegment}", urlSegment);
+            logger.LogError(ex, "Error retrieving category by URL segment with fallback: {UrlSegment}", urlSegment);
             return Problem(
                 title: "Internal Server Error",
                 detail: "An error occurred while retrieving the category",

@@ -1,11 +1,10 @@
-using ArvidsonFoto.Api.Attributes;
+using ArvidsonFoto.Core.Attributes;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ArvidsonFoto.Api.Controllers;
+namespace ArvidsonFoto.Controllers.ApiControllers;
 
 /// <summary>
 /// Provides endpoints for managing images
@@ -13,25 +12,16 @@ namespace ArvidsonFoto.Api.Controllers;
 /// <remarks>This controller includes both public and secured endpoints. Secured endpoints require authentication
 /// in production environments,  while public endpoints are accessible without authentication. Debug mode bypasses
 /// authentication for secured endpoints.</remarks>
+/// <inheritdoc cref="ImageApiController"/>
 [ApiController]
-[Route("api/[controller]")]
-public class ImageController : ControllerBase
+[Route("api/image")]
+public class ImageApiController(ILogger<ImageApiController> logger,
+    IApiImageService imageService,
+    ArvidsonFotoDbContext entityContext,
+    IApiCategoryService categoryService,
+    IConfiguration configuration) : ControllerBase
 {
-    private readonly ILogger<ImageController> _logger;
-    private readonly IImageService _imageService;
-    private readonly ArvidsonFotoDbContext _entityContext;
-    private readonly ICategoryService _categoryService;
-    private readonly IConfiguration _configuration;
-
-    /// <inheritdoc cref="ImageController"/>
-    public ImageController(ILogger<ImageController> logger, IImageService imageService, ArvidsonFotoDbContext entityContext, ICategoryService categoryService, IConfiguration configuration)
-    {
-        _logger = logger;
-        _imageService = imageService;
-        _entityContext = entityContext;
-        _categoryService = categoryService;
-        _configuration = configuration;
-    }
+    private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
 
     /// <summary>
     /// Adds a new image to the system.
@@ -48,8 +38,8 @@ public class ImageController : ControllerBase
     [HttpPost("AddImage")]
     public bool AddImage(ImageDto image)
     {
-        _logger.LogInformation("Image - AddImage called.");
-        return _imageService.AddImage(image);
+        logger.LogInformation("Image - AddImage called.");
+        return imageService.AddImage(image);
     }
 
     /// <summary>
@@ -86,8 +76,8 @@ public class ImageController : ControllerBase
     [SwaggerSecurityRequirement("api_key")] // This will add the lock icon for this endpoint
     public List<ImageDto> GetAll()
     {
-        _logger.LogInformation("Image - GetAll called.");
-        return _imageService.GetAll();
+        logger.LogInformation("Image - GetAll called.");
+        return imageService.GetAll();
     }
 
     /// <summary>
@@ -106,8 +96,8 @@ public class ImageController : ControllerBase
     [HttpGet("ByCategoryId/{categoryId}")]
     public List<ImageDto> GetImagesByCategoryID(int categoryId = 13, [FromQuery] string sortBy = "uploaded", [FromQuery]string sortOrder = "asc", [FromQuery]int limit = 48)
     {
-        _logger.LogInformation("Image - GetAllImagesByCategoryID called.");
-        return _imageService.GetImagesByCategoryID(categoryId);
+        logger.LogInformation("Image - GetAllImagesByCategoryID called.");
+        return imageService.GetImagesByCategoryID(categoryId);
     }
 
     private string GetCategoryPath(int categoryId)
@@ -116,11 +106,11 @@ public class ImageController : ControllerBase
         {
             if (categoryId <= 0)
             {
-                _logger.LogInformation("Invalid category ID provided to GetCategoryPath: {CategoryId}", categoryId);
+                logger.LogInformation("Invalid category ID provided to GetCategoryPath: {CategoryId}", categoryId);
                 return string.Empty;
             }
             
-            var category = _categoryService.GetById(categoryId);
+            var category = categoryService.GetById(categoryId);
             
             if (category == null || category.CategoryId <= 0)
                 return string.Empty;
@@ -130,7 +120,7 @@ public class ImageController : ControllerBase
             // Get parent categories if any
             if (category.ParentCategoryId.HasValue && category.ParentCategoryId.Value > 0)
             {
-                var parent = _categoryService.GetById(category.ParentCategoryId.Value);
+                var parent = categoryService.GetById(category.ParentCategoryId.Value);
                 if (parent != null && parent.CategoryId > 0)
                 {
                     path = (parent.UrlCategoryPath?.ToLower() ?? "") + "/" + path;
@@ -138,7 +128,7 @@ public class ImageController : ControllerBase
                     // Get grandparent if any
                     if (parent.ParentCategoryId.HasValue && parent.ParentCategoryId.Value > 0)
                     {
-                        var grandparent = _categoryService.GetById(parent.ParentCategoryId.Value);
+                        var grandparent = categoryService.GetById(parent.ParentCategoryId.Value);
                         if (grandparent != null && grandparent.CategoryId > 0)
                         {
                             path = (grandparent.UrlCategoryPath?.ToLower() ?? "") + "/" + path;
@@ -151,7 +141,7 @@ public class ImageController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetCategoryPath for categoryId {CategoryId}", categoryId);
+            logger.LogError(ex, "Error in GetCategoryPath for categoryId {CategoryId}", categoryId);
             return string.Empty;
         }
     }
@@ -169,8 +159,8 @@ public class ImageController : ControllerBase
     [HttpGet("GetById/{imageId}")]
     public ImageDto GetById(int imageId = 2)
     {
-        _logger.LogInformation($"Image - GetById called with id: {imageId}.");
-        return _imageService.GetById(imageId);
+        logger.LogInformation($"Image - GetById called with id: {imageId}.");
+        return imageService.GetById(imageId);
     }
 
     /// <summary>
@@ -182,8 +172,8 @@ public class ImageController : ControllerBase
     [HttpGet("GetImageLastId")]
     public int GetImageLastId()
     {
-        _logger.LogInformation("Image - GetImageLastId called.");
-        return _imageService.GetImageLastId();
+        logger.LogInformation("Image - GetImageLastId called.");
+        return imageService.GetImageLastId();
     }
 
     /// <summary>
@@ -199,8 +189,8 @@ public class ImageController : ControllerBase
     [HttpGet("GetOneImageFromCategory/{categoryId}")]
     public ImageDto GetOneImageFromCategory(int categoryId= 13)
     {
-        _logger.LogInformation("Image - GetOneImageFromCategory called.");
-        return _imageService.GetOneImageFromCategory(categoryId);
+        logger.LogInformation("Image - GetOneImageFromCategory called.");
+        return imageService.GetOneImageFromCategory(categoryId);
     }
 
     /// <summary>
@@ -216,8 +206,8 @@ public class ImageController : ControllerBase
     [HttpGet("GetRandomNumberOfImages/{count}")]
     public List<ImageDto> GetRandomNumberOfImages(int count = 3)
     {
-        _logger.LogInformation("Image - GetRandomNumberOfImages called.");
-        return _imageService.GetRandomNumberOfImages(count);
+        logger.LogInformation("Image - GetRandomNumberOfImages called.");
+        return imageService.GetRandomNumberOfImages(count);
     }
 
     /// <summary>
@@ -247,13 +237,13 @@ public class ImageController : ControllerBase
                 );
             }
 
-            _logger.LogInformation("Image - GetLatestImages called with count: {Count}", count);
-            var result = _imageService.GetLatestImageList(count);
+            logger.LogInformation("Image - GetLatestImages called with count: {Count}", count);
+            var result = imageService.GetLatestImageList(count);
             return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving latest images with count: {Count}", count);
+            logger.LogError(ex, "Error retrieving latest images with count: {Count}", count);
             // Let the global exception handler deal with it
             throw;
         }
@@ -283,7 +273,7 @@ public class ImageController : ControllerBase
         }
 
         // Find the existing image in the database
-        var existingImage = _entityContext.TblImages.Find(image.ImageId);
+        var existingImage = entityContext.TblImages.Find(image.ImageId);
         if (existingImage == null)
         {
             return false; // Image not found
@@ -296,7 +286,7 @@ public class ImageController : ControllerBase
         //existingImage.ImageFamiljNamn = image.ImageFamiljNamn;
 
         // Save changes to the database
-        _entityContext.SaveChanges();
+        entityContext.SaveChanges();
 
         return true; // Update successful
     }
@@ -334,7 +324,7 @@ public class ImageController : ControllerBase
                 return BadRequest("Category path cannot be empty");
             }
             
-            _logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", categoryPath);
+            logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", categoryPath);
             
             // Split the path into segments
             string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -355,7 +345,7 @@ public class ImageController : ControllerBase
                 // If this is the first segment, find the main category
                 if (currentCategoryId == null)
                 {
-                    currentCategoryId = _categoryService.GetIdByName(segment);
+                    currentCategoryId = categoryService.GetIdByName(segment);
                     if (currentCategoryId <= 0)
                     {
                         return NotFound($"Category '{segment}' not found");
@@ -364,7 +354,7 @@ public class ImageController : ControllerBase
                 else
                 {
                     // Find the child category under the current parent
-                    var children = _categoryService.GetChildrenByParentId(currentCategoryId.Value);
+                    var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
                     var matchingChild = children.FirstOrDefault(c => 
                         c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) || 
                         c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
@@ -384,7 +374,7 @@ public class ImageController : ControllerBase
             // Get images for the final category ID
             if (currentCategoryId.HasValue && currentCategoryId.Value > 0)
             {
-                var images = _imageService.GetImagesByCategoryID(currentCategoryId.Value);
+                var images = imageService.GetImagesByCategoryID(currentCategoryId.Value);
                 
                 // Apply sorting and limiting
                 var sortedImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
@@ -396,7 +386,7 @@ public class ImageController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing category path: {CategoryPath}", categoryPath);
+            logger.LogError(ex, "Error processing category path: {CategoryPath}", categoryPath);
             return StatusCode(500, "An error occurred while processing the request");
         }
     }
@@ -421,7 +411,7 @@ public class ImageController : ControllerBase
                 return BadRequest("Category path cannot be empty");
             }
             
-            _logger.LogInformation("Image - TestCategoryPath called with path: {CategoryPath}", categoryPath);
+            logger.LogInformation("Image - TestCategoryPath called with path: {CategoryPath}", categoryPath);
             
             // Split the path into segments
             string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -440,13 +430,13 @@ public class ImageController : ControllerBase
                 // If this is the first segment, find the main category
                 if (currentCategoryId == null)
                 {
-                    currentCategoryId = _categoryService.GetIdByName(segment);
+                    currentCategoryId = categoryService.GetIdByName(segment);
                     if (currentCategoryId <= 0)
                     {
                         return NotFound($"Category '{segment}' not found");
                     }
                     
-                    var category = _categoryService.GetById(currentCategoryId.Value);
+                    var category = categoryService.GetById(currentCategoryId.Value);
                     pathInfo.Add(new { 
                         Level = "Main", 
                         Name = category.Name, 
@@ -457,7 +447,7 @@ public class ImageController : ControllerBase
                 else
                 {
                     // Find the child category under the current parent
-                    var children = _categoryService.GetChildrenByParentId(currentCategoryId.Value);
+                    var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
                     var matchingChild = children.FirstOrDefault(c => 
                         c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) || 
                         c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
@@ -489,7 +479,7 @@ public class ImageController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error testing category path: {CategoryPath}", categoryPath);
+            logger.LogError(ex, "Error testing category path: {CategoryPath}", categoryPath);
             return StatusCode(500, "An error occurred while processing the request");
         }
     }

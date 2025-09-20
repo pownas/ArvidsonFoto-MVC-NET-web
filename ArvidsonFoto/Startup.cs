@@ -2,6 +2,8 @@
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Services;
 
 namespace ArvidsonFoto;
 

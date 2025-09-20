@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Models;
+
+namespace ArvidsonFoto.Services;
 
 public interface IImageService
 {
