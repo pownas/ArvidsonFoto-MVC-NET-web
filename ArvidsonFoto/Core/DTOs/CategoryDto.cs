@@ -46,10 +46,10 @@ public class CategoryDto()
     /// <example>2021-11-23T16:21:00</example>
     public DateTime? DateUpdated { get; set; }
 
-    /// <summary> Kategori beskrivning </summary>
-    /// <remarks> Beskrivning av kategorin, kan vara tom sträng. </remarks>
-    /// <example>Djupare beskrivning av amiral...</example>
-    public string? Description { get; set; } = string.Empty;
+    ///// <summary> Kategori beskrivning </summary>
+    ///// <remarks> Beskrivning av kategorin, kan vara tom sträng. </remarks>
+    ///// <example>Djupare beskrivning av amiral...</example>
+    //public string? Description { get; set; } = string.Empty;
 
     /// <summary> Huvudkategori ID (Parent ID) </summary>
     /// <remarks> Används för att gruppera underkategorier under en huvudkategori. Null för huvudkategorier. </remarks>

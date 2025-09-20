@@ -34,9 +34,9 @@ public static class CategoryMappingExtensions
             UrlCategoryPath = menu.MenuUrlSegment ?? string.Empty,
             UrlCategoryPathFull = categoryPath ?? menu.MenuUrlSegment ?? string.Empty, // This might need more complex logic for full paths
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
-            Description = string.Empty, // TblMenu doesn't have a description field
+            //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
-            ImageCount = imageCounted ?? -1,
+            ImageCount = imageCounted.HasValue ? imageCounted.Value : -1,
         };
     }
 
@@ -73,7 +73,7 @@ public static class CategoryMappingExtensions
             UrlCategoryPath = "404-NotFound",
             UrlCategoryPathFull = "404-NotFound",
             DateUpdated = DateTime.UtcNow,
-            Description = "Category not found"
+            //Description = "Category not found"
         };
     }
 }

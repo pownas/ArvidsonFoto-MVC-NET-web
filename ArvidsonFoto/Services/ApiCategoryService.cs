@@ -107,7 +107,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
         var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-        return category.ToCategoryDto(categoryPath, lastImageFilename);
+        var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+        return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
     }
 
     /// <summary>
@@ -544,7 +545,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     CategoryId = 1,
                     Name = "Däggdjur",
-                    Description = "Däggdjur bilder",
+                    //Description = "Däggdjur bilder",
                     UrlCategoryPath = "daggdjur",
                     UrlCategoryPathFull = "daggdjur"
                 },
@@ -552,7 +553,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     CategoryId = 2,
                     Name = "Fåglar",
-                    Description = "Fåglar bilder",
+                    //Description = "Fåglar bilder",
                     UrlCategoryPath = "faglar",
                     UrlCategoryPathFull = "faglar"
                 },
@@ -560,7 +561,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     CategoryId = 3,
                     Name = "Insekter",
-                    Description = "Insekter bilder",
+                    //Description = "Insekter bilder",
                     UrlCategoryPath = "insekter",
                     UrlCategoryPathFull = "insekter"
                 },
@@ -568,7 +569,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     CategoryId = 4,
                     Name = "Landskap",
-                    Description = "Landskap bilder",
+                    //Description = "Landskap bilder",
                     UrlCategoryPath = "landskap",
                     UrlCategoryPathFull = "landskap"
                 },
@@ -576,7 +577,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     CategoryId = 5,
                     Name = "Växter",
-                    Description = "Växter bilder",
+                    //Description = "Växter bilder",
                     UrlCategoryPath = "vaxter",
                     UrlCategoryPathFull = "vaxter"
                 }
@@ -692,8 +693,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
+            var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
 
-            return category.ToCategoryDto(categoryPath, lastImageFilename);
+            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
         }
         catch (Exception ex)
         {
@@ -759,7 +761,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                return category.ToCategoryDto(categoryPath, lastImageFilename);
+                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
             // If not found, check if the segment might be a numeric ID
@@ -774,7 +778,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                     Log.Information("Found category by ID fallback: {Id}", categoryId);
                     var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                     var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                    return category.ToCategoryDto(categoryPath, lastImageFilename);
+                    var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+
+                    return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
                 }
             }
 
@@ -787,7 +793,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 Log.Information("Found category by display name fallback: {Name}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                return category.ToCategoryDto(categoryPath, lastImageFilename);
+                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
             // If all else fails, try a partial match on URL segment or display name
@@ -800,7 +808,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 Log.Information("Found category by partial match: {Segment}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                return category.ToCategoryDto(categoryPath, lastImageFilename);
+                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
             Log.Warning("Could not find category with URL segment or fallback: '{UrlSegment}'", urlSegment);
