@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
+using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using System.Globalization;
 
-namespace ArvidsonFoto;
+namespace ArvidsonFoto.Views.Shared;
 
 public static class SharedStaticFunctions
 {
