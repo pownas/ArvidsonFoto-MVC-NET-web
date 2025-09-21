@@ -1,4 +1,5 @@
-﻿@inject ICategoryService _categoryService
+﻿@using ArvidsonFoto.Views.Shared
+@inject ICategoryService _categoryService
 @{
     List<TblMenu> categories;
     categories = _categoryService.GetAll();

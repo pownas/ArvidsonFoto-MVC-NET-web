@@ -2,6 +2,10 @@
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Services;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto;
 
@@ -20,18 +24,44 @@ public class Startup
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         //Lägger till Databaskoppling för appen (Identity kopplas i: /Areas/Identity/IdentityHostingStartup.cs): 
-        services.AddDbContext<ArvidsonFotoDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+                           Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
+                           Configuration.GetConnectionString("UseInMemoryDatabase") == "true";
 
-        //Lägger till Services:
+        if (useInMemoryDb)
+        {
+            // Använd In-Memory databas i Codespaces eller när konfigurerat
+            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
+            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
+                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
+        }
+        else
+        {
+            // Använd SQL Server lokalt
+            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+        }
+
+        // Lägger till Services för frontend:
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
 
+        // Lägger till Services för backend API: 
+        services.AddScoped<IApiCategoryService, ApiCategoryService>();
+        services.AddScoped<IApiImageService, ApiImageService>();
+
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
+
+        // OpenAPI konfiguration för API-dokumentation (använder .NET 10 inbyggt stöd)
+        services.AddOpenApi();
 
         // Konfigurera JavaScript engine för SCSS kompilering
         services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
@@ -59,6 +89,21 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        // Seed in-memory database if using in-memory database
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+                           Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
+                           Configuration.GetConnectionString("UseInMemoryDatabase") == "true";
+
+        if (useInMemoryDb)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoDbContext>();
+                context.Database.EnsureCreated();
+                context.SeedInMemoryDatabase();
+            }
+        }
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -95,6 +140,12 @@ public class Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
+            
+            // Native .NET 10 OpenAPI endpoint - endast i development
+            if (env.IsDevelopment())
+            {
+                endpoints.MapOpenApi("/api/openapi.json");
+            }
         });
     }
 }

@@ -1,4 +1,9 @@
-﻿namespace ArvidsonFoto.Controllers;
+﻿using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
+using ArvidsonFoto.Views.Shared;
+
+namespace ArvidsonFoto.Controllers;
 
 public class SenastController(ArvidsonFotoDbContext context) : Controller
 {

@@ -1,4 +1,7 @@
-﻿namespace ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+
+namespace ArvidsonFoto.Services;
 
 public class CategoryService : ICategoryService
 {
