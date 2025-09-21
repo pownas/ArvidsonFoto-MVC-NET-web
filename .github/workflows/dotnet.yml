@@ -35,7 +35,6 @@ jobs:
       run: dotnet --info
 
     - name: Restore dependencies
-      # Rely on repo-root discovery instead of a specific solution path
       run: dotnet restore --verbosity minimal
 
     - name: Build (Release)
@@ -64,13 +63,21 @@ jobs:
           **/*.sln
           **/*.csproj
 
+    - name: Restore dependencies (web project)
+      run: dotnet restore ./ArvidsonFoto/ArvidsonFoto.csproj --verbosity minimal
+
     - name: Restore local dotnet tools
       run: dotnet tool restore
 
+    - name: Build app (for migrations)
+      run: dotnet build ./ArvidsonFoto/ArvidsonFoto.csproj -c Release --no-restore --verbosity minimal
+
     - name: Update database (EF Core migrations)
-      shell: pwsh
       run: |
-        dotnet ef database update -p ./ArvidsonFoto/ArvidsonFoto.csproj -c ArvidsonFotoDbContext
+        dotnet ef database update \
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj \
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj \
+          --configuration Release
 
     - name: Test
       # Build as part of test job so we don't rely on artifacts from the build job
