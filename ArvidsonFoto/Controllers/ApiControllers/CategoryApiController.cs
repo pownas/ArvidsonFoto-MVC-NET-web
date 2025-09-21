@@ -90,20 +90,20 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
     /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
     /// <returns>Information about the resolved category</returns>
     [AllowAnonymous]
-    [HttpGet("/{*categoryPath}")]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
     [HttpGet("ByPath/Bilder/{*categoryPath}")]
     [HttpGet("ByCategoryPath/{*categoryPath}")]
     public IActionResult ByCategoryPath(string categoryPath)
     {
-        categoryPath = Uri.UnescapeDataString(categoryPath);
         try
         {
             if (string.IsNullOrEmpty(categoryPath))
             {
                 return BadRequest("Category path cannot be empty");
             }
+            // Decode the URL-encoded path
+            categoryPath = Uri.UnescapeDataString(categoryPath);
 
             logger.LogInformation("Image - TestCategoryPath called with path: {CategoryPath}", categoryPath);
 
