@@ -17,12 +17,6 @@ public class ImageListResponse
     /// <summary> Kategori Url </summary>
     public string CategoryUrl { get; set; }
 
-    /// <summary> Datum för senaste fotograferade bilden i denna kategori. </summary>
-    public DateTime? DateLastPhotographedImage { get; set; }
-
-    /// <summary> Datum för senaste uppladdade bilden i denna kategori. </summary>
-    public DateTime? DateLastUploadedImage { get; set; }
-
     /// <summary> Antal bilder i denna kategori </summary>
     public int ImageCategoryTotalCount { get; set; } = -1;
 

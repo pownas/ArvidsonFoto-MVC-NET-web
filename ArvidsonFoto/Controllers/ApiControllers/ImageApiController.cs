@@ -308,6 +308,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
+    [HttpGet("/api/Bilder/{*categoryPath}")]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
     [HttpGet("ByPath/Bilder/{*categoryPath}")]
@@ -319,7 +320,6 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         [FromQuery] int limit = 48,
         CancellationToken cancellationToken = default)
     {
-        categoryPath = Uri.UnescapeDataString(categoryPath);
         try
         {
             // Check for cancellation early
@@ -329,6 +329,8 @@ public class ImageApiController(ILogger<ImageApiController> logger,
             {
                 return BadRequest("Category path cannot be empty");
             }
+            // Decode the URL-encoded path
+            categoryPath = Uri.UnescapeDataString(categoryPath);
             
             logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", categoryPath);
             
@@ -395,8 +397,6 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                     CategoryUrl =  $"{matchingChildCategory?.UrlCategoryPathFull ?? "Unknown"}",
                     CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
                     ImageCategoryTotalCount = totalCategoryImageCount,
-                    DateLastPhotographedImage = sortedImages.OrderBy(x => x.DateImageTaken).FirstOrDefault()?.DateImageTaken,
-                    DateLastUploadedImage = sortedImages.FirstOrDefault()?.DateUploaded,
                     ImageResultCount = sortedImages.Count,
                     Images = sortedImages,
                     QueryLimit = limit,
