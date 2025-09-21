@@ -1,7 +1,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET8?style=flat-square&cacheSeconds=86400)
 
-# ArvidsonFoto-MVC-NET8
- Ombyggnation av ArvidsonFoto med MVC och .NET9 (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9)
+# ArvidsonFoto-MVC .NET web
+Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9... osv. till senaste .NET)
   
   
 ## Instruktion för att starta webbsidan lokalt
@@ -33,8 +33,32 @@ Då behöver du installera dotnet-ef CLI (dotnet entity framework), som installe
 ```dotnet tool install --global dotnet-ef```
 
 ## Uppdatera entityframework till senaste versionen
-Uppdatera din dotnet-ef till version 9.0.0 eller högre med kommandot:  
+Uppdatera din dotnet-ef till version 10.0.0 eller högre med kommandot:  
 ```dotnet tool update --global dotnet-ef```
 
+Eller via CURL: 
+```sh
+  Write-Host "Installing .NET 10 SDK using Microsoft's installation script..."
+  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 10.0
+    
+  Write-Host "Configuring PATH for .NET..."
+  export PATH="$HOME/.dotnet:$PATH"
+  echo 'export PATH="$HOME/.dotnet:$PATH"' >> ~/.bashrc
+```
+
+## Installera developer-certifikat
+Om du får felmeddelande när du kör webbsidan lokalt, som säger:  
+```
+Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found.
+```
+Då behöver du installera ett developer-certifikat med kommandot:  
+```ps
+# Rensa bort alla gamla certifikat
+dotnet dev-certs https --clean
+# Installera ASP.NET Core HTTPS development certifikat
+dotnet dev-certs https --trust
+```
+
+
 ## Systemdokumentation
-![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET8/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
+![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)

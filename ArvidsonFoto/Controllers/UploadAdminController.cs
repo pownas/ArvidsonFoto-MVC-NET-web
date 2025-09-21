@@ -1,4 +1,7 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Data;
+using ArvidsonFoto.Models;
+using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics;

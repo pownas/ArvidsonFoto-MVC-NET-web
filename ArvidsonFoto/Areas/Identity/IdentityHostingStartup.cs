@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
-using ArvidsonFoto.Data;
 using Microsoft.EntityFrameworkCore;
 
 [assembly: HostingStartup(typeof(ArvidsonFoto.Areas.Identity.IdentityHostingStartup))]

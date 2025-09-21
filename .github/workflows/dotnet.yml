@@ -1,4 +1,4 @@
-name: .NET9-Windows
+name: .NET 10 RC - Windows
 
 on:
   push:
@@ -8,26 +8,77 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      ASPNETCORE_ENVIRONMENT: Development
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET SDK v9.0.x
-    # (Latest: .NET v8.0.0) - See version info: https://dotnet.microsoft.com/download/dotnet/8.0 
-      uses: actions/setup-dotnet@v1
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK 10 RC
+      # Installs the latest 10.0 RC SDK (preview quality covers RC builds)
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: '10.0.x'
+        dotnet-quality: 'preview'
+        cache: true
+        # Provide explicit dependency files for cache key to avoid lock-file requirement error
+        cache-dependency-path: |
+          **/packages.lock.json
+          **/*.sln
+          **/*.csproj
+
+    - name: Display .NET info
+      run: dotnet --info
+
     - name: Restore dependencies
-      run: dotnet restore ./ArvidsonFoto-MVC-NET8.sln
-    - name: Build
-      run: dotnet build --no-restore ./ArvidsonFoto-MVC-NET8.sln
-    - name: Update database
+      run: dotnet restore --verbosity minimal
+
+    - name: Build (Release)
+      run: dotnet build --configuration Release --no-restore --verbosity minimal
+
+  test:
+    needs: build   # Run this job after 'build'
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      ASPNETCORE_ENVIRONMENT: Development
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK 10 RC
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        dotnet-quality: 'preview'
+        cache: true
+        cache-dependency-path: |
+          **/packages.lock.json
+          **/*.sln
+          **/*.csproj
+
+    - name: Restore dependencies (web project)
+      run: dotnet restore ./ArvidsonFoto/ArvidsonFoto.csproj --verbosity minimal
+
+    - name: Restore local dotnet tools
+      run: dotnet tool restore
+
+    - name: Build app (for migrations)
+      run: dotnet build ./ArvidsonFoto/ArvidsonFoto.csproj -c Release --no-restore --verbosity minimal
+
+    - name: Update database (EF Core migrations)
       run: |
-            dotnet tool install --global dotnet-ef
-            dotnet tool restore
-            dotnet ef database update -p ./ArvidsonFoto/ArvidsonFoto.csproj -c ArvidsonFotoDbContext
-      env:
-        ASPNETCORE_ENVIRONMENT: Development
+        dotnet ef database update \
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj \
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj \
+          --configuration Release
+
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./ArvidsonFoto-MVC-NET8.sln
+      # Build as part of test job so we don't rely on artifacts from the build job
+      run: dotnet test --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --configuration Release

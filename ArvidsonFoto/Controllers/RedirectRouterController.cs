@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Controllers;
+﻿using ArvidsonFoto.Views.Shared;
+
+namespace ArvidsonFoto.Controllers;
 
 public class RedirectRouterController() : Controller
 {

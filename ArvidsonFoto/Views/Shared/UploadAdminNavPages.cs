@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ArvidsonFoto;
+namespace ArvidsonFoto.Views.Shared;
 
 public static class UploadAdminNavPages
 {

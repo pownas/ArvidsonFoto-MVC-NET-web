@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/dotnet.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ArvidsonFoto-LogReader/ArvidsonFoto-LogReader.csproj" />
+  <Project Path="ArvidsonFoto.Tests.Unit/ArvidsonFoto.Tests.Unit.csproj" />
+  <Project Path="ArvidsonFoto/ArvidsonFoto.csproj" />
+</Solution>
