@@ -463,11 +463,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// Gets the count of all images in a specified categoryId.
     /// </summary>
     /// <returns>A The total number of images for the.</returns>
-    public (int, int) GetCountedCategoryId(int categoryId)
+    public int GetCountedCategoryId(int categoryId)
     {
-        var categoryImages = _entityContext.TblImages.Where(x => x.ImageCategoryId == categoryId).Count();
-        var childrenImages = _entityContext.TblImages.Where(x => x.ImageCategoryId == categoryId && x.ImageFamilyId == categoryId && x.ImageMainFamilyId == categoryId).Count();
-        return (categoryImages, childrenImages);
+        var imagesCategoryCount = _entityContext.TblImages.Count(x => x.ImageCategoryId == categoryId);
+        var imagesFamilyCount = _entityContext.TblImages.Count(x => x.ImageFamilyId == categoryId);
+        var imagesMainFamilyCount = _entityContext.TblImages.Count(x => x.ImageMainFamilyId == categoryId);
+        var totalImagesForCategoryId = imagesCategoryCount + imagesFamilyCount + imagesMainFamilyCount;
+        return totalImagesForCategoryId;
     }
 
     /// <summary>

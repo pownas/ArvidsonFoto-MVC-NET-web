@@ -67,7 +67,7 @@ public interface IApiImageService
 
     /// <summary>Räknar alla bilder i en kategori</summary>
     /// <returns>En int med kategorins bilder, samt en int med kategorins bilder + alla dess childrens</returns>
-    (int, int) GetCountedCategoryId(int categoryId);
+    int GetCountedCategoryId(int categoryId);
 
     /// <summary>Tar bort en bild asynkront</summary>
     /// <param name="id">ID för bilden som ska tas bort</param>

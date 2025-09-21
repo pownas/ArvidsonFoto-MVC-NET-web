@@ -386,7 +386,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 // Apply sorting and limiting
                 var sortedImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
 
-                (_, var totalCategoryImageCount) = imageService.GetCountedCategoryId(currentCategoryId.Value);
+                var totalCategoryImageCount = imageService.GetCountedCategoryId(currentCategoryId.Value);
 
                 var response = new ImageListResponse
                 {
