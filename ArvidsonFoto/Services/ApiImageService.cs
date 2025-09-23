@@ -3,6 +3,7 @@ using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
+using NUglify.Helpers;
 using Serilog;
 
 namespace ArvidsonFoto.Services;
@@ -199,7 +200,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             // If the new gallery category feature is enabled, use the new category path
             var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (featureNewGalleryCategory is not null && featureNewGalleryCategory.Enabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }

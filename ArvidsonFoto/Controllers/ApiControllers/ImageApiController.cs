@@ -4,6 +4,9 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading;
+using static ArvidsonFoto.Core.Statics.SortByEnum;
 
 namespace ArvidsonFoto.Controllers.ApiControllers;
 
@@ -292,6 +295,85 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         entityContext.SaveChanges();
 
         return true; // Update successful
+    }
+
+
+    [AllowAnonymous]
+    [HttpGet("/api/senast/fotograferad")]
+    [HttpGet("senast/fotograferad")]
+    [HttpGet("latest/photographed")]
+    [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
+    public IActionResult GetLatestImagesPhotograped()
+    {
+        var requestUri = Request.Path.ToString().Replace("/api", "");
+        return (IActionResult)GetLatestImagesAsync(SortBy.Photographed, requestUri);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/api/senast/uppladdad")]
+    [HttpGet("senast/uppladdad")]
+    [HttpGet("latest/uploaded")]
+    [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
+    public IActionResult GetLatestImagesUploaded()
+    {
+        var requestUri = Request.Path.ToString().Replace("/api", "");
+        return (IActionResult)GetLatestImagesAsync(SortBy.Uploaded, requestUri);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/api/senast/per%20kategori")]
+    [HttpGet("senast/per%20kategori")]
+    [HttpGet("senast/per-kategori")]
+    [HttpGet("senast/kategori")]
+    [HttpGet("latest/category")]
+    [HttpGet("latest/by-category")]
+    [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
+    public IActionResult GetLatestImagesByCateogry()
+    {
+        var requestUri = Request.Path.ToString().Replace("/api", "");
+        return (IActionResult)GetLatestImagesAsync(SortBy.Category, requestUri);
+    }
+
+    [AllowAnonymous]
+    private async Task<IActionResult> GetLatestImagesAsync(SortBy sortBy, string requestUri)
+    {
+        try
+        {
+            logger.LogInformation("Image - GetLatestImages called with SortBy: {SortBy}", sortBy.ToFriendlyString());
+
+            // Get images
+            var limit = 48; // Default limit
+            const string sortOrder = "desc"; // Default sort order
+            var images = await imageService.GetAllImagesAsync();
+
+            if (images == null || !images.Any())
+            {
+                return NotFound("No images found in the database");
+            }
+
+            // Apply sorting and limiting
+            var sortedImages = ApplySortingAndLimit(images.ToList(), sortBy.ToFriendlyString(), sortOrder, limit);
+
+            var response = new ImageListResponse
+            {
+                CategoryId = 0,
+                CategoryName = $"latest/{sortBy.ToFriendlyString()}",
+                CategoryUrl = $"{requestUri ?? "Unknown"}",
+                CategoryUrlWithAAO = Uri.EscapeDataString(requestUri ?? "Unknown"),
+                ImageCategoryTotalCount = images.Count(),
+                ImageResultCount = sortedImages.Count,
+                Images = sortedImages,
+                QueryLimit = limit,
+                QuerySortBy = sortBy.ToFriendlyString(),
+                QuerySortOrder = sortOrder,
+            };
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error processing latest sort by path: {SortBy}", sortBy.ToFriendlyString());
+            return StatusCode(500, $"An error occurred while processing the request for sort by path: {sortBy.ToFriendlyString()}");
+        }
     }
 
     /// <summary>
