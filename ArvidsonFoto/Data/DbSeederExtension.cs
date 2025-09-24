@@ -170,6 +170,46 @@ public static class DbSeederExtension
         },
     };
 
+    public static List<TblNews> DbSeed_Tbl_News { get; set; } = new List<TblNews>
+    {
+        new TblNews
+        {
+            Id = 1,
+            NewsId = 1,
+            NewsTitle = "Välkommen till vårt nya nyhetsflöde!",
+            NewsContent = "<p>Vi är glada att presentera vårt nya nyhetsflöde där vi kommer att dela med oss av de senaste uppdateringarna om fotografering, nya bilder och intressanta händelser.</p><p>Här kan du följa våra senaste projekt och få tips om naturfotografering.</p>",
+            NewsAuthor = "Torbjörn Arvidson",
+            NewsSummary = "Vi lanserar vårt nya nyhetsflöde för att hålla dig uppdaterad om de senaste bilderna och fotograferingsprojekten.",
+            NewsCreated = new DateTime(2024, 12, 14, 10, 0, 0),
+            NewsUpdated = new DateTime(2024, 12, 14, 10, 0, 0),
+            NewsPublished = true
+        },
+        new TblNews
+        {
+            Id = 2,
+            NewsId = 2,
+            NewsTitle = "Nya bilder från Costa Rica tillgängliga",
+            NewsContent = "<p>Vi har lagt till flera nya bilder från vårt fotograferingsäventyr i Costa Rica. Bilderna visar den fantastiska biodiversiteten i detta tropiska paradis.</p><p>Besök <a href='/Bilder/Resor/2008 Costa Rica'>Costa Rica-galleriet</a> för att se alla nya bilder.</p>",
+            NewsAuthor = "Torbjörn Arvidson",
+            NewsSummary = "Nya spännande bilder från Costa Rica har lagts till i galleriet.",
+            NewsCreated = new DateTime(2024, 12, 13, 15, 30, 0),
+            NewsUpdated = new DateTime(2024, 12, 13, 15, 30, 0),
+            NewsPublished = true
+        },
+        new TblNews
+        {
+            Id = 3,
+            NewsId = 3,
+            NewsTitle = "Tips för vinterfotografering",
+            NewsContent = "<p>Vintern erbjuder fantastiska möjligheter för naturfotografering. Här är några tips för att få de bästa bilderna:</p><ul><li>Använd snabb slutartid för att frysa rörelse</li><li>Var försiktig med vitbalansen i snöiga miljöer</li><li>Skydda din kamerautrustning från kyla och fukt</li></ul><p>Kom ihåg att vinterlandskapet kan skapa magiska ljusförhållanden!</p>",
+            NewsAuthor = "Torbjörn Arvidson",
+            NewsSummary = "Användbara tips och råd för att ta fantastiska naturbilder under vintersäsongen.",
+            NewsCreated = new DateTime(2024, 12, 12, 9, 15, 0),
+            NewsUpdated = new DateTime(2024, 12, 12, 9, 15, 0),
+            NewsPublished = true
+        }
+    };
+
     /// <summary>
     /// En extensionmetod skapad via 'DbSeederExtension.cs'
     /// </summary>
@@ -185,6 +225,8 @@ public static class DbSeederExtension
         modelBuilder.Entity<TblPageCounter>().HasData(DbSeed_Tbl_PageCounter);
 
         modelBuilder.Entity<TblImage>().HasData(DbSeed_Tbl_Image);
+
+        modelBuilder.Entity<TblNews>().HasData(DbSeed_Tbl_News);
     }
 
     /// <summary>
@@ -196,7 +238,7 @@ public static class DbSeederExtension
     public static void SeedInMemoryDatabase(this ArvidsonFotoDbContext context)
     {
         // Kontrollera om databasen redan har data
-        if (context.TblGbs.Any() || context.TblMenus.Any() || context.TblImages.Any())
+        if (context.TblGbs.Any() || context.TblMenus.Any() || context.TblImages.Any() || context.TblNews.Any())
         {
             return; // Databasen är redan seedand
         }
@@ -206,6 +248,7 @@ public static class DbSeederExtension
         context.TblMenus.AddRange(DbSeed_Tbl_Menu);
         context.TblPageCounter.AddRange(DbSeed_Tbl_PageCounter);
         context.TblImages.AddRange(DbSeed_Tbl_Image);
+        context.TblNews.AddRange(DbSeed_Tbl_News);
 
         // Spara ändringar
         context.SaveChanges();

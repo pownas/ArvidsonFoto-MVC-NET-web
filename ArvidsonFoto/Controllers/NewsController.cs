@@ -9,6 +9,7 @@ public class NewsController(ArvidsonFotoDbContext context) : Controller
     internal INewsService _newsService = new NewsService(context);
     internal IPageCounterService _pageCounterService = new PageCounterService(context);
 
+    [Route("[controller]")]
     public IActionResult Index()
     {
         ViewData["Title"] = "Nyheter";

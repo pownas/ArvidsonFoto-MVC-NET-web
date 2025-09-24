@@ -481,6 +481,59 @@ namespace ArvidsonFoto.Migrations
                             PicturePage = true
                         });
                 });
+
+            modelBuilder.Entity("ArvidsonFoto.Models.TblNews", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NewsAuthor")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("news_author");
+
+                    b.Property<string>("NewsContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("news_content");
+
+                    b.Property<DateTime?>("NewsCreated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("news_created");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int")
+                        .HasColumnName("news_ID");
+
+                    b.Property<bool>("NewsPublished")
+                        .HasColumnType("bit")
+                        .HasColumnName("news_published");
+
+                    b.Property<string>("NewsSummary")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("news_summary");
+
+                    b.Property<string>("NewsTitle")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("news_title");
+
+                    b.Property<DateTime?>("NewsUpdated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("news_updated");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_news", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
