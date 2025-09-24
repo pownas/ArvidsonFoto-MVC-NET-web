@@ -60,9 +60,6 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
 
-        // OpenAPI konfiguration för API-dokumentation (använder .NET 10 inbyggt stöd)
-        services.AddOpenApi();
-
         // Konfigurera JavaScript engine för SCSS kompilering
         services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
                 .AddV8();
@@ -140,12 +137,6 @@ public class Startup
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
-            
-            // Native .NET 10 OpenAPI endpoint - endast i development
-            if (env.IsDevelopment())
-            {
-                endpoints.MapOpenApi("/api/openapi.json");
-            }
         });
     }
 }
