@@ -265,9 +265,6 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     public IActionResult Statistik()
     {
         ViewData["Title"] = "Hemsidans statistik";
-        // Hämta sidvisningar per månad (senaste 12 månader)
-        var monthlyPageViews = _pageCounterService.GetMonthlyPageViews(12);
-        ViewBag.MonthlyPageViews = monthlyPageViews;
         return View();
     }
 
