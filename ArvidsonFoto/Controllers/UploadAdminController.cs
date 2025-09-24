@@ -14,6 +14,7 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     internal IImageService _imageService = new ImageService(context);
     internal ICategoryService _categoryService = new CategoryService(context);
     internal IGuestBookService _guestBookService = new GuestBookService(context);
+    internal INewsService _newsService = new NewsService(context);
     internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
 
     public IActionResult Index()
@@ -305,6 +306,126 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
+    }
+
+    [Route("/[controller]/Nyheter")]
+    public IActionResult NewsAdmin()
+    {
+        ViewData["Title"] = "Nyhetsadministration";
+        var viewModel = new NewsViewModel
+        {
+            NewsList = _newsService.GetAll(),
+            ShowAdminControls = true
+        };
+        return View(viewModel);
+    }
+
+    [Route("/[controller]/NyNyhet")]
+    public IActionResult NewNews(NewsInputModel? inputModel = null)
+    {
+        ViewData["Title"] = "Ny nyhetsartikel";
+        return View(inputModel ?? new NewsInputModel());
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult CreateNews(NewsInputModel inputModel)
+    {
+        inputModel.NewsCreated = false;
+        inputModel.DisplayErrorPublish = false;
+
+        if (ModelState.IsValid)
+        {
+            TblNews newNews = new TblNews()
+            {
+                NewsTitle = inputModel.NewsTitle,
+                NewsContent = inputModel.NewsContent,
+                NewsAuthor = inputModel.NewsAuthor,
+                NewsSummary = inputModel.NewsSummary,
+                NewsPublished = inputModel.NewsPublished,
+                NewsId = _newsService.GetLastId() + 1,
+                NewsCreated = DateTime.Now,
+                NewsUpdated = DateTime.Now
+            };
+
+            if (_newsService.CreateNews(newNews))
+            {
+                inputModel.NewsCreated = true;
+                inputModel = new NewsInputModel(); // Reset form
+            }
+            else
+            {
+                inputModel.DisplayErrorPublish = true;
+            }
+        }
+
+        return RedirectToAction("NewNews", inputModel);
+    }
+
+    [Route("/[controller]/RedigeraNyhet/{id}")]
+    public IActionResult EditNews(int id, NewsInputModel? inputModel = null)
+    {
+        ViewData["Title"] = "Redigera nyhetsartikel";
+        
+        if (inputModel == null)
+        {
+            var news = _newsService.GetById(id);
+            if (news == null)
+            {
+                return RedirectToAction("NewsAdmin");
+            }
+            
+            inputModel = new NewsInputModel
+            {
+                Id = news.Id,
+                NewsId = news.NewsId,
+                NewsTitle = news.NewsTitle,
+                NewsContent = news.NewsContent,
+                NewsAuthor = news.NewsAuthor,
+                NewsSummary = news.NewsSummary,
+                NewsPublished = news.NewsPublished
+            };
+        }
+
+        return View(inputModel);
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult UpdateNews(NewsInputModel inputModel)
+    {
+        inputModel.NewsUpdated = false;
+        inputModel.DisplayErrorPublish = false;
+
+        if (ModelState.IsValid)
+        {
+            var existingNews = _newsService.GetById(inputModel.Id);
+            if (existingNews != null)
+            {
+                existingNews.NewsTitle = inputModel.NewsTitle;
+                existingNews.NewsContent = inputModel.NewsContent;
+                existingNews.NewsAuthor = inputModel.NewsAuthor;
+                existingNews.NewsSummary = inputModel.NewsSummary;
+                existingNews.NewsPublished = inputModel.NewsPublished;
+                existingNews.NewsUpdated = DateTime.Now;
+
+                if (_newsService.UpdateNews(existingNews))
+                {
+                    inputModel.NewsUpdated = true;
+                }
+                else
+                {
+                    inputModel.DisplayErrorPublish = true;
+                }
+            }
+        }
+
+        return RedirectToAction("EditNews", new { id = inputModel.Id });
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteNews(int id)
+    {
+        _newsService.DeleteNews(id);
+        return RedirectToAction("NewsAdmin");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
