@@ -4,6 +4,19 @@ using ArvidsonFoto.Models;
 namespace ArvidsonFoto.Services;
 
 public class PageCounterService : IPageCounterService
+    // Returnerar sidvisningar per månad för senaste X månader (default 12)
+    public List<(string Month, int PageViews)> GetMonthlyPageViews(int monthsBack = 12)
+    {
+        var fromDate = DateTime.Now.AddMonths(-monthsBack);
+        // MonthViewed format: "yyyy-MM"
+        return _entityContext.TblPageCounter
+            .Where(p => DateTime.Parse(p.MonthViewed + "-01") >= fromDate)
+            .GroupBy(p => p.MonthViewed)
+            .Select(g => new { Month = g.Key, PageViews = g.Sum(x => x.PageViews) })
+            .OrderBy(g => g.Month)
+            .Select(g => (g.Month, g.PageViews))
+            .ToList();
+    }
 {
     private readonly ArvidsonFotoDbContext _entityContext;
     public PageCounterService(ArvidsonFotoDbContext context)

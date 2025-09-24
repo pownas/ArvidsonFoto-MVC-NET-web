@@ -4,6 +4,14 @@ namespace ArvidsonFoto.Services;
 
 public interface IPageCounterService
 {
+    /// <summary>
+    /// Hämtar sidvisningar per månad för senaste X månader (default 12).
+    /// </summary>
+    /// <param name="monthsBack">Antal månader bakåt i tiden</param>
+    /// <returns>Lista med (månad, antal sidvisningar)</returns>
+    List<(string Month, int PageViews)> GetMonthlyPageViews(int monthsBack = 12);
+ 
+ 
     /// <summary> Räknar upp en sidvisning och sätter datum till att sidan nu besöks. </summary>
     /// <param name="pageName">Namn på kategorin som ska uppdateras.</param>
     void AddPageCount(string pageName);
