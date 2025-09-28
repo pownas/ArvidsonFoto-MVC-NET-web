@@ -28,4 +28,10 @@ public interface IPageCounterService
     /// <summary> Hämtar de 20st mest besökta bild-Kategorierna. </summary>
     /// <returns></returns>
     List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount();
+
+    /// <summary> Hämtar sidvisningar för de senaste månaderna grupperat per månad. </summary>
+    /// <param name="monthsBack">Antal månader bakåt att hämta data för</param>
+    /// <param name="picturePage">true == en bild-kategori , false == en sida</param>
+    /// <returns>Dictionary med månad som nyckel och totala sidvisningar som värde</returns>
+    Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage);
 }
