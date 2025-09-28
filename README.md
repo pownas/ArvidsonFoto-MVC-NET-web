@@ -69,47 +69,59 @@ Detta dokument innehåller två olika diagram som beskriver funktionaliteten och
 
 ---
 
-### 1. UML Use-case Diagram
+### 1. Aktörer och Användningsfall (Use-case)
 
 **Beskrivning**
-Detta diagram visar de olika aktörerna i systemet och de huvudsakliga funktionella mål (use cases) som de interagerar med. Det inkluderar roller som besökare, registrerad användare, fotograf, redaktör och systemets bakgrundsprocesser.
+Detta dokument innehåller två olika diagram som beskriver funktionaliteten och arkitekturen i projektet **ArvidsonFoto-MVC-NET-web**. Diagrammen är skapade för att ge en överblick av användningsfall och tekniska flöden i applikationen.
+
+Detta flödesschema visualiserar de olika aktörerna i systemet och deras interaktion med olika funktionella mål (use cases).
 
 ```mermaid
-%% UML Use-case diagram för ArvidsonFoto
-usecaseDiagram
-actor Besokare as Besökare
-actor "Registrerad användare" as RegUser
-actor Fotograf
-actor Redaktor as Redaktör
-actor System
+flowchart TD
+  subgraph Aktörer
+    A1[Besökare]
+    A2[Registrerad användare]
+    A3[Fotograf]
+    A4[Redaktör]
+    A5[System]
+  end
 
-Besökare --> (Visa galleri)
-Besökare --> (Sök / filtrera)
-Besökare --> (Visa bilddetaljer)
+  subgraph "Use cases"
+    UC1(Visa galleri)
+    UC2(Sök / filtrera)
+    UC3(Visa bilddetaljer)
+    UC4(Logga in)
+    UC5(Logga ut)
+    UC6(Ladda upp bild)
+    UC7(Kommentera bild)
+    UC8(Ladda ner bild)
+    UC9(Redigera metadata)
+    UC10(Ta bort bild)
+    UC11(Granska och publicera)
+    UC12(Generera thumbnails)
+    UC13(Indexera metadata)
+    UC14(Optimera bilder)
+  end
 
-RegUser --> (Logga in)
-RegUser --> (Logga ut)
-RegUser --> (Ladda upp bild)
-RegUser --> (Kommentera bild)
-RegUser --> (Ladda ner bild)
-RegUser --> (Redigera egen profil)
+  A1 --> UC1
+  A1 --> UC2
+  A1 --> UC3
 
-Fotograf --> (Ladda upp bild)
-Fotograf --> (Redigera metadata)
-Fotograf --> (Ta bort bild)
+  A2 --> UC4
+  A2 --> UC5
+  A2 --> UC6
+  A2 --> UC7
+  A2 --> UC8
 
-Redaktör --> (Granska och publicera)
-Redaktör --> (Hantera gallerier)
+  A3 --> UC6
+  A3 --> UC9
+  A3 --> UC10
 
-System --> (Generera thumbnails)
-System --> (Indexera metadata)
-System --> (Optimera bilder)
+  A4 --> UC11
 
-(Ladda upp bild) <-- RegUser
-(Ladda upp bild) <-- Fotograf
-(Granska och publicera) <-- Redaktör
-(Generera thumbnails) <-- System
-(Indexera metadata) <-- System
+  A5 --> UC12
+  A5 --> UC13
+  A5 --> UC14
 ```
 
 ### 2. Flödesschema: Bilduppladdning till Publicering
@@ -120,19 +132,19 @@ Detta diagram visar det tekniska flödet för en bilduppladdning, från använda
 
 ```mermaid
 flowchart LR
-  User[Registrerad användare / Fotograf] -->|Laddar upp bild via formulär| WebApp[ASP.NET MVC - Upload Controller]
-  WebApp -->|Validera & spara metadata| DB[(SQL Database)]
-  WebApp -->|Spara originalfil| Storage[(Fil-lagring / Blob)]
-  WebApp -->|Enqueue jobb| Queue[(Jobbkö / Background Queue)]
-  Queue --> Worker[Background worker / Image processor]
-  Worker -->|Generera thumbnails / olika storlekar| Storage
-  Worker -->|Optimera/konvertera bilder| Storage
-  Worker -->|Extrahera & uppdatera metadata (EXIF, taggar)| DB
-  Worker -->|Markera som publicerad / uppdatera status| DB
-  Worker -->|Pusha / uppdatera CDN cache| CDN[(CDN / Cache)]
-  Worker -->|Skicka notifikation (valfritt)| Notifier[Notifiering / E-post / UI-flagga]
-  WebApp -->|Visa publicerad bild via CDN| Visitor[Besökare / Sök etc.]
-  Storage -->|Servera bild| CDN
-  DB -->|Används för sökning & visning| WebApp
+User[Registrerad användare / Fotograf] -->|Laddar upp bild via formulär| WebApp[ASP.NET MVC - Upload Controller]
+WebApp -->|Validera och spara metadata| DB[SQL Database]
+WebApp -->|Spara originalfil| Storage[Fil-lagring eller Blob]
+WebApp -->|Enqueue jobb| Queue[Jobbkö eller Background Queue]
+Queue --> Worker[Background worker eller Image processor]
+Worker -->|Generera thumbnails och olika storlekar| Storage
+Worker -->|Optimera eller konvertera bilder| Storage
+Worker -->|Extrahera och uppdatera metadata, EXIF och taggar| DB
+Worker -->|Markera som publicerad eller uppdatera status| DB
+Worker -->|Pusha eller uppdatera CDN cache| CDN[CDN eller Cache]
+Worker -->|Skicka notifikation valfritt| Notifier[Notifiering eller E-post eller UI-flagga]
+WebApp -->|Visa publicerad bild via CDN| Visitor[Besökare eller Sök etc.]
+Storage -->|Servera bild| CDN
+DB -->|Används för sökning och visning| WebApp
 ```
 
