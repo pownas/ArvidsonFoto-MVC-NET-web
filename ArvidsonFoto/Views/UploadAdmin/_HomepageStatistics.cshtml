@@ -8,7 +8,19 @@
                                                               .ToList();
     List<TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false);
 
+    // Hämta data för de senaste 6 månaderna för grafen
+    Dictionary<string, int> monthlyPageViews = _pageCounterService.GetMonthlyPageViewsChart(6, false);
+    Dictionary<string, int> monthlyCategoryViews = _pageCounterService.GetMonthlyPageViewsChart(6, true);
+
 }
+
+<!-- Chart.js för sidvisningar per månad -->
+<div class="mb-4">
+    <h4>Sidvisningar senaste 6 månaderna</h4>
+    <div style="width: 100%; height: 400px;">
+        <canvas id="pageViewsChart"></canvas>
+    </div>
+</div>
 
 <h4>Sidvisningar per sida, denna månaden (@(DateTime.Now.ToString("yyyy-MM")))</h4>
 <table class="table table-striped table-dark">
@@ -51,3 +63,66 @@
         }
     </tbody>
 </table>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('pageViewsChart').getContext('2d');
+    
+    // Förbereda data för grafen
+    const pageViewsData = @Html.Raw(Json.Serialize(monthlyPageViews));
+    const categoryViewsData = @Html.Raw(Json.Serialize(monthlyCategoryViews));
+    
+    const months = Object.keys(pageViewsData);
+    const pageViews = Object.values(pageViewsData);
+    const categoryViews = Object.values(categoryViewsData);
+    
+    // Formatera månadslabels för bättre visning
+    const monthLabels = months.map(month => {
+        const date = new Date(month + '-01');
+        return date.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short' });
+    });
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Sidvisningar',
+                data: pageViews,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }, {
+                label: 'Kategorivisningar',
+                data: categoryViews,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Sidvisningar per månad (senaste 6 månaderna)'
+                },
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+});
+</script>
