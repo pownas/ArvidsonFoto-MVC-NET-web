@@ -49,7 +49,9 @@
                 @foreach (var news in (List<TblNews>)ViewBag.LatestNews)
                 {
                     <div class="col mb-3">
-                        <div class="card h-100">
+                        <div class="card h-100 news-card" onclick="location.href='/Nyheter/@news.NewsId'" role="button" tabindex="0" 
+                             onkeydown="if(event.key==='Enter'||event.key===' '){location.href='/Nyheter/@news.NewsId'}" 
+                             aria-label="Läs artikeln: @news.NewsTitle">
                             <div class="card-body">
                                 <h6 class="card-title">@news.NewsTitle</h6>
                                 <p class="card-text small">
@@ -65,7 +67,7 @@
                                 <small class="text-muted">@news.NewsCreated?.ToString("yyyy-MM-dd")</small>
                             </div>
                             <div class="card-footer p-2">
-                                <a href="/Nyheter/@news.NewsId" class="btn btn-sm btn-outline-primary">Läs mer</a>
+                                <span class="btn btn-sm btn-outline-light">Läs mer <i class="bi bi-arrow-right"></i></span>
                             </div>
                         </div>
                     </div>
