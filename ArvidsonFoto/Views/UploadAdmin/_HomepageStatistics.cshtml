@@ -84,45 +84,67 @@ document.addEventListener('DOMContentLoaded', function() {
         return date.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short' });
     });
     
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: monthLabels,
-            datasets: [{
-                label: 'Sidvisningar',
-                data: pageViews,
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1
-            }, {
-                label: 'Kategorivisningar',
-                data: categoryViews,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
+    // Kontrollera om Chart.js har laddats
+    if (typeof Chart !== 'undefined') {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Sidvisningar',
+                    data: pageViews,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }, {
+                    label: 'Kategorivisningar',
+                    data: categoryViews,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Sidvisningar per månad (senaste 6 månaderna)'
+                    },
+                    legend: {
+                        display: true
                     }
                 }
-            },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Sidvisningar per månad (senaste 6 månaderna)'
-                },
-                legend: {
-                    display: true
-                }
             }
-        }
-    });
+        });
+    } else {
+        // Fallback: visa data i tabellformat om Chart.js inte kan laddas
+        const canvas = document.getElementById('pageViewsChart');
+        const fallbackDiv = document.createElement('div');
+        fallbackDiv.className = 'alert alert-info';
+        fallbackDiv.innerHTML = `
+            <h5>Månadsvis statistik (Chart.js kunde inte laddas)</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr><th>Månad</th><th>Sidvisningar</th><th>Kategorivisningar</th></tr>
+                </thead>
+                <tbody>
+                    ${monthLabels.map((label, i) => 
+                        `<tr><td>${label}</td><td>${pageViews[i]}</td><td>${categoryViews[i]}</td></tr>`
+                    ).join('')}
+                </tbody>
+            </table>
+        `;
+        canvas.parentNode.replaceChild(fallbackDiv, canvas);
+    }
 });
 </script>
