@@ -62,3 +62,77 @@ dotnet dev-certs https --trust
 
 ## Systemdokumentation
 ![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
+
+## Diagram och Beskrivningar
+
+Detta dokument innehåller två olika diagram som beskriver funktionaliteten och arkitekturen i projektet **ArvidsonFoto-MVC-NET-web**. Diagrammen är skapade för att ge en överblick av användningsfall och tekniska flöden i applikationen.
+
+---
+
+### 1. UML Use-case Diagram
+
+**Beskrivning**
+Detta diagram visar de olika aktörerna i systemet och de huvudsakliga funktionella mål (use cases) som de interagerar med. Det inkluderar roller som besökare, registrerad användare, fotograf, redaktör och systemets bakgrundsprocesser.
+
+```mermaid
+%% UML Use-case diagram för ArvidsonFoto
+usecaseDiagram
+actor Besokare as Besökare
+actor "Registrerad användare" as RegUser
+actor Fotograf
+actor Redaktor as Redaktör
+actor System
+
+Besökare --> (Visa galleri)
+Besökare --> (Sök / filtrera)
+Besökare --> (Visa bilddetaljer)
+
+RegUser --> (Logga in)
+RegUser --> (Logga ut)
+RegUser --> (Ladda upp bild)
+RegUser --> (Kommentera bild)
+RegUser --> (Ladda ner bild)
+RegUser --> (Redigera egen profil)
+
+Fotograf --> (Ladda upp bild)
+Fotograf --> (Redigera metadata)
+Fotograf --> (Ta bort bild)
+
+Redaktör --> (Granska och publicera)
+Redaktör --> (Hantera gallerier)
+
+System --> (Generera thumbnails)
+System --> (Indexera metadata)
+System --> (Optimera bilder)
+
+(Ladda upp bild) <-- RegUser
+(Ladda upp bild) <-- Fotograf
+(Granska och publicera) <-- Redaktör
+(Generera thumbnails) <-- System
+(Indexera metadata) <-- System
+```
+
+### 2. Flödesschema: Bilduppladdning till Publicering
+
+**Beskrivning**
+
+Detta diagram visar det tekniska flödet för en bilduppladdning, från användarens gränssnitt till lagring och bearbetning i bakgrunden, och slutligen publicering och visning via CDN. Flödet innefattar steg som validering, lagring, jobbköer och bakgrundsprocesser.
+
+```mermaid
+flowchart LR
+  User[Registrerad användare / Fotograf] -->|Laddar upp bild via formulär| WebApp[ASP.NET MVC - Upload Controller]
+  WebApp -->|Validera & spara metadata| DB[(SQL Database)]
+  WebApp -->|Spara originalfil| Storage[(Fil-lagring / Blob)]
+  WebApp -->|Enqueue jobb| Queue[(Jobbkö / Background Queue)]
+  Queue --> Worker[Background worker / Image processor]
+  Worker -->|Generera thumbnails / olika storlekar| Storage
+  Worker -->|Optimera/konvertera bilder| Storage
+  Worker -->|Extrahera & uppdatera metadata (EXIF, taggar)| DB
+  Worker -->|Markera som publicerad / uppdatera status| DB
+  Worker -->|Pusha / uppdatera CDN cache| CDN[(CDN / Cache)]
+  Worker -->|Skicka notifikation (valfritt)| Notifier[Notifiering / E-post / UI-flagga]
+  WebApp -->|Visa publicerad bild via CDN| Visitor[Besökare / Sök etc.]
+  Storage -->|Servera bild| CDN
+  DB -->|Används för sökning & visning| WebApp
+```
+
