@@ -276,7 +276,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         }
 
         // Find the existing image in the database
-        var existingImage = entityContext.TblImages.Find(image.ImageId);
+        var existingImage = entityContext.TblImages.FirstOrDefault(x => x.ImageId == image.ImageId);
         if (existingImage == null)
         {
             return false; // Image not found
@@ -285,8 +285,13 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         // Update the image properties
         existingImage.ImageMainFamilyId = image.ImageHuvudfamilj;
         existingImage.ImageFamilyId = image.ImageFamilj;
-        //existingImage.ImageHuvudfamiljNamn = image.ImageHuvudfamiljNamn;
-        //existingImage.ImageFamiljNamn = image.ImageFamiljNamn;
+        existingImage.ImageDescription = image.ImageDescription;
+        existingImage.ImageDate = image.ImageDate;
+        existingImage.ImageCategoryId = image.ImageArt;
+        existingImage.ImageUpdate = DateTime.Now;
+        existingImage.ImageUrlName = image.ImageUrl;
+        existingImage.Name = image.ImageArtNamn;
+        //TODO: Kanske uppdatera fler fält om det behövs
 
         // Save changes to the database
         entityContext.SaveChanges();
