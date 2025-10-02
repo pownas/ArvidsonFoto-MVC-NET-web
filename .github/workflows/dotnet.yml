@@ -74,9 +74,9 @@ jobs:
 
     - name: Update database (EF Core migrations)
       run: |
-        dotnet ef database update \
-          --project ./ArvidsonFoto/ArvidsonFoto.csproj \
-          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj \
+        dotnet ef database update `
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
           --configuration Release
 
     - name: Test
