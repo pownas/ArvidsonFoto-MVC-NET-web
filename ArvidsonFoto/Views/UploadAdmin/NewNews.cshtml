@@ -1,0 +1,82 @@
+@*<!-- UploadAdmin-NewNews -->*@
+@model NewsInputModel
+
+<div class="row">
+    <div class="col-12">
+        <h2><i class="bi bi-plus"></i> @ViewData["Title"]</h2>
+        
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/UploadAdmin">Admin</a></li>
+                <li class="breadcrumb-item"><a href="/UploadAdmin/Nyheter">Nyheter</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Ny artikel</li>
+            </ol>
+        </nav>
+
+        <form class="form-horizontal" asp-action="CreateNews" method="post">
+            <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+            
+            @if (Model.DisplayErrorPublish)
+            {
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Något gick fel när nyhetsartikeln skulle sparas...
+                </div>
+            }
+            
+            @if (Model.NewsCreated)
+            {
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i>
+                    Nyhetsartikeln har skapats!
+                </div>
+            }
+
+            <div class="form-group mb-3">
+                <label asp-for="NewsTitle" class="form-label">Titel</label>
+                <input asp-for="NewsTitle" class="form-control" placeholder="Ange titel för nyhetsartikeln" />
+                <span asp-validation-for="NewsTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NewsAuthor" class="form-label">Författare</label>
+                <input asp-for="NewsAuthor" class="form-control" placeholder="Ange författarens namn" />
+                <span asp-validation-for="NewsAuthor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NewsSummary" class="form-label">Sammanfattning (valfritt)</label>
+                <textarea asp-for="NewsSummary" class="form-control" rows="3" placeholder="En kort sammanfattning av artikeln"></textarea>
+                <span asp-validation-for="NewsSummary" class="text-danger"></span>
+                <small class="form-text text-muted">Detta visas som förhandsvisning i nyhetsflödet.</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NewsContent" class="form-label">Innehåll</label>
+                <textarea asp-for="NewsContent" class="form-control" rows="10" placeholder="Ange innehållet för nyhetsartikeln (HTML tillåts)"></textarea>
+                <span asp-validation-for="NewsContent" class="text-danger"></span>
+                <small class="form-text text-muted">Du kan använda HTML-taggar för formatering.</small>
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="NewsPublished" class="form-check-input" type="checkbox" />
+                <label asp-for="NewsPublished" class="form-check-label">
+                    Publicera direkt
+                </label>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-save"></i> Spara nyhetsartikel
+                </button>
+                <a href="/UploadAdmin/Nyheter" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Tillbaka
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -20,6 +20,7 @@ public partial class ArvidsonFotoDbContext : DbContext
     public virtual DbSet<TblImage> TblImages { get; set; } = null!;
     public virtual DbSet<TblMenu> TblMenus { get; set; } = null!;
     public virtual DbSet<TblPageCounter> TblPageCounter { get; set; } = null!;
+    public virtual DbSet<TblNews> TblNews { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -155,6 +156,45 @@ public partial class ArvidsonFotoDbContext : DbContext
 
             entity.Property(e => e.CategoryId)
                 .HasColumnName("PageCounter_CategoryId");
+
+            entity.HasKey("Id");
+        });
+
+        modelBuilder.Entity<TblNews>(entity =>
+        {
+            entity.ToTable("tbl_news");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+
+            entity.Property(e => e.NewsId)
+                .HasColumnName("news_ID");
+
+            entity.Property(e => e.NewsTitle)
+                .HasMaxLength(200)
+                .HasColumnName("news_title");
+
+            entity.Property(e => e.NewsContent)
+                .HasColumnName("news_content");
+
+            entity.Property(e => e.NewsAuthor)
+                .HasMaxLength(100)
+                .HasColumnName("news_author");
+
+            entity.Property(e => e.NewsCreated)
+                .HasColumnType("datetime")
+                .HasColumnName("news_created");
+
+            entity.Property(e => e.NewsUpdated)
+                .HasColumnType("datetime")
+                .HasColumnName("news_updated");
+
+            entity.Property(e => e.NewsPublished)
+                .HasColumnType("bit")
+                .HasColumnName("news_published");
+
+            entity.Property(e => e.NewsSummary)
+                .HasMaxLength(500)
+                .HasColumnName("news_summary");
 
             entity.HasKey("Id");
         });
