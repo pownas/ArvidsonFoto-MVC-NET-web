@@ -76,7 +76,7 @@ jobs:
       run: |
         dotnet ef database update `
           --project ./ArvidsonFoto/ArvidsonFoto.csproj `
-          --context ArvidsonFotoCoreDbContext
+          --context ArvidsonFotoCoreDbContext `
           --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
           --configuration Release
       continue-on-error: true
@@ -85,7 +85,7 @@ jobs:
       run: |
         dotnet ef database update `
           --project ./ArvidsonFoto/ArvidsonFoto.csproj `
-          --context ArvidsonFotoDbContext
+          --context ArvidsonFotoDbContext `
           --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
           --configuration Release
       continue-on-error: true
