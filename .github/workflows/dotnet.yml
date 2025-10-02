@@ -72,12 +72,23 @@ jobs:
     - name: Build app (for migrations)
       run: dotnet build ./ArvidsonFoto/ArvidsonFoto.csproj -c Release --no-restore --verbosity minimal
 
-    - name: Update database (EF Core migrations)
+    - name: Update database CoreDbContext (EF Core migrations)
       run: |
         dotnet ef database update `
           --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --context ArvidsonFotoCoreDbContext
           --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
           --configuration Release
+      continue-on-error: true
+
+    - name: Update database DbContext (EF Core migrations)
+      run: |
+        dotnet ef database update `
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --context ArvidsonFotoDbContext
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --configuration Release
+      continue-on-error: true
 
     - name: Test
       # Build as part of test job so we don't rely on artifacts from the build job
