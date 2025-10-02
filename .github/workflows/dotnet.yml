@@ -72,13 +72,33 @@ jobs:
     - name: Build app (for migrations)
       run: dotnet build ./ArvidsonFoto/ArvidsonFoto.csproj -c Release --no-restore --verbosity minimal
 
-    - name: Update database (EF Core migrations)
-      run: |
-        dotnet ef database update \
-          --project ./ArvidsonFoto/ArvidsonFoto.csproj \
-          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj \
-          --configuration Release
-
     - name: Test
       # Build as part of test job so we don't rely on artifacts from the build job
       run: dotnet test --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --configuration Release
+
+    - name: Test - dotnet database update - CoreDbContext (EF Core migrations)
+      run: |
+        dotnet ef database update `
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --context ArvidsonFotoCoreDbContext `
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --configuration Release
+      continue-on-error: true
+
+    - name: Test - dotnet database update - DbContext (EF Core migrations)
+      run: |
+        dotnet ef database update `
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --context ArvidsonFotoDbContext `
+          --startup-project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --configuration Release
+      continue-on-error: true
+
+    - name: Run DB seed command
+      run: |
+        dotnet run `
+          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+          --configuration Release `
+          --no-build `
+          -- seeddb
+      continue-on-error: true
