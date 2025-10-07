@@ -44,3 +44,46 @@
         </div>
     </div>
 }
+
+@* News Section with Divider *@
+@if (ViewBag.LatestNews != null && ((List<TblNews>)ViewBag.LatestNews).Count > 0)
+{
+    <hr class="my-5" style="border-top: 2px solid #dee2e6;" />
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3><i class="bi bi-newspaper"></i> Nyheter</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                @foreach (var news in (List<TblNews>)ViewBag.LatestNews)
+                {
+                    <div class="col mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">@news.NewsTitle</h6>
+                                <p class="card-text small">
+                                    @if (!string.IsNullOrEmpty(news.NewsSummary))
+                                    {
+                                        @news.NewsSummary
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(news.NewsContent.Length > 100 ? news.NewsContent.Substring(0, 100) + "..." : news.NewsContent)
+                                    }
+                                </p>
+                                <small class="text-muted">@news.NewsCreated?.ToString("yyyy-MM-dd")</small>
+                            </div>
+                            <div class="card-footer p-2">
+                                <a href="/Nyheter/@news.NewsId" class="btn btn-sm btn-outline-primary">Läs mer</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="text-center">
+                <a href="/Nyheter" class="btn btn-primary">
+                    <i class="bi bi-newspaper"></i> Visa alla nyheter
+                </a>
+            </div>
+        </div>
+    </div>
+}

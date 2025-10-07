@@ -8,6 +8,7 @@ namespace ArvidsonFoto.Controllers;
 public class HomeController(ArvidsonFotoDbContext context) : Controller
 {
     internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    internal INewsService _newsService = new NewsService(context);
 
     public IActionResult Index()
     {
@@ -15,6 +16,7 @@ public class HomeController(ArvidsonFotoDbContext context) : Controller
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
         var viewModel = new GalleryViewModel();
+        ViewBag.LatestNews = _newsService.GetLatestPublished(3); // Get 3 latest news for home page
         return View(viewModel);
     }
 

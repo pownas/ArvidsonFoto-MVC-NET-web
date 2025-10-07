@@ -1,0 +1,66 @@
+@*<!-- News-Article -->*@
+@model NewsViewModel
+
+@section MetaData {
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="@Model.SelectedNews?.NewsSummary" />
+    <link rel="canonical" href="https://ArvidsonFoto.se/Nyheter/@Model.SelectedNews?.NewsId" />
+}
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/Nyheter">Nyheter</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.SelectedNews?.NewsTitle</li>
+    </ol>
+</nav>
+
+<div id="page-content" class="brodtext">
+    @if (Model.SelectedNews != null)
+    {
+        <article>
+            <header>
+                <h1>@Model.SelectedNews.NewsTitle</h1>
+                <div class="text-muted mb-3">
+                    <small>
+                        <i class="bi bi-calendar"></i> @Model.SelectedNews.NewsCreated?.ToString("yyyy-MM-dd HH:mm")
+                        <i class="bi bi-person ms-2"></i> @Model.SelectedNews.NewsAuthor
+                        @if (Model.SelectedNews.NewsUpdated != Model.SelectedNews.NewsCreated)
+                        {
+                            <span class="ms-2">
+                                <i class="bi bi-pencil"></i> Uppdaterad: @Model.SelectedNews.NewsUpdated?.ToString("yyyy-MM-dd HH:mm")
+                            </span>
+                        }
+                    </small>
+                </div>
+            </header>
+            
+            @if (!string.IsNullOrEmpty(Model.SelectedNews.NewsSummary))
+            {
+                <div class="alert alert-light" role="alert">
+                    <strong>Sammanfattning:</strong> @Model.SelectedNews.NewsSummary
+                </div>
+            }
+
+            <div class="news-content">
+                @Html.Raw(Model.SelectedNews.NewsContent)
+            </div>
+        </article>
+
+        <div class="mt-4">
+            <a href="/Nyheter" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Tillbaka till nyheter
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            Artikeln kunde inte hittas.
+        </div>
+        <a href="/Nyheter" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Tillbaka till nyheter
+        </a>
+    }
+</div>
