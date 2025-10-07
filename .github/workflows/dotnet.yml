@@ -46,7 +46,7 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: GithubActions
 
     steps:
     - name: Checkout
@@ -94,11 +94,13 @@ jobs:
           --configuration Release
       continue-on-error: true
 
-    - name: Run DB seed command
-      run: |
-        dotnet run `
-          --project ./ArvidsonFoto/ArvidsonFoto.csproj `
-          --configuration Release `
-          --no-build `
-          -- seeddb
-      continue-on-error: true
+    # Uncomment the following to run the DB seed command as part of the test job 
+    ### -- Tog dock 6 timmar att köra denna senast, sedan timeout
+    # - name: Run DB seed command
+    #   run: |
+    #     dotnet run `
+    #       --project ./ArvidsonFoto/ArvidsonFoto.csproj `
+    #       --configuration Release `
+    #       --no-build `
+    #       -- seeddb
+    #   continue-on-error: true
