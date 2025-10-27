@@ -3,6 +3,32 @@
 
 // Write your JavaScript code.
 
+// Dark mode toggle functionality
+(function () {
+    // Check if user has a dark mode preference
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    if (darkModeToggle) {
+        // Load saved preference from localStorage
+        const savedDarkMode = localStorage.getItem('darker-mode');
+        if (savedDarkMode === 'enabled') {
+            document.body.classList.add('darker-mode');
+        }
+
+        // Toggle dark mode on click
+        darkModeToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.body.classList.toggle('darker-mode');
+
+            // Save preference to localStorage
+            if (document.body.classList.contains('darker-mode')) {
+                localStorage.setItem('darker-mode', 'enabled');
+            } else {
+                localStorage.setItem('darker-mode', 'disabled');
+            }
+        });
+    }
+})();
 
 // <!-- Google analytics START -->
 var _gaq = _gaq || [];

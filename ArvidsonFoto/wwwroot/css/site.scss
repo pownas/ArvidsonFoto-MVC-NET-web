@@ -100,6 +100,16 @@ body {
     color: #ddd;
 }
 
+/* Dark/Darker mode - Kolsvart (coal black) theme */
+body.darker-mode {
+    background-color: #000;
+    color: #ddd;
+}
+
+body.darker-mode header {
+    background-color: #000;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
