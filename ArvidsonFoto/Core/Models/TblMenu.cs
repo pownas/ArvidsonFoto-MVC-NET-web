@@ -26,6 +26,11 @@ public partial class TblMenu()
     //[JsonPropertyName("menu_text")] // ColumnName in database
     public string? MenuDisplayName { get; set; } = string.Empty;
     
+    /// <summary> Engelskt namn för menyn, används för att visa i UI. </summary>
+    /// <remarks> Exempel: "Blue Tit" </remarks>
+    /// <example>Blue Tit</example>
+    public string? MenuDisplayNameEn { get; set; } = string.Empty;
+    
     //public string MenuEngtext { get; set; }
 
     /// <summary> URL text för menyn, används för att skapa sökvänliga URL:er. </summary>
@@ -33,6 +38,11 @@ public partial class TblMenu()
     /// <example>blames</example>
     //[JsonPropertyName("menu_URLtext")] // ColumnName in database
     public string? MenuUrlSegment { get; set; } = string.Empty;
+
+    /// <summary> URL text för menyn på engelska, används för att skapa sökvänliga URL:er. </summary>
+    /// <remarks> Exempel: "blue-tit" </remarks>
+    /// <example>blue-tit</example>
+    public string? MenuUrlSegmentEn { get; set; } = string.Empty;
 
     /// <summary> Datumen då menyn uppdaterades senast. </summary>
     //[JsonPropertyName("menu_dateUpdated")] // ColumnName in database

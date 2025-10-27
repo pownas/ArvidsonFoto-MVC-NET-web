@@ -33,11 +33,21 @@ public partial class TblMenu()
     public string MenuText { get; set; }
 
     /// <summary>
+    /// Meny text (namn på kategorin, ex. "Doves") på engelska
+    /// </summary>
+    public string MenuTextEn { get; set; }
+
+    /// <summary>
     /// Url text (namn på kategorin när den anropas via en Url, använd INTE ÅÄÖ, ex. "Duvor")
     /// </summary>
     /// <remarks>
     /// Här ska INTE ÅÄÖ användas. T.ex. "Tradkrypare"
     /// </remarks>
     public string MenuUrltext { get; set; }
+
+    /// <summary>
+    /// Url text (namn på kategorin när den anropas via en Url) på engelska
+    /// </summary>
+    public string MenuUrltextEn { get; set; }
     //public string MenuEngtext { get; set; }
 }

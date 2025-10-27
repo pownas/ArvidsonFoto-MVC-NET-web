@@ -50,6 +50,11 @@ public partial class TblImage()
     public string ImageDescription { get; set; }
 
     /// <summary>
+    /// Bildens beskrivning på engelska
+    /// </summary>
+    public string ImageDescriptionEn { get; set; }
+
+    /// <summary>
     /// Bildens uppdateringsdatum (när bilden laddades upp)
     /// </summary>
     public DateTime ImageUpdate { get; set; }
