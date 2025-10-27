@@ -2,6 +2,11 @@
 
 # ArvidsonFoto-MVC .NET web
 Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9... osv. till senaste .NET)
+
+## English Language Support / Engelskt språkstöd
+The application now supports bilingual content (Swedish/English). See [English Language Support Documentation](docs/ENGLISH_LANGUAGE_SUPPORT.md) for details.
+
+Applikationen stöder nu tvåspråkigt innehåll (Svenska/Engelska). Se [dokumentation för engelskt språkstöd](docs/ENGLISH_LANGUAGE_SUPPORT.md) för detaljer.
   
   
 ## Instruktion för att starta webbsidan lokalt
