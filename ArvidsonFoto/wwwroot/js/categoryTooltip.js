@@ -82,7 +82,7 @@
         $links.each(function () {
             var $link = $(this);
             var categoryId = $link.data('category-id');
-            var hoverTimer = null;
+            var hoverTimer = null; // Timer specific to this link
 
             if (!categoryId) {
                 return; // Skip if no category ID
@@ -102,7 +102,10 @@
             $link.on('mouseenter', function () {
                 var $currentLink = $(this);
                 
-                // Clear any existing timer
+                // Hide any other visible popovers first
+                $links.not($currentLink).popover('hide');
+                
+                // Clear any existing timer for this link
                 if (hoverTimer) {
                     clearTimeout(hoverTimer);
                 }
@@ -140,7 +143,7 @@
             $link.on('mouseleave', function () {
                 var $currentLink = $(this);
                 
-                // Clear timer
+                // Clear timer for this link
                 if (hoverTimer) {
                     clearTimeout(hoverTimer);
                     hoverTimer = null;
