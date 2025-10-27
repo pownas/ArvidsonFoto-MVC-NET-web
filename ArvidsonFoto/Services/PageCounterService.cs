@@ -149,7 +149,7 @@ public class PageCounterService : IPageCounterService
             
             var monthlyViews = _entityContext.TblPageCounter
                                             .Where(p => p.MonthViewed.Equals(yearMonth) && p.PicturePage == picturePage)
-                                            .Sum(p => (int?)p.PageViews) ?? 0; // Handle null case
+                                            .Sum(p => p.PageViews);
             
             result[yearMonth] = monthlyViews;
         }
