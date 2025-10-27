@@ -74,6 +74,22 @@
     }
 
     /**
+     * Creates popover configuration object
+     * @param {string} content - The HTML content for the popover
+     * @returns {Object} - Popover configuration object
+     */
+    function getPopoverConfig(content) {
+        return {
+            trigger: 'manual',
+            html: true,
+            placement: 'right',
+            container: 'body',
+            content: content,
+            template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
+        };
+    }
+
+    /**
      * Initializes popovers for category links
      */
     function initializeCategoryTooltips() {
@@ -89,14 +105,8 @@
             }
 
             // Initialize popover with placeholder content
-            $link.popover({
-                trigger: 'manual',
-                html: true,
-                placement: 'right',
-                container: 'body',
-                content: '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> Laddar...</div>',
-                template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
-            });
+            var loadingContent = '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> Laddar...</div>';
+            $link.popover(getPopoverConfig(loadingContent));
 
             // Mouse enter event - start timer
             $link.on('mouseenter', function () {
@@ -123,14 +133,7 @@
                         // Update popover if still visible
                         if ($currentLink.attr('aria-describedby')) {
                             $currentLink.popover('dispose');
-                            $currentLink.popover({
-                                trigger: 'manual',
-                                html: true,
-                                placement: 'right',
-                                container: 'body',
-                                content: content,
-                                template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
-                            });
+                            $currentLink.popover(getPopoverConfig(content));
                             $currentLink.popover('show');
                         }
                     });
