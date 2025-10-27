@@ -10,18 +10,22 @@
     string GetPopoverAttributes(TblMenu category, string imagePath)
     {
         var image = _imageService.GetOneImageFromCategory(category.MenuId);
-        if (image == null)
+        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrl))
         {
             return "";
         }
         
-        string imageUrl = imagePath + "/" + image.ImageUrl + ".thumb.jpg";
-        string popoverContent = $"<div class='category-tooltip'><img src='{imageUrl}' alt='{category.MenuText}' class='img-fluid' /><div class='category-name'>{category.MenuText}</div></div>";
+        // Sanitize the image URL to prevent path traversal
+        string safeImageUrl = image.ImageUrl.Replace("..", "").Replace("\\", "/");
         
-        // HTML encode the content for the data attribute
-        string encodedContent = WebUtility.HtmlEncode(popoverContent);
+        string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
         
-        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{encodedContent}\" data-placement=\"right\"";
+        // Build the popover content - escape the values but not the HTML structure
+        string escapedCategoryName = WebUtility.HtmlEncode(category.MenuText);
+        string escapedImageUrl = WebUtility.HtmlAttributeEncode(imageUrl);
+        string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
+        
+        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlAttributeEncode(popoverContent)}\" data-placement=\"right\"";
     }
 }
 <nav class="main-nav">
