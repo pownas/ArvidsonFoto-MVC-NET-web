@@ -16,6 +16,9 @@ public class TblPageCounter()
     /// <summary> Sidans namn </summary>
     public string PageName { get; set; }
 
+    /// <summary> Sidans namn på engelska </summary>
+    public string PageNameEn { get; set; }
+
     /// <summary> Categori Id som uppdateras </summary>
     public int CategoryId { get; set; }
 

@@ -22,6 +22,11 @@ public partial class TblGb()
     public string GbName { get; set; }
 
     /// <summary>
+    /// Gästboksinläggets titel/rubrik på engelska
+    /// </summary>
+    public string GbNameEn { get; set; }
+
+    /// <summary>
     /// Inläggets avsändares e-postadress
     /// </summary>
     public string GbEmail { get; set; }
@@ -35,6 +40,11 @@ public partial class TblGb()
     /// Inläggets text
     /// </summary>
     public string GbText { get; set; }
+
+    /// <summary>
+    /// Inläggets text på engelska
+    /// </summary>
+    public string GbTextEn { get; set; }
 
     /// <summary>
     /// Inläggets datum
