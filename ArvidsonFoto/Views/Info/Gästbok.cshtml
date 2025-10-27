@@ -3,7 +3,7 @@
 
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok." />
+    <meta name="description" content="@Localizer["MetaDescription"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se/Info/GB" />
 }
 
@@ -26,47 +26,47 @@
     <form class="form-horizontal" asp-action="@(nameof(InfoController.PostToGb))" method="post">
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
         @if (Model!.DisplayErrorPublish)
-        {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
+        {<div class="ml-3"><p class="badge badge-danger">@Localizer["ErrorSending"]</p></div>}
         @if (Model.DisplayPublished)
-        {<div class="ml-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
+        {<div class="ml-3"><p class="badge badge-success">@Localizer["MessageSent"]</p></div>}
         <div class="form-row">
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Name" class="ml-2 control-label">Namn</label>
+                <label asp-for="Name" class="ml-2 control-label">@Localizer["Name"]</label>
                 <div>
-                    <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)">
+                    <input asp-for="Name" type="text" class="form-control" placeholder="@Localizer["NamePlaceholder"]">
                     <span asp-validation-for="Name" class="ml-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Email" class="ml-2 control-label">Epost</label>
+                <label asp-for="Email" class="ml-2 control-label">@Localizer["Email"]</label>
                 <div>
-                    <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="@Localizer["EmailPlaceholder"]">
                     <span asp-validation-for="Email" class="ml-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Homepage" class="ml-2 control-label">Hemsida</label>
+                <label asp-for="Homepage" class="ml-2 control-label">@Localizer["Homepage"]</label>
                 <div>
-                    <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)">
+                    <input asp-for="Homepage" type="url" class="form-control" placeholder="@Localizer["HomepagePlaceholder"]">
                     <span asp-validation-for="Homepage" class="ml-2"></span>
                 </div>
                 <div class="ml-2 mt-1">
                     <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive">
                 </div>
-                <label asp-for="Code" class="ml-2 control-label">Ange siffrorna från bilden</label>
+                <label asp-for="Code" class="ml-2 control-label">@Localizer["EnterNumbers"]</label>
                 <div>
-                    <input asp-for="Code" class="form-control" placeholder="Siffror">
+                    <input asp-for="Code" class="form-control" placeholder="@Localizer["NumbersPlaceholder"]">
                     <span asp-validation-for="Code" class="ml-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Message" class="ml-2 control-label">Meddelande</label>
+                <label asp-for="Message" class="ml-2 control-label">@Localizer["Message"]</label>
                 <div>
-                    <textarea asp-for="Message" class="form-control" placeholder="Meddelande" rows="5"></textarea>
+                    <textarea asp-for="Message" class="form-control" placeholder="@Localizer["MessagePlaceholder"]" rows="5"></textarea>
                     <span asp-validation-for="Message"></span>
                 </div>
                 <div class="text-right mt-2">
-                    <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark">Skicka inlägget</button>
+                    <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark">@Localizer["SubmitPost"]</button>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                             @if (gbPost.GbName is not null)
                             {@gbPost.GbName}
                         else
-                        {@("Anonym användare")}
+                        {@Localizer["AnonymousUser"]}
                         </div>
                         <div class="card-body">
                             <p class="card-text text-dark">
