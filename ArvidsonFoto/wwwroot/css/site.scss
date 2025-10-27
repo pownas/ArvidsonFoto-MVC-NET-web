@@ -197,4 +197,45 @@ body {
     .thumb-img-startpage { min-width: 2.5rem; }
     .thumb-img-gallery{ min-width: 2.5rem; }
 }
+
+/* Category Tooltip Popover Styles */
+.category-tooltip-popover {
+    max-width: 350px;
+    
+    .popover-body {
+        padding: 0.5rem;
+        background-color: #333;
+        color: #ddd;
+        
+        img {
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+    }
+    
+    &.bs-popover-right .arrow::after {
+        border-right-color: #333;
+    }
+    
+    &.bs-popover-left .arrow::after {
+        border-left-color: #333;
+    }
+    
+    &.bs-popover-top .arrow::after {
+        border-top-color: #333;
+    }
+    
+    &.bs-popover-bottom .arrow::after {
+        border-bottom-color: #333;
+    }
+}
+
+.category-tooltip-content {
+    text-align: center;
+    
+    .spinner-border {
+        color: #0078ff;
+    }
+}
+
 /* -------- End Gallery-fix på mobil ------------ */
