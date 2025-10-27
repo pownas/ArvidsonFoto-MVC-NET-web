@@ -117,23 +117,21 @@
 
                     // Fetch and update content
                     fetchCategoryImage(categoryId).then(function (imageData) {
-                        if (imageData) {
-                            var content = generatePopoverContent(imageData);
-                            $currentLink.attr('data-content', content);
-                            
-                            // Update popover if still visible
-                            if ($currentLink.attr('aria-describedby')) {
-                                $currentLink.popover('dispose');
-                                $currentLink.popover({
-                                    trigger: 'manual',
-                                    html: true,
-                                    placement: 'right',
-                                    container: 'body',
-                                    content: content,
-                                    template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
-                                });
-                                $currentLink.popover('show');
-                            }
+                        var content = generatePopoverContent(imageData);
+                        $currentLink.attr('data-content', content);
+                        
+                        // Update popover if still visible
+                        if ($currentLink.attr('aria-describedby')) {
+                            $currentLink.popover('dispose');
+                            $currentLink.popover({
+                                trigger: 'manual',
+                                html: true,
+                                placement: 'right',
+                                container: 'body',
+                                content: content,
+                                template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
+                            });
+                            $currentLink.popover('show');
                         }
                     });
                 }, config.delay);
