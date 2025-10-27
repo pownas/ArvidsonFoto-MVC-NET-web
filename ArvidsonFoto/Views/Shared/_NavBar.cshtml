@@ -7,7 +7,7 @@
 <nav class="main-nav">
     <input id="main-menu-state" type="checkbox" />@* Hamburger-meny knappen skrivs ut här:  *@
     <label class="main-menu-btn" for="main-menu-state">
-        <span class="main-menu-btn-icon"></span> Växla menyns synlighet
+        <span class="main-menu-btn-icon"></span> @Localizer["ToggleNavigation"]
     </label>
     <h1 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h1>
     <ul id="main-menu" class="sm sm-mint">
@@ -16,11 +16,11 @@
         </li>
         @* Den synliga menyn börjar här *@
         <li class="pr-1">
-            <a href="./Senast">Senast</a>
+            <a href="./Senast">@Localizer["Latest"]</a>
             <ul>
-                <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
-                <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> Uppladdad</a></li>
-                <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> Per kategori</a></li>
+                <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> @Localizer["Photographed"]</a></li>
+                <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> @Localizer["Uploaded"]</a></li>
+                <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> @Localizer["PerCategory"]</a></li>
                 @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
             </ul>
         </li>
@@ -100,24 +100,27 @@ else
 }
         }
         <li class="pr-1">
-            <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
+            <a href="./Info"><i class="bi bi-info-circle"></i> @Localizer["Info"] </a>
             <ul>
                 @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
                 <li class="divider"></li>  <!-- Kräver inloggning --> *@
-                <li><a href="./Info/Köp_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
+                <li><a href="./Info/Köp_av_bilder"><i class="bi bi-cart3"></i> @Localizer["BuyImages"]</a></li>
                 @*<li><a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-                <li><a href="./Info/Gästbok"><i class="bi bi-book"></i> Gästbok</a></li>
+                <li><a href="./Info/Gästbok"><i class="bi bi-book"></i> @Localizer["Guestbook"]</a></li>
                 <li class="divider"></li>
                 @*<li class="disabled"><a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-                <li><a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
-                <li><a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
+                <li><a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> @Localizer["ContactInfo"]</a></li>
+                <li><a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> @Localizer["AboutMe"]</a></li>
                 <li class="divider"></li>
-                <li><a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
-                <li><a href="./Info/Copyright">&copy; Copyright</a></li>
+                <li><a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> @Localizer["Sitemap"]</a></li>
+                <li><a href="./Info/Copyright">&copy; @Localizer["Copyright"]</a></li>
                 @*Den synliga menyn slutar här*@
                 <partial name="_NavLoginPartial" />
             </ul>
         </li>
-        <li class="pr-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+        <li class="pr-2"><a href="./Search" aria-label="@Localizer["SearchOnSite"]"><i class="bi bi-search"></i> @Localizer["Search"]</a></li>
+        <li class="pr-1">
+            <partial name="_LanguageSelector" />
+        </li>
     </ul>
 </nav>

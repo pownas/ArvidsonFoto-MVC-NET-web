@@ -6,6 +6,8 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Data;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace ArvidsonFoto;
 
@@ -57,7 +59,12 @@ public class Startup
         services.AddScoped<IApiCategoryService, ApiCategoryService>();
         services.AddScoped<IApiImageService, ApiImageService>();
 
-        services.AddControllersWithViews();
+        // Konfigurera lokalisering
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+        services.AddControllersWithViews()
+            .AddViewLocalization()
+            .AddDataAnnotationsLocalization();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
 
         // OpenAPI konfiguration för API-dokumentation (använder .NET 10 inbyggt stöd)
@@ -89,6 +96,20 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        // Konfigurera lokalisering
+        var supportedCultures = new[]
+        {
+            new CultureInfo("sv-SE"),
+            new CultureInfo("en-US")
+        };
+
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture("sv-SE"),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        });
+
         // Seed in-memory database if using in-memory database
         var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
