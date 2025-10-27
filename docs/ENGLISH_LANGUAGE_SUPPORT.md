@@ -144,10 +144,11 @@ If needed, the migration can be rolled back:
 Om nödvändigt kan migrationen återställas:
 
 ```bash
+# Rollback to previous migration (UpdateDatabaseSchema from 2025-07-14)
 dotnet ef database update 20250714143852_UpdateDatabaseSchema --context ArvidsonFotoCoreDbContext
 ```
 
-Or restore from backup / Eller återställ från backup.
+Or restore from database backup / Eller återställ från databas-backup.
 
 ## Future Enhancements / Framtida förbättringar
 

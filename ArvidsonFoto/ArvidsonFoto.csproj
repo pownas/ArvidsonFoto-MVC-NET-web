@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup Label="Common">
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>warnings</Nullable>
@@ -21,12 +21,12 @@
     <PackageReference Include="Azure.Identity" Version="1.16.0" />
     <PackageReference Include="MailKit" Version="4.13.0" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
     <PackageReference Include="MimeKit" Version="4.13.0" /> <!-- Används för kryptering av skicka mail -->
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0" /> <!-- Osäker vart denna används... -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" /> <!-- Används för inloggning på sidan -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" /> <!-- Används som utökning av inloggningens UI  -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" /> <!-- Används för Databas-anrop -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" /> <!-- In-memory databas för utveckling -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0"> <!-- Osäker om denna verkligen används, men annars för DB-anrop -->
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.0-rc.1.25451.107" /> <!-- Osäker vart denna används... -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0-rc.1.25451.107" /> <!-- Används för inloggning på sidan -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.0-rc.1.25451.107" /> <!-- Används som utökning av inloggningens UI  -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.1.25451.107" /> <!-- Används för Databas-anrop -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0-rc.1.25451.107" /> <!-- In-memory databas för utveckling -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.1.25451.107"> <!-- Osäker om denna verkligen används, men annars för DB-anrop -->
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -36,7 +36,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Sass" Version="3.0.136" /> <!-- För SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.29.1" /> <!-- JavaScript engine för SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.24.1" /> <!-- DI för JS engine -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" /> <!-- OpenAPI support -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" /> <!-- OpenAPI support -->
   </ItemGroup>
 
   <ItemGroup Label="Folders">
