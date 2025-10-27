@@ -197,4 +197,52 @@ body {
     .thumb-img-startpage { min-width: 2.5rem; }
     .thumb-img-gallery{ min-width: 2.5rem; }
 }
+
+/* Language Selector Styles */
+.language-selector {
+    display: inline-block;
+    padding: 0;
+
+    form {
+        margin: 0;
+        padding: 0;
+    }
+
+    select {
+        background-color: #333;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #444;
+            border-color: #666;
+        }
+
+        &:focus {
+            border-color: #0078ff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 120, 255, 0.25);
+        }
+
+        option {
+            background-color: #333;
+            color: #fff;
+        }
+    }
+}
+
+/* Mobile adjustments for language selector */
+@media (max-width: 768px) {
+    .language-selector {
+        select {
+            font-size: 12px;
+            padding: 3px 6px;
+        }
+    }
+}
 /* -------- End Gallery-fix på mobil ------------ */

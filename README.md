@@ -2,6 +2,22 @@
 
 # ArvidsonFoto-MVC .NET web
 Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9... osv. till senaste .NET)
+
+## Funktioner
+
+- 📸 Bildgalleri med kategorier
+- 🌍 **Flerspråksstöd** - Svenska och Engelska (se [Lokalisering](#lokalisering))
+- 📝 Gästbok
+- 🔍 Bildsökning
+- 📧 Kontaktformulär
+- 👤 Användarhantering med Identity
+- 📊 Admin-gränssnitt för bilduppladdning
+
+## Lokalisering
+
+Webbplatsen stöder nu flerspråkighet med svenska (sv-SE) och engelska (en-US). Användare kan växla språk via en språkväljare i navigeringsmenyn.
+
+För mer information om hur lokaliseringen fungerar och hur man lägger till nya översättningar, se [LOCALIZATION.md](docs/LOCALIZATION.md).
   
   
 ## Instruktion för att starta webbsidan lokalt

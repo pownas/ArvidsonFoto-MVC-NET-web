@@ -3,6 +3,7 @@ using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Localization;
 namespace ArvidsonFoto.Controllers;
 
 public class HomeController(ArvidsonFotoDbContext context) : Controller
@@ -22,6 +23,18 @@ public class HomeController(ArvidsonFotoDbContext context) : Controller
     {
         ViewData["Title"] = "Privacy Policy";
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult SetLanguage(string culture, string returnUrl)
+    {
+        Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+        );
+
+        return LocalRedirect(returnUrl);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

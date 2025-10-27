@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Localization
+@using System.Globalization
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = requestCulture?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString.Value}";
+}
+
+<div class="language-selector">
+    <form id="selectLanguage" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post">
+        <select name="culture" onchange="this.form.submit()" aria-label="@Localizer["Language"]">
+            <option value="sv-SE" selected="@(currentCulture.Name == "sv-SE")">🇸🇪 @Localizer["Swedish"]</option>
+            <option value="en-US" selected="@(currentCulture.Name == "en-US")">🇬🇧 @Localizer["English"]</option>
+        </select>
+    </form>
+</div>
