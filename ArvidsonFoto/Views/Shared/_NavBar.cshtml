@@ -22,10 +22,10 @@
         
         // Build the popover content - escape the values but not the HTML structure
         string escapedCategoryName = WebUtility.HtmlEncode(category.MenuText);
-        string escapedImageUrl = WebUtility.HtmlAttributeEncode(imageUrl);
+        string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
         string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
         
-        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlAttributeEncode(popoverContent)}\" data-placement=\"right\"";
+        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-placement=\"right\"";
     }
 }
 <nav class="main-nav">
