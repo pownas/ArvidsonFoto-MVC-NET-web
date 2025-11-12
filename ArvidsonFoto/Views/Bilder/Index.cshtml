@@ -95,12 +95,14 @@ else
 
 @if (subCategories is not null)
 {
-    foreach (var category in subCategories)
+    <div class="categories">
+    @foreach (var category in subCategories)
     {
         string imgPath = "https://arvidsonfoto.se" + Model.CurrentUrl + "/" + category.MenuText;
         string popoverAttrs = GetPopoverAttributes(category, imgPath);
         <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)" @Html.Raw(popoverAttrs)>@category.MenuText</a>
     }
+    </div>
 }
 
 
