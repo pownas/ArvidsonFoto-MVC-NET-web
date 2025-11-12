@@ -3,6 +3,13 @@
 
 // Write your JavaScript code.
 
+// Initialize Bootstrap popovers for category tooltips
+$(document).ready(function () {
+    $('[data-toggle="popover"]').popover({
+        container: 'body',
+        template: '<div class="popover category-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+    });
+});
 
 // <!-- Google analytics START -->
 var _gaq = _gaq || [];

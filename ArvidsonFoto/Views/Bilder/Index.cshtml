@@ -12,6 +12,7 @@
 
 @inject IImageService _imageService
 @inject ICategoryService _categoryService
+@using System.Net
 @{
     List<TblMenu> subCategories = new List<TblMenu>();
     try
@@ -30,6 +31,28 @@
         Model!.ErrorMessage = ex.Message;
         //Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
+    }
+    
+    // Helper function to get popover attributes for a category
+    string GetPopoverAttributes(TblMenu category, string imagePath)
+    {
+        var image = _imageService.GetOneImageFromCategory(category.MenuId);
+        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrl))
+        {
+            return "";
+        }
+        
+        // Sanitize the image URL to prevent path traversal
+        string safeImageUrl = image.ImageUrl.Replace("..", "").Replace("\\", "/");
+        
+        string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
+        
+        // Build the popover content - escape the values but not the HTML structure
+        string escapedCategoryName = WebUtility.HtmlEncode(category.MenuText);
+        string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
+        string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
+        
+        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-placement=\"right\"";
     }
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
@@ -72,10 +95,14 @@ else
 
 @if (subCategories is not null)
 {
-    foreach (var category in subCategories)
+    <div class="categories">
+    @foreach (var category in subCategories)
     {
-        <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)">@category.MenuText</a>
+        string imgPath = "https://arvidsonfoto.se" + Model.CurrentUrl + "/" + category.MenuText;
+        string popoverAttrs = GetPopoverAttributes(category, imgPath);
+        <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)" @Html.Raw(popoverAttrs)>@category.MenuText</a>
     }
+    </div>
 }
 
 
