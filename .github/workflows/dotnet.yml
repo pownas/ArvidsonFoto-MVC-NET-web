@@ -1,4 +1,4 @@
-name: .NET 10 RC - Windows
+name: .NET 10 - Windows
 
 on:
   push:
@@ -18,12 +18,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 10 RC
-      # Installs the latest 10.0 RC SDK (preview quality covers RC builds)
+    - name: Setup .NET SDK 10
+      # Installs the latest stable 10.0 SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
-        dotnet-quality: 'preview'
         cache: true
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
@@ -52,11 +51,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 10 RC
+    - name: Setup .NET SDK 10
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
-        dotnet-quality: 'preview'
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
