@@ -10,6 +10,7 @@ public class SenastController(ArvidsonFotoDbContext context) : Controller
     internal IImageService _imageService = new ImageService(context);
     internal ICategoryService _categoryService = new CategoryService(context);
     internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    internal INewsService _newsService = new NewsService(context);
 
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
@@ -67,6 +68,9 @@ public class SenastController(ArvidsonFotoDbContext context) : Controller
         viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
         viewModel.CurrentPage = (int)sida;
         viewModel.CurrentUrl = "/Senast/" + sortOrder;
+
+        // Add latest news to ViewBag
+        ViewBag.LatestNews = _newsService.GetLatestPublished(3);
 
         return View(viewModel);
     }
