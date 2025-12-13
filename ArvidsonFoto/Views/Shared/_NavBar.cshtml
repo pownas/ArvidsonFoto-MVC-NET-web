@@ -59,7 +59,7 @@ else
 var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub2Menu != null && sub2Menu.Count > 0)
 {
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)">@sub1Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId">@sub1Item.MenuText</a>
 <ul>
 @foreach (var sub2Item in sub2Menu)
 {
@@ -68,25 +68,25 @@ if (sub2Menu != null && sub2Menu.Count > 0)
 var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub3Menu != null && sub3Menu.Count > 0)
 {
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)">@sub2Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId">@sub2Item.MenuText</a>
 <ul>
 @foreach (var sub3Item in sub3Menu)
 {
 <li>
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)">@sub3Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)" class="has-category-tooltip" data-category-id="@sub3Item.MenuId">@sub3Item.MenuText</a>
 </li>
 }
 </ul>
 }
 else
-{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)">@sub2Item.MenuText</a> }
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId">@sub2Item.MenuText</a> }
 }
 </li>
 }
 </ul>
 }
 else
-{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)">@sub1Item.MenuText</a> }
+{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId">@sub1Item.MenuText</a> }
 }
 </li>
 }
