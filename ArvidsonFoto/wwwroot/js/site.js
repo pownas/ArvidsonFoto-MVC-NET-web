@@ -4,31 +4,32 @@
 // Write your JavaScript code.
 
 // Dark mode toggle functionality
-(function () {
-    // Check if user has a dark mode preference
+document.addEventListener('DOMContentLoaded', function() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     
     if (darkModeToggle) {
-        // Load saved preference from localStorage
-        const savedDarkMode = localStorage.getItem('darker-mode');
-        if (savedDarkMode === 'enabled') {
-            document.body.classList.add('darker-mode');
+        // Load saved theme preference from localStorage
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
         }
 
         // Toggle dark mode on click
         darkModeToggle.addEventListener('click', function (e) {
             e.preventDefault();
+            
             document.body.classList.toggle('darker-mode');
 
-            // Save preference to localStorage
-            if (document.body.classList.contains('darker-mode')) {
-                localStorage.setItem('darker-mode', 'enabled');
+            // Save theme preference to localStorage
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
             } else {
-                localStorage.setItem('darker-mode', 'disabled');
+                localStorage.setItem('theme', 'light');
             }
         });
     }
-})();
+});
 
 // <!-- Google analytics START -->
 var _gaq = _gaq || [];
