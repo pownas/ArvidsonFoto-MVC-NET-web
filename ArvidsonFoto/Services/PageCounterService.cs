@@ -136,4 +136,24 @@ public class PageCounterService : IPageCounterService
     {
         throw new NotImplementedException();
     }
+
+    public Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage)
+    {
+        var result = new Dictionary<string, int>();
+        var currentDate = DateTime.Now;
+
+        for (int i = monthsBack - 1; i >= 0; i--)
+        {
+            var targetDate = currentDate.AddMonths(-i);
+            var yearMonth = targetDate.ToString("yyyy-MM");
+            
+            var monthlyViews = _entityContext.TblPageCounter
+                                            .Where(p => p.MonthViewed.Equals(yearMonth) && p.PicturePage == picturePage)
+                                            .Sum(p => p.PageViews);
+            
+            result[yearMonth] = monthlyViews;
+        }
+
+        return result;
+    }
 }
