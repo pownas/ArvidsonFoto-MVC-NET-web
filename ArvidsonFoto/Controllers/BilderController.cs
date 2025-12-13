@@ -98,8 +98,6 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
     }
 
     [Route("/search")]
-    [Route("/Sök")]
-    [Route("/sok")]
     public IActionResult Search(string s)
     {
         if (User?.Identity?.IsAuthenticated is false)
