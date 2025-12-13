@@ -71,12 +71,12 @@
                             <td>@image.ImageDescription</td>
                             <td>
                                 <p class="m-0 mb-3">
-                                    <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-toggle="modal" data-target="#EditImage-@image.ImageId">
+                                    <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
                                         <i class="bi bi-pencil-square mr-2"></i> Ändra
                                     </button>
                                 </p>
                                 <p class="m-0">
-                                    <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-toggle="modal" data-target="#DeleteImage-@image.ImageId">
+                                    <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
                                         <i class="bi bi-trash mr-2"></i> Radera
                                     </button>
                                 </p>
@@ -107,9 +107,7 @@
                             <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
                                 Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
                     </div>
@@ -124,9 +122,7 @@
                             <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
                                 Radera bilden: @image.ImageUrl på @image.ImageArtNamn?
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
@@ -135,7 +131,7 @@
                             <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 Avbryt <i class="bi bi-x-circle"></i>
                             </button>
                             <a href="/UploadAdmin/DeleteImage?imgId=@image.ImageId" class="btn btn-danger">
