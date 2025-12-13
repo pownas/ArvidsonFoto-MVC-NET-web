@@ -68,6 +68,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         catch (Exception ex)
         {
             success = false;
+            logger.LogError("Error adding category: {Message}", ex.Message);
             throw new Exception("Fel vid skapande av kategori. Felmeddelande: " + ex.Message);
         }
         return success;
@@ -86,6 +87,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         }
         catch (Exception ex)
         {
+            logger.LogError("Error getting last category ID: {Message}", ex.Message);
             Log.Error("GetLastId failed: {Message}", ex.Message);
             return -1;
         }

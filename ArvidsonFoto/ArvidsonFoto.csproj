@@ -4,9 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>aspnet-ArvidsonFoto-12D5C8B6-497A-402B-A341-5E18649479B4</UserSecretsId>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>warnings</Nullable>
+    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
+    <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
     <CompileScss>true</CompileScss>
   </PropertyGroup>
 

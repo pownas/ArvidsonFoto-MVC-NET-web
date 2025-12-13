@@ -1,4 +1,4 @@
-using ArvidsonFoto.Core.ApiResponses;
+Ôªøusing ArvidsonFoto.Core.ApiResponses;
 using ArvidsonFoto.Core.Attributes;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
@@ -19,11 +19,11 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 [Route("api/bild")]
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
-    ArvidsonFotoCoreDbContext entityContext, //TODO: Bˆr bygga bort denna och enbart anv‰nda IApiImageService
+    ArvidsonFotoCoreDbContext entityContext, //TODO: B√∂r bygga bort denna och enbart anv√§nda IApiImageService
     IApiCategoryService categoryService,
-    IConfiguration configuration) : ControllerBase
+    IConfiguration _) : ControllerBase
 {
-    // TODO: Att anv‰nda senare om vi vill spara eller l‰sa bilder frÂn filsystemet
+    // TODO: Att anv√§nda senare om vi vill spara eller l√§sa bilder fr√•n filsystemet
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
 
     /// <summary>
