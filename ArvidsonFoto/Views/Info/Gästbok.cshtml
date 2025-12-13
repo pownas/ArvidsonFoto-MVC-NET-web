@@ -26,41 +26,41 @@
     <form class="form-horizontal" asp-action="@(nameof(InfoController.PostToGb))" method="post">
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
         @if (Model!.DisplayErrorPublish)
-        {<div class="ml-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
+        {<div class="ms-3"><p class="badge badge-danger">Något gick fel när meddelandet skulle skickas...</p></div>}
         @if (Model.DisplayPublished)
-        {<div class="ml-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
+        {<div class="ms-3"><p class="badge badge-success">Meddelandet skickat!</p></div>}
         <div class="form-row">
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Name" class="ml-2 control-label">Namn</label>
+                <label asp-for="Name" class="ms-2 control-label">Namn</label>
                 <div>
                     <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)">
-                    <span asp-validation-for="Name" class="ml-2"></span>
+                    <span asp-validation-for="Name" class="ms-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Email" class="ml-2 control-label">Epost</label>
+                <label asp-for="Email" class="ms-2 control-label">Epost</label>
                 <div>
                     <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)">
-                    <span asp-validation-for="Email" class="ml-2"></span>
+                    <span asp-validation-for="Email" class="ms-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Homepage" class="ml-2 control-label">Hemsida</label>
+                <label asp-for="Homepage" class="ms-2 control-label">Hemsida</label>
                 <div>
                     <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)">
-                    <span asp-validation-for="Homepage" class="ml-2"></span>
+                    <span asp-validation-for="Homepage" class="ms-2"></span>
                 </div>
-                <div class="ml-2 mt-1">
+                <div class="ms-2 mt-1">
                     <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive">
                 </div>
-                <label asp-for="Code" class="ml-2 control-label">Ange siffrorna från bilden</label>
+                <label asp-for="Code" class="ms-2 control-label">Ange siffrorna från bilden</label>
                 <div>
                     <input asp-for="Code" class="form-control" placeholder="Siffror">
-                    <span asp-validation-for="Code" class="ml-2"></span>
+                    <span asp-validation-for="Code" class="ms-2"></span>
                 </div>
             </div>
             <div class="form-group col-md-12 col-lg-6">
-                <label asp-for="Message" class="ml-2 control-label">Meddelande</label>
+                <label asp-for="Message" class="ms-2 control-label">Meddelande</label>
                 <div>
                     <textarea asp-for="Message" class="form-control" placeholder="Meddelande" rows="5"></textarea>
                     <span asp-validation-for="Message"></span>

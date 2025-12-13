@@ -13,10 +13,10 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-pencil-square ml-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-pencil-square ms-1"></i></li>
     </ol>
 </nav>
-<h2 class="offset-md-4"><i class="bi bi-pencil-square mr-2"></i>@ViewData["Title"]</h2>
+<h2 class="offset-md-4"><i class="bi bi-pencil-square me-2"></i>@ViewData["Title"]</h2>
 <div class="row">
     <nav class="nav nav-pills col-12 col-md-4 p-0">
         <ul class="p-0 col-11">
@@ -72,12 +72,12 @@
                             <td>
                                 <p class="m-0 mb-3">
                                     <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
-                                        <i class="bi bi-pencil-square mr-2"></i> Ändra
+                                        <i class="bi bi-pencil-square me-2"></i> Ändra
                                     </button>
                                 </p>
                                 <p class="m-0">
                                     <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
-                                        <i class="bi bi-trash mr-2"></i> Radera
+                                        <i class="bi bi-trash me-2"></i> Radera
                                     </button>
                                 </p>
                             </td>
