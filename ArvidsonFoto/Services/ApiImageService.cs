@@ -22,6 +22,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <summary> Databas koppling: <see cref="ArvidsonFotoCoreDbContext"/> </summary>
     private readonly ArvidsonFotoCoreDbContext _entityContext = dbContext;
 
+    /// <summary>
+    /// If the new gallery category feature is enabled, use the new category path
+    /// </summary>
+    private bool NewGalleryCategoryEnabled => field =
+                _configuration.GetSection("FeatureFlags:NewGalleryCategory")
+                    .Get<FeatureFlag>()?.Enabled == true ? true : false;
+
     /// <summary> Värde när <see cref="ImageDto"/> inte hittats </summary>
     private static ImageDto DefaultImageDtoNotFound { get; } = new()
     {
@@ -162,10 +169,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                                      .FirstOrDefault() ?? DefaultTblImageNotFound;
             }
 
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }
@@ -199,7 +204,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             // If the new gallery category feature is enabled, use the new category path
             var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (featureNewGalleryCategory?.Enabled == true)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }
@@ -228,10 +233,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }
@@ -351,11 +354,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                             .Where(i => i.ImageId == imageId)
                             .FirstOrDefault() ?? DefaultTblImageNotFound;
 
-
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }
@@ -488,10 +488,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
             var categoryPath = "";
-            if (featureNewGalleryCategory!.Enabled)
+            if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
             }
