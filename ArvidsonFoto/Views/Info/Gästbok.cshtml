@@ -77,6 +77,9 @@
             </div>
         </div>
     </form>
+
+    <h3 class="mt-5 mb-4"><i class="bi bi-book"></i> Inlägg i gästboken</h3>
+
     <div class="infotable row row-cols-1 row-cols-sm-2 row-cols-lg-3">
         @if (_guestBookService is not null && gbListView is not null)
         {
@@ -85,15 +88,17 @@
                 DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
 
                 <div class="col mb-4">
-                    <div class="card text-left text-dark">
-                        <div class="card-header">
-                            @if (gbPost.GbName is not null)
-                            {@gbPost.GbName}
-                        else
-                        {@("Anonym användare")}
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-light">
+                            <strong>
+                                @if (gbPost.GbName is not null)
+                                {@gbPost.GbName}
+                            else
+                            {@("Anonym användare")}
+                            </strong>
                         </div>
                         <div class="card-body">
-                            <p class="card-text text-dark">
+                            <p class="card-text">
                                 @if(gbPost.GbName!.Equals("Jonas Arvidson (Webmaster)"))
                                 {
                                     @HttpUtility.HtmlEncode(gbPost.GbText.Replace("<br>", "\n"))
@@ -105,12 +110,16 @@
                                 
                             </p>
                         </div>
-                        <div class="card-footer text-muted row">
-                            <div class="text-left col-6">
-                                @if (gbPost.GbHomepage is not null)
-                                {<span class="card-text badge badge-info text-dark">@gbPost.GbHomepage</span>}
+                        <div class="card-footer bg-white border-top">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    @if (gbPost.GbHomepage is not null)
+                                    {<span class="badge bg-info text-dark"><i class="bi bi-globe"></i> @gbPost.GbHomepage</span>}
+                                </div>
+                                <div class="col-6 text-end">
+                                    <small class="text-muted"><i class="bi bi-calendar3"></i> @gbDate.ToString("yyyy-MM-dd")</small>
+                                </div>
                             </div>
-                            <div class="text-right col-6">@gbDate.ToString("yyyy-MM-dd")</div>
                         </div>
                     </div>
                 </div>
