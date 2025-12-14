@@ -101,21 +101,200 @@ body {
 }
 
 /* Bootstrap 5.3 Dark Mode Overrides - Kolsvart (coal black) theme */
-[data-bs-theme="dark"] body {
-    background-color: #000;
-    color: #ddd;
-}
+[data-bs-theme="dark"] {
+    /* Body and base elements */
+    body {
+        background-color: #000;
+        color: #ddd;
+    }
 
-[data-bs-theme="dark"] header {
-    background-color: #000;
-}
+    header {
+        background-color: #000;
+    }
 
-[data-bs-theme="dark"] .bg-dark-arvidsonfoto {
-    background-color: #000;
-}
+    /* Custom background classes */
+    .bg-dark-arvidsonfoto {
+        background-color: #000;
+    }
 
-[data-bs-theme="dark"] .glightbox-clean .gslide-description {
-    background-color: rgba(0, 0, 0, 0.85);
+    /* Alerts - make them darker */
+    .alert-light {
+        background-color: #222;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    /* Cards - dark theme */
+    .card {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .card-header {
+        background-color: #222;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .card-body {
+        background-color: #1a1a1a;
+        color: #ddd;
+    }
+
+    .card-footer {
+        background-color: #222;
+        border-color: #333;
+        color: #aaa;
+    }
+
+    /* Figure and figcaptions */
+    .figure {
+        background-color: transparent;
+    }
+
+    .figure-caption {
+        color: #aaa;
+    }
+
+    /* Buttons and links */
+    .btn-light {
+        background-color: #333;
+        border-color: #444;
+        color: #ddd;
+    }
+
+    .btn-light:hover {
+        background-color: #444;
+        border-color: #555;
+        color: #fff;
+    }
+
+    .btn-outline-primary {
+        color: #6c9bd1;
+        border-color: #6c9bd1;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #6c9bd1;
+        border-color: #6c9bd1;
+        color: #000;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb {
+        background-color: #1a1a1a;
+    }
+
+    /* Forms */
+    .form-control {
+        background-color: #222;
+        border-color: #444;
+        color: #ddd;
+    }
+
+    .form-control:focus {
+        background-color: #2a2a2a;
+        border-color: #555;
+        color: #fff;
+    }
+
+    .form-select {
+        background-color: #222;
+        border-color: #444;
+        color: #ddd;
+    }
+
+    .form-label {
+        color: #ddd;
+    }
+
+    /* Tables */
+    .table {
+        color: #ddd;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        background-color: #1a1a1a;
+    }
+
+    .table-bordered {
+        border-color: #333;
+    }
+
+    /* Modals */
+    .modal-content {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .modal-header {
+        border-color: #333;
+    }
+
+    .modal-footer {
+        border-color: #333;
+    }
+
+    /* Badges */
+    .badge {
+        &.bg-light {
+            background-color: #333 !important;
+            color: #ddd;
+        }
+
+        &.text-dark {
+            color: #ddd !important;
+        }
+    }
+
+    /* Text utilities */
+    .text-dark {
+        color: #ddd !important;
+    }
+
+    .text-muted {
+        color: #888 !important;
+    }
+
+    /* Background utilities */
+    .bg-light {
+        background-color: #222 !important;
+    }
+
+    .bg-white {
+        background-color: #1a1a1a !important;
+    }
+
+    /* Lightbox */
+    .glightbox-clean .gslide-description {
+        background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    /* Links */
+    a {
+        color: #6c9bd1;
+    }
+
+    a:hover {
+        color: #8db3e2;
+    }
+
+    /* Page header and content */
+    #page-header {
+        color: #ddd;
+    }
+
+    #page-content {
+        color: #ddd;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        color: #aaa;
+    }
 }
 
 .footer {
