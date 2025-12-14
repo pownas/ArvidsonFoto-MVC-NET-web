@@ -293,8 +293,7 @@ public class ImageApiControllerTests : IDisposable
             ImageUrlFullSrc = "full/path/B57W4725_Updated"
         };
 
-        // Add a test image to the in-memory database first
-        _dbContext.TblImages.Add(new ArvidsonFoto.Core.Models.TblImage
+        var existingImage = new ArvidsonFoto.Core.Models.TblImage
         {
             Id = 1,
             ImageId = 2,
@@ -305,7 +304,10 @@ public class ImageApiControllerTests : IDisposable
             ImageDescription = "Original description",
             ImageDate = DateTime.Now.AddDays(-1),
             ImageUpdate = DateTime.Now.AddDays(-1)
-        });
+        };
+
+        // Add a test image to the in-memory database first
+        _dbContext.TblImages.Add(existingImage);
         _dbContext.SaveChanges();
 
         // Act
@@ -315,10 +317,12 @@ public class ImageApiControllerTests : IDisposable
         Assert.True(result);
         
         // Verify the image was updated in the database
-        var updatedImage = _dbContext.TblImages.FirstOrDefault(i => i.ImageId == 2);
-        Assert.NotNull(updatedImage);
-        Assert.Equal(10, updatedImage.ImageMainFamilyId);
-        Assert.Equal(12, updatedImage.ImageFamilyId);
+        var actualImage = _dbContext.TblImages.FirstOrDefault(i => i.ImageId == uploadImage.ImageId);
+        Assert.NotNull(actualImage);
+        Assert.Equal(uploadImage.ImageHuvudfamilj, actualImage.ImageMainFamilyId);
+        Assert.Equal(uploadImage.ImageFamilj, actualImage.ImageFamilyId);
+        Assert.Equal(uploadImage.ImageDescription, actualImage.ImageDescription);
+        Assert.Equal(uploadImage.ImageUrl, actualImage.ImageUrlName);
     }
 
     [Fact]

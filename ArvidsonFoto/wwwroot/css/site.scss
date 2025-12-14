@@ -583,3 +583,36 @@ body {
 }
 
 /* -------- End Gallery-fix på mobil ------------ */
+
+/* -------- Category Tooltip Popover Styles -------- */
+.category-popover {
+    max-width: 300px;
+    border: 2px solid #444;
+    background-color: #222;
+    z-index: 9999 !important;
+}
+
+    .category-popover .popover-body {
+        padding: 0;
+        background-color: #222;
+        color: #ddd;
+    }
+
+.category-tooltip {
+    text-align: center;
+}
+
+    .category-tooltip img {
+        width: 100%;
+        height: auto;
+        max-width: 250px;
+        border-radius: 4px;
+    }
+
+    .category-tooltip .category-name {
+        padding: 8px;
+        font-weight: bold;
+        color: #ddd;
+        font-size: 14px;
+    }
+/* -------- End Category Tooltip Popover Styles -------- */
