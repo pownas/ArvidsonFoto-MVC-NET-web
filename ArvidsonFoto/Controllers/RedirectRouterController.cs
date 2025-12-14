@@ -18,10 +18,12 @@ public class RedirectRouterController() : Controller
     }
 
     [Route("/Sk")]
-    [Route("/Sok")]
-    [Route("/Search")]
+    [Route("/Sök")]
+    [Route("/sok")]
+    [Route("/Sökning")]
+    [Route("/Searching")]
     [Route("/Search.asp")]
-    public RedirectToActionResult RedirectToBilderSök()
+    public RedirectToActionResult RedirectToBilderSearch()
     {
         ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         //var url = Url.ActionContext.HttpContext;
