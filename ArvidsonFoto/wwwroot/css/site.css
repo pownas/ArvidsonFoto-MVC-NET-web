@@ -1,5 +1,5 @@
 ﻿@charset "UTF-8";
-/* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
+/* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen från .scss filen 
     (Använder NuGet-paketet: BuildWebCompiler, för detta). 
 
     Steg för kompilering: 
@@ -520,3 +520,5 @@ body {
 [data-bs-theme="dark"] #dark-mode-toggle .bi-lightbulb-fill {
   color: #ffc107 !important;
 }
+
+[data-bs-theme="dark"] .sm-mint{background-color:#111!important;border-color:#444!important}[data-bs-theme="dark"] .sm-mint>li>a{color:#ddd!important;background-color:#111!important}[data-bs-theme="dark"] .sm-mint>li>a:hover,[data-bs-theme="dark"] .sm-mint>li>a:focus,[data-bs-theme="dark"] .sm-mint>li>a:active{background-color:#222!important;color:#fff!important}[data-bs-theme="dark"] .sm-mint .sub-arrow{background-color:rgba(255,255,255,0.1)!important;color:#ddd!important}[data-bs-theme="dark"] .main-nav{background-color:#000!important}

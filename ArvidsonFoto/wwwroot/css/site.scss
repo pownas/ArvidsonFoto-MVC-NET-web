@@ -157,6 +157,35 @@ body {
         background-color: #444 !important;
         color: #fff !important;
     }
+    
+    /* Collapsible/Mobile menu dark mode */
+    .sm-mint {
+        background-color: #111 !important;
+        border-color: #444 !important;
+    }
+    
+    .sm-mint > li > a {
+        color: #ddd !important;
+        background-color: #111 !important;
+    }
+    
+    .sm-mint > li > a:hover,
+    .sm-mint > li > a:focus,
+    .sm-mint > li > a:active {
+        background-color: #222 !important;
+        color: #fff !important;
+    }
+    
+    /* Sub-arrow (toggle buttons) in collapsible mode */
+    .sm-mint .sub-arrow {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ddd !important;
+    }
+    
+    /* Main nav container */
+    .main-nav {
+        background-color: #000 !important;
+    }
 
     /* Buttons for dark mode */
     .btn-light,
