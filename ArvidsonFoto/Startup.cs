@@ -19,6 +19,8 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
+    private readonly string CorsPolicyName = "ArvidsonFotoCorsPolicy";
+
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
@@ -57,6 +59,22 @@ public class Startup
         // Lägger till Services för backend API: 
         services.AddScoped<IApiCategoryService, ApiCategoryService>();
         services.AddScoped<IApiImageService, ApiImageService>();
+
+        // CORS-konfiguration för API-anrop från localhost och produktion
+        services.AddCors(options =>
+        {
+            options.AddPolicy(CorsPolicyName, policy =>
+            {
+                policy.WithOrigins(
+                        "https://localhost:5001",
+                        "http://localhost:5000",
+                        "https://www.arvidsonfoto.se",
+                        "https://arvidsonfoto.se"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
 
         services.AddControllersWithViews();
         services.AddRazorPages(); //Tror att Razor-Pages kan behövas... 
@@ -134,6 +152,9 @@ public class Startup
         app.UseMiddleware<InputValidationMiddleware>();
 
         app.UseRouting();
+
+        // CORS middleware - måste vara efter UseRouting och före UseAuthorization
+        app.UseCors(CorsPolicyName);
 
         app.UseAuthentication();
         app.UseAuthorization();
