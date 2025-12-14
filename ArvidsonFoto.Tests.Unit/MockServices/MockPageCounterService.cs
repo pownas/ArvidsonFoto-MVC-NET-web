@@ -17,4 +17,7 @@ public class MockPageCounterService : IPageCounterService
     
     public List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount() =>
         DbSeederExtension.DbSeed_Tbl_PageCounter ?? new List<TblPageCounter>();
+
+    public Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage) =>
+        new Dictionary<string, int>();
 }

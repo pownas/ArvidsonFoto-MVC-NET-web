@@ -63,26 +63,20 @@ public class InputValidationMiddlewareTests
     }
 
     [Fact]
-    public async Task InvokeAsync_WithSqlInjectionAttempt_ShouldLogWarning()
+    public async Task InvokeAsync_WithSqlInjectionAttempt_ShouldBlockRequestAndReturnBadRequest()
     {
         // Arrange
         var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
         var context = CreateHttpContext();
-        var maliciousInput = "1' or '1'='1";
+        var maliciousInput = "1 or 1=1";
         context.Request.QueryString = new QueryString($"?id={Uri.EscapeDataString(maliciousInput)}");
 
         // Act
         await middleware.InvokeAsync(context);
 
-        // Assert
-        _mockLogger.Verify(
-            x => x.Log(
-                LogLevel.Warning,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Potential SQL injection attempt")),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        // Assert - request should be blocked
+        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
     [Theory]

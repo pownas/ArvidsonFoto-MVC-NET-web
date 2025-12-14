@@ -29,6 +29,8 @@ public class InputValidationMiddleware
         new Regex(@"(-{2}|\/\*|\*\/)", RegexOptions.Compiled), // SQL comments
         new Regex(@"(\bor\b\s+\d+\s*=\s*\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // or 1=1
         new Regex(@"(\band\b\s+\d+\s*=\s*\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // and 1=1
+        new Regex(@"(\bor\b\s+['""]?\d+['""]?\s*=\s*['""]?\d+['""]?)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // or '1'='1'
+        new Regex(@"(\band\b\s+['""]?\d+['""]?\s*=\s*['""]?\d+['""]?)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // and '1'='1'
         new Regex(@"(char\s*\(\d+\))", RegexOptions.IgnoreCase | RegexOptions.Compiled), // char(xxx)
         new Regex(@"(concat\s*\()", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(name_const\s*\()", RegexOptions.IgnoreCase | RegexOptions.Compiled),
