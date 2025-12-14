@@ -3,30 +3,31 @@
 
 // Write your JavaScript code.
 
-// Dark mode toggle functionality
+// Dark mode toggle functionality using Bootstrap 5.3 color modes
 document.addEventListener('DOMContentLoaded', function() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     
     if (darkModeToggle) {
+        const htmlElement = document.documentElement;
+        
         // Load saved theme preference from localStorage
-        const savedTheme = localStorage.getItem('theme');
+        const savedTheme = localStorage.getItem('bs-theme');
         
         if (savedTheme === 'dark') {
-            document.body.classList.add('dark');
+            htmlElement.setAttribute('data-bs-theme', 'dark');
+        } else {
+            htmlElement.setAttribute('data-bs-theme', 'light');
         }
 
         // Toggle dark mode on click
         darkModeToggle.addEventListener('click', function (e) {
             e.preventDefault();
             
-            document.body.classList.toggle('darker-mode');
-
-            // Save theme preference to localStorage
-            if (document.body.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('bs-theme', newTheme);
         });
     }
 });

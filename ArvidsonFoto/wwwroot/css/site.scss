@@ -100,21 +100,21 @@ body {
     color: #ddd;
 }
 
-/* Dark/Darker mode - Kolsvart (coal black) theme */
-body.darker-mode {
+/* Bootstrap 5.3 Dark Mode Overrides - Kolsvart (coal black) theme */
+[data-bs-theme="dark"] body {
     background-color: #000;
     color: #ddd;
 }
 
-body.darker-mode header {
+[data-bs-theme="dark"] header {
     background-color: #000;
 }
 
-body.darker-mode .bg-dark-arvidsonfoto {
+[data-bs-theme="dark"] .bg-dark-arvidsonfoto {
     background-color: #000;
 }
 
-body.darker-mode .glightbox-clean .gslide-description {
+[data-bs-theme="dark"] .glightbox-clean .gslide-description {
     background-color: rgba(0, 0, 0, 0.85);
 }
 
