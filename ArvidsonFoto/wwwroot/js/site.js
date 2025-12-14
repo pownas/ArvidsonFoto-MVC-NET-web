@@ -82,10 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Initialize Bootstrap popovers for category tooltips
-$(document).ready(function () {
-    $('[data-toggle="popover"]').popover({
-        container: 'body',
-        template: '<div class="popover category-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all popovers with data-bs-toggle="popover" attribute
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl, {
+            container: 'body',
+            template: '<div class="popover category-popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+        });
     });
 });
 

@@ -1,8 +1,9 @@
 /**
  * Category Tooltip Feature
  * Displays a popover with the latest image when hovering over subcategory links
+ * Updated for Bootstrap 5.3 - using vanilla JavaScript
  */
-(function ($) {
+(function () {
     'use strict';
 
     // Cache for storing fetched images to avoid repeated API calls
@@ -28,16 +29,24 @@
         }
 
         // Fetch from API
-        return $.ajax({
-            url: config.apiEndpoint + categoryId,
+        return fetch(config.apiEndpoint + categoryId, {
             method: 'GET',
-            dataType: 'json',
-            timeout: 5000
-        }).then(function (imageData) {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(function (imageData) {
             // Cache the result
             imageCache[categoryId] = imageData;
             return imageData;
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
             console.warn('Failed to fetch image for category ' + categoryId + ':', error);
             return null;
         });
@@ -85,7 +94,7 @@
             placement: 'right',
             container: 'body',
             content: content,
-            template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
+            template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="popover-arrow"></div><div class="popover-body"></div></div>'
         };
     }
 
@@ -93,27 +102,28 @@
      * Initializes popovers for category links
      */
     function initializeCategoryTooltips() {
-        var $links = $('.has-category-tooltip');
+        var links = document.querySelectorAll('.has-category-tooltip');
         
-        $links.each(function () {
-            var $link = $(this);
-            var categoryId = $link.data('category-id');
+        links.forEach(function (linkElement) {
+            var categoryId = linkElement.getAttribute('data-category-id');
             var hoverTimer = null; // Timer specific to this link
+            var popoverInstance = null;
 
             if (!categoryId) {
                 return; // Skip if no category ID
             }
 
-            // Initialize popover with placeholder content
-            var loadingContent = '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> Laddar...</div>';
-            $link.popover(getPopoverConfig(loadingContent));
-
             // Mouse enter event - start timer
-            $link.on('mouseenter', function () {
-                var $currentLink = $(this);
-                
+            linkElement.addEventListener('mouseenter', function () {
                 // Hide any other visible popovers first
-                $links.not($currentLink).popover('hide');
+                links.forEach(function (otherLink) {
+                    if (otherLink !== linkElement) {
+                        var otherPopover = bootstrap.Popover.getInstance(otherLink);
+                        if (otherPopover) {
+                            otherPopover.hide();
+                        }
+                    }
+                });
                 
                 // Clear any existing timer for this link
                 if (hoverTimer) {
@@ -122,28 +132,32 @@
 
                 // Set timer to show popover after delay
                 hoverTimer = setTimeout(function () {
+                    // Initialize popover with loading state if not already initialized
+                    var loadingContent = '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> Laddar...</div>';
+                    
+                    if (!popoverInstance) {
+                        popoverInstance = new bootstrap.Popover(linkElement, getPopoverConfig(loadingContent));
+                    }
+                    
                     // Show popover with loading state
-                    $currentLink.popover('show');
+                    popoverInstance.show();
 
                     // Fetch and update content
                     fetchCategoryImage(categoryId).then(function (imageData) {
                         var content = generatePopoverContent(imageData);
-                        $currentLink.attr('data-content', content);
                         
                         // Update popover if still visible
-                        if ($currentLink.attr('aria-describedby')) {
-                            $currentLink.popover('dispose');
-                            $currentLink.popover(getPopoverConfig(content));
-                            $currentLink.popover('show');
+                        if (document.querySelector('[id^="popover"]')?.getAttribute('aria-labelledby') === linkElement.getAttribute('aria-describedby')) {
+                            popoverInstance.dispose();
+                            popoverInstance = new bootstrap.Popover(linkElement, getPopoverConfig(content));
+                            popoverInstance.show();
                         }
                     });
                 }, config.delay);
             });
 
             // Mouse leave event - cancel timer and hide popover
-            $link.on('mouseleave', function () {
-                var $currentLink = $(this);
-                
+            linkElement.addEventListener('mouseleave', function () {
                 // Clear timer for this link
                 if (hoverTimer) {
                     clearTimeout(hoverTimer);
@@ -151,19 +165,28 @@
                 }
 
                 // Hide popover
-                $currentLink.popover('hide');
+                if (popoverInstance) {
+                    popoverInstance.hide();
+                }
             });
         });
 
         // Also hide popover when clicking anywhere
-        $(document).on('click', function () {
-            $links.popover('hide');
+        document.addEventListener('click', function () {
+            links.forEach(function (link) {
+                var popover = bootstrap.Popover.getInstance(link);
+                if (popover) {
+                    popover.hide();
+                }
+            });
         });
     }
 
     // Initialize when DOM is ready
-    $(document).ready(function () {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCategoryTooltips);
+    } else {
         initializeCategoryTooltips();
-    });
+    }
 
-})(jQuery);
+})();

@@ -486,7 +486,7 @@ body {
 .glightbox-clean .gslide-description {
     background-color: rgba(34, 34, 34, 0.75);
 }
-/* ----------end of glightbox config------------ */
+/* ----------end of gllightbox config------------ */
 
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-figcaption-startpage { width: 9rem; }
@@ -547,19 +547,20 @@ body {
         }
     }
     
-    &.bs-popover-right .arrow::after {
+    /* Bootstrap 5.3 uses popover-arrow instead of arrow */
+    &.bs-popover-end .popover-arrow::after {
         border-right-color: #333;
     }
     
-    &.bs-popover-left .arrow::after {
+    &.bs-popover-start .popover-arrow::after {
         border-left-color: #333;
     }
     
-    &.bs-popover-top .arrow::after {
+    &.bs-popover-top .popover-arrow::after {
         border-top-color: #333;
     }
     
-    &.bs-popover-bottom .arrow::after {
+    &.bs-popover-bottom .popover-arrow::after {
         border-bottom-color: #333;
     }
 }
@@ -590,29 +591,46 @@ body {
     border: 2px solid #444;
     background-color: #222;
     z-index: 9999 !important;
-}
-
-    .category-popover .popover-body {
+    
+    .popover-body {
         padding: 0;
         background-color: #222;
         color: #ddd;
     }
+    
+    /* Bootstrap 5.3 popover arrow styling */
+    &.bs-popover-end .popover-arrow::after {
+        border-right-color: #222;
+    }
+    
+    &.bs-popover-start .popover-arrow::after {
+        border-left-color: #222;
+    }
+    
+    &.bs-popover-top .popover-arrow::after {
+        border-top-color: #222;
+    }
+    
+    &.bs-popover-bottom .popover-arrow::after {
+        border-bottom-color: #222;
+    }
+}
 
 .category-tooltip {
     text-align: center;
-}
-
-    .category-tooltip img {
+    
+    img {
         width: 100%;
         height: auto;
         max-width: 250px;
         border-radius: 4px;
     }
-
-    .category-tooltip .category-name {
+    
+    .category-name {
         padding: 8px;
         font-weight: bold;
         color: #ddd;
         font-size: 14px;
     }
+}
 /* -------- End Category Tooltip Popover Styles -------- */
