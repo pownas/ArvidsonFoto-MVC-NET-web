@@ -1,20 +1,20 @@
 using ArvidsonFoto.Security;
+using ArvidsonFoto.Tests.Unit.Security.Mocks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 
 namespace ArvidsonFoto.Tests.Unit.Security;
 
 public class InputValidationMiddlewareTests
 {
-    private readonly Mock<ILogger<InputValidationMiddleware>> _mockLogger;
-    private readonly Mock<RequestDelegate> _mockNext;
+    private readonly MockLogger<InputValidationMiddleware> _mockLogger;
+    private readonly MockRequestDelegate _mockNext;
 
     public InputValidationMiddlewareTests()
     {
-        _mockLogger = new Mock<ILogger<InputValidationMiddleware>>();
-        _mockNext = new Mock<RequestDelegate>();
+        _mockLogger = new MockLogger<InputValidationMiddleware>();
+        _mockNext = new MockRequestDelegate();
     }
 
     [Theory]
@@ -26,7 +26,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithSafeInput_ShouldContinuePipeline(string safeInput)
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.QueryString = new QueryString($"?param={safeInput}");
 
@@ -34,7 +34,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Once);
+        Assert.Equal(1, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status200OK, context.Response.StatusCode);
     }
 
@@ -50,7 +50,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithSqlInjectionAttempt_ShouldBlockRequest(string maliciousInput)
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.QueryString = new QueryString($"?param={Uri.EscapeDataString(maliciousInput)}");
 
@@ -58,7 +58,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
@@ -66,7 +66,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithSqlInjectionAttempt_ShouldBlockRequestAndReturnBadRequest()
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         var maliciousInput = "1 or 1=1";
         context.Request.QueryString = new QueryString($"?id={Uri.EscapeDataString(maliciousInput)}");
@@ -75,7 +75,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert - request should be blocked
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
@@ -86,7 +86,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithRealWorldAttackExamples_ShouldBlockRequest(string attackQuery)
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         
         // Extract query string from the attack URL
@@ -100,7 +100,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
@@ -108,7 +108,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithEmptyQueryString_ShouldContinuePipeline()
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.QueryString = QueryString.Empty;
 
@@ -116,7 +116,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Once);
+        Assert.Equal(1, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status200OK, context.Response.StatusCode);
     }
 
@@ -124,7 +124,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithMultipleParameters_OneMalicious_ShouldBlockRequest()
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.QueryString = new QueryString("?category=birds&page=1%20or%201=1&sort=desc");
 
@@ -132,7 +132,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
@@ -145,7 +145,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithBasicSqlKeywords_ShouldBlockRequest(string sqlInput)
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.QueryString = new QueryString($"?query={Uri.EscapeDataString(sqlInput)}");
 
@@ -153,7 +153,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
@@ -161,7 +161,7 @@ public class InputValidationMiddlewareTests
     public async Task InvokeAsync_WithSqlInjectionInRouteValue_ShouldBlockRequest()
     {
         // Arrange
-        var middleware = new InputValidationMiddleware(_mockNext.Object, _mockLogger.Object);
+        var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
         context.Request.RouteValues["id"] = "1 or 1=1";
 
@@ -169,7 +169,7 @@ public class InputValidationMiddlewareTests
         await middleware.InvokeAsync(context);
 
         // Assert
-        _mockNext.Verify(next => next(It.IsAny<HttpContext>()), Times.Never);
+        Assert.Equal(0, _mockNext.CallCount);
         Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
     }
 
