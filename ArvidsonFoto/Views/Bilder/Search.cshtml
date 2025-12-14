@@ -12,25 +12,144 @@
     </ol>
 </nav>
 
-<h2>@ViewData["Title"]</h2>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <h1 class="mb-4">
+                <i class="bi bi-search"></i> @ViewData["Title"]
+            </h1>
 
-<partial name="_SearchBar" />
+            <!-- Search bar in a card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <partial name="_SearchBar" />
+                    <small class="form-text text-muted d-block mt-2">
+                        <i class="bi bi-info-circle"></i> Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".
+                    </small>
+                </div>
+            </div>
 
-@if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count > 0) //Kör Continue, för att komma förbi try/catch i Debug-läget...
-{
-    <p class="text-left">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
+            @if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count > 0)
+            {
+                <!-- Search results header -->
+                <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                    <div>
+                        <strong>Sökningen lyckades!</strong> Hittade <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier").
+                    </div>
+                </div>
 
-    <partial name="_Gallery" model="Model" />
-    @*<!-- Här läggs Galleriet in via en PartialView -->*@
+                <!-- Gallery -->
+                <partial name="_Gallery" model="Model" />
 
-    <p class="text-center">Antal hittade kategorier: @(Model.DisplayImagesList.Count)st</p>
-}
-else if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count == 0)
-{
-    <p class="mt-3">@ViewData["Title"], men hittade inget. </p>
-    <p>Upplever du att det verkvar vara en bugg med sökningen, så får du gärna meddela mig via Kontaktsidan.</p>
-}
-else
-{
-    <p>Skriv in en kategori du söker efter och tryck på sök. Till exempel: "Fjäril" eller en fågelart som "Havsörn".</p>
-}
+                <!-- Results footer -->
+                <div class="text-center mt-4 mb-4">
+                    <p class="text-muted">
+                        <i class="bi bi-image"></i> Totalt: <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier")
+                    </p>
+                </div>
+            }
+            else if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count == 0)
+            {
+                <!-- No results found -->
+                <div class="alert alert-warning d-flex align-items-start" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <div>
+                        <h4 class="alert-heading">Inga resultat hittades</h4>
+                        <p class="mb-2">@ViewData["Title"], men hittade inget.</p>
+                        <hr>
+                        <p class="mb-0">
+                            <i class="bi bi-lightbulb"></i> <strong>Tips:</strong> Prova att söka på:
+                        </p>
+                        <ul class="mb-2">
+                            <li>Ett djurnamn (t.ex. "Räv", "Örn", "Fjäril")</li>
+                            <li>En kategori (t.ex. "Fåglar", "Däggdjur", "Landskap")</li>
+                            <li>Ett mer generellt sökord</li>
+                        </ul>
+                        <p class="mb-0">
+                            Upplever du att det verkar vara en bugg med sökningen? 
+                            <a href="/Info/Kontakta" class="alert-link">Kontakta mig gärna</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Alternative navigation -->
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-diagram-3 fs-1 text-primary mb-3"></i>
+                                <h5 class="card-title">Sidkarta</h5>
+                                <p class="card-text">Visa alla tillgängliga kategorier</p>
+                                <a href="/Info/Sidkarta" class="btn btn-outline-primary">
+                                    <i class="bi bi-diagram-3"></i> Till sidkartan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-week fs-1 text-success mb-3"></i>
+                                <h5 class="card-title">Senaste bilderna</h5>
+                                <p class="card-text">Se de nyaste bilderna i arkivet</p>
+                                <a href="/Senast/Uppladdad" class="btn btn-outline-success">
+                                    <i class="bi bi-camera"></i> Senast uppladdade
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Initial state - no search performed -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-info-circle text-info"></i> Hur söker jag?
+                                </h5>
+                                <p class="card-text">Ange ett sökord i sökfältet ovan och tryck på "Sök" eller Enter.</p>
+                                <p class="mb-0"><strong>Exempel på sökord:</strong></p>
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <a href="/Search?s=Fjäril" class="badge bg-secondary text-decoration-none">Fjäril</a>
+                                    <a href="/Search?s=Havsörn" class="badge bg-secondary text-decoration-none">Havsörn</a>
+                                    <a href="/Search?s=Räv" class="badge bg-secondary text-decoration-none">Räv</a>
+                                    <a href="/Search?s=Landskap" class="badge bg-secondary text-decoration-none">Landskap</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-lightning text-warning"></i> Snabblänkar
+                                </h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <a href="/Info/Sidkarta" class="text-decoration-none">
+                                            <i class="bi bi-diagram-3 text-primary"></i> Se alla kategorier i sidkartan
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="/Senast/Per%20kategori" class="text-decoration-none">
+                                            <i class="bi bi-grid-3x3-gap text-success"></i> Senaste bilder per kategori
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="/Bilder/Fåglar" class="text-decoration-none">
+                                            <i class="bi bi-camera text-info"></i> Bläddra bland fågelbilder
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
