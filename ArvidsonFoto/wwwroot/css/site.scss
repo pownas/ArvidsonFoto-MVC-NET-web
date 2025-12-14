@@ -398,6 +398,11 @@ body {
         background-color: #000;
         color: #aaa;
     }
+    
+    /* Dark mode toggle - filled bulb in yellow/gold color */
+    #dark-mode-toggle .bi-lightbulb-fill {
+        color: #ffc107 !important;
+    }
 }
 
 .footer {

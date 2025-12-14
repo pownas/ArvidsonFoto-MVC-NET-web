@@ -512,3 +512,11 @@ body {
   padding: 0.5em 0.75em;
   font-size: 0.875rem;
 }
+
+[data-bs-theme="dark"] #dark-mode-toggle .bi-lightbulb-fill {
+  color: #ffc107 !important;
+}
+
+[data-bs-theme="dark"] #dark-mode-toggle .bi-lightbulb-fill {
+  color: #ffc107 !important;
+}
