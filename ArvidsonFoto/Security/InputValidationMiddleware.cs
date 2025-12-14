@@ -26,7 +26,8 @@ public class InputValidationMiddleware
         new Regex(@"(\bsp_\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(;\s*drop)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(;\s*shutdown)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
-        new Regex(@"(-{2}|\/\*|\*\/)", RegexOptions.Compiled), // SQL comments
+        new Regex(@"(--\s|;\s*--)", RegexOptions.Compiled), // SQL comments with whitespace/semicolon
+        new Regex(@"(\/\*.*?\*\/)", RegexOptions.Compiled | RegexOptions.Singleline), // SQL block comments
         new Regex(@"(\bor\b\s+\d+\s*=\s*\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // or 1=1
         new Regex(@"(\band\b\s+\d+\s*=\s*\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // and 1=1
         new Regex(@"(\bor\b\s+['""]?\d+['""]?\s*=\s*['""]?\d+['""]?)", RegexOptions.IgnoreCase | RegexOptions.Compiled), // or '1'='1'
@@ -55,18 +56,21 @@ public class InputValidationMiddleware
         {
             foreach (var param in context.Request.Query)
             {
-                if (ContainsSqlInjectionAttempt(param.Value))
+                // StringValues can contain multiple values, check each one
+                foreach (var value in param.Value)
                 {
-                    _logger.LogWarning(
-                        "Potential SQL injection attempt detected in query parameter '{Key}' from IP {IpAddress}. Value: {Value}",
-                        param.Key,
-                        context.Connection.RemoteIpAddress,
-                        param.Value
-                    );
+                    if (ContainsSqlInjectionAttempt(value))
+                    {
+                        _logger.LogWarning(
+                            "Potential SQL injection attempt detected in query parameter '{Key}' from IP {IpAddress}. Value: {Value}",
+                            param.Key,
+                            context.Connection.RemoteIpAddress,
+                            value
+                        );
 
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync("Invalid request parameters.");
-                    return;
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        return;
+                    }
                 }
             }
         }
@@ -86,7 +90,6 @@ public class InputValidationMiddleware
                     );
 
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync("Invalid request parameters.");
                     return;
                 }
             }
@@ -103,10 +106,18 @@ public class InputValidationMiddleware
         if (string.IsNullOrWhiteSpace(input))
             return false;
 
-        // Decode URL-encoded strings
-        var decodedInput = Uri.UnescapeDataString(input);
+        try
+        {
+            // Decode URL-encoded strings
+            var decodedInput = Uri.UnescapeDataString(input);
 
-        // Check against all SQL injection patterns
-        return SqlInjectionPatterns.Any(pattern => pattern.IsMatch(decodedInput));
+            // Check against all SQL injection patterns
+            return SqlInjectionPatterns.Any(pattern => pattern.IsMatch(decodedInput));
+        }
+        catch (UriFormatException)
+        {
+            // If URL decoding fails, check the original input
+            return SqlInjectionPatterns.Any(pattern => pattern.IsMatch(input));
+        }
     }
 }
