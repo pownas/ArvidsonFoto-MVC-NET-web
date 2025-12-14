@@ -291,7 +291,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         existingImage.ImageUpdate = DateTime.Now;
         existingImage.ImageUrlName = image.ImageUrl;
         existingImage.Name = image.ImageArtNamn;
-        //TODO: Kanske uppdatera fler fält om det behövs
+        //TODO: Kanske uppdatera fler fÃ¤lt om det behÃ¶vs
 
         // Save changes to the database
         entityContext.SaveChanges();
