@@ -6,6 +6,7 @@ using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Security;
 
 namespace ArvidsonFoto;
 
@@ -128,6 +129,9 @@ public class Startup
         app.UseWebOptimizer();
         
         app.UseStaticFiles();
+
+        // Add input validation middleware to prevent SQL injection and malicious input
+        app.UseMiddleware<InputValidationMiddleware>();
 
         app.UseRouting();
 
