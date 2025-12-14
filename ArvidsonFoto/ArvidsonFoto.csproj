@@ -15,7 +15,13 @@
     <RootNamespace>ArvidsonFoto</RootNamespace>
     <AssemblyName>ArvidsonFoto</AssemblyName>
     <IsPackable>false</IsPackable>
-    <Version>3.10.1</Version>
+    <Version>3.10.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Label="DeterministicBuild">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <PathMap>$(MSBuildProjectDirectory)=/__/</PathMap>
   </PropertyGroup>
 
   <ItemGroup Label="PackageReferences">
