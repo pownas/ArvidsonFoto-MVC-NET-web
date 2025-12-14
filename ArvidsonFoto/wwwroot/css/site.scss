@@ -238,15 +238,13 @@ body {
     }
 
     /* Badges */
-    .badge {
-        &.bg-light {
-            background-color: #333 !important;
-            color: #ddd;
-        }
+    .badge.bg-light {
+        background-color: #333 !important;
+        color: #ddd;
+    }
 
-        &.text-dark {
-            color: #ddd !important;
-        }
+    .badge.text-dark {
+        color: #ddd !important;
     }
 
     /* Text utilities */
