@@ -1,4 +1,5 @@
-﻿namespace ArvidsonFoto.Core.Models;
+﻿#nullable enable
+namespace ArvidsonFoto.Core.Models;
 
 /// <summary>
 /// Modell för en meny kategori i databasen

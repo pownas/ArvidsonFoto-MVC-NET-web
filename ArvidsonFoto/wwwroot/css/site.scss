@@ -100,6 +100,340 @@ body {
     color: #ddd;
 }
 
+/* Bootstrap 5.3 Dark Mode Support - Kolsvart (coal black) theme */
+[data-bs-theme="dark"] {
+    
+    /* Body styling for dark mode */
+    body {
+        background-color: #000 !important;
+        color: #ddd;
+    }
+
+    header {
+        background-color: #000;
+    }
+
+    /* Custom background classes for dark mode */
+    .bg-dark-arvidsonfoto {
+        background-color: #000;
+    }
+
+    /* Navbar dropdown menus (SmartMenus) */
+    .sm-mint ul {
+        background-color: #222 !important;
+        border-color: #444 !important;
+    }
+
+    .sm-mint a,
+    .sm-mint a:hover,
+    .sm-mint a:focus,
+    .sm-mint a:active {
+        color: #ddd !important;
+    }
+
+    .sm-mint a:hover,
+    .sm-mint a:focus,
+    .sm-mint a:active {
+        background-color: #333 !important;
+    }
+
+    .sm-mint a.highlighted {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    .sm-mint ul a,
+    .sm-mint ul a:hover,
+    .sm-mint ul a:focus,
+    .sm-mint ul a:active {
+        background-color: #222 !important;
+        color: #ddd !important;
+    }
+
+    .sm-mint ul a:hover,
+    .sm-mint ul a:focus,
+    .sm-mint ul a:active,
+    .sm-mint ul a.highlighted {
+        background-color: #444 !important;
+        color: #fff !important;
+    }
+    
+    /* Collapsible/Mobile menu dark mode */
+    .sm-mint {
+        background-color: #111 !important;
+        border-color: #444 !important;
+    }
+    
+    .sm-mint > li > a {
+        color: #ddd !important;
+        background-color: #111 !important;
+    }
+    
+    .sm-mint > li > a:hover,
+    .sm-mint > li > a:focus,
+    .sm-mint > li > a:active {
+        background-color: #222 !important;
+        color: #fff !important;
+    }
+    
+    /* Sub-arrow (toggle buttons) in collapsible mode */
+    .sm-mint .sub-arrow {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ddd !important;
+    }
+    
+    /* Main nav container */
+    .main-nav {
+        background-color: #000 !important;
+    }
+
+    /* Buttons for dark mode */
+    .btn-light,
+    a.btn-light {
+        background-color: #333 !important;
+        border-color: #444 !important;
+        color: #ddd !important;
+        
+        &:hover,
+        &:focus {
+            background-color: #444 !important;
+            border-color: #555 !important;
+            color: #fff !important;
+        }
+    }
+
+    /* Gallery thumbnails dark mode fix - more specific selectors */
+    .thumb-a-class,
+    a.thumb-a-class.btn-light,
+    a.glightbox.btn-light {
+        background-color: #333 !important;
+        border-color: #444 !important;
+        
+        &:hover {
+            background-color: #444 !important;
+            border-color: #555 !important;
+        }
+    }
+
+    /* Alerts - make them darker */
+    .alert-light {
+        background-color: #222;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .alert-success {
+        background-color: #1a3d1a;
+        border-color: #2d5a2d;
+        color: #a8e6a8;
+    }
+
+    .alert-danger {
+        background-color: #3d1a1a;
+        border-color: #5a2d2d;
+        color: #e6a8a8;
+    }
+
+    /* Cards - dark theme */
+    .card {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .card-header {
+        background-color: #222 !important;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .card-body {
+        background-color: #1a1a1a;
+        color: #ddd;
+    }
+
+    .card-footer {
+        background-color: #222 !important;
+        border-color: #333;
+        color: #aaa;
+    }
+
+    /* Figure and figcaptions */
+    .figure {
+        background-color: transparent;
+    }
+
+    .figure-caption {
+        color: #aaa;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb {
+        background-color: #000 !important;
+        
+        .breadcrumb-item {
+            color: #aaa;
+            
+            a {
+                color: #6c9bd1;
+                
+                &:hover {
+                    color: #8db3e2;
+                }
+            }
+            
+            &.active {
+                color: #ddd;
+            }
+        }
+    }
+
+    /* Forms */
+    .form-control {
+        background-color: #222;
+        border-color: #444;
+        color: #ddd;
+
+        &:focus {
+            background-color: #2a2a2a;
+            border-color: #555;
+            color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(108, 155, 209, 0.25);
+        }
+
+        &::placeholder {
+            color: #666;
+        }
+    }
+
+    .form-select {
+        background-color: #222;
+        border-color: #444;
+        color: #ddd;
+    }
+
+    .form-label {
+        color: #ddd;
+    }
+
+    .invalid-feedback {
+        color: #e6a8a8;
+    }
+
+    /* Tables */
+    .table {
+        color: #ddd;
+        
+        thead {
+            border-color: #333;
+        }
+        
+        tbody {
+            border-color: #333;
+        }
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        background-color: #1a1a1a;
+    }
+
+    .table-bordered {
+        border-color: #333;
+    }
+
+    /* Modals */
+    .modal-content {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #ddd;
+    }
+
+    .modal-header {
+        border-color: #333;
+    }
+
+    .modal-footer {
+        border-color: #333;
+    }
+
+    /* Badges */
+    .badge.bg-light {
+        background-color: #333 !important;
+        color: #ddd;
+    }
+
+    .badge.bg-info {
+        background-color: #1a3a3a !important;
+        color: #a8d8e6;
+    }
+
+    .badge.text-dark {
+        color: #ddd !important;
+    }
+
+    /* Text utilities */
+    .text-dark {
+        color: #ddd !important;
+    }
+
+    .text-muted {
+        color: #888 !important;
+    }
+
+    /* Background utilities */
+    .bg-light {
+        background-color: #222 !important;
+    }
+
+    .bg-white {
+        background-color: #1a1a1a !important;
+    }
+
+    /* Shadow fix for dark mode */
+    .shadow,
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.075) !important;
+    }
+
+    /* Lightbox */
+    .glightbox-clean .gslide-description {
+        background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .gslide-description {
+        color: #aaa;
+    }
+
+    /* Links */
+    a {
+        color: #6c9bd1;
+        
+        &:hover {
+            color: #8db3e2;
+        }
+    }
+
+    /* Page header and content */
+    #page-header {
+        color: #ddd;
+    }
+
+    #page-content {
+        color: #ddd;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        color: #aaa;
+    }
+    
+    /* Dark mode toggle - filled bulb in yellow/gold color */
+    #dark-mode-toggle .bi-lightbulb-fill {
+        color: #ffc107 !important;
+    }
+}
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -236,6 +570,16 @@ body {
     .spinner-border {
         color: #0078ff;
     }
+}
+
+/* Search page badges gap fix */
+.gap-2 {
+    gap: 0.5rem !important;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.875rem;
 }
 
 /* -------- End Gallery-fix på mobil ------------ */

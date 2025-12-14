@@ -25,9 +25,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <summary>
     /// If the new gallery category feature is enabled, use the new category path
     /// </summary>
-    private bool NewGalleryCategoryEnabled => field =
-                _configuration.GetSection("FeatureFlags:NewGalleryCategory")
-                    .Get<FeatureFlag>()?.Enabled == true ? true : false;
+    private bool NewGalleryCategoryEnabled => 
+        _configuration.GetSection("FeatureFlags:NewGalleryCategory")
+            .Get<FeatureFlag>()?.Enabled == true;
 
     /// <summary> Värde när <see cref="ImageDto"/> inte hittats </summary>
     private static ImageDto DefaultImageDtoNotFound { get; } = new()
@@ -93,6 +93,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns><see langword="true"/> if the image was successfully deleted; otherwise, <see langword="false"/>.</returns>
     public bool DeleteImgId(int imgId)
     {
+        logger.LogWarning("DeleteImgId called for imgId: {ImgId}", imgId);
         bool succeeded = false; //verkar som det måste heta "success" för att defaulta till false. För det går inte att ta bort false tilldelningen.
         try
         {
@@ -107,7 +108,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         }
         catch (Exception ex)
         {
-            Log.Error("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
+            logger.LogError("Error when deleting the image with id: " + imgId + ". Error-message: " + ex.Message);
         }
         return succeeded;
     }

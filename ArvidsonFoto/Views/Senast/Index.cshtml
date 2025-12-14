@@ -24,23 +24,24 @@
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 text-center">
+            <h3>Sök bland kategorierna</h3>
+            <p>
+                Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
+                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
+            </p>
+        </div>
+        <div class="mb-4">
+            <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
+        </div>
+    </div>
+}
+
+@if (ViewData["Title"]!.Equals("Per kategori"))
+{
     <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
 <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
-@if (ViewData["Title"]!.Equals("Per kategori"))
-{
-    <div class="row justify-content-center mt-4">
-        <div class="col-12 text-center">
-            <h3>Sök bland kategorierna</h3>
-            <p>
-                Du kan även söka bland kategorierna här nedan eller se alla kategorier via: 
-                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
-            </p>
-        </div>
-        <div id="searchbar" class="mb-4">
-            <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
-        </div>
-    </div>
-}

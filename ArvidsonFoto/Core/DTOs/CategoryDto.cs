@@ -1,4 +1,5 @@
-﻿namespace ArvidsonFoto.Core.DTOs;
+﻿#nullable enable
+namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
 /// Data Transfer Object (DTO) for Categories  (DB model: <see cref="TblMenu"/>).
