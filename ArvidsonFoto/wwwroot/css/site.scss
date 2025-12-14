@@ -100,11 +100,12 @@ body {
     color: #ddd;
 }
 
-/* Bootstrap 5.3 Dark Mode Overrides - Kolsvart (coal black) theme */
+/* Bootstrap 5.3 Dark Mode Support - Kolsvart (coal black) theme */
 [data-bs-theme="dark"] {
-    /* Body and base elements */
+    
+    /* Body styling for dark mode */
     body {
-        background-color: #000;
+        background-color: #000 !important;
         color: #ddd;
     }
 
@@ -112,9 +113,77 @@ body {
         background-color: #000;
     }
 
-    /* Custom background classes */
+    /* Custom background classes for dark mode */
     .bg-dark-arvidsonfoto {
         background-color: #000;
+    }
+
+    /* Navbar dropdown menus (SmartMenus) */
+    .sm-mint ul {
+        background-color: #222 !important;
+        border-color: #444 !important;
+    }
+
+    .sm-mint a,
+    .sm-mint a:hover,
+    .sm-mint a:focus,
+    .sm-mint a:active {
+        color: #ddd !important;
+    }
+
+    .sm-mint a:hover,
+    .sm-mint a:focus,
+    .sm-mint a:active {
+        background-color: #333 !important;
+    }
+
+    .sm-mint a.highlighted {
+        background-color: #333 !important;
+        color: #fff !important;
+    }
+
+    .sm-mint ul a,
+    .sm-mint ul a:hover,
+    .sm-mint ul a:focus,
+    .sm-mint ul a:active {
+        background-color: #222 !important;
+        color: #ddd !important;
+    }
+
+    .sm-mint ul a:hover,
+    .sm-mint ul a:focus,
+    .sm-mint ul a:active,
+    .sm-mint ul a.highlighted {
+        background-color: #444 !important;
+        color: #fff !important;
+    }
+
+    /* Buttons for dark mode */
+    .btn-light,
+    a.btn-light {
+        background-color: #333 !important;
+        border-color: #444 !important;
+        color: #ddd !important;
+        
+        &:hover,
+        &:focus {
+            background-color: #444 !important;
+            border-color: #555 !important;
+            color: #fff !important;
+        }
+    }
+
+    /* Gallery thumbnails dark mode fix - more specific selectors */
+    .thumb-a-class,
+    a.thumb-a-class.btn-light,
+    a.glightbox.btn-light {
+        background-color: #333 !important;
+        border-color: #444 !important;
+        
+        &:hover {
+            background-color: #444 !important;
+            border-color: #555 !important;
+        }
     }
 
     /* Alerts - make them darker */
@@ -122,6 +191,18 @@ body {
         background-color: #222;
         border-color: #333;
         color: #ddd;
+    }
+
+    .alert-success {
+        background-color: #1a3d1a;
+        border-color: #2d5a2d;
+        color: #a8e6a8;
+    }
+
+    .alert-danger {
+        background-color: #3d1a1a;
+        border-color: #5a2d2d;
+        color: #e6a8a8;
     }
 
     /* Cards - dark theme */
@@ -132,7 +213,7 @@ body {
     }
 
     .card-header {
-        background-color: #222;
+        background-color: #222 !important;
         border-color: #333;
         color: #ddd;
     }
@@ -143,7 +224,7 @@ body {
     }
 
     .card-footer {
-        background-color: #222;
+        background-color: #222 !important;
         border-color: #333;
         color: #aaa;
     }
@@ -157,33 +238,25 @@ body {
         color: #aaa;
     }
 
-    /* Buttons and links */
-    .btn-light {
-        background-color: #333;
-        border-color: #444;
-        color: #ddd;
-    }
-
-    .btn-light:hover {
-        background-color: #444;
-        border-color: #555;
-        color: #fff;
-    }
-
-    .btn-outline-primary {
-        color: #6c9bd1;
-        border-color: #6c9bd1;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #6c9bd1;
-        border-color: #6c9bd1;
-        color: #000;
-    }
-
     /* Breadcrumbs */
     .breadcrumb {
-        background-color: #1a1a1a;
+        background-color: #000 !important;
+        
+        .breadcrumb-item {
+            color: #aaa;
+            
+            a {
+                color: #6c9bd1;
+                
+                &:hover {
+                    color: #8db3e2;
+                }
+            }
+            
+            &.active {
+                color: #ddd;
+            }
+        }
     }
 
     /* Forms */
@@ -191,12 +264,17 @@ body {
         background-color: #222;
         border-color: #444;
         color: #ddd;
-    }
 
-    .form-control:focus {
-        background-color: #2a2a2a;
-        border-color: #555;
-        color: #fff;
+        &:focus {
+            background-color: #2a2a2a;
+            border-color: #555;
+            color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(108, 155, 209, 0.25);
+        }
+
+        &::placeholder {
+            color: #666;
+        }
     }
 
     .form-select {
@@ -209,9 +287,21 @@ body {
         color: #ddd;
     }
 
+    .invalid-feedback {
+        color: #e6a8a8;
+    }
+
     /* Tables */
     .table {
         color: #ddd;
+        
+        thead {
+            border-color: #333;
+        }
+        
+        tbody {
+            border-color: #333;
+        }
     }
 
     .table-striped > tbody > tr:nth-of-type(odd) > * {
@@ -243,6 +333,11 @@ body {
         color: #ddd;
     }
 
+    .badge.bg-info {
+        background-color: #1a3a3a !important;
+        color: #a8d8e6;
+    }
+
     .badge.text-dark {
         color: #ddd !important;
     }
@@ -265,18 +360,28 @@ body {
         background-color: #1a1a1a !important;
     }
 
+    /* Shadow fix for dark mode */
+    .shadow,
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.075) !important;
+    }
+
     /* Lightbox */
     .glightbox-clean .gslide-description {
         background-color: rgba(0, 0, 0, 0.85);
     }
 
+    .gslide-description {
+        color: #aaa;
+    }
+
     /* Links */
     a {
         color: #6c9bd1;
-    }
-
-    a:hover {
-        color: #8db3e2;
+        
+        &:hover {
+            color: #8db3e2;
+        }
     }
 
     /* Page header and content */
