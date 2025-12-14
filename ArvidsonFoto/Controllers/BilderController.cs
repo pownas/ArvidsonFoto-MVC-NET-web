@@ -104,6 +104,10 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
             _pageCounterService.AddPageCount("search");
 
         GalleryViewModel viewModel = new GalleryViewModel();
+        
+        // Store search query for display in the view
+        ViewBag.SearchQuery = s ?? "";
+        
         if (s is null) //Besöker sidan utan att skrivit in någon sökning
         {
             ViewData["Title"] = "Sök bland bild-kategorierna";

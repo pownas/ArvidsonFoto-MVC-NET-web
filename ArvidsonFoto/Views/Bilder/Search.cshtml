@@ -15,9 +15,18 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10 col-xl-8">
-            <h1 class="mb-4">
-                <i class="bi bi-search"></i> @ViewData["Title"]
-            </h1>
+            @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
+            {
+                <h1 class="mb-4">
+                    <i class="bi bi-search"></i> Söker efter: <span class="text-primary">"@ViewBag.SearchQuery"</span>
+                </h1>
+            }
+            else
+            {
+                <h1 class="mb-4">
+                    <i class="bi bi-search"></i> @ViewData["Title"]
+                </h1>
+            }
 
             <!-- Search bar in a card -->
             <div class="card mb-4 shadow-sm">
@@ -42,11 +51,28 @@
                 <!-- Gallery -->
                 <partial name="_Gallery" model="Model" />
 
-                <!-- Results footer -->
-                <div class="text-center mt-4 mb-4">
-                    <p class="text-muted">
-                        <i class="bi bi-image"></i> Totalt: <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier")
-                    </p>
+                <!-- Results footer with clear heading -->
+                <div class="card shadow-sm mt-4 mb-4">
+                    <div class="card-body text-center">
+                        <h3 class="mb-3">
+                            <i class="bi bi-check-circle text-success"></i> Sökresultat
+                        </h3>
+                        <p class="text-muted mb-2">
+                            Din sökning efter <strong class="text-primary">"@ViewBag.SearchQuery"</strong> gav:
+                        </p>
+                        <p class="fs-4 mb-0">
+                            <i class="bi bi-images"></i> <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier")
+                        </p>
+                        <hr class="my-3">
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a href="/Search" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-arrow-clockwise"></i> Ny sökning
+                            </a>
+                            <a href="/Info/Sidkarta" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-diagram-3"></i> Visa alla kategorier
+                            </a>
+                        </div>
+                    </div>
                 </div>
             }
             else if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count == 0)
