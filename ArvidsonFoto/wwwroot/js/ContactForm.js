@@ -36,22 +36,16 @@ $(() => {
         });
 
         form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
+            const isValid = form.checkValidity();
+            
+            if (!isValid) {
                 event.preventDefault();
                 event.stopPropagation();
+                // Show validation summary only if form is invalid
+                $('#validationSummary').removeClass('d-none');
             }
 
             form.classList.add('was-validated');
-            
-            // Show validation summary if form is invalid
-            if (!form.checkValidity()) {
-                $('#validationSummary').removeClass('d-none');
-            }
         }, false);
-    });
-
-    // Show validation feedback when submit button is clicked
-    $('#SubmitButton').on('click', () => {
-        $('#validationSummary').removeClass('d-none');
     });
 });
