@@ -11,7 +11,7 @@
 
     // Configuration
     var config = {
-        delay: 500,           // Delay before showing tooltip (ms)
+        delay: 1000,           // Delay before showing tooltip (ms)
         imageMaxWidth: 300,   // Max width of preview image
         imageMaxHeight: 200,  // Max height of preview image
         apiEndpoint: '/api/image/GetOneImageFromCategory/'
@@ -58,22 +58,24 @@
      * @returns {string} - HTML content
      */
     function generatePopoverContent(imageData) {
-        if (!imageData || !imageData.UrlImage) {
+        if (!imageData || !imageData.urlImage) {
             return '<div class="text-muted">Ingen bild tillgänglig</div>';
         }
 
-        var imagePath = imageData.UrlImage;
+        var imagePath = imageData.urlImage;
         // Ensure the path starts with a slash
         if (!imagePath.startsWith('/')) {
             imagePath = '/' + imagePath;
         }
+        // Add .thumb.jpg extension for thumbnail
+        imagePath += '.thumb.jpg';
 
         var html = '<div class="category-tooltip-content">';
-        html += '<img src="' + imagePath + '" alt="' + (imageData.Name || 'Preview') + '" ';
+        html += '<img src="' + imagePath + '" alt="' + (imageData.name || 'Preview') + '" ';
         html += 'style="max-width: ' + config.imageMaxWidth + 'px; max-height: ' + config.imageMaxHeight + 'px; width: auto; height: auto; display: block;" />';
         
-        if (imageData.DateImageTaken) {
-            var date = new Date(imageData.DateImageTaken);
+        if (imageData.dateImageTaken) {
+            var date = new Date(imageData.dateImageTaken);
             var formattedDate = date.toLocaleDateString('sv-SE');
             html += '<div class="mt-2 small text-muted">Fotograferad: ' + formattedDate + '</div>';
         }
