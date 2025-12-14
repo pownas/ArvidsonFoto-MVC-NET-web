@@ -1,7 +1,7 @@
 ![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET8?style=flat-square&cacheSeconds=86400)
 
 # ArvidsonFoto-MVC .NET web
-Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9... osv. till senaste .NET)
+Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9 till .NET10... osv. till senaste .NET)
   
   
 ## Instruktion för att starta webbsidan lokalt
@@ -62,3 +62,89 @@ dotnet dev-certs https --trust
 
 ## Systemdokumentation
 ![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
+
+## Diagram och Beskrivningar
+
+Detta dokument innehåller två olika diagram som beskriver funktionaliteten och arkitekturen i projektet **ArvidsonFoto-MVC-NET-web**. Diagrammen är skapade för att ge en överblick av användningsfall och tekniska flöden i applikationen.
+
+---
+
+### 1. Aktörer och Användningsfall (Use-case)
+
+**Beskrivning**
+Detta dokument innehåller två olika diagram som beskriver funktionaliteten och arkitekturen i projektet **ArvidsonFoto-MVC-NET-web**. Diagrammen är skapade för att ge en överblick av användningsfall och tekniska flöden i applikationen.
+
+Detta flödesschema visualiserar de olika aktörerna i systemet och deras interaktion med olika funktionella mål (use cases).
+
+```mermaid
+flowchart TD
+  subgraph Aktörer
+    A1[Besökare]
+    A2[Registrerad användare]
+    A3[Fotograf]
+    A4[Redaktör]
+    A5[System]
+  end
+
+  subgraph "Use cases"
+    UC1(Visa galleri)
+    UC2(Sök / filtrera)
+    UC3(Visa bilddetaljer)
+    UC4(Logga in)
+    UC5(Logga ut)
+    UC6(Ladda upp bild)
+    UC7(Kommentera bild)
+    UC8(Ladda ner bild)
+    UC9(Redigera metadata)
+    UC10(Ta bort bild)
+    UC11(Granska och publicera)
+    UC12(Generera thumbnails)
+    UC13(Indexera metadata)
+    UC14(Optimera bilder)
+  end
+
+  A1 --> UC1
+  A1 --> UC2
+  A1 --> UC3
+
+  A2 --> UC4
+  A2 --> UC5
+  A2 --> UC6
+  A2 --> UC7
+  A2 --> UC8
+
+  A3 --> UC6
+  A3 --> UC9
+  A3 --> UC10
+
+  A4 --> UC11
+
+  A5 --> UC12
+  A5 --> UC13
+  A5 --> UC14
+```
+
+### 2. Flödesschema: Bilduppladdning till Publicering
+
+**Beskrivning**
+
+Detta diagram visar det tekniska flödet för en bilduppladdning, från användarens gränssnitt till lagring och bearbetning i bakgrunden, och slutligen publicering och visning via CDN. Flödet innefattar steg som validering, lagring, jobbköer och bakgrundsprocesser.
+
+```mermaid
+flowchart LR
+User[Registrerad användare / Fotograf] -->|Laddar upp bild via formulär| WebApp[ASP.NET MVC - Upload Controller]
+WebApp -->|Validera och spara metadata| DB[SQL Database]
+WebApp -->|Spara originalfil| Storage[Fil-lagring eller Blob]
+WebApp -->|Enqueue jobb| Queue[Jobbkö eller Background Queue]
+Queue --> Worker[Background worker eller Image processor]
+Worker -->|Generera thumbnails och olika storlekar| Storage
+Worker -->|Optimera eller konvertera bilder| Storage
+Worker -->|Extrahera och uppdatera metadata, EXIF och taggar| DB
+Worker -->|Markera som publicerad eller uppdatera status| DB
+Worker -->|Pusha eller uppdatera CDN cache| CDN[CDN eller Cache]
+Worker -->|Skicka notifikation valfritt| Notifier[Notifiering eller E-post eller UI-flagga]
+WebApp -->|Visa publicerad bild via CDN| Visitor[Besökare eller Sök etc.]
+Storage -->|Servera bild| CDN
+DB -->|Används för sökning och visning| WebApp
+```
+

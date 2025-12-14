@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Common">
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>ArvidsonFoto_LogReader</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Label="DeterministicBuild">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <PathMap>$(MSBuildProjectDirectory)=/__/</PathMap>
+  </PropertyGroup>
+
+  <ItemGroup Label="Folders">
     <Folder Include="logs\" />
   </ItemGroup>
 

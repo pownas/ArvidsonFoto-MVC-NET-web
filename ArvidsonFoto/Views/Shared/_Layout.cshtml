@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="sv-se">
+<html lang="sv-se" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="ArvidsonFoto-version" content="Build: v3.10.1 - Date: 2025-09-21 - Time: 00:04 - Commit: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/commit/8be6d8b7" />
+    <meta name="ArvidsonFoto-version" content="Build: v3.10.2 - Date: 2025-12-14 - Time: 20:42 - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v3.10.2" />
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
@@ -22,12 +22,13 @@
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 -->*@
-    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script> @*<!-- version: 4.5.3-dist with Popper.js -->*@
+    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
     <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
     <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
     <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
     <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
+    <script src="js/categoryTooltip.js"></script> @*<!-- Category tooltip with image preview -->*@
     <script src="js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

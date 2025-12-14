@@ -35,11 +35,11 @@
     </label>
     <h1 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h1>
     <ul id="main-menu" class="sm sm-mint">
-        <li class="pr-1">
+        <li class="pe-1">
             <partial name="_NavUploadAdmin" />
         </li>
         @* Den synliga menyn börjar här *@
-        <li class="pr-1">
+        <li class="pe-1">
             <a href="./Senast">Senast</a>
             <ul>
                 <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
@@ -66,7 +66,7 @@ if (headMenu != null && headMenu.Count > 0)
 {
 foreach (var headItem in headMenu)
 {
-<li class="pr-1">
+<li class="pe-1">
 @{
 var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub1Menu != null && sub1Menu.Count > 0)
@@ -83,7 +83,7 @@ else
 var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub2Menu != null && sub2Menu.Count > 0)
 {
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)">@sub1Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId">@sub1Item.MenuText</a>
 <ul>
 @foreach (var sub2Item in sub2Menu)
 {
@@ -92,7 +92,7 @@ if (sub2Menu != null && sub2Menu.Count > 0)
 var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub3Menu != null && sub3Menu.Count > 0)
 {
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)">@sub2Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId">@sub2Item.MenuText</a>
 <ul>
 @foreach (var sub3Item in sub3Menu)
 {
@@ -101,7 +101,7 @@ if (sub3Menu != null && sub3Menu.Count > 0)
     string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText);
     string popoverAttrs = GetPopoverAttributes(sub3Item, imgPath);
 }
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)" @Html.Raw(popoverAttrs)>@sub3Item.MenuText</a>
+<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)" class="has-category-tooltip" data-category-id="@sub3Item.MenuId" @Html.Raw(popoverAttrs)>@sub3Item.MenuText</a>
 </li>
 }
 </ul>
@@ -110,7 +110,7 @@ else
 {
     string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText);
     string popoverAttrs = GetPopoverAttributes(sub2Item, imgPath);
-    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" @Html.Raw(popoverAttrs)>@sub2Item.MenuText</a>
+    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId" @Html.Raw(popoverAttrs)>@sub2Item.MenuText</a>
 }
 }
 </li>
@@ -121,7 +121,7 @@ else
 {
     string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText);
     string popoverAttrs = GetPopoverAttributes(sub1Item, imgPath);
-    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" @Html.Raw(popoverAttrs)>@sub1Item.MenuText</a>
+    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId" @Html.Raw(popoverAttrs)>@sub1Item.MenuText</a>
 }
 }
 </li>
@@ -135,7 +135,7 @@ else
 }
 }
         }
-        <li class="pr-1">
+        <li class="pe-1">
             <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
             <ul>
                 @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
@@ -154,6 +154,7 @@ else
                 <partial name="_NavLoginPartial" />
             </ul>
         </li>
-        <li class="pr-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+        <li class="pe-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+        <li class="pe-2"><a href="#" id="dark-mode-toggle" title="Tänd ljuset"><i class="bi bi-lightbulb"></i></a></li>
     </ul>
 </nav>
