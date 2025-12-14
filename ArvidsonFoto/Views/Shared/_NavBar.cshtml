@@ -11,11 +11,11 @@
     </label>
     <h1 class="nav-brand"><a href="./">ArvidsonFoto.se</a></h1>
     <ul id="main-menu" class="sm sm-mint">
-        <li class="pr-1">
+        <li class="pe-1">
             <partial name="_NavUploadAdmin" />
         </li>
         @* Den synliga menyn börjar här *@
-        <li class="pr-1">
+        <li class="pe-1">
             <a href="./Senast">Senast</a>
             <ul>
                 <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
@@ -42,7 +42,7 @@ if (headMenu != null && headMenu.Count > 0)
 {
 foreach (var headItem in headMenu)
 {
-<li class="pr-1">
+<li class="pe-1">
 @{
 var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
 if (sub1Menu != null && sub1Menu.Count > 0)
@@ -99,7 +99,7 @@ else
 }
 }
         }
-        <li class="pr-1">
+        <li class="pe-1">
             <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
             <ul>
                 @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
@@ -118,6 +118,6 @@ else
                 <partial name="_NavLoginPartial" />
             </ul>
         </li>
-        <li class="pr-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+        <li class="pe-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
     </ul>
 </nav>
