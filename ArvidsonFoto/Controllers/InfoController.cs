@@ -255,4 +255,12 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             _pageCounterService.AddPageCount("Copyright");
         return View();
     }
+
+    public IActionResult Cookies()
+    {
+        ViewData["Title"] = "Cookie-policy";
+        if (User?.Identity?.IsAuthenticated is false)
+            _pageCounterService.AddPageCount("Cookies");
+        return View();
+    }
 }
