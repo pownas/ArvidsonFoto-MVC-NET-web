@@ -7,6 +7,8 @@
     categories = _categoryService.GetAll();
     
     // Helper function to get popover attributes for a category
+    // Note: This is kept for backwards compatibility but the actual popover functionality
+    // is now handled by categoryTooltip.js which uses the Bootstrap 5.3 JavaScript API
     string GetPopoverAttributes(TblMenu category, string imagePath)
     {
         var image = _imageService.GetOneImageFromCategory(category.MenuId);
@@ -25,7 +27,8 @@
         string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
         string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
         
-        return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-placement=\"right\"";
+        // Updated to Bootstrap 5.3 format with data-bs-* attributes
+        return $"data-bs-toggle=\"popover\" data-bs-trigger=\"hover\" data-bs-html=\"true\" data-bs-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-bs-placement=\"right\"";
     }
 }
 <nav class="main-nav">

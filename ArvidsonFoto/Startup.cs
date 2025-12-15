@@ -55,6 +55,10 @@ public class Startup
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
+        services.AddScoped<IFacebookService, FacebookService>();
+
+        // Lägger till HttpClient för FacebookService
+        services.AddHttpClient<IFacebookService, FacebookService>();
 
         // Lägger till Services för backend API: 
         services.AddScoped<IApiCategoryService, ApiCategoryService>();
