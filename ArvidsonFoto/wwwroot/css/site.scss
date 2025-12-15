@@ -486,7 +486,7 @@ body {
 .glightbox-clean .gslide-description {
     background-color: rgba(34, 34, 34, 0.75);
 }
-/* ----------end of gllightbox config------------ */
+/* ----------end of glightbox config------------ */
 
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-figcaption-startpage { width: 9rem; }
@@ -634,3 +634,53 @@ body {
     }
 }
 /* -------- End Category Tooltip Popover Styles -------- */
+
+/* -------- Promotional boxes (puffar) on home page -------- */
+.puff-card {
+    border: 2px solid #444;
+    background-color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        border-color: #0078ff;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    .puff-icon {
+        font-size: 3rem;
+        color: #0078ff;
+    }
+    
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ddd;
+    }
+    
+    .card-text {
+        color: #aaa;
+        margin-bottom: 1.5rem;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .puff-card {
+        border-color: #555;
+        background-color: #1a1a1a;
+        
+        &:hover {
+            border-color: #6c9bd1;
+        }
+        
+        .puff-icon {
+            color: #6c9bd1;
+        }
+    }
+}
+/* -------- End Promotional boxes (puffar) -------- */
