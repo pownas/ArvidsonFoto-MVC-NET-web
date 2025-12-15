@@ -1,15 +1,41 @@
-![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET8?style=flat-square&cacheSeconds=86400)
+﻿![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET8?style=flat-square&cacheSeconds=86400)
 
 # ArvidsonFoto-MVC .NET web
 Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET8 till .NET9 till .NET10... osv. till senaste .NET)
   
   
 ## Instruktion för att starta webbsidan lokalt
+
+### Alternativ 1: Med .NET Aspire AppHost (REKOMMENDERAS) 🚀
+
+**Enklaste sättet!** Aspire AppHost är nu inkluderat i projektet och ger dig:
+- ✨ **Aspire Dashboard** med OpenTelemetry (http://localhost:15888)
+- ✨ **SQL Server i Docker** - startar automatiskt
+- ✨ **Distributed Tracing** - se requests genom hela systemet
+- ✨ **Metrics & Logs** - samlade på ett ställe
+- ✨ **Health Checks** - övervaka tjänsternas hälsa
+
+```bash
+# Steg 1: Se till att Docker Desktop är igång
+# Ladda ner från https://www.docker.com/products/docker-desktop/
+
+# Steg 2: Kör AppHost (från projektets rot)
+dotnet run --project ArvidsonFoto.AppHost
+```
+
+**Det är allt!** Aspire Dashboard öppnas automatiskt i din webbläsare.
+
+Se [ArvidsonFoto.AppHost/README.md](ArvidsonFoto.AppHost/README.md) för mer detaljer.
+
+### Alternativ 2: Traditionell setup (Utan Aspire)
+
 För att starta webbsidan så är det några steg man behöver genomföra. 
 1. Kommentera bort ```modelBuilder.InitialDatabaseSeed();``` (ca rad 163) i **[/ArvidsonFoto/Data/ArvidsonFotoDbContext.cs](https://github.com/pownas/ArvidsonFoto-MVC-NET8/blob/main/ArvidsonFoto/Data/ArvidsonFotoDbContext.cs#L163)** , för att kunna skapa en ny databas med dess tillhörande data. 
 2. Kör entityframework databas uppdateringar: 
-```dotnet ef database update --context ArvidsonFotoDbContext```  
-```dotnet ef database update --context ArvidsonFotoIdentityContext```
+```bash
+dotnet ef database update --context ArvidsonFotoDbContext
+dotnet ef database update --context ArvidsonFotoIdentityContext
+```
 3. Vill du skapa nya användare för att komma åt: **https://localhost:44300/UploadAdmin**, så behöver du kommentera tillbaka all kod på sidan: **[/ArvidsonFoto/Areas/Identity/Pages/Account/Register.cshtml](https://github.com/pownas/ArvidsonFoto-MVC-NET8/blob/main/ArvidsonFoto/Areas/Identity/Pages/Account/Register.cshtml)**
 4. Nu kan du registrera nya användare och sedan logga in på sidan **/UploadAdmin** också. 
   
@@ -148,3 +174,30 @@ Storage -->|Servera bild| CDN
 DB -->|Används för sökning och visning| WebApp
 ```
 
+
+## Modernisering och utveckling
+
+### Senaste moderniseringar (v3.10.4)
+
+Projektet har nyligen moderniserats med följande förbättringar:
+
+- ✅ **Program.cs modernisering**: Migrerat från Startup.cs till modern WebApplicationBuilder-pattern
+- ✅ **Konsoliderad konfiguration**: All appconfiguration hanteras nu i en enda Program.cs-fil
+- ✅ **.NET Aspire-ready**: Projektet är förberett för att enkelt integrera .NET Aspire för lokal utveckling
+- ✅ **.NET 10**: Senaste .NET-versionen med alla moderna features
+
+### Ytterligare moderniseringsmöjligheter
+
+För fullständig lista över rekommenderade moderniseringar, se [MODERNIZATION.md](docs/MODERNIZATION.md). Sammanfattning:
+
+1. **Nullable reference types**: Använd `required` keyword för att eliminera warnings
+2. **Records**: Konvertera ViewModels och DTOs till records för immutabilitet
+3. **Global usings**: Expandera för att minska repetitiv kod
+4. **Primary constructors**: Förenkla service-konstruktorer
+5. **LoggerMessage source generators**: Förbättra logging-performance
+
+### Dokumentation
+
+- 📖 [ASPIRE.md](docs/ASPIRE.md) - Guide för .NET Aspire integration och lokal utveckling
+- 📖 [MODERNIZATION.md](docs/MODERNIZATION.md) - Detaljerade moderniseringsrekommendationer
+- 📖 [Use case-diagram](docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg) - Systemöversikt
