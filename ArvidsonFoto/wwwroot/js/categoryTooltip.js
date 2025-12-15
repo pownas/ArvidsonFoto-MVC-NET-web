@@ -2,11 +2,12 @@
  * Category Tooltip Feature
  * Displays a popover with the latest image when hovering over subcategory links
  * Updated for Bootstrap 5.3 - using vanilla JavaScript
+ * Now with localStorage caching support for better performance
  */
 (function () {
     'use strict';
 
-    // Cache for storing fetched images to avoid repeated API calls
+    // In-memory cache for quick access (secondary layer)
     var imageCache = {};
 
     // Configuration
@@ -15,7 +16,8 @@
         imageMaxWidth: 300,   // Max width of preview image
         imageMaxHeight: 200,  // Max height of preview image
         apiEndpoint: '/api/image/GetOneImageFromCategory/',
-        imageBaseUrl: 'https://arvidsonfoto.se' // Base URL for images
+        imageBaseUrl: 'https://arvidsonfoto.se', // Base URL for images
+        cacheKeyPrefix: 'category_image_' // Prefix for localStorage cache keys
     };
 
     /**
@@ -28,13 +30,26 @@
 
     /**
      * Fetches the latest image for a category from the API
+     * Uses both localStorage and in-memory cache for optimal performance
      * @param {number} categoryId - The category ID
      * @returns {Promise} - Promise that resolves with image data
      */
     function fetchCategoryImage(categoryId) {
-        // Check cache first
+        var cacheKey = config.cacheKeyPrefix + categoryId;
+        
+        // Check in-memory cache first (fastest)
         if (imageCache[categoryId]) {
             return Promise.resolve(imageCache[categoryId]);
+        }
+
+        // Check localStorage cache (if available)
+        if (window.LocalStorageCache) {
+            var cachedData = LocalStorageCache.get(cacheKey);
+            if (cachedData) {
+                // Store in memory cache for even faster subsequent access
+                imageCache[categoryId] = cachedData;
+                return Promise.resolve(cachedData);
+            }
         }
 
         // Fetch from API
@@ -51,8 +66,14 @@
             return response.json();
         })
         .then(function (imageData) {
-            // Cache the result
+            // Cache the result in memory
             imageCache[categoryId] = imageData;
+            
+            // Cache in localStorage with 1 hour TTL
+            if (window.LocalStorageCache) {
+                LocalStorageCache.set(cacheKey, imageData);
+            }
+            
             return imageData;
         })
         .catch(function (error) {
