@@ -318,7 +318,7 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
         // Hämta de 25 senaste bilderna
         var recentImages = _imageService.GetAll()
             .OrderByDescending(i => i.ImageId)
-            .Take(25)
+            .Take(60)
             .ToList();
 
         var viewModel = new FacebookUploadViewModel
