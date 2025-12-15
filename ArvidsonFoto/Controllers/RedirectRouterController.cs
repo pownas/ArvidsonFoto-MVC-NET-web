@@ -64,15 +64,16 @@ public class RedirectRouterController() : Controller
     [Route("/Info/GB")]
     [Route("/Info/Gstbok")]
     [Route("/Info/Gastbok")]
+    [Route("/Info/Gästbok")]
     //[Route("/GB.asp")] //Tar bort denna routern för att slippa gamla spammers. 
-    public RedirectToActionResult RedirectToInfoGästbok()
+    public RedirectToActionResult RedirectToInfoGastbok()
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-        Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Gästbok");
+        Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Gastbok");
 
-        return RedirectToActionPermanent(actionName: nameof(InfoController.Gästbok), controllerName: nameof(InfoController).Replace("Controller", ""));
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Gastbok), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Kontakta.asp")]
@@ -89,17 +90,19 @@ public class RedirectRouterController() : Controller
     }
 
     [Route("/Kop.asp")]
+    [Route("/Kop_av_bilder")]
     [Route("/Köp_av_bilder")]
     [Route("/Info/Kp_av_bilder")]
     [Route("/Info/Kop_av_bilder")]
-    public RedirectToActionResult RedirectToInfoKöp_av_bilder()
+    [Route("/Info/Köp_av_bilder")]
+    public RedirectToActionResult RedirectToInfoKop_av_bilder()
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
         string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-        Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Köp_av_bilder");
+        Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Kop_av_bilder");
 
-        return RedirectToActionPermanent(actionName: nameof(InfoController.Köp_av_bilder), controllerName: nameof(InfoController).Replace("Controller", ""));
+        return RedirectToActionPermanent(actionName: nameof(InfoController.Kop_av_bilder), controllerName: nameof(InfoController).Replace("Controller", ""));
     }
 
     [Route("/Om.asp")]

@@ -21,7 +21,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         return View();
     }
 
-    public IActionResult Gästbok(GuestbookInputModel inputModel)
+    public IActionResult Gastbok(GuestbookInputModel inputModel)
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
@@ -97,7 +97,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'."); //SKRIVS INTE UT???
             inputModel.DisplayPublished = false;
         }
-        return RedirectToAction("Gästbok", inputModel);
+        return RedirectToAction("Gastbok", inputModel);
     }
 
     [HttpPost]
@@ -166,9 +166,9 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         {
             return RedirectToAction("Kontakta", contactFormModel);
         }
-        else if (Page.Equals("Köp_av_bilder"))
+        else if (Page.Equals("Kop_av_bilder"))
         {
-            return RedirectToAction("Köp_av_bilder", contactFormModel);
+            return RedirectToAction("Kop_av_bilder", contactFormModel);
         }
         else
         {
@@ -197,7 +197,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         return View(contactFormModel);
     }
 
-    public IActionResult Köp_av_bilder(ContactFormModel contactFormModel, string imgId)
+    public IActionResult Kop_av_bilder(ContactFormModel contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
@@ -210,7 +210,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
-                ReturnPageUrl = "Köp_av_bilder"
+                ReturnPageUrl = "Kop_av_bilder"
             };
 
             if (imgId is not null)

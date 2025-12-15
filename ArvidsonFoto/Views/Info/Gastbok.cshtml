@@ -4,7 +4,7 @@
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
     <meta name="description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/GB" />
+    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Gastbok" />
 }
 
 @inject IGuestBookService _guestBookService
@@ -99,15 +99,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">
-                                @if(gbPost.GbName!.Equals("Jonas Arvidson (Webmaster)"))
-                                {
-                                    @HttpUtility.HtmlEncode(gbPost.GbText.Replace("<br>", "\n"))
-                                }
-                                else
-                                {
-                                    @gbPost.GbText.Replace("<br>", "\n")
-                                }
-                                
+                                @HttpUtility.HtmlDecode(gbPost.GbText.Replace("<br>", "\n"))
                             </p>
                         </div>
                         <div class="card-footer bg-white border-top">
