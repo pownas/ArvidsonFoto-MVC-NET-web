@@ -15,24 +15,39 @@
 <h2><i class="bi bi-cart3"></i> @ViewData["Title"]</h2>
 
 <div id="page-content" class="brodtext">
-    <div class="row">
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow-sm h-100">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100 d-flex flex-column">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Information om bildköp</h5>
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> Information om bildköp</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body flex-grow-1">
                     <p><strong>Intresserad av att köpa bilder?</strong></p>
                     <p>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</p>
-                    <p class="mb-0">Se även mer information under sidan <a href="/Info/Kontakta">Kontaktinformation</a>.</p>
+                    <p>Se även mer information under sidan <a href="/Info/Kontakta">Kontaktinformation</a>.</p>
+                    
+                    <div class="mt-4">
+                        <h4><i class="bi bi-check-circle"></i> Vad kan jag hjälpa till med?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-image text-primary"></i> Högupplösta bilder för tryck</li>
+                            <li><i class="bi bi-file-earmark-image text-primary"></i> Digitala bildfiler</li>
+                            <li><i class="bi bi-newspaper text-primary"></i> Redaktionellt bruk</li>
+                            <li><i class="bi bi-megaphone text-primary"></i> Kommersiellt bruk</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> Svarar vanligtvis inom 1-5 dagar
+                    </small>
                 </div>
             </div>
         </div>
         
         <div class="col-lg-7">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h5>
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ContactForm" model="Model" />

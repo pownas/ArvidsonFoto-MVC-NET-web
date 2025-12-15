@@ -15,49 +15,54 @@
 <h2><i class="bi bi-mailbox"></i> @ViewData["Title"]</h2>
 
 <div id="page-content" class="brodtext">
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm h-100">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100 d-flex flex-column">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Kontaktinformation</h5>
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> Kontaktinformation</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body flex-grow-1">
                     <p>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon.</p>
                     
                     <div class="mb-3">
-                        <h6><i class="bi bi-geo-alt-fill"></i> Adress</h6>
+                        <h4><i class="bi bi-geo-alt-fill"></i> Adress</h4>
                         <p class="ms-4">Hagmarksgatan 8, 70216 Örebro</p>
                     </div>
                     
                     <div class="mb-3">
-                        <h6><i class="bi bi-telephone-fill"></i> Telefon</h6>
+                        <h4><i class="bi bi-telephone-fill"></i> Telefon</h4>
                         <p class="ms-4"><a href="tel:019120412">019-12 04 12</a></p>
                     </div>
                     
                     <div class="mb-3">
-                        <h6><i class="bi bi-phone-fill"></i> Mobil</h6>
+                        <h4><i class="bi bi-phone-fill"></i> Mobil</h4>
                         <p class="ms-4"><a href="tel:0708120412">0708-12 04 12</a></p>
                     </div>
                     
                     <div class="mb-3">
-                        <h6><i class="bi bi-envelope-fill"></i> Epost</h6>
+                        <h4><i class="bi bi-envelope-fill"></i> Epost</h4>
                         <p class="ms-4"><a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
                     </div>
                     
                     <div class="mb-0">
-                        <h6><i class="bi bi-facebook"></i> Facebook</h6>
+                        <h4><i class="bi bi-facebook"></i> Facebook</h4>
                         <div class="ms-4">
                             <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FArvidsonFoto%2F&tabs=timeline&width=300&height=70&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=true&appId=223060987754416" width="270" height="70" style="border: none;overflow: hidden;" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> Svarar vanligtvis inom 1-5 dagar
+                    </small>
+                </div>
             </div>
         </div>
         
         <div class="col-lg-6">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h5>
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ContactForm" model="Model" />

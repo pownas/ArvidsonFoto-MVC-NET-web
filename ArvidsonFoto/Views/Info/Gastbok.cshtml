@@ -63,9 +63,9 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span></label>
-                        <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid mb-2 rounded" alt="CAPTCHA bild med siffror" style="max-width: 200px;">
                         <input asp-for="Code" class="form-control" placeholder="Siffror" required aria-required="true" aria-describedby="validationCode">
                         <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
+                        <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid mt-2 rounded" alt="CAPTCHA bild med siffror" style="max-width: 200px;">
                     </div>
                     <div class="col-12">
                         <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span></label>
