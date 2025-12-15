@@ -20,22 +20,22 @@
     <div class="row g-3">
         <div class="col-12">
             <label asp-for="Name" class="form-label"><i class="bi bi-person"></i> Namn <span class="text-danger">*</span></label>
-            <input asp-for="Name" type="text" placeholder="Ditt namn" class="form-control" aria-required="true" aria-describedby="validationName" />
+            <input asp-for="Name" type="text" placeholder="Ditt namn" class="form-control" required aria-required="true" aria-describedby="validationName" />
             <div id="validationName" class="invalid-feedback" asp-validation-for="Name"></div>
         </div>
         <div class="col-12">
             <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Epost <span class="text-danger">*</span></label>
-            <input asp-for="Email" type="email" placeholder="din.epost@exempel.se" class="form-control" aria-required="true" aria-describedby="validationEmail" />
+            <input asp-for="Email" type="email" placeholder="din.epost@exempel.se" class="form-control" required aria-required="true" aria-describedby="validationEmail" />
             <div id="validationEmail" class="invalid-feedback" asp-validation-for="Email"></div>
         </div>
         <div class="col-12">
             <label asp-for="Subject" class="form-label"><i class="bi bi-tag"></i> Rubrik <span class="text-danger">*</span></label>
-            <input asp-for="Subject" type="text" placeholder="Rubrik på ditt meddelande" class="form-control" aria-required="true" aria-describedby="validationSubject" />
+            <input asp-for="Subject" type="text" placeholder="Rubrik på ditt meddelande" class="form-control" required aria-required="true" aria-describedby="validationSubject" />
             <div id="validationSubject" class="invalid-feedback" asp-validation-for="Subject"></div>
         </div>
         <div class="col-12">
             <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span></label>
-            <textarea asp-for="Message" placeholder="@Model.MessagePlaceholder" rows="6" class="form-control" aria-required="true" aria-describedby="validationMessage"></textarea>
+            <textarea asp-for="Message" placeholder="@Model.MessagePlaceholder" rows="6" class="form-control" required aria-required="true" aria-describedby="validationMessage"></textarea>
             <div id="validationMessage" class="invalid-feedback" asp-validation-for="Message"></div>
         </div>
         <div class="col-12">
@@ -43,7 +43,7 @@
         </div>
         <div class="col-12">
             <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span></label>
-            <input asp-for="Code" placeholder="Siffror från bilden" class="form-control" aria-required="true" aria-describedby="validationCode" />
+            <input asp-for="Code" placeholder="Siffror från bilden" class="form-control" required aria-required="true" aria-describedby="validationCode" />
             <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
         </div>
         <div class="col-12">
