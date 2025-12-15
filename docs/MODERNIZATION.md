@@ -65,31 +65,42 @@ public class Program
 
 Projektet använder redan file-scoped namespaces! ✅
 
-### 3. Global usings expansion 🌐 MEDEL PRIORITET
+### 3. Global usings expansion 🌐 BEGRÄNSAD MÖJLIGHET
 
 **Nuvarande GlobalUsings.cs:**
 ```csharp
 global using ArvidsonFoto.Controllers;
 global using Microsoft.AspNetCore.Mvc;
 global using Serilog;
+global using Serilog.Events;
 global using System.ComponentModel.DataAnnotations.Schema;
 ```
 
-**Rekommenderad expansion:**
+**Förbättrad (redan implementerad):**
 ```csharp
 global using ArvidsonFoto.Controllers;
-global using ArvidsonFoto.Data;
-global using ArvidsonFoto.Models;
-global using ArvidsonFoto.Services;
-global using ArvidsonFoto.Core.Interfaces;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.EntityFrameworkCore;
 global using Serilog;
-global using System.ComponentModel.DataAnnotations;
+global using Serilog.Events;  // Added for better logging
 global using System.ComponentModel.DataAnnotations.Schema;
 ```
 
-**Fördelar:**
+**Varför inte fler?**
+
+Projektet har **dubbletter av modellnamn** mellan `ArvidsonFoto.Models` och `ArvidsonFoto.Core.Models`:
+- `TblImage` finns i båda
+- `TblMenu` finns i båda  
+- `TblGb` finns i båda
+- `TblPageCounter` finns i båda
+
+Detta gör att vi inte kan inkludera `ArvidsonFoto.Models`, `ArvidsonFoto.Data` eller `ArvidsonFoto.Core.Interfaces` i global usings utan att orsaka ambiguösa referenser.
+
+**Rekommendation för framtiden:**
+1. Byt namn på modeller i `ArvidsonFoto.Core.Models` för att undvika konflikter (t.ex. `CoreTblImage`)
+2. Eller konsolidera modellerna till en gemensam plats
+3. Efter detta kan global usings expanderas enligt ursprungligt förslag
+
+**Fördelar efter konsolidering:**
 - Mindre repetitiv kod i varje fil
 - Tydligare fokus på affärslogik
 - Lättare att läsa och underhålla
