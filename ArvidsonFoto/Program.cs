@@ -8,6 +8,7 @@ using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
+using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 
 namespace ArvidsonFoto;
 
@@ -65,7 +66,7 @@ public class Program
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
-            services.AddDbContext<Areas.Identity.Data.ArvidsonFotoIdentityContext>(options =>
+            services.AddDbContext<IdentityContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
         }
         else
@@ -76,13 +77,13 @@ public class Program
                 options.UseSqlServer(connectionString));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            services.AddDbContext<Areas.Identity.Data.ArvidsonFotoIdentityContext>(options =>
+            services.AddDbContext<IdentityContext>(options =>
                 options.UseSqlServer(connectionString));
         }
 
         // Identity configuration (moved from IdentityHostingStartup.cs)
         services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<Areas.Identity.Data.ArvidsonFotoIdentityContext>();
+            .AddEntityFrameworkStores<IdentityContext>();
 
         // Add frontend services
         services.AddScoped<ICategoryService, CategoryService>();

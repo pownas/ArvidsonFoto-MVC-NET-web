@@ -55,28 +55,72 @@ Lägg till referens till ServiceDefaults-projektet:
 
 ### Steg 4: Uppdatera Program.cs i ArvidsonFoto
 
-Lägg till Aspire service defaults i början av `ConfigureServices`-metoden:
+Lägg till Aspire service defaults i `Main`-metoden innan `ConfigureServices` anropas:
 
 ```csharp
-private static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+public static void Main(string[] args)
 {
-    // Add Aspire service defaults (observability, health checks, resilience)
-    builder.AddServiceDefaults();
-    
-    services.AddDatabaseDeveloperPageExceptionFilter();
-    // ... resten av koden
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Debug()
+        .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day)
+        .CreateLogger();
+
+    try
+    {
+        Log.Information("Starting web application");
+        
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add Aspire service defaults (observability, health checks, resilience)
+        builder.AddServiceDefaults();
+
+        // Add services to the container
+        ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline
+        ConfigureMiddleware(app, app.Environment, app.Configuration);
+
+        app.Run();
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Application terminated unexpectedly");
+        throw;
+    }
+    finally
+    {
+        Log.CloseAndFlush();
+    }
 }
 ```
 
-Och i `ConfigureMiddleware`-metoden:
+Och i `ConfigureMiddleware`-metoden, lägg till:
 
 ```csharp
 private static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env, IConfiguration configuration)
 {
-    // Map default endpoints (health checks, etc.)
+    // ... existing seeding code ...
+
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseMigrationsEndPoint();
+        app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+    }
+    
+    // ... rest of middleware ...
+    
+    // Map default endpoints (health checks, etc.) - add before MapControllerRoute
     app.MapDefaultEndpoints();
     
-    // ... resten av middleware-konfigurationen
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+    app.MapRazorPages();
+    
+    // ... rest of code
 }
 ```
 
