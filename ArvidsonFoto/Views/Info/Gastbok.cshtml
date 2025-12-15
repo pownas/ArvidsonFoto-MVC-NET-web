@@ -133,4 +133,18 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/ContactForm.js"></script>
+    <script>
+        // Auto-prefix homepage URL with https:// if not present
+        document.addEventListener('DOMContentLoaded', function() {
+            const homepageInput = document.getElementById('Homepage');
+            if (homepageInput) {
+                homepageInput.addEventListener('blur', function() {
+                    let value = this.value.trim();
+                    if (value && !value.match(/^https?:\/\//i)) {
+                        this.value = 'https://' + value;
+                    }
+                });
+            }
+        });
+    </script>
 }

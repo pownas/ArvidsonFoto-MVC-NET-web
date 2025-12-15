@@ -15,8 +15,8 @@ public class GuestbookInputModel
     [MaxLength(150, ErrorMessage = "Du har angivit en för lång epost-adress. Max 150 tecken")]
     public string Email { get; set; }
 
-    [StringLength(250, ErrorMessage = "För lång rubrik (max 250 tecken)")] //StringLength
-    [Url(ErrorMessage = "Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt")]
+    [StringLength(250, ErrorMessage = "För lång URL (max 250 tecken)")]
+    [RegularExpression(@"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$", ErrorMessage = "Ogiltig URL-format. Exempel: exempel.se eller https://exempel.se")]
     public string Homepage { get; set; }
 
     [Required(ErrorMessage = "Ange ett meddelande")]
