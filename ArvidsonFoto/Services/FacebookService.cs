@@ -38,6 +38,12 @@ public class FacebookService : IFacebookService
                 return null;
             }
 
+            if (imageUrls == null || imageUrls.Count == 0)
+            {
+                Log.Error("Ingen bild angiven för Facebook-inlägg.");
+                return null;
+            }
+
             var pageAccessToken = _configuration["Facebook:PageAccessToken"];
             var pageId = _configuration["Facebook:PageId"];
 
@@ -121,6 +127,12 @@ public class FacebookService : IFacebookService
             {
                 Log.Error("Kunde inte ladda upp några bilder till Facebook");
                 return null;
+            }
+
+            // Logga varning om några bilder misslyckades
+            if (mediaIds.Count < imageUrls.Count)
+            {
+                Log.Warning($"Endast {mediaIds.Count} av {imageUrls.Count} bilder kunde laddas upp till Facebook");
             }
 
             // Steg 2: Skapa inlägg med alla media-ID:n
