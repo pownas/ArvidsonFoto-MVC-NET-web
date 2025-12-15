@@ -63,7 +63,6 @@ public class RedirectRouterController() : Controller
 
     [Route("/Info/GB")]
     [Route("/Info/Gstbok")]
-    [Route("/Info/Gastbok")]
     [Route("/Info/Gästbok")]
     //[Route("/GB.asp")] //Tar bort denna routern för att slippa gamla spammers. 
     public RedirectToActionResult RedirectToInfoGastbok()
@@ -93,7 +92,6 @@ public class RedirectRouterController() : Controller
     [Route("/Kop_av_bilder")]
     [Route("/Köp_av_bilder")]
     [Route("/Info/Kp_av_bilder")]
-    [Route("/Info/Kop_av_bilder")]
     [Route("/Info/Köp_av_bilder")]
     public RedirectToActionResult RedirectToInfoKop_av_bilder()
     {
