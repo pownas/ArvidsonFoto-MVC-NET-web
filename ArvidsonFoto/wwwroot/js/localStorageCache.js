@@ -160,8 +160,10 @@
 
             var cleared = 0;
             var now = new Date().getTime();
+            var keysToRemove = [];
 
             try {
+                // First pass: collect keys to remove
                 for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
                     if (key && key.startsWith(config.prefix)) {
@@ -169,20 +171,22 @@
                         if (itemStr) {
                             try {
                                 var item = JSON.parse(itemStr);
-                                // Remove if expired or wrong version
+                                // Mark for removal if expired or wrong version
                                 if (item.expiry < now || item.version !== config.cacheVersion) {
-                                    localStorage.removeItem(key);
-                                    cleared++;
-                                    i--; // Adjust index after removal
+                                    keysToRemove.push(key);
                                 }
                             } catch (e) {
-                                // Invalid JSON, remove it
-                                localStorage.removeItem(key);
-                                cleared++;
-                                i--;
+                                // Invalid JSON, mark for removal
+                                keysToRemove.push(key);
                             }
                         }
                     }
+                }
+
+                // Second pass: remove collected keys
+                for (var j = 0; j < keysToRemove.length; j++) {
+                    localStorage.removeItem(keysToRemove[j]);
+                    cleared++;
                 }
             } catch (e) {
                 console.error('Error clearing expired cache', e);
@@ -201,14 +205,21 @@
             }
 
             var cleared = 0;
+            var keysToRemove = [];
+
             try {
+                // First pass: collect keys to remove
                 for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
                     if (key && key.startsWith(config.prefix)) {
-                        localStorage.removeItem(key);
-                        cleared++;
-                        i--; // Adjust index after removal
+                        keysToRemove.push(key);
                     }
+                }
+
+                // Second pass: remove collected keys
+                for (var j = 0; j < keysToRemove.length; j++) {
+                    localStorage.removeItem(keysToRemove[j]);
+                    cleared++;
                 }
             } catch (e) {
                 console.error('Error clearing all cache', e);
