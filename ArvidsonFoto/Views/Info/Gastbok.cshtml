@@ -23,94 +23,102 @@
 <h2><i class="bi bi-book"></i> @ViewData["Title"]</h2>
 
 <div id="page-content" class="brodtext">
-    <form asp-action="@(nameof(InfoController.PostToGb))" method="post" class="needs-validation" novalidate>
-        <div id="validationSummary" asp-validation-summary="All" class="alert alert-danger d-none" role="alert"></div>
-        @if (Model!.DisplayErrorPublish)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
-            </div>
-        }
-        @if (Model.DisplayPublished)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Tack för ditt inlägg!</strong> Ditt meddelande har publicerats i gästboken.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
-            </div>
-        }
-        <div class="row">
-            <div class="col-md-12 col-lg-6">
-                <div class="mb-3">
-                    <label asp-for="Name" class="form-label">Namn</label>
-                    <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)" aria-describedby="validationName">
-                    <div id="validationName" class="invalid-feedback" asp-validation-for="Name"></div>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">Epost</label>
-                    <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)" aria-describedby="validationEmail">
-                    <div id="validationEmail" class="invalid-feedback" asp-validation-for="Email"></div>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Homepage" class="form-label">Hemsida</label>
-                    <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)" aria-describedby="validationHomepage">
-                    <div id="validationHomepage" class="invalid-feedback" asp-validation-for="Homepage"></div>
-                </div>
-                <div class="mb-3">
-                    <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid" alt="CAPTCHA bild med siffror">
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Code" class="form-label">Ange siffrorna från bilden <span class="text-danger">*</span></label>
-                    <input asp-for="Code" class="form-control" placeholder="Siffror" aria-required="true" aria-describedby="validationCode">
-                    <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="mb-3">
-                    <label asp-for="Message" class="form-label">Meddelande <span class="text-danger">*</span></label>
-                    <textarea asp-for="Message" class="form-control" placeholder="Meddelande" rows="5" aria-required="true" aria-describedby="validationMessage"></textarea>
-                    <div id="validationMessage" class="invalid-feedback" asp-validation-for="Message"></div>
-                </div>
-                <div class="mb-3">
-                    <button id="SubmitButton" type="submit" class="btn btn-primary">Skicka inlägget</button>
-                </div>
-            </div>
+    <!-- Guestbook Form Section -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Skriv i gästboken</h3>
         </div>
-    </form>
+        <div class="card-body">
+            <form asp-action="@(nameof(InfoController.PostToGb))" method="post" class="needs-validation" novalidate>
+                <div id="validationSummary" asp-validation-summary="All" class="alert alert-danger d-none" role="alert"></div>
+                @if (Model!.DisplayErrorPublish)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
+                    </div>
+                }
+                @if (Model.DisplayPublished)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt inlägg!</strong> Ditt meddelande har publicerats i gästboken.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
+                    </div>
+                }
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label"><i class="bi bi-person"></i> Namn</label>
+                        <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)" aria-describedby="validationName">
+                        <div id="validationName" class="invalid-feedback" asp-validation-for="Name"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Epost</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)" aria-describedby="validationEmail">
+                        <div id="validationEmail" class="invalid-feedback" asp-validation-for="Email"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Homepage" class="form-label"><i class="bi bi-globe"></i> Hemsida</label>
+                        <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)" aria-describedby="validationHomepage">
+                        <div id="validationHomepage" class="invalid-feedback" asp-validation-for="Homepage"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span></label>
+                        <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid mb-2 rounded" alt="CAPTCHA bild med siffror" style="max-width: 200px;">
+                        <input asp-for="Code" class="form-control" placeholder="Siffror" aria-required="true" aria-describedby="validationCode">
+                        <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span></label>
+                        <textarea asp-for="Message" class="form-control" placeholder="Skriv ditt meddelande här..." rows="5" aria-required="true" aria-describedby="validationMessage"></textarea>
+                        <div id="validationMessage" class="invalid-feedback" asp-validation-for="Message"></div>
+                    </div>
+                    <div class="col-12">
+                        <button id="SubmitButton" type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send-fill"></i> Skicka inlägget
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <h3 class="mt-5 mb-4"><i class="bi bi-book"></i> Inlägg i gästboken</h3>
+    <!-- Guestbook Posts Section -->
+    <h3 class="mt-5 mb-4"><i class="bi bi-chat-dots"></i> Inlägg i gästboken</h3>
 
-    <div class="infotable row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
         @if (_guestBookService is not null && gbListView is not null)
         {
             @foreach (var gbPost in gbListView)
             {
                 DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
 
-                <div class="col mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-header bg-light">
-                            <strong>
-                                @if (gbPost.GbName is not null)
-                                {@gbPost.GbName}
-                            else
-                            {@("Anonym användare")}
-                            </strong>
+                <div class="col">
+                    <div class="card h-100 shadow hover-shadow-lg transition-all">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-circle me-2 fs-5"></i>
+                                <strong>
+                                    @if (gbPost.GbName is not null)
+                                    {@gbPost.GbName}
+                                else
+                                {@("Anonym användare")}
+                                </strong>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">
-                                @HttpUtility.HtmlDecode(gbPost.GbText.Replace("<br>", "\n"))
-                            </p>
+                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode(gbPost.GbText.Replace("<br>", "\n"))</p>
                         </div>
-                        <div class="card-footer bg-white border-top">
-                            <div class="row align-items-center">
-                                <div class="col-6">
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div>
                                     @if (gbPost.GbHomepage is not null)
-                                    {<span class="badge bg-info text-dark"><i class="bi bi-globe"></i> @gbPost.GbHomepage</span>}
+                                    {
+                                        <span class="badge bg-info text-dark"><i class="bi bi-globe2"></i> @gbPost.GbHomepage</span>
+                                    }
                                 </div>
-                                <div class="col-6 text-end">
-                                    <small class="text-muted"><i class="bi bi-calendar3"></i> @gbDate.ToString("yyyy-MM-dd")</small>
-                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-event"></i> @gbDate.ToString("yyyy-MM-dd")
+                                </small>
                             </div>
                         </div>
                     </div>
