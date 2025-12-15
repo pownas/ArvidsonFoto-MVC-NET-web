@@ -8,7 +8,7 @@
     @inject IGuestBookService _guestBookService
     int countOfUnreadGbPosts = _guestBookService.GetCountOfUnreadPosts();
 
-    string username = User.Identity!.Name;
+    string username = User.Identity!.Name ?? "";
     string[] splittedUser = username!.Split("@");
     username = splittedUser[0];
 
