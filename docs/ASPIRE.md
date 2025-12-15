@@ -1,6 +1,32 @@
 # .NET Aspire Integration för ArvidsonFoto
 
-## Introduktion
+## ✅ Aspire är nu aktiverat!
+
+**Goda nyheter!** Projektet inkluderar nu fullt fungerande Aspire AppHost med:
+- ✨ **Aspire Dashboard v13** med OpenTelemetry
+- ✨ **SQL Server orchestration** i Docker
+- ✨ **Distributed tracing, metrics & logs**
+- ✨ **Health checks** och **Service discovery**
+
+## Snabbstart
+
+### Kör Aspire AppHost
+
+```bash
+# Steg 1: Starta Docker Desktop
+# Ladda ner från https://www.docker.com/products/docker-desktop/
+
+# Steg 2: Kör AppHost från projektets rot
+dotnet run --project ArvidsonFoto.AppHost
+```
+
+Aspire Dashboard öppnas automatiskt på: **http://localhost:15888**
+
+Se [ArvidsonFoto.AppHost/README.md](../ArvidsonFoto.AppHost/README.md) för mer information.
+
+---
+
+## Vad är .NET Aspire?
 
 .NET Aspire är ett ramverk för att bygga observerbara, produktionsklara molnbaserade applikationer med .NET. Det förenklar lokal utveckling och debugging genom att tillhandahålla en orkestrator för att hantera flera tjänster, databaser och resurser.
 
@@ -14,30 +40,68 @@
 
 ## Förutsättningar
 
-- .NET 10 SDK eller senare (redan installerat)
+- .NET 10 SDK eller senare (redan installerat) ✅
 - Docker Desktop (för att köra resurser som SQL Server, Redis, etc.)
 - Visual Studio 2022 17.13+ eller Visual Studio Code med C# Dev Kit
 
-```bash
-# Installera .NET Aspire workload
-dotnet workload update
-dotnet workload install aspire
-```
+**OBS**: Aspire workload är **inte längre nödvändig**. Aspire v13 fungerar via NuGet-paket istället.
 
-## Lägg till Aspire till projektet
+## Vad ingår i projektet?
 
-### Steg 1: Skapa ett Aspire AppHost-projekt
+### 1. ArvidsonFoto.AppHost ✅
 
-Detta projekt orkestrerar alla dina applikationer och resurser.
+Orkestrator-projektet som startar hela lösningen:
+- Konfigurerar SQL Server i Docker
+- Startar ArvidsonFoto webbapplikationen
+- Exponerar Aspire Dashboard
+- Hanterar dependencies mellan tjänster
+
+**Kod**: Se `ArvidsonFoto.AppHost/AppHost.cs`
+
+### 2. ArvidsonFoto.ServiceDefaults ✅
+
+Gemensamma servicekonfigurationer:
+- OpenTelemetry (tracing, metrics, logs)
+- Health checks (/health, /alive)
+- Service discovery
+- Resilience patterns (retry, circuit breaker)
+
+**Kod**: Se `ArvidsonFoto.ServiceDefaults/Extensions.cs`
+
+### 3. ArvidsonFoto - Uppdaterat ✅
+
+Huvudapplikationen använder nu ServiceDefaults:
+- `builder.AddServiceDefaults()` - Lägger till observability
+- `app.MapDefaultEndpoints()` - Exponerar health checks
+
+**Kod**: Se `ArvidsonFoto/Program.cs`
+
+## Hur det fungerar
+
+När du kör AppHost:
+
+1. **Docker startar SQL Server** - Automatisk container med persistent data
+2. **ArvidsonFoto startar** - Med automatisk connection string
+3. **Dashboard öppnas** - Visual monitoring på http://localhost:15888
+4. **OpenTelemetry aktiveras** - Traces, metrics och logs samlas in
+
+## Ingen installation behövs (Redan klart!)
+
+~~Du behöver inte längre skapa AppHost eller ServiceDefaults - de finns redan!~~
+
+<details>
+<summary>📚 Om du vill lära dig hur det gjordes (klicka för att expandera)</summary>
+
+## Hur projektet konfigurerades
+
+### Steg 1: Skapa AppHost-projekt
 
 ```bash
 cd /home/runner/work/ArvidsonFoto-MVC-NET-web/ArvidsonFoto-MVC-NET-web
 dotnet new aspire-apphost -n ArvidsonFoto.AppHost
 ```
 
-### Steg 2: Skapa ett Service Defaults-projekt
-
-Detta projekt innehåller gemensamma konfigurationer för observability och resilience.
+### Steg 2: Skapa ServiceDefaults-projekt
 
 ```bash
 dotnet new aspire-servicedefaults -n ArvidsonFoto.ServiceDefaults
@@ -52,6 +116,8 @@ Lägg till referens till ServiceDefaults-projektet:
   <ProjectReference Include="../ArvidsonFoto.ServiceDefaults/ArvidsonFoto.ServiceDefaults.csproj" />
 </ItemGroup>
 ```
+
+✅ **Redan gjort i projektet!**
 
 ### Steg 4: Uppdatera Program.cs i ArvidsonFoto
 

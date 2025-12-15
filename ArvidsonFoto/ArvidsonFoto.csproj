@@ -51,4 +51,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ArvidsonFoto.ServiceDefaults\ArvidsonFoto.ServiceDefaults.csproj" />
+  </ItemGroup>
+
 </Project>

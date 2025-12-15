@@ -6,33 +6,26 @@ Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET
   
 ## Instruktion för att starta webbsidan lokalt
 
-### Alternativ 1: Med .NET Aspire (Rekommenderas för lokal utveckling) 🚀
+### Alternativ 1: Med .NET Aspire AppHost (REKOMMENDERAS) 🚀
 
-.NET Aspire förenklar lokal utveckling genom att automatiskt hantera databaser och andra resurser. Se [ASPIRE.md](docs/ASPIRE.md) för fullständig guide.
+**Enklaste sättet!** Aspire AppHost är nu inkluderat i projektet och ger dig:
+- ✨ **Aspire Dashboard** med OpenTelemetry (http://localhost:15888)
+- ✨ **SQL Server i Docker** - startar automatiskt
+- ✨ **Distributed Tracing** - se requests genom hela systemet
+- ✨ **Metrics & Logs** - samlade på ett ställe
+- ✨ **Health Checks** - övervaka tjänsternas hälsa
 
 ```bash
-# Installera .NET Aspire workload (en gång)
-dotnet workload install aspire
+# Steg 1: Se till att Docker Desktop är igång
+# Ladda ner från https://www.docker.com/products/docker-desktop/
 
-# Skapa Aspire-projekt (en gång)
-dotnet new aspire-apphost -n ArvidsonFoto.AppHost
-dotnet new aspire-servicedefaults -n ArvidsonFoto.ServiceDefaults
-
-# Starta hela applikationen med Aspire
-cd ArvidsonFoto.AppHost
-dotnet run
+# Steg 2: Kör AppHost (från projektets rot)
+dotnet run --project ArvidsonFoto.AppHost
 ```
 
-Aspire startar automatiskt:
-- SQL Server i Docker
-- Webbapplikationen
-- Development Dashboard för monitoring
+**Det är allt!** Aspire Dashboard öppnas automatiskt i din webbläsare.
 
-**Fördelar:**
-- Ingen manuell databashantering
-- Automatisk service discovery
-- Inbyggd observability och logging
-- Närmare produktionsmiljö
+Se [ArvidsonFoto.AppHost/README.md](ArvidsonFoto.AppHost/README.md) för mer detaljer.
 
 ### Alternativ 2: Traditionell setup (Utan Aspire)
 

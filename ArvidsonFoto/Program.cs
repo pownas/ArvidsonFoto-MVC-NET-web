@@ -29,6 +29,9 @@ public class Program
             
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add Aspire service defaults (observability, health checks, resilience, service discovery)
+            builder.AddServiceDefaults();
+
             // Add services to the container
             ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
@@ -197,6 +200,9 @@ public class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        // Map Aspire default endpoints (health checks, alive checks)
+        app.MapDefaultEndpoints();
 
         app.MapControllerRoute(
             name: "default",
