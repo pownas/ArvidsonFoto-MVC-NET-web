@@ -1,0 +1,197 @@
+﻿@model List<ArvidsonFoto.Models.TblMenu>
+@{
+    ViewData["Title"] = "Category Tooltip Examples";
+}
+
+<div class="container my-5">
+    <h1>Category Tooltip Component - Examples</h1>
+    <p class="lead">Examples of how to use the category tooltip component in different scenarios.</p>
+
+    <hr class="my-4" />
+
+    <!-- Example 1: Tag Helper Usage -->
+    <section class="mb-5">
+        <h2>Example 1: Using Tag Helper</h2>
+        <p>The simplest way to add tooltips to your links:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Code:</h5>
+                <pre><code>&lt;a category-tooltip="1" href="/Bilder/Faglar"&gt;Fåglar&lt;/a&gt;</code></pre>
+                
+                <h5 class="card-title mt-3">Result:</h5>
+                <p>Hover over this link to see the tooltip:</p>
+                <a category-tooltip="1" href="/Bilder/Faglar" class="btn btn-primary">Fåglar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example 2: View Component Usage -->
+    <section class="mb-5">
+        <h2>Example 2: Using View Component</h2>
+        <p>When you need more control or want to use it programmatically:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Code:</h5>
+                <pre><code>@@await Component.InvokeAsync("CategoryTooltip", new { 
+    categoryId = 2, 
+    categoryName = "Däggdjur", 
+    url = "/Bilder/Daggdjur",
+    cssClass = "btn btn-success"
+})</code></pre>
+                
+                <h5 class="card-title mt-3">Result:</h5>
+                <p>Hover over this link to see the tooltip:</p>
+                @await Component.InvokeAsync("CategoryTooltip", new { 
+                    categoryId = 2, 
+                    categoryName = "Däggdjur", 
+                    url = "/Bilder/Daggdjur",
+                    cssClass = "btn btn-success"
+                })
+            </div>
+        </div>
+    </section>
+
+    <!-- Example 3: Manual HTML -->
+    <section class="mb-5">
+        <h2>Example 3: Manual HTML</h2>
+        <p>For full control over the HTML structure:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Code:</h5>
+                <pre><code>&lt;a href="/Bilder/Insekter" 
+   class="has-category-tooltip btn btn-info" 
+   data-category-id="3"&gt;
+    Insekter
+&lt;/a&gt;</code></pre>
+                
+                <h5 class="card-title mt-3">Result:</h5>
+                <p>Hover over this link to see the tooltip:</p>
+                <a href="/Bilder/Insekter" 
+                   class="has-category-tooltip btn btn-info" 
+                   data-category-id="3">
+                    Insekter
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example 4: In a List -->
+    <section class="mb-5">
+        <h2>Example 4: In a Navigation List</h2>
+        <p>Using tooltips in a typical navigation menu:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Code:</h5>
+                <pre><code>&lt;ul class="nav flex-column"&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a category-tooltip="1" href="/Bilder/Faglar" class="nav-link"&gt;Fåglar&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a category-tooltip="2" href="/Bilder/Daggdjur" class="nav-link"&gt;Däggdjur&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="nav-item"&gt;
+        &lt;a category-tooltip="3" href="/Bilder/Insekter" class="nav-link"&gt;Insekter&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+                
+                <h5 class="card-title mt-3">Result:</h5>
+                <p>Hover over these links to see the tooltips:</p>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a category-tooltip="1" href="/Bilder/Faglar" class="nav-link">Fåglar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a category-tooltip="2" href="/Bilder/Daggdjur" class="nav-link">Däggdjur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a category-tooltip="3" href="/Bilder/Insekter" class="nav-link">Insekter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example 5: Dynamic Initialization -->
+    <section class="mb-5">
+        <h2>Example 5: Dynamic Content (JavaScript)</h2>
+        <p>Reinitialize tooltips after dynamically adding content:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">JavaScript Code:</h5>
+                <pre><code>// Add new link dynamically
+var newLink = document.createElement('a');
+newLink.href = '/Bilder/Vaxter';
+newLink.className = 'has-category-tooltip btn btn-warning';
+newLink.setAttribute('data-category-id', '4');
+newLink.textContent = 'Växter';
+document.getElementById('dynamic-container').appendChild(newLink);
+
+// Reinitialize tooltips
+CategoryTooltip.init();</code></pre>
+                
+                <h5 class="card-title mt-3">Result:</h5>
+                <div id="dynamic-container" class="mb-3"></div>
+                <button onclick="addDynamicLink()" class="btn btn-secondary">Add Dynamic Link</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example 6: Custom Configuration -->
+    <section class="mb-5">
+        <h2>Example 6: Custom Configuration</h2>
+        <p>Change tooltip behavior at runtime:</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">JavaScript Code:</h5>
+                <pre><code>// Change delay to 500ms
+CategoryTooltip.updateConfig({ delay: 500 });
+
+// Get current config
+console.log(CategoryTooltip.getConfig());
+
+// Clear image cache
+CategoryTooltip.clearCache();</code></pre>
+                
+                <h5 class="card-title mt-3">Controls:</h5>
+                <div class="btn-group" role="group">
+                    <button onclick="setDelay(500)" class="btn btn-sm btn-outline-primary">Fast (500ms)</button>
+                    <button onclick="setDelay(1000)" class="btn btn-sm btn-outline-primary">Normal (1000ms)</button>
+                    <button onclick="setDelay(2000)" class="btn btn-sm btn-outline-primary">Slow (2000ms)</button>
+                    <button onclick="CategoryTooltip.clearCache()" class="btn btn-sm btn-outline-danger">Clear Cache</button>
+                </div>
+                
+                <p class="mt-3">Test link (delay changes affect this):</p>
+                <a category-tooltip="1" href="/Bilder/Faglar" class="btn btn-primary">Test Fåglar</a>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Example 5: Dynamic link
+    function addDynamicLink() {
+        var container = document.getElementById('dynamic-container');
+        var newLink = document.createElement('a');
+        newLink.href = '/Bilder/Vaxter';
+        newLink.className = 'has-category-tooltip btn btn-warning me-2 mb-2';
+        newLink.setAttribute('data-category-id', '4');
+        newLink.textContent = 'Växter (Dynamically Added)';
+        container.appendChild(newLink);
+        
+        // Reinitialize tooltips for new elements
+        CategoryTooltip.init();
+    }
+
+    // Example 6: Config changes
+    function setDelay(ms) {
+        CategoryTooltip.updateConfig({ delay: ms });
+        alert('Delay set to ' + ms + 'ms');
+    }
+</script>

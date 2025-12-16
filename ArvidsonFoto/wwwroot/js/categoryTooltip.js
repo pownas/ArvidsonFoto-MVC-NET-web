@@ -2,8 +2,15 @@
  * Category Tooltip Feature
  * Displays a popover with the latest image when hovering over subcategory links
  * Updated for Bootstrap 5.3 - using vanilla JavaScript
+ * 
+ * USAGE:
+ * Add class 'has-category-tooltip' and data-category-id attribute to any link:
+ * <a href="/Bilder/Faglar" class="has-category-tooltip" data-category-id="1">Fåglar</a>
+ * 
+ * OR use Tag Helper:
+ * <a category-tooltip="1" href="/Bilder/Faglar">Fåglar</a>
  */
-(function () {
+var CategoryTooltip = (function () {
     'use strict';
 
     // Cache for storing fetched images to avoid repeated API calls
@@ -105,9 +112,11 @@
 
     /**
      * Initializes popovers for category links
+     * @param {string} selector - CSS selector for links (default: '.has-category-tooltip')
      */
-    function initializeCategoryTooltips() {
-        var links = document.querySelectorAll('.has-category-tooltip');
+    function initializeCategoryTooltips(selector) {
+        selector = selector || '.has-category-tooltip';
+        var links = document.querySelectorAll(selector);
         
         links.forEach(function (linkElement) {
             var categoryId = linkElement.getAttribute('data-category-id');
@@ -193,11 +202,49 @@
         });
     }
 
-    // Initialize when DOM is ready
+    /**
+     * Clears the image cache
+     */
+    function clearCache() {
+        imageCache = {};
+    }
+
+    /**
+     * Updates configuration
+     * @param {Object} newConfig - Configuration object with properties to update
+     */
+    function updateConfig(newConfig) {
+        Object.assign(config, newConfig);
+    }
+
+    /**
+     * Gets current configuration
+     * @returns {Object} - Current configuration
+     */
+    function getConfig() {
+        return Object.assign({}, config);
+    }
+
+    // Auto-initialize on DOM ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeCategoryTooltips);
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCategoryTooltips();
+        });
     } else {
         initializeCategoryTooltips();
     }
 
+    // Public API
+    return {
+        init: initializeCategoryTooltips,
+        clearCache: clearCache,
+        updateConfig: updateConfig,
+        getConfig: getConfig
+    };
+
 })();
+
+// Export for use in other modules (if needed)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CategoryTooltip;
+}
