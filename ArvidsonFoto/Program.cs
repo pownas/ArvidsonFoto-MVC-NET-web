@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using ArvidsonFoto.Data;
@@ -159,7 +158,7 @@ public class Program
         {
             using (var scope = app.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoDbContext>();
+                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
                 context.Database.EnsureCreated();
                 context.SeedInMemoryDatabase();
             }

@@ -1,78 +1,65 @@
-using ArvidsonFoto.Core.DTOs;
+ï»¿using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
 /// <summary>
 /// Mock implementation of IApiImageService for unit testing
-/// Uses in-memory test data without external dependencies
+/// Uses data from ArvidsonFotoCoreDbSeeder to match production data structure
 /// </summary>
 public class MockApiImageService : IApiImageService
 {
     private readonly List<ImageDto> _testImages;
+    private readonly MockApiCategoryService _categoryService;
 
     public MockApiImageService()
     {
-        // Create a fresh copy for each instance to avoid test interference
-        _testImages = new List<ImageDto>
+        _categoryService = new MockApiCategoryService();
+        
+        // Convert ArvidsonFotoCoreDbSeeder image data to ImageDto format
+        _testImages = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image.Select(image => new ImageDto
         {
-            new ImageDto
-            {
-                ImageId = 1,
-                CategoryId = 11,
-                Name = "Fjällabb",
-                UrlImage = "08TA3696",
-                UrlCategory = "faglar/alkor-och-labbar/fjallabb",
-                DateImageTaken = new DateTime(2021, 11, 22, 16, 21, 00),
-                DateUploaded = new DateTime(2021, 11, 22, 16, 21, 00),
-                Description = "En fjällabbs beskrivning..."
-            },
-            new ImageDto
-            {
-                ImageId = 2,
-                CategoryId = 13,
-                Name = "Blåmes",
-                UrlImage = "B57W4725",
-                UrlCategory = "faglar/tattingar/mesar/blames",
-                DateImageTaken = new DateTime(2021, 11, 22, 16, 21, 00),
-                DateUploaded = new DateTime(2021, 11, 22, 16, 21, 00),
-                Description = "Hane, beskrivning av blåmes...."
-            },
-            new ImageDto
-            {
-                ImageId = 3,
-                CategoryId = 14,
-                Name = "Björn",
-                UrlImage = "B59W4837",
-                UrlCategory = "daggdjur/bjorn",
-                DateImageTaken = new DateTime(2021, 11, 22, 16, 21, 00),
-                DateUploaded = new DateTime(2021, 11, 22, 16, 21, 00),
-                Description = "i Sverige"
-            },
-            new ImageDto
-            {
-                ImageId = 4,
-                CategoryId = 15,
-                Name = "Hasselsnok",
-                UrlImage = "13TA5142",
-                UrlCategory = "kraldjur/hasselsnok",
-                DateImageTaken = new DateTime(2021, 11, 22, 16, 21, 00),
-                DateUploaded = new DateTime(2021, 11, 22, 16, 21, 00),
-                Description = ""
-            },
-            new ImageDto
-            {
-                ImageId = 5,
-                CategoryId = 16,
-                Name = "Ekoxe",
-                UrlImage = "B60W1277",
-                UrlCategory = "insekter/skalbaggar",
-                DateImageTaken = new DateTime(2021, 11, 22, 16, 21, 00),
-                DateUploaded = new DateTime(2021, 11, 22, 16, 21, 00),
-                Description = "Ekoxe, hane"
-            }
-        };
+            ImageId = image.ImageId ?? 0,
+            CategoryId = image.ImageCategoryId ?? -1, // ImageCategoryId is the category ID
+            Name = GetCategoryName(image.ImageCategoryId ?? -1),
+            UrlImage = image.ImageUrlName ?? $"image-{image.ImageId}",
+            UrlCategory = GetCategoryPath(image.ImageCategoryId ?? -1),
+            DateImageTaken = image.ImageDate,
+            DateUploaded = image.ImageUpdate,
+            Description = image.ImageDescription ?? string.Empty
+        }).ToList();
+    }
+
+    private string GetCategoryName(int categoryId)
+    {
+        if (categoryId <= 0) return "Unknown";
+        var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == categoryId);
+        return menu?.MenuDisplayName ?? "Unknown";
+    }
+
+    private string GetCategoryPath(int categoryId)
+    {
+        if (categoryId <= 0) return "unknown";
+        
+        var pathParts = new List<string>();
+        var currentMenuId = categoryId;
+        
+        while (currentMenuId > 0)
+        {
+            var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenuId);
+            if (menu == null) break;
+            
+            pathParts.Insert(0, menu.MenuUrlSegment ?? $"category-{currentMenuId}");
+            
+            if (menu.MenuParentCategoryId == 0 || menu.MenuParentCategoryId == null)
+                break;
+                
+            currentMenuId = menu.MenuParentCategoryId ?? 0;
+        }
+        
+        return string.Join("/", pathParts);
     }
 
     public bool AddImage(ImageDto image)
@@ -102,18 +89,23 @@ public class MockApiImageService : IApiImageService
 
     public ImageDto GetOneImageFromCategory(int categoryId)
     {
-        if (categoryId == 1) // Special case for main category "Fåglar"
-        {
-            // Return Blåmes image
-            categoryId = 13;
-        }
-        
+        // Check if there are images directly in this category
         var image = _testImages
             .Where(i => i.CategoryId == categoryId)
             .OrderByDescending(i => i.DateUploaded)
             .FirstOrDefault();
             
-        return image ?? CreateNotFoundImage();
+        if (image != null) return image;
+        
+        // Check subcategories
+        var subcategories = _categoryService.GetChildrenByParentId(categoryId);
+        foreach (var subcategory in subcategories)
+        {
+            image = GetOneImageFromCategory(subcategory.CategoryId ?? -1);
+            if (image.ImageId != -1) return image;
+        }
+            
+        return CreateNotFoundImage();
     }
 
     public List<ImageDto> GetAll()

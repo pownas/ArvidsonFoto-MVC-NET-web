@@ -1,9 +1,13 @@
-﻿using ArvidsonFoto.Data;
+﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
+/// <summary>
+/// Mock implementation of IImageService for unit testing
+/// Uses data from ArvidsonFotoCoreDbSeeder to match production data structure
+/// </summary>
 public class MockImageService : IImageService
 {
     public bool AddImage(TblImage image) => true;
@@ -11,37 +15,77 @@ public class MockImageService : IImageService
     public bool DeleteImgId(int imgId) => true;
 
     public int GetImageLastId() => 
-        DbSeederExtension.DbSeed_Tbl_Image.Max(x => x.Id);
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image.Max(x => x.Id ?? 0);
 
-    public TblImage GetById(int imageId) =>
-        DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageId.Equals(imageId))
-            .FirstOrDefault() ?? new TblImage();
+    public TblImage GetById(int imageId)
+    {
+        var coreImage = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .FirstOrDefault(i => i.ImageId == imageId);
+        
+        if (coreImage == null)
+            return new TblImage();
+        
+        return MapToOldModel(coreImage);
+    }
 
-    public TblImage GetOneImageFromCategory(int category) =>
-         DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt.Equals(category)
-                     || i.ImageFamilj.Equals(category)
-                     || i.ImageHuvudfamilj.Equals(category))
+    public TblImage GetOneImageFromCategory(int category)
+    {
+        var coreImage = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .Where(i => i.ImageCategoryId == category
+                     || i.ImageFamilyId == category
+                     || i.ImageMainFamilyId == category)
             .OrderByDescending(i => i.ImageUpdate)
-            .FirstOrDefault() ?? DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt.Equals(13)) // 13 == Blåmes
+            .FirstOrDefault();
+
+        if (coreImage != null)
+            return MapToOldModel(coreImage);
+
+        // Fallback till Blåmes (MenuCategoryId=243 i nya datan)
+        coreImage = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .Where(i => i.ImageCategoryId == 243) // 243 == Blåmes i nya datan
             .OrderByDescending(i => i.ImageUpdate)
-            .First();
+            .FirstOrDefault();
+
+        return coreImage != null ? MapToOldModel(coreImage) : new TblImage();
+    }
 
     public List<TblImage> GetAll() =>
-        DbSeederExtension.DbSeed_Tbl_Image ?? new List<TblImage>();
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .Select(MapToOldModel)
+            .ToList();
 
     public List<TblImage> GetRandomNumberOfImages(int count) =>
-        DbSeederExtension.DbSeed_Tbl_Image
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
             .OrderBy(r => Guid.NewGuid())
             .Take(count)
-            .ToList() ?? new List<TblImage>();
+            .Select(MapToOldModel)
+            .ToList();
 
     public List<TblImage> GetAllImagesByCategoryID(int categoryID) =>
-        DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt == categoryID
-                     || i.ImageFamilj == categoryID
-                     || i.ImageHuvudfamilj == categoryID)
-            .ToList() ?? new List<TblImage>();
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .Where(i => i.ImageCategoryId == categoryID
+                     || i.ImageFamilyId == categoryID
+                     || i.ImageMainFamilyId == categoryID)
+            .Select(MapToOldModel)
+            .ToList();
+
+    /// <summary>
+    /// Maps from Core.Models.TblImage to Models.TblImage (old model)
+    /// </summary>
+    private static TblImage MapToOldModel(Core.Models.TblImage coreImage)
+    {
+        return new TblImage
+        {
+            Id = coreImage.Id ?? 0,
+            ImageId = coreImage.ImageId ?? 0,
+            ImageHuvudfamilj = coreImage.ImageMainFamilyId,
+            ImageFamilj = coreImage.ImageFamilyId,
+            ImageArt = coreImage.ImageCategoryId ?? 0,
+            ImageUrl = coreImage.ImageUrlName ?? string.Empty,
+            ImageDate = coreImage.ImageDate,
+            ImageDescription = coreImage.ImageDescription ?? string.Empty,
+            ImageUpdate = coreImage.ImageUpdate ?? DateTime.Now,
+            Name = coreImage.Name ?? string.Empty
+        };
+    }
 }
