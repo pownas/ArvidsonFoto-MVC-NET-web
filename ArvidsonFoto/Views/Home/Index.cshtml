@@ -1,5 +1,6 @@
-﻿@*<!-- Home-Index (Startsidan) -->*@
-@model GalleryViewModel
+﻿@using ArvidsonFoto.Core.Interfaces
+@*<!-- Home-Index (Startsidan) -->*@
+@model ArvidsonFoto.Core.ViewModels.GalleryViewModel
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
@@ -7,7 +8,7 @@
     <link rel="canonical" href="https://ArvidsonFoto.se/" />
 }
 
-@inject IImageService _imageService
+@inject IApiImageService _imageService
 @{
     Model!.DisplayImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
 }

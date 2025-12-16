@@ -202,8 +202,6 @@ public partial class ArvidsonFotoDbContext : DbContext
         });
 
 
-        ///Kommentera bort denna raden för att göra en initial Databas Seed
-        modelBuilder.InitialDatabaseSeed();
 
         OnModelCreatingPartial(modelBuilder);
     }

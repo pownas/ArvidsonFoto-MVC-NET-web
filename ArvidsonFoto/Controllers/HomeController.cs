@@ -1,13 +1,27 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;
+
 namespace ArvidsonFoto.Controllers;
 
-public class HomeController(ArvidsonFotoDbContext context) : Controller
+/// <summary>
+/// Controller for handling home page and general site functionality.
+/// </summary>
+public class HomeController : Controller
 {
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    private readonly IApiPageCounterService _pageCounterService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HomeController"/> class.
+    /// </summary>
+    /// <param name="coreContext">The Core database context</param>
+    public HomeController(ArvidsonFotoCoreDbContext coreContext)
+    {
+        _pageCounterService = new ApiPageCounterService(coreContext);
+    }
 
     public IActionResult Index()
     {
