@@ -152,7 +152,8 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 contactFormModel = new ContactFormModel()
                 {
                     DisplayEmailSent = true,
-                    FormSubmitDate = DateTime.Now
+                    FormSubmitDate = DateTime.Now,
+                    ReturnPageUrl = Page
                 };
             }
             catch (Exception e)

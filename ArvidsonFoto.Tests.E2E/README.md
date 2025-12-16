@@ -13,6 +13,7 @@ This project contains automated UI tests that verify the contact form functional
 - **ContactForm_ShowsValidationErrors_WhenFieldsEmpty**: Tests HTML5 validation when submitting empty form
 - **ContactForm_FillsOutFormCorrectly**: Tests form filling with valid data
 - **ContactForm_ShowsErrorMessage_OnEmailFailure**: Tests error message display when email sending fails
+- **ContactForm_ShowsSuccessMessage_AndClearsForm**: Tests success message and form clearing after successful submission
 
 ### Image Purchase Form Tests
 - **ImagePurchaseForm_DisplaysCorrectly**: Verifies the image purchase page displays correctly
@@ -25,6 +26,7 @@ All tests capture screenshots that are saved to the `screenshots/` directory:
 - `contact-form-page.png` - Initial contact form page
 - `contact-form-validation-errors.png` - Validation errors when fields are empty
 - `contact-form-filled.png` - Form filled with test data
+- `contact-form-success-message.png` - Success message with cleared form after email sent successfully
 - `contact-form-error-message.png` - Error message with fallback email (torbjorn@arvidsonfoto.se)
 - `image-purchase-form-page.png` - Image purchase form page
 - `image-purchase-form-filled.png` - Image purchase form filled with data

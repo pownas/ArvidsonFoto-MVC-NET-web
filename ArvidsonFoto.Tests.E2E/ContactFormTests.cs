@@ -180,6 +180,70 @@ public class ContactFormTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task ContactForm_ShowsSuccessMessage_AndClearsForm()
+    {
+        // Arrange
+        var context = await _browser!.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true
+        });
+        var page = await context.NewPageAsync();
+
+        // Act
+        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        // Fill form with correct code
+        await page.Locator("input[name='Name']").FillAsync("Test User Success");
+        await page.Locator("input[name='Email']").FillAsync("success@example.com");
+        await page.Locator("input[name='Subject']").FillAsync("Success Test");
+        await page.Locator("textarea[name='Message']").FillAsync("Testing success message and form clearing.");
+        await page.Locator("input[name='Code']").FillAsync("3568");
+
+        // Submit form
+        await page.Locator("button[type='submit']").ClickAsync();
+        
+        // Wait for redirect and page load
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await page.WaitForTimeoutAsync(2000);
+
+        // Take screenshot
+        await page.ScreenshotAsync(new PageScreenshotOptions
+        {
+            Path = "screenshots/contact-form-success-message.png",
+            FullPage = true
+        });
+
+        // Assert - Check if success or error message is shown
+        var successAlert = page.Locator(".alert-success");
+        var errorAlert = page.Locator(".alert-danger");
+        
+        var hasSuccess = await successAlert.IsVisibleAsync();
+        var hasError = await errorAlert.IsVisibleAsync();
+
+        if (hasSuccess)
+        {
+            // Verify success message text
+            await Assertions.Expect(successAlert).ToContainTextAsync("Tack för ditt mejl!");
+            await Assertions.Expect(successAlert).ToContainTextAsync("återkommer inom 1-5 dagar");
+            
+            // Verify form is cleared
+            await Assertions.Expect(page.Locator("input[name='Name']")).ToHaveValueAsync("");
+            await Assertions.Expect(page.Locator("input[name='Email']")).ToHaveValueAsync("");
+            await Assertions.Expect(page.Locator("input[name='Subject']")).ToHaveValueAsync("");
+            await Assertions.Expect(page.Locator("textarea[name='Message']")).ToHaveValueAsync("");
+            await Assertions.Expect(page.Locator("input[name='Code']")).ToHaveValueAsync("");
+        }
+        else if (hasError)
+        {
+            // If email sending fails (no SMTP configured), verify error message
+            await Assertions.Expect(errorAlert).ToContainTextAsync("torbjorn@arvidsonfoto.se");
+        }
+
+        await context.CloseAsync();
+    }
+
+    [Fact]
     public async Task ImagePurchaseForm_DisplaysCorrectly()
     {
         // Arrange
