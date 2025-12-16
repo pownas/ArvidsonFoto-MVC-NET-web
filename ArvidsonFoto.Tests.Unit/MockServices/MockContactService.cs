@@ -27,12 +27,13 @@ public class MockContactService : IContactService
         return true;
     }
 
-    public List<TblKontakt> GetAll()
+    // Helper methods for testing (not part of IContactService interface)
+    internal List<TblKontakt> GetAll()
     {
         return _mockContactSubmissions.OrderByDescending(k => k.SubmitDate).ToList();
     }
 
-    public TblKontakt? GetById(int id)
+    internal TblKontakt? GetById(int id)
     {
         return _mockContactSubmissions.FirstOrDefault(k => k.Id == id);
     }

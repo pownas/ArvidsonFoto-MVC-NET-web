@@ -1,5 +1,6 @@
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
+using Serilog;
 
 namespace ArvidsonFoto.Services;
 
@@ -19,7 +20,7 @@ public class ContactService(ArvidsonFotoDbContext context) : IContactService
         {
             _context.TblKontakt.Add(kontakt);
             _context.SaveChanges();
-            Log.Information($"Contact form saved to database. Name: {kontakt.Name}, Email: {kontakt.Email}, EmailSent: {kontakt.EmailSent}");
+            Log.Information($"Contact form saved to database. ID: {kontakt.Id}, SourcePage: {kontakt.SourcePage}, EmailSent: {kontakt.EmailSent}");
             return true;
         }
         catch (Exception ex)
