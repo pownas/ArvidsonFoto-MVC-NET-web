@@ -161,19 +161,40 @@ public class ContactFormTests : IAsyncLifetime
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         await page.WaitForTimeoutAsync(2000);
 
-        // Take screenshot
-        await page.ScreenshotAsync(new PageScreenshotOptions
-        {
-            Path = "screenshots/contact-form-error-message.png",
-            FullPage = true
-        });
-
         // Assert - error message should be visible (if SMTP not configured)
         // The error alert contains the fallback email
         var errorAlert = page.Locator(".alert-danger");
-        if (await errorAlert.IsVisibleAsync())
+        var isErrorVisible = await errorAlert.IsVisibleAsync();
+        
+        if (isErrorVisible)
         {
             await Assertions.Expect(errorAlert).ToContainTextAsync("torbjorn@arvidsonfoto.se");
+            
+            // Scroll to alert to ensure it's visible in screenshot
+            await errorAlert.ScrollIntoViewIfNeededAsync();
+            await page.WaitForTimeoutAsync(500);
+            
+            // Take screenshot of the full page showing error
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshots/contact-form-error-message.png",
+                FullPage = true
+            });
+            
+            // Take focused screenshot of just the alert
+            await errorAlert.ScreenshotAsync(new LocatorScreenshotOptions
+            {
+                Path = "screenshots/contact-form-error-alert-only.png"
+            });
+        }
+        else
+        {
+            // If no error (email sent successfully), take screenshot anyway
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshots/contact-form-error-message.png",
+                FullPage = true
+            });
         }
 
         await context.CloseAsync();
@@ -207,13 +228,6 @@ public class ContactFormTests : IAsyncLifetime
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         await page.WaitForTimeoutAsync(2000);
 
-        // Take screenshot
-        await page.ScreenshotAsync(new PageScreenshotOptions
-        {
-            Path = "screenshots/contact-form-success-message.png",
-            FullPage = true
-        });
-
         // Assert - Check if success or error message is shown
         var successAlert = page.Locator(".alert-success");
         var errorAlert = page.Locator(".alert-danger");
@@ -227,6 +241,23 @@ public class ContactFormTests : IAsyncLifetime
             await Assertions.Expect(successAlert).ToContainTextAsync("Tack för ditt mejl!");
             await Assertions.Expect(successAlert).ToContainTextAsync("återkommer inom 1-5 dagar");
             
+            // Scroll to alert to ensure it's visible in screenshot
+            await successAlert.ScrollIntoViewIfNeededAsync();
+            await page.WaitForTimeoutAsync(500);
+            
+            // Take screenshot of full page
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshots/contact-form-success-message.png",
+                FullPage = true
+            });
+            
+            // Take focused screenshot of just the alert
+            await successAlert.ScreenshotAsync(new LocatorScreenshotOptions
+            {
+                Path = "screenshots/contact-form-success-alert-only.png"
+            });
+            
             // Verify form is cleared
             await Assertions.Expect(page.Locator("input[name='Name']")).ToHaveValueAsync("");
             await Assertions.Expect(page.Locator("input[name='Email']")).ToHaveValueAsync("");
@@ -238,6 +269,31 @@ public class ContactFormTests : IAsyncLifetime
         {
             // If email sending fails (no SMTP configured), verify error message
             await Assertions.Expect(errorAlert).ToContainTextAsync("torbjorn@arvidsonfoto.se");
+            
+            // Scroll to alert
+            await errorAlert.ScrollIntoViewIfNeededAsync();
+            await page.WaitForTimeoutAsync(500);
+            
+            // Take screenshots
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshots/contact-form-success-message.png",
+                FullPage = true
+            });
+            
+            await errorAlert.ScreenshotAsync(new LocatorScreenshotOptions
+            {
+                Path = "screenshots/contact-form-success-alert-only.png"
+            });
+        }
+        else
+        {
+            // No alert visible - take screenshot for debugging
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshots/contact-form-success-message.png",
+                FullPage = true
+            });
         }
 
         await context.CloseAsync();

@@ -191,13 +191,17 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             contactFormModel.DisplayEmailSent = false;
         }
 
+        // Store display flags in TempData for the redirect
+        TempData["DisplayEmailSent"] = contactFormModel.DisplayEmailSent;
+        TempData["DisplayErrorSending"] = contactFormModel.DisplayErrorSending;
+
         if (Page.Equals("Kontakta"))
         {
-            return RedirectToAction("Kontakta", contactFormModel);
+            return RedirectToAction("Kontakta");
         }
         else if (Page.Equals("Kop_av_bilder"))
         {
-            return RedirectToAction("Kop_av_bilder", contactFormModel);
+            return RedirectToAction("Kop_av_bilder");
         }
         else
         {
@@ -211,6 +215,18 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Kontaktinformation");
 
+        // Retrieve display flags from TempData
+        if (TempData["DisplayEmailSent"] is bool displayEmailSent)
+        {
+            contactFormModel.DisplayEmailSent = displayEmailSent;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        if (TempData["DisplayErrorSending"] is bool displayErrorSending)
+        {
+            contactFormModel.DisplayErrorSending = displayErrorSending;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
             contactFormModel = new ContactFormModel()
@@ -222,6 +238,11 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 ReturnPageUrl = "Kontakta"
             };
         }
+        else
+        {
+            // Preserve the ReturnPageUrl
+            contactFormModel.ReturnPageUrl = "Kontakta";
+        }
 
         return View(contactFormModel);
     }
@@ -231,6 +252,19 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Köp av bilder");
+        
+        // Retrieve display flags from TempData
+        if (TempData["DisplayEmailSent"] is bool displayEmailSent)
+        {
+            contactFormModel.DisplayEmailSent = displayEmailSent;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        if (TempData["DisplayErrorSending"] is bool displayErrorSending)
+        {
+            contactFormModel.DisplayErrorSending = displayErrorSending;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
             contactFormModel = new ContactFormModel()
@@ -256,6 +290,11 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
 
                 }
             }
+        }
+        else
+        {
+            // Preserve the ReturnPageUrl
+            contactFormModel.ReturnPageUrl = "Kop_av_bilder";
         }
 
         return View(contactFormModel);
