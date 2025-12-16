@@ -566,6 +566,19 @@ body {
     }
 }
 
+/* Mobile-specific positioning - move tooltip to the right to avoid covering +/- buttons */
+@media (max-width: 767px) {
+    .category-tooltip-popover {
+        // Add horizontal offset to the right on mobile
+        &.bs-popover-end,
+        &.bs-popover-start,
+        &.bs-popover-right,
+        &.bs-popover-left {
+            margin-left: 50px !important; // Move to the right to avoid +/- buttons
+        }
+    }
+}
+
 .category-tooltip-content {
     text-align: center;
     
