@@ -547,4 +547,306 @@ public class InfoControllerTests
     }
 
     #endregion
+
+    #region SendMessage Action Tests
+
+    [Fact]
+    public void SendMessage_HasHttpPostAttribute()
+    {
+        // Arrange
+        var methodInfo = typeof(InfoController).GetMethod(nameof(InfoController.SendMessage));
+
+        // Assert
+        Assert.NotNull(methodInfo);
+        var httpPostAttribute = methodInfo!.GetCustomAttributes(typeof(HttpPostAttribute), false).FirstOrDefault();
+        Assert.NotNull(httpPostAttribute);
+    }
+
+    [Fact]
+    public void SendMessage_HasValidateAntiForgeryTokenAttribute()
+    {
+        // Arrange
+        var methodInfo = typeof(InfoController).GetMethod(nameof(InfoController.SendMessage));
+
+        // Assert
+        Assert.NotNull(methodInfo);
+        var antiForgeryAttribute = methodInfo!.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute), false)
+            .FirstOrDefault();
+        Assert.NotNull(antiForgeryAttribute);
+    }
+
+    [Fact]
+    public void SendMessage_WithInvalidModel_DoesNotSaveToDatabase()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        var mockDbContext = new ArvidsonFotoDbContext();
+        var controller = new InfoController(mockDbContext)
+        {
+            _contactService = mockContactService
+        };
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        // Add model error to simulate invalid model state
+        controller.ModelState.AddModelError("Email", "Invalid email");
+
+        var contactFormModel = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "invalid-email",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        var initialCount = mockContactService.GetAll().Count;
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kontakta");
+
+        // Assert
+        // When model is invalid, no database save should occur
+        Assert.Equal(initialCount, mockContactService.GetAll().Count);
+    }
+
+    [Fact]
+    public void SendMessage_RedirectsToCorrectPage_Kontakta()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        var mockDbContext = new ArvidsonFotoDbContext();
+        var controller = new InfoController(mockDbContext)
+        {
+            _contactService = mockContactService
+        };
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        var contactFormModel = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kontakta");
+
+        // Assert
+        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Kontakta", redirectResult.ActionName);
+    }
+
+    [Fact]
+    public void SendMessage_RedirectsToCorrectPage_KopAvBilder()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        var mockDbContext = new ArvidsonFotoDbContext();
+        var controller = new InfoController(mockDbContext)
+        {
+            _contactService = mockContactService
+        };
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        var contactFormModel = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kop_av_bilder");
+
+        // Assert
+        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Kop_av_bilder", redirectResult.ActionName);
+    }
+
+    #endregion
+
+    #region ContactFormModel Validation Tests
+
+    [Fact]
+    public void ContactFormModel_RequiresCode()
+    {
+        // Arrange
+        var model = new ContactFormModel
+        {
+            Code = "", // Missing required field
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Code"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresValidEmail()
+    {
+        // Arrange
+        var model = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "invalid-email", // Invalid email format
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Email"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresSubject()
+    {
+        // Arrange
+        var model = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "", // Missing required field
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Subject"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresMessage()
+    {
+        // Arrange
+        var model = new ContactFormModel
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "" // Missing required field
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Message"));
+    }
+
+    [Fact]
+    public void ContactFormModel_ValidatesCorrectCode()
+    {
+        // Arrange
+        var model = new ContactFormModel
+        {
+            Code = "1234", // Wrong code (should be 3568)
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Code") && r.ErrorMessage!.Contains("Fel kod"));
+    }
+
+    #endregion
 }
