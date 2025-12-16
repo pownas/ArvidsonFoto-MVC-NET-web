@@ -1,0 +1,69 @@
+﻿@model ContactFormModel
+
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/Info">Info</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Köp av bilder<i class="bi bi-cart3 mx-1"></i></li>
+    </ol>
+</nav>
+
+<h2><i class="bi bi-cart3"></i> @ViewData["Title"]</h2>
+
+<div id="page-content" class="brodtext">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100 d-flex flex-column">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> Information om bildköp</h3>
+                </div>
+                <div class="card-body flex-grow-1">
+                    <p><strong>Intresserad av att köpa bilder?</strong></p>
+                    <p>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</p>
+                    <p>Se även mer information under sidan <a href="/Info/Kontakta">Kontaktinformation</a>.</p>
+                    
+                    <div class="mt-4">
+                        <h4><i class="bi bi-check-circle"></i> Vad kan jag hjälpa till med?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-image text-primary"></i> Högupplösta bilder för tryck</li>
+                            <li><i class="bi bi-file-earmark-image text-primary"></i> Digitala bildfiler</li>
+                            <li><i class="bi bi-newspaper text-primary"></i> Redaktionellt bruk</li>
+                            <li><i class="bi bi-megaphone text-primary"></i> Kommersiellt bruk</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> Svarar vanligtvis inom 1-5 dagar
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
+                </div>
+                <div class="card-body">
+                    <partial name="_ContactForm" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @*<!--<p>Ett urval av arkivets bilder samt många flera finns på bildbyrerna:</p>
+        <p><img src="images/logo_Matton.jpg" height="64" /> <a href="http://www.matton.se/bilder/sok/torbjo3rn+arvidson.html" target="_blank">Matton Collection</a></p>
+        <p><img src="images/logo_Nordic.jpg" height="64" /> <a href="http://nordicphotos.com/Torbj%C3%B6rn%20Arvidson-3204" target="_blank">Nordic Photos</a></p>
+        <p><img src="images/logo_IBL.jpg" height="64" /> <a href="http://bildarkiv.iblbildbyra.se/fotoweb/Grid.fwx?archiveId=5000&search=(IPTC080%20contains(Torbj%C3%B6rn%20Arvidson%20%2F%20IBL%20Bildbyr%C3%A5))" target="_blank">IBL Bildbyrå</a></p>-->*@
+</div>
+
+@*<!-- Kräver att man har denna för validerings-scriptet ska läsas in... -->*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/ContactForm.js"></script>
+}

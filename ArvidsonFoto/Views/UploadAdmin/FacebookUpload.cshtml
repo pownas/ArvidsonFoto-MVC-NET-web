@@ -1,0 +1,230 @@
+@using ArvidsonFoto.Views.Shared
+@model FacebookUploadViewModel
+
+@section MetaData {
+    <meta name="robots" content="noindex" />
+}
+@{
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.FacebookUpload;
+}
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-facebook ms-1"></i></li>
+    </ol>
+</nav>
+<h2 class="offset-md-4"><i class="bi bi-facebook me-2"></i>@ViewData["Title"]</h2>
+<div class="row">
+    <nav class="nav nav-pills col-12 col-md-4 p-0">
+        <ul class="p-0 col-11">
+            <partial name="_NavUploadAdmin" />
+        </ul>
+    </nav>
+    <div class="col-12 col-md-8">
+        @if (Model!.DisplayMessage == "Success" && !string.IsNullOrEmpty(Model.FacebookPostUrl))
+        {
+            <div class="alert alert-success bg-success text-dark">
+                <h5><i class="bi bi-check-circle me-2"></i>Inlägget har publicerats på Facebook!</h5>
+                <p class="mb-0">
+                    <a href="@Model.FacebookPostUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>Visa inlägget på Facebook
+                    </a>
+                </p>
+            </div>
+        }
+        else if (Model.DisplayMessage == "FacebookError")
+        {
+            <div class="alert alert-danger bg-danger text-light">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Fel vid publicering</h5>
+                <p class="mb-0">Något gick fel vid kommunikationen med Facebook. Kontrollera inställningarna och försök igen.</p>
+            </div>
+        }
+        else if (Model.DisplayMessage == "NotConfigured")
+        {
+            <div class="alert alert-warning bg-warning text-dark">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Facebook är inte konfigurerat</h5>
+                <p class="mb-0">Facebook-integreringen är inte konfigurerad. Kontakta administratören.</p>
+            </div>
+        }
+        else if (Model.DisplayMessage == "NoImagesSelected")
+        {
+            <div class="alert alert-warning bg-warning text-dark">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Inga bilder valda</h5>
+                <p class="mb-0">Du måste välja minst en bild att dela.</p>
+            </div>
+        }
+        else if (Model.DisplayMessage == "ValidationError")
+        {
+            <div class="alert alert-warning bg-warning text-dark">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Valideringsfel</h5>
+                <p class="mb-0">Kontrollera att du fyllt i alla obligatoriska fält korrekt.</p>
+            </div>
+        }
+        else if (Model.DisplayMessage == "Error")
+        {
+            <div class="alert alert-danger bg-danger text-light">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Ett fel inträffade</h5>
+                <p class="mb-0">Ett oväntat fel inträffade. Försök igen senare.</p>
+            </div>
+        }
+
+        <p>Välj 1-10 bilder från de senast uppladdade bilderna och skapa ett Facebook-inlägg:</p>
+        
+        <form method="post" asp-action="CreateFacebookPost" asp-controller="UploadAdmin" id="facebookUploadForm">
+            @Html.AntiForgeryToken()
+            
+            <div class="mb-3">
+                <label for="message" class="form-label">Meddelande till inlägget <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="message" name="Message" rows="4" maxlength="5000" required 
+                          placeholder="Skriv en text som ska följa med bilderna på Facebook..."></textarea>
+                <div class="form-text">Max 5000 tecken</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Välj bilder (1-10 st) <span class="text-danger">*</span></label>
+                <div id="selectedCount" class="badge bg-secondary mb-2">0 valda</div>
+                <p class="text-muted small">Klicka på bilderna för att välja/avvälja dem. Du kan välja mellan 1 och 10 bilder.</p>
+            </div>
+
+            <div class="row" id="imageGrid">
+                @foreach (var image in Model.RecentImages)
+                {
+                    string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card h-100 image-selection-card" data-image-id="@image.ImageId">
+                            <img src="@imgThumbSrc" class="card-img-top" alt="@image.ImageArtNamn" 
+                                 style="cursor: pointer; object-fit: cover; height: 200px;">
+                            <div class="card-body p-2">
+                                <p class="card-text small mb-1"><strong>@image.ImageArtNamn</strong></p>
+                                <p class="card-text small mb-1">@image.ImageDate.ToString("yyyy-MM-dd")</p>
+                                <div class="form-check">
+                                    <input class="form-check-input image-checkbox" type="checkbox" 
+                                           name="SelectedImageIds" value="@image.ImageId" 
+                                           id="img-@image.ImageId">
+                                    <label class="form-check-label small" for="img-@image.ImageId">
+                                        Välj
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="mt-4 mb-4">
+                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                    <i class="bi bi-facebook me-2"></i>Publicera på Facebook
+                </button>
+                <a href="/UploadAdmin" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>Avbryt
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function() {
+            const checkboxes = document.querySelectorAll('.image-checkbox');
+            const selectedCountBadge = document.getElementById('selectedCount');
+            const submitBtn = document.getElementById('submitBtn');
+            const cards = document.querySelectorAll('.image-selection-card');
+            const maxImages = 10;
+
+            function updateSelectedCount() {
+                const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
+                selectedCountBadge.textContent = checkedCount + ' valda';
+                
+                if (checkedCount === 0) {
+                    selectedCountBadge.classList.remove('bg-primary', 'bg-success');
+                    selectedCountBadge.classList.add('bg-secondary');
+                    submitBtn.disabled = true;
+                } else if (checkedCount > maxImages) {
+                    selectedCountBadge.classList.remove('bg-primary', 'bg-success', 'bg-secondary');
+                    selectedCountBadge.classList.add('bg-danger');
+                    submitBtn.disabled = true;
+                } else {
+                    selectedCountBadge.classList.remove('bg-secondary', 'bg-danger');
+                    selectedCountBadge.classList.add('bg-primary');
+                    submitBtn.disabled = false;
+                }
+
+                // Disable checkboxes if max reached
+                if (checkedCount >= maxImages) {
+                    checkboxes.forEach(cb => {
+                        if (!cb.checked) {
+                            cb.disabled = true;
+                        }
+                    });
+                } else {
+                    checkboxes.forEach(cb => {
+                        cb.disabled = false;
+                    });
+                }
+            }
+
+            // Add click handler to cards
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                        const checkbox = this.querySelector('.image-checkbox');
+                        const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
+                        
+                        // Only toggle if not exceeding max or if unchecking
+                        if (!checkbox.checked && checkedCount >= maxImages) {
+                            return;
+                        }
+                        
+                        checkbox.checked = !checkbox.checked;
+                        this.classList.toggle('border-primary', checkbox.checked);
+                        this.classList.toggle('border-3', checkbox.checked);
+                        updateSelectedCount();
+                    }
+                });
+            });
+
+            // Add change handler to checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const card = this.closest('.image-selection-card');
+                    card.classList.toggle('border-primary', this.checked);
+                    card.classList.toggle('border-3', this.checked);
+                    updateSelectedCount();
+                });
+            });
+
+            // Initial update
+            updateSelectedCount();
+
+            // Form validation
+            document.getElementById('facebookUploadForm').addEventListener('submit', function(e) {
+                const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
+                const message = document.getElementById('message').value.trim();
+                
+                if (checkedCount === 0) {
+                    e.preventDefault();
+                    alert('Du måste välja minst en bild!');
+                    return false;
+                }
+                
+                if (checkedCount > maxImages) {
+                    e.preventDefault();
+                    alert('Du kan välja max ' + maxImages + ' bilder!');
+                    return false;
+                }
+                
+                if (message === '') {
+                    e.preventDefault();
+                    alert('Du måste skriva ett meddelande!');
+                    return false;
+                }
+                
+                // Disable submit button to prevent double submission
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Publicerar...';
+            });
+        })();
+    </script>
+}

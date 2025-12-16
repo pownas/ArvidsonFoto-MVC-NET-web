@@ -486,7 +486,7 @@ body {
 .glightbox-clean .gslide-description {
     background-color: rgba(34, 34, 34, 0.75);
 }
-/* ----------end of gllightbox config------------ */
+/* ----------end of glightbox config------------ */
 
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-figcaption-startpage { width: 9rem; }
@@ -535,6 +535,7 @@ body {
 /* Category Tooltip Popover Styles */
 .category-tooltip-popover {
     max-width: 350px;
+    z-index: 10000 !important; // Higher than menu z-index to appear on top
     
     .popover-body {
         padding: 0.5rem;
@@ -570,6 +571,11 @@ body {
     
     .spinner-border {
         color: #0078ff;
+    }
+    
+    // Fix for date text in light mode - always light text on dark background
+    .small.text-muted {
+        color: #aaa !important;
     }
 }
 
@@ -634,3 +640,97 @@ body {
     }
 }
 /* -------- End Category Tooltip Popover Styles -------- */
+
+/* -------- Promotional boxes (puffar) on home page -------- */
+.puff-card {
+    border: 2px solid #444;
+    background-color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        border-color: #0078ff;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    .puff-icon {
+        font-size: 3rem;
+        color: #0078ff;
+    }
+    
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ddd;
+    }
+    
+    .card-text {
+        color: #aaa;
+        margin-bottom: 1.5rem;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .puff-card {
+        border-color: #555;
+        background-color: #1a1a1a;
+        
+        &:hover {
+            border-color: #6c9bd1;
+        }
+        
+        .puff-icon {
+            color: #6c9bd1;
+        }
+    }
+}
+/* -------- End Promotional boxes (puffar) -------- */
+
+/* -------- Info Pages Modern Design -------- */
+/* Guestbook and contact form improvements */
+.hover-shadow-lg {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    
+    &:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+    }
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Card improvements for info pages */
+.card-header.bg-primary {
+    background-color: #0078ff;
+    border-bottom: 2px solid #0066dd;
+}
+
+[data-bs-theme="dark"] {
+    .card-header.bg-primary {
+        background-color: #6c9bd1;
+        border-bottom: 2px solid #5a89bf;
+    }
+}
+
+/* Improved spacing for form groups */
+.row.g-3 > * {
+    padding-bottom: 0.5rem;
+}
+
+/* Better button styling */
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    
+    i {
+        margin-right: 0.5rem;
+    }
+}
+/* -------- End Info Pages Modern Design -------- */

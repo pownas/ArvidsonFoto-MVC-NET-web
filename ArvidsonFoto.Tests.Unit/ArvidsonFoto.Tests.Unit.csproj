@@ -32,6 +32,7 @@
 
   <ItemGroup Label="GlobalUsings">
     <Using Include="System.Net" />
+    <Using Include="System.ComponentModel.DataAnnotations" />
     <Using Include="Microsoft.Extensions.DependencyInjection" />
     <Using Include="Aspire.Hosting.ApplicationModel" />
     <Using Include="Aspire.Hosting.Testing" />

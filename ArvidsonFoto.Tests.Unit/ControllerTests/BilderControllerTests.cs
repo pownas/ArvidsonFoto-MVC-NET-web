@@ -13,17 +13,14 @@ public class BilderControllerTests
 
     public BilderControllerTests()
     {
-        var mockDbContext = new ArvidsonFotoDbContext();
         var mockImageService = new MockImageService();
         var mockCategoryService = new MockCategoryService();
         var mockPageCounterService = new MockPageCounterService();
 
-        _controller = new BilderController(mockDbContext)
-        {
-            _imageService = mockImageService,
-            _categoryService = mockCategoryService,
-            _pageCounterService = mockPageCounterService
-        };
+        _controller = new BilderController(
+            mockImageService,
+            mockCategoryService,
+            mockPageCounterService);
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";

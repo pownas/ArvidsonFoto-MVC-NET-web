@@ -9,12 +9,13 @@ using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager) : Controller
+public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager, IFacebookService facebookService) : Controller
 {
     internal IImageService _imageService = new ImageService(context);
     internal ICategoryService _categoryService = new CategoryService(context);
     internal IGuestBookService _guestBookService = new GuestBookService(context);
     internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    internal readonly IFacebookService _facebookService = facebookService;
 
     public IActionResult Index()
     {
@@ -305,6 +306,129 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
+    }
+
+    /// <summary>
+    /// Visar sidan för att välja bilder och skapa Facebook-inlägg
+    /// </summary>
+    public IActionResult FacebookUpload(string? DisplayMessage, string? FacebookPostUrl)
+    {
+        ViewData["Title"] = "Dela bilder på Facebook";
+
+        // Hämta de 25 senaste bilderna
+        var recentImages = _imageService.GetAll()
+            .OrderByDescending(i => i.ImageId)
+            .Take(60)
+            .ToList();
+
+        var viewModel = new FacebookUploadViewModel
+        {
+            DisplayMessage = DisplayMessage,
+            FacebookPostUrl = FacebookPostUrl
+        };
+
+        foreach (var item in recentImages)
+        {
+            DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
+
+            var inputModel = new UploadImageInputModel()
+            {
+                ImageId = item.ImageId,
+                ImageHuvudfamilj = item.ImageHuvudfamilj,
+                ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageHuvudfamilj),
+                ImageFamilj = item.ImageFamilj,
+                ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilj),
+                ImageArt = item.ImageArt,
+                ImageArtNamn = _categoryService.GetNameById(item.ImageArt),
+                ImageDate = imgDate,
+                ImageUpdate = item.ImageUpdate,
+                ImageDescription = item.ImageDescription,
+                ImageUrl = item.ImageUrl
+            };
+
+            inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
+            if (inputModel.ImageHuvudfamilj is not null)
+                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
+            if (inputModel.ImageFamilj is not null)
+                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
+
+            inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
+
+            viewModel.RecentImages.Add(inputModel);
+        }
+
+        return View(viewModel);
+    }
+
+    /// <summary>
+    /// Skapar Facebook-inlägg med valda bilder
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateFacebookPost(FacebookUploadInputModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("FacebookUpload", new { DisplayMessage = "ValidationError" });
+        }
+
+        if (!_facebookService.IsConfigured())
+        {
+            return RedirectToAction("FacebookUpload", new { DisplayMessage = "NotConfigured" });
+        }
+
+        try
+        {
+            // Hämta de valda bilderna och bygg fullständiga URL:er
+            var selectedImages = _imageService.GetAll()
+                .Where(img => model.SelectedImageIds.Contains(img.ImageId))
+                .Take(10) // Max 10 bilder
+                .ToList();
+
+            if (selectedImages.Count == 0)
+            {
+                return RedirectToAction("FacebookUpload", new { DisplayMessage = "NoImagesSelected" });
+            }
+
+            var imageUrls = new List<string>();
+            foreach (var image in selectedImages)
+            {
+                string imageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
+                
+                if (image.ImageHuvudfamilj is not null)
+                {
+                    var huvudfamiljNamn = _categoryService.GetNameById(image.ImageHuvudfamilj);
+                    imageUrlFullSrc += "/" + huvudfamiljNamn;
+                }
+                
+                if (image.ImageFamilj is not null)
+                {
+                    var familjNamn = _categoryService.GetNameById(image.ImageFamilj);
+                    imageUrlFullSrc += "/" + familjNamn;
+                }
+                
+                var artNamn = _categoryService.GetNameById(image.ImageArt);
+                imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrl;
+                
+                imageUrls.Add(imageUrlFullSrc);
+            }
+
+            // Skapa Facebook-inlägg
+            var postUrl = await _facebookService.CreatePostAsync(imageUrls, model.Message);
+
+            if (!string.IsNullOrEmpty(postUrl))
+            {
+                return RedirectToAction("FacebookUpload", new { DisplayMessage = "Success", FacebookPostUrl = postUrl });
+            }
+            else
+            {
+                return RedirectToAction("FacebookUpload", new { DisplayMessage = "FacebookError" });
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Fel vid skapande av Facebook-inlägg från UploadAdmin");
+            return RedirectToAction("FacebookUpload", new { DisplayMessage = "Error" });
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
