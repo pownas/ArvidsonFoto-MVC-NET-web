@@ -6,7 +6,9 @@
     @if (Model!.DisplayErrorSending)
     {
         <div class="alert alert-danger alert-dismissible fade show">
-            <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
+            <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> 
+            <p class="mb-2">Något gick fel när meddelandet skulle skickas via formuläret. Ditt meddelande har sparats som backup.</p>
+            <p class="mb-0"><strong>Alternativ:</strong> Skicka ett mail direkt till <a href="mailto:torbjorn@arvidsonfoto.se" class="alert-link">torbjorn@arvidsonfoto.se</a></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
         </div>
     }

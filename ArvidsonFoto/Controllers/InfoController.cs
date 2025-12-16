@@ -12,6 +12,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
     internal IImageService _imageService = new ImageService(context);
     internal IGuestBookService _guestbookService = new GuestBookService(context);
     internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    internal IContactService _contactService = new ContactService(context);
 
     public IActionResult Index()
     {
@@ -108,6 +109,8 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         if (ModelState.IsValid)
         {
             contactFormModel.DisplayErrorSending = false;
+            bool emailSent = false;
+            string? errorMessage = null;
 
             try
             {
@@ -143,6 +146,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                     client.Send(message);
                     client.Disconnect(true);
                     Log.Information("Email, sent OK.");
+                    emailSent = true;
                 }
 
                 contactFormModel = new ContactFormModel()
@@ -155,7 +159,30 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             {
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
+                errorMessage = e.Message;
                 Log.Error("Error sending email. Error-message: " + e.Message);
+            }
+
+            // Save to database as backup (regardless of email success/failure)
+            try
+            {
+                var kontaktRecord = new TblKontakt
+                {
+                    SubmitDate = DateTime.Now,
+                    Name = contactFormModel.Name,
+                    Email = contactFormModel.Email,
+                    Subject = contactFormModel.Subject,
+                    Message = contactFormModel.Message,
+                    SourcePage = Page,
+                    EmailSent = emailSent,
+                    ErrorMessage = errorMessage
+                };
+
+                _contactService.SaveContactSubmission(kontaktRecord);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to save contact form to database: {ex.Message}");
             }
         }
         else
