@@ -41,6 +41,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
+    [Route("Info/PostToGb")]
     public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputModel inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");

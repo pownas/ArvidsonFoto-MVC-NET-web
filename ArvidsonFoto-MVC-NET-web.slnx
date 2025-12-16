@@ -6,6 +6,7 @@
   <Project Path="ArvidsonFoto.AppHost/ArvidsonFoto.AppHost.csproj" />
   <Project Path="ArvidsonFoto.ServiceDefaults/ArvidsonFoto.ServiceDefaults.csproj" />
   <Project Path="ArvidsonFoto-LogReader/ArvidsonFoto-LogReader.csproj" />
+  <Project Path="ArvidsonFoto.Tests.Integration/ArvidsonFoto.Tests.Integration.csproj" />
   <Project Path="ArvidsonFoto.Tests.Unit/ArvidsonFoto.Tests.Unit.csproj" />
   <Project Path="ArvidsonFoto/ArvidsonFoto.csproj" />
 </Solution>

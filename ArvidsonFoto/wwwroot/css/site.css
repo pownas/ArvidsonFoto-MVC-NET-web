@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
     (Använder NuGet-paketet: BuildWebCompiler, för detta). 
 
@@ -552,6 +552,7 @@ body {
 /* Category Tooltip Popover Styles */
 .category-tooltip-popover {
   max-width: 350px;
+  z-index: 10000 !important;
 }
 .category-tooltip-popover .popover-body {
   padding: 0.5rem;
@@ -563,7 +564,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .category-tooltip-popover {
-  /* Bootstrap 5.3 uses popover-arrow instead of arrow */
+  /* Bootstrap 5.3 uses popover-arrow istället för arrow */
 }
 .category-tooltip-popover.bs-popover-end .popover-arrow::after {
   border-right-color: #333;
@@ -583,6 +584,9 @@ body {
 }
 .category-tooltip-content .spinner-border {
   color: #0078ff;
+}
+.category-tooltip-content .small.text-muted {
+  color: #aaa !important;
 }
 
 /* Search page badges gap fix */
