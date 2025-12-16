@@ -1,0 +1,1 @@
+2025-12-16 06:42:32.621 +00:00 [INF] Starting web application
