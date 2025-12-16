@@ -535,6 +535,7 @@ body {
 /* Category Tooltip Popover Styles */
 .category-tooltip-popover {
     max-width: 350px;
+    z-index: 10000 !important; // Higher than menu z-index to appear on top
     
     .popover-body {
         padding: 0.5rem;
@@ -570,6 +571,11 @@ body {
     
     .spinner-border {
         color: #0078ff;
+    }
+    
+    // Fix for date text in light mode - always light text on dark background
+    .small.text-muted {
+        color: #aaa !important;
     }
 }
 

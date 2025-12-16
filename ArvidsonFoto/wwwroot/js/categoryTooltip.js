@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Category Tooltip Feature
  * Displays a popover with the latest image when hovering over subcategory links
  * Updated for Bootstrap 5.3 - using vanilla JavaScript
@@ -77,7 +77,7 @@
         if (imageData.dateImageTaken) {
             var date = new Date(imageData.dateImageTaken);
             var formattedDate = date.toLocaleDateString('sv-SE');
-            html += '<div class="mt-2 small text-muted">Fotograferad: ' + formattedDate + '</div>';
+            html += '<div class="mt-2 small text-muted" style="color: #aaa !important;">Fotograferad: ' + formattedDate + '</div>';
         }
         
         html += '</div>';
@@ -93,10 +93,13 @@
         return {
             trigger: 'manual',
             html: true,
-            placement: 'right',
+            placement: 'right', // Default to right side
+            fallbackPlacements: ['left', 'bottom', 'top'], // Avoid top placement that might cover menu
             container: 'body',
             content: content,
-            template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="popover-arrow"></div><div class="popover-body"></div></div>'
+            template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="popover-arrow"></div><div class="popover-body"></div></div>',
+            boundary: 'viewport', // Keep within viewport
+            offset: [0, 10] // Add some spacing from the element
         };
     }
 
@@ -110,6 +113,7 @@
             var categoryId = linkElement.getAttribute('data-category-id');
             var hoverTimer = null; // Timer specific to this link
             var popoverInstance = null;
+            var isVisible = false; // Track visibility state
 
             if (!categoryId) {
                 return; // Skip if no category ID
@@ -143,13 +147,15 @@
                     
                     // Show popover with loading state
                     popoverInstance.show();
+                    isVisible = true;
 
                     // Fetch and update content
                     fetchCategoryImage(categoryId).then(function (imageData) {
-                        var content = generatePopoverContent(imageData);
-                        
-                        // Update popover if still visible
-                        if (document.querySelector('[id^="popover"]')?.getAttribute('aria-labelledby') === linkElement.getAttribute('aria-describedby')) {
+                        // Only update if popover is still visible
+                        if (isVisible) {
+                            var content = generatePopoverContent(imageData);
+                            
+                            // Dispose old popover and create new one with actual content
                             popoverInstance.dispose();
                             popoverInstance = new bootstrap.Popover(linkElement, getPopoverConfig(content));
                             popoverInstance.show();
@@ -160,6 +166,9 @@
 
             // Mouse leave event - cancel timer and hide popover
             linkElement.addEventListener('mouseleave', function () {
+                // Mark as not visible
+                isVisible = false;
+                
                 // Clear timer for this link
                 if (hoverTimer) {
                     clearTimeout(hoverTimer);

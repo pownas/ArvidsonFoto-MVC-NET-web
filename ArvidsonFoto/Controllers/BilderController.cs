@@ -5,11 +5,14 @@ using ArvidsonFoto.Views.Shared;
 
 namespace ArvidsonFoto.Controllers;
 
-public class BilderController(ArvidsonFotoDbContext context) : Controller
+public class BilderController(
+    IImageService imageService,
+    ICategoryService categoryService,
+    IPageCounterService pageCounterService) : Controller
 {
-    internal IImageService _imageService = new ImageService(context);
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    private readonly IImageService _imageService = imageService;
+    private readonly ICategoryService _categoryService = categoryService;
+    private readonly IPageCounterService _pageCounterService = pageCounterService;
 
     [Route("/[controller]/{subLevel1}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}")]
@@ -39,24 +42,44 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
         if (subLevel4 is not null)
         {
             viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
+            if (viewModel.SelectedCategory == null)
+            {
+                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}");
+                return NotFound();
+            }
             viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
         {
             viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
+            if (viewModel.SelectedCategory == null)
+            {
+                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}");
+                return NotFound();
+            }
             viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
         {
             viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
+            if (viewModel.SelectedCategory == null)
+            {
+                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}");
+                return NotFound();
+            }
             viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
         {
             viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
+            if (viewModel.SelectedCategory == null)
+            {
+                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}");
+                return NotFound();
+            }
             viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1;
         }
@@ -66,10 +89,16 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
             Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
         }
 
-        if (User?.Identity?.IsAuthenticated is false)
-        {   //Räkar upp sidvisningar om användaren inte är inloggad: 
+        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null)
+        {   //Räkar upp sidvisningar om användaren inte är inloggad och om vi har en giltig kategori: 
             _pageCounterService.AddPageCount("Bilder"); //Räkar upp att sidan "Bilder" besöks. 
             _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.Id, viewModel.SelectedCategory.MenuText); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+        }
+
+        // Add null check for AllImagesList before using it
+        if (viewModel.AllImagesList == null)
+        {
+            viewModel.AllImagesList = new List<TblImage>();
         }
 
         viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
