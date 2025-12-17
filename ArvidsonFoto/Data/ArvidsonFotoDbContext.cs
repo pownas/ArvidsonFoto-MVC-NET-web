@@ -20,6 +20,7 @@ public partial class ArvidsonFotoDbContext : DbContext
     public virtual DbSet<TblImage> TblImages { get; set; } = null!;
     public virtual DbSet<TblMenu> TblMenus { get; set; } = null!;
     public virtual DbSet<TblPageCounter> TblPageCounter { get; set; } = null!;
+    public virtual DbSet<TblKontakt> TblKontakt { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -155,6 +156,47 @@ public partial class ArvidsonFotoDbContext : DbContext
 
             entity.Property(e => e.CategoryId)
                 .HasColumnName("PageCounter_CategoryId");
+
+            entity.HasKey("Id");
+        });
+
+        modelBuilder.Entity<TblKontakt>(entity =>
+        {
+            entity.ToTable("tbl_kontakt");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+
+            entity.Property(e => e.SubmitDate)
+                .HasColumnType("datetime")
+                .HasColumnName("SubmitDate");
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("Name");
+
+            entity.Property(e => e.Email)
+                .HasMaxLength(150)
+                .HasColumnName("Email");
+
+            entity.Property(e => e.Subject)
+                .HasMaxLength(50)
+                .HasColumnName("Subject");
+
+            entity.Property(e => e.Message)
+                .HasMaxLength(2000)
+                .HasColumnName("Message");
+
+            entity.Property(e => e.SourcePage)
+                .HasMaxLength(50)
+                .HasColumnName("SourcePage");
+
+            entity.Property(e => e.EmailSent)
+                .HasColumnType("bit")
+                .HasColumnName("EmailSent");
+
+            entity.Property(e => e.ErrorMessage)
+                .HasMaxLength(500)
+                .HasColumnName("ErrorMessage");
 
             entity.HasKey("Id");
         });

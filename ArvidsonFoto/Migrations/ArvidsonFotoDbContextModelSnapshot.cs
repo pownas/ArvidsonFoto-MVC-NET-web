@@ -481,6 +481,63 @@ namespace ArvidsonFoto.Migrations
                             PicturePage = true
                         });
                 });
+
+            modelBuilder.Entity("ArvidsonFoto.Models.TblKontakt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("SubmitDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("SubmitDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Name");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("Email");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Subject");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnName("Message");
+
+                    b.Property<string>("SourcePage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("SourcePage");
+
+                    b.Property<bool>("EmailSent")
+                        .HasColumnType("bit")
+                        .HasColumnName("EmailSent");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("ErrorMessage");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_kontakt", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
