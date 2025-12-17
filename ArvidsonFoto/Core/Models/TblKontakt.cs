@@ -1,4 +1,4 @@
-namespace ArvidsonFoto.Models;
+﻿namespace ArvidsonFoto.Core.Models;
 
 /// <summary>
 /// Database backup of contact form submissions for when email sending fails

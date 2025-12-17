@@ -1,6 +1,7 @@
 ﻿@model GalleryViewModel
 @inject IImageService _imageService
 @inject ICategoryService _categoryService
+@using System.Net
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
     List<TblImage> imageList = Model!.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan

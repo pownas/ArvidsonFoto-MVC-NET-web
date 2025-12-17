@@ -1,4 +1,4 @@
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Services;
 

@@ -1,0 +1,54 @@
+﻿@model ArvidsonFoto.Core.ViewModels.GalleryViewModel
+@{
+    var imageList = Model!.DisplayImagesList;
+    string rowSizeClass = "col-4 col-lg-3";
+    string imgCharWidth = "thumb-img-startpage";
+    string figcaptionCharWidth = "thumb-figcaption-startpage";
+}
+
+@if (imageList is null || imageList.Count == 0)
+{
+    <p>Det finns inga bilder att visa för tillfället.</p>
+}
+else
+{
+    <div id="gallery" class="row">
+        @{ var index = 1; }
+        @foreach (var img in imageList)
+        {
+            string customDesc = "custom-desc" + index;
+            
+            // Build proper image paths
+            // UrlImage contains the path like "bilder/landskap/gotland/AP2D1201"
+            string imgPath = img.UrlImage;
+            if (!imgPath.StartsWith("http"))
+            {
+                imgPath = $"https://arvidsonfoto.se/{imgPath}";
+            }
+            
+            string imgSrc = $"{imgPath}.jpg";
+            string imgThumbSrc = $"{imgPath}.thumb.jpg";
+            string imgTitle = !string.IsNullOrWhiteSpace(img.Name) ? img.Name : "Bild";
+            string imgDesc = !string.IsNullOrWhiteSpace(img.Description) ? $", {img.Description}." : "";
+            string imgName = imgPath.Substring(imgPath.LastIndexOf('/') + 1) + ".jpg";
+            DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
+            string categoryHref = !string.IsNullOrWhiteSpace(img.UrlCategory) ? $"https://arvidsonfoto.se/{img.UrlCategory}" : "";
+
+            <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+                <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
+Tryck för att förstora">
+                    <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" loading="lazy" title="@imgTitle@imgDesc
+Tryck för att förstora">
+                    <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
+                </a>
+            </figure>
+
+            <div class="glightbox-desc row @customDesc">
+                <p>@index av @imageList.Count - <strong>@imgTitle</strong>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
+                <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+            </div>
+
+            index++;
+        }
+    </div><!-- /end-gallery-row -->
+}

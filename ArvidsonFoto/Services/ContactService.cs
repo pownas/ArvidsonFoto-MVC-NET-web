@@ -1,5 +1,5 @@
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Models;
 using Serilog;
 
 namespace ArvidsonFoto.Services;
@@ -7,9 +7,9 @@ namespace ArvidsonFoto.Services;
 /// <summary>
 /// Service for managing contact form submissions
 /// </summary>
-public class ContactService(ArvidsonFotoDbContext context) : IContactService
+public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
 {
-    private readonly ArvidsonFotoDbContext _context = context;
+    private readonly ArvidsonFotoCoreDbContext _context = context;
 
     /// <summary>
     /// Save a contact form submission to the database

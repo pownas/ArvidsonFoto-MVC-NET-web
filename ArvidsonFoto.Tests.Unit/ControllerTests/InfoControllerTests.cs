@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Controllers;
+using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Tests.Unit.MockServices;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
@@ -23,12 +25,19 @@ public class InfoControllerTests
     public InfoControllerTests()
     {
         var mockDbContext = new ArvidsonFotoDbContext();
+        
+        // Create an in-memory database for Core context
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
         _mockGuestBookService = new MockGuestBookService();
         var mockImageService = new MockImageService();
         var mockCategoryService = new MockCategoryService();
         var mockPageCounterService = new MockPageCounterService();
 
-        _controller = new InfoController(mockDbContext)
+        _controller = new InfoController(mockDbContext, mockCoreDbContext)
         {
             _guestbookService = _mockGuestBookService,
             _imageService = mockImageService,
@@ -581,7 +590,13 @@ public class InfoControllerTests
         // Arrange
         var mockContactService = new MockContactService();
         var mockDbContext = new ArvidsonFotoDbContext();
-        var controller = new InfoController(mockDbContext)
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = new InfoController(mockDbContext, mockCoreDbContext)
         {
             _contactService = mockContactService
         };
@@ -634,7 +649,13 @@ public class InfoControllerTests
         // Arrange
         var mockContactService = new MockContactService();
         var mockDbContext = new ArvidsonFotoDbContext();
-        var controller = new InfoController(mockDbContext)
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = new InfoController(mockDbContext, mockCoreDbContext)
         {
             _contactService = mockContactService
         };
@@ -682,7 +703,13 @@ public class InfoControllerTests
         // Arrange
         var mockContactService = new MockContactService();
         var mockDbContext = new ArvidsonFotoDbContext();
-        var controller = new InfoController(mockDbContext)
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = new InfoController(mockDbContext, mockCoreDbContext)
         {
             _contactService = mockContactService
         };

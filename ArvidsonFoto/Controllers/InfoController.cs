@@ -1,18 +1,33 @@
-﻿using ArvidsonFoto.Data;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Data;
 using ArvidsonFoto.Models;
 using ArvidsonFoto.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+
 namespace ArvidsonFoto.Controllers;
 
-public class InfoController(ArvidsonFotoDbContext context) : Controller
+public class InfoController : Controller
 {
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IImageService _imageService = new ImageService(context);
-    internal IGuestBookService _guestbookService = new GuestBookService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
-    internal IContactService _contactService = new ContactService(context);
+    private readonly ArvidsonFotoDbContext _oldContext;
+    private readonly ArvidsonFotoCoreDbContext _coreContext;
+    internal ICategoryService _categoryService;
+    internal IImageService _imageService;
+    internal IGuestBookService _guestbookService;
+    internal IPageCounterService _pageCounterService;
+    internal IContactService _contactService;
+
+    public InfoController(ArvidsonFotoDbContext oldContext, ArvidsonFotoCoreDbContext coreContext)
+    {
+        _oldContext = oldContext;
+        _coreContext = coreContext;
+        _categoryService = new CategoryService(_oldContext);
+        _imageService = new ImageService(_oldContext);
+        _guestbookService = new GuestBookService(_oldContext);
+        _pageCounterService = new PageCounterService(_oldContext);
+        _contactService = new ContactService(_coreContext);
+    }
 
     public IActionResult Index()
     {
@@ -167,7 +182,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             // Save to database as backup (regardless of email success/failure)
             try
             {
-                var kontaktRecord = new TblKontakt
+                var kontaktRecord = new ArvidsonFoto.Core.Models.TblKontakt
                 {
                     SubmitDate = DateTime.Now,
                     Name = contactFormModel.Name,
