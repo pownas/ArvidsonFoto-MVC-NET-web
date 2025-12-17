@@ -18,6 +18,14 @@
     };
 
     /**
+     * Checks if current viewport is mobile (max-width: 767px)
+     * @returns {boolean} - True if mobile viewport
+     */
+    function isMobileView() {
+        return window.innerWidth <= 767;
+    }
+
+    /**
      * Fetches the latest image for a category from the API
      * @param {number} categoryId - The category ID
      * @returns {Promise} - Promise that resolves with image data
@@ -96,6 +104,9 @@
      * @returns {Object} - Popover configuration object
      */
     function getPopoverConfig(content) {
+        // On mobile, add significant horizontal offset to avoid covering menu buttons
+        var offsetConfig = isMobileView() ? [40, 10] : [0, 10];
+        
         return {
             trigger: 'manual',
             html: true,
@@ -105,7 +116,7 @@
             content: content,
             template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="popover-arrow"></div><div class="popover-body"></div></div>',
             boundary: 'viewport', // Keep within viewport
-            offset: [0, 10] // Add some spacing from the element
+            offset: offsetConfig // Larger offset on mobile to avoid +/- buttons
         };
     }
 

@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
     (Använder NuGet-paketet: BuildWebCompiler, för detta). 
 
@@ -467,7 +467,7 @@ body {
   background-color: rgba(34, 34, 34, 0.75);
 }
 
-/* ----------end of glightbox config------------ */
+/* ----------end of gllightbox config------------ */
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-figcaption-startpage {
   width: 9rem;
@@ -582,7 +582,6 @@ body {
 /* Mobile-specific positioning - move tooltip to the right to avoid covering +/- buttons */
 @media (max-width: 767px) {
   .category-tooltip-popover.bs-popover-end, .category-tooltip-popover.bs-popover-start, .category-tooltip-popover.bs-popover-right, .category-tooltip-popover.bs-popover-left {
-    margin-left: 50px !important;
   }
 }
 .category-tooltip-content {
