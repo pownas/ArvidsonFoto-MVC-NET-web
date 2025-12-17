@@ -566,6 +566,20 @@ body {
     }
 }
 
+/* Mobile-specific positioning - move tooltip to the right to avoid covering +/- buttons */
+@media (max-width: 767px) {
+    .category-tooltip-popover {
+        // Position is now handled via JavaScript offset configuration
+        // This ensures tooltip appears to the right of menu items on mobile
+        &.bs-popover-end,
+        &.bs-popover-start,
+        &.bs-popover-right,
+        &.bs-popover-left {
+            // Additional styling for mobile if needed
+        }
+    }
+}
+
 .category-tooltip-content {
     text-align: center;
     

@@ -18,6 +18,14 @@
     };
 
     /**
+     * Checks if current viewport is mobile (max-width: 767px)
+     * @returns {boolean} - True if mobile viewport
+     */
+    function isMobileView() {
+        return window.innerWidth <= 767;
+    }
+
+    /**
      * Fetches the latest image for a category from the API
      * @param {number} categoryId - The category ID
      * @returns {Promise} - Promise that resolves with image data
@@ -55,9 +63,10 @@
     /**
      * Generates HTML content for the popover
      * @param {Object} imageData - Image data from API
+     * @param {string} categoryName - Name of the category
      * @returns {string} - HTML content
      */
-    function generatePopoverContent(imageData) {
+    function generatePopoverContent(imageData, categoryName) {
         if (!imageData || !imageData.urlImage) {
             return '<div class="text-muted">Ingen bild tillgänglig</div>';
         }
@@ -74,10 +83,15 @@
         html += '<img src="' + imagePath + '" alt="' + (imageData.name || 'Preview') + '" ';
         html += 'style="max-width: ' + config.imageMaxWidth + 'px; max-height: ' + config.imageMaxHeight + 'px; width: auto; height: auto; display: block;" />';
         
+        // Add category name below the image
+        if (categoryName) {
+            html += '<div class="mt-2 fw-bold" style="color: #ddd !important;">' + categoryName + '</div>';
+        }
+        
         if (imageData.dateImageTaken) {
             var date = new Date(imageData.dateImageTaken);
             var formattedDate = date.toLocaleDateString('sv-SE');
-            html += '<div class="mt-2 small text-muted" style="color: #aaa !important;">Fotograferad: ' + formattedDate + '</div>';
+            html += '<div class="mt-1 small text-muted" style="color: #aaa !important;">Fotograferad: ' + formattedDate + '</div>';
         }
         
         html += '</div>';
@@ -90,6 +104,9 @@
      * @returns {Object} - Popover configuration object
      */
     function getPopoverConfig(content) {
+        // On mobile, add significant horizontal offset to avoid covering menu buttons
+        var offsetConfig = isMobileView() ? [40, 10] : [0, 10];
+        
         return {
             trigger: 'manual',
             html: true,
@@ -99,7 +116,7 @@
             content: content,
             template: '<div class="popover category-tooltip-popover" role="tooltip"><div class="popover-arrow"></div><div class="popover-body"></div></div>',
             boundary: 'viewport', // Keep within viewport
-            offset: [0, 10] // Add some spacing from the element
+            offset: offsetConfig // Larger offset on mobile to avoid +/- buttons
         };
     }
 
@@ -111,6 +128,7 @@
         
         links.forEach(function (linkElement) {
             var categoryId = linkElement.getAttribute('data-category-id');
+            var categoryName = linkElement.getAttribute('data-category-name');
             var hoverTimer = null; // Timer specific to this link
             var popoverInstance = null;
             var isVisible = false; // Track visibility state
@@ -153,7 +171,7 @@
                     fetchCategoryImage(categoryId).then(function (imageData) {
                         // Only update if popover is still visible
                         if (isVisible) {
-                            var content = generatePopoverContent(imageData);
+                            var content = generatePopoverContent(imageData, categoryName);
                             
                             // Dispose old popover and create new one with actual content
                             popoverInstance.dispose();

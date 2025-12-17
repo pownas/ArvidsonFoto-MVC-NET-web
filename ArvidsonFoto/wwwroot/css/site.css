@@ -467,7 +467,7 @@ body {
   background-color: rgba(34, 34, 34, 0.75);
 }
 
-/* ----------end of glightbox config------------ */
+/* ----------end of gllightbox config------------ */
 /* ---------- Gallery-fix på mobil ------------- */
 .thumb-figcaption-startpage {
   width: 9rem;
@@ -564,7 +564,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .category-tooltip-popover {
-  /* Bootstrap 5.3 uses popover-arrow istället för arrow */
+  /* Bootstrap 5.3 uses popover-arrow instead of arrow */
 }
 .category-tooltip-popover.bs-popover-end .popover-arrow::after {
   border-right-color: #333;
@@ -579,6 +579,11 @@ body {
   border-bottom-color: #333;
 }
 
+/* Mobile-specific positioning - move tooltip to the right to avoid covering +/- buttons */
+@media (max-width: 767px) {
+  .category-tooltip-popover.bs-popover-end, .category-tooltip-popover.bs-popover-start, .category-tooltip-popover.bs-popover-right, .category-tooltip-popover.bs-popover-left {
+  }
+}
 .category-tooltip-content {
   text-align: center;
 }
@@ -726,5 +731,3 @@ body {
 }
 
 /* -------- End Info Pages Modern Design -------- */
-
-/*# sourceMappingURL=site.css.map */
