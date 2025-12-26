@@ -158,9 +158,23 @@ public class Program
         {
             using (var scope = app.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
-                context.Database.EnsureCreated();
-                context.SeedInMemoryDatabase();
+                var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
+                coreContext.Database.EnsureCreated();
+                
+                // Seeda data om databasen är tom
+                if (!coreContext.TblImages.Any())
+                {
+                    Log.Information("Seeding in-memory database with test data...");
+                    coreContext.SeedInMemoryDatabase();
+                    Log.Information("In-memory database seeded successfully with {ImageCount} images, {CategoryCount} categories, {GuestbookCount} guestbook entries",
+                        coreContext.TblImages.Count(),
+                        coreContext.TblMenus.Count(),
+                        coreContext.TblGbs.Count());
+                }
+                else
+                {
+                    Log.Information("In-memory database already contains data - skipping seed");
+                }
             }
         }
 
