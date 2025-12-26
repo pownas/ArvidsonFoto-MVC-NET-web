@@ -1,21 +1,41 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<ArvidsonFotoUser> userManager, IFacebookService facebookService) : Controller
+public class UploadAdminController : Controller
 {
-    internal IImageService _imageService = new ImageService(context);
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IGuestBookService _guestBookService = new GuestBookService(context);
-    internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
-    internal readonly IFacebookService _facebookService = facebookService;
+    internal IApiImageService _imageService;
+    internal IApiCategoryService _categoryService;
+    internal IGuestBookService _guestBookService;
+    internal readonly UserManager<ArvidsonFotoUser> _userManager;
+    internal readonly IFacebookService _facebookService;
+
+    public UploadAdminController(
+        ArvidsonFotoCoreDbContext coreContext,
+        UserManager<ArvidsonFotoUser> userManager,
+        IFacebookService facebookService,
+        ILogger<ApiImageService> imageLogger,
+        ILogger<ApiCategoryService> categoryLogger,
+        IConfiguration configuration,
+        IMemoryCache memoryCache)
+    {
+        _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
+        _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
+        _guestBookService = new GuestBookService(coreContext);
+        _userManager = userManager;
+        _facebookService = facebookService;
+    }
 
     public IActionResult Index()
     {
@@ -28,39 +48,48 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputModel inputModel)
+    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputDto inputModel)
     {
         ViewData["Title"] = "Länka till ny bild";
         UploadImageViewModel viewModel = new UploadImageViewModel();
-        viewModel.ImageInputModel = inputModel;
+        viewModel.ImageInputModel = inputModel ?? UploadImageInputDto.CreateEmpty();
 
         if (subLevel4 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
-            viewModel.SubCategories = _categoryService.GetSubsList(_categoryService.GetByName(subLevel4).MenuId).OrderBy(c => c.MenuText).ToList();
+            var category = _categoryService.GetByName(subLevel4);
+            viewModel.SelectedCategory = category;
+            var subs = _categoryService.GetSubsList(category.CategoryId ?? 0);
+            viewModel.SubCategories = subs.OrderBy(c => c.Name).ToList();
             viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
-            viewModel.SubCategories = _categoryService.GetSubsList(_categoryService.GetByName(subLevel3).MenuId).OrderBy(c => c.MenuText).ToList();
+            var category = _categoryService.GetByName(subLevel3);
+            viewModel.SelectedCategory = category;
+            var subs = _categoryService.GetSubsList(category.CategoryId ?? 0);
+            viewModel.SubCategories = subs.OrderBy(c => c.Name).ToList();
             viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
-            viewModel.SubCategories = _categoryService.GetSubsList(_categoryService.GetByName(subLevel2).MenuId).OrderBy(c => c.MenuText).ToList();
+            var category = _categoryService.GetByName(subLevel2);
+            viewModel.SelectedCategory = category;
+            var subs = _categoryService.GetSubsList(category.CategoryId ?? 0);
+            viewModel.SubCategories = subs.OrderBy(c => c.Name).ToList();
             viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
-            viewModel.SubCategories = _categoryService.GetSubsList(_categoryService.GetByName(subLevel1).MenuId).OrderBy(c => c.MenuText).ToList();
+            var category = _categoryService.GetByName(subLevel1);
+            viewModel.SelectedCategory = category;
+            var subs = _categoryService.GetSubsList(category.CategoryId ?? 0);
+            viewModel.SubCategories = subs.OrderBy(c => c.Name).ToList();
             viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1;
         }
         else
         {
-            viewModel.SubCategories = _categoryService.GetSubsList(0); //Hämtar top-level menyn
+            var subs = _categoryService.GetSubsList(0);
+            viewModel.SubCategories = subs.ToList();
             viewModel.CurrentUrl = "./UploadAdmin/NyBild";
         }
 
@@ -68,7 +97,7 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateImageLink(UploadImageInputModel model)
+    public IActionResult CreateImageLink(UploadImageInputDto model)
     {
         model.ImageCreated = false;
 
@@ -80,22 +109,33 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
             if (model.ImageFamilj.Equals(0))
                 model.ImageFamilj = null;
 
-            if (model.ImageHuvudfamilj.Equals(1)) //ID för Fåglar = 1
+            if (model.ImageHuvudfamilj.Equals(1))
                 model.ImageHuvudfamilj = null;
 
-            TblImage newImage = new TblImage()
+            Core.Models.TblImage newImage = new Core.Models.TblImage
             {
-                ImageHuvudfamilj = model.ImageHuvudfamilj,
-                ImageFamilj = model.ImageFamilj,
-                ImageArt = model.ImageArt,
                 ImageId = _imageService.GetImageLastId() + 1,
+                ImageMainFamilyId = model.ImageHuvudfamilj,
+                ImageFamilyId = model.ImageFamilj,
+                ImageCategoryId = model.ImageArt,
                 ImageUpdate = DateTime.Now,
                 ImageDate = model.ImageDate,
                 ImageDescription = model.ImageDescription,
-                ImageUrl = model.ImageUrl
+                ImageUrlName = model.ImageUrl
             };
 
-            model.ImageCreated = _imageService.AddImage(newImage); //Om allt OK...
+            try
+            {
+                var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
+                coreContext.TblImages.Add(newImage);
+                coreContext.SaveChanges();
+                model.ImageCreated = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Fel vid skapande av bild");
+                model.ImageCreated = false;
+            }
         }
         if (model.ImageCreated)
             return RedirectToAction("NyBild", new { model.ImageCreated, model.ImageArt, model.ImageUrl });
@@ -104,40 +144,63 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult EditImageLink(UploadImageInputModel model)
+    public async Task<IActionResult> EditImageLink(UploadImageInputDto model)
     {
         if (ModelState.IsValid)
         {
-            if (_imageService.UpdateImage(model)) //Lägg in skapandet här, och då sätt som true/false..
-                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
+            try
+            {
+                var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
+                var existingImage = coreContext.TblImages
+                    .Where(i => i.ImageId == model.ImageId)
+                    .FirstOrDefault();
+                    
+                if (existingImage != null)
+                {
+                    existingImage.ImageUrlName = model.ImageUrl;
+                    existingImage.ImageCategoryId = model.ImageArt;
+                    existingImage.ImageFamilyId = model.ImageFamilj;
+                    existingImage.ImageMainFamilyId = model.ImageHuvudfamilj;
+                    existingImage.ImageDate = model.ImageDate;
+                    existingImage.ImageDescription = model.ImageDescription;
+                    existingImage.ImageUpdate = DateTime.Now;
+                    
+                    await coreContext.SaveChangesAsync();
+                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Fel vid uppdatering av bild");
+            }
         }
 
         return RedirectToAction("RedigeraBilder", model);
     }
 
-    public IActionResult NyKategori(UploadNewCategoryModel inputModel)
+    public IActionResult NyKategori(UploadNewCategoryDto inputModel)
     {
         ViewData["Title"] = "Länka till ny kategori";
-        return View(inputModel);
+        return View(inputModel ?? UploadNewCategoryDto.CreateEmpty());
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateCategory(UploadNewCategoryModel inputModel)
+    public IActionResult CreateCategory(UploadNewCategoryDto inputModel)
     {
         inputModel.CategoryCreated = false;
 
         if (ModelState.IsValid)
         {
-            TblMenu newCategory = new TblMenu()
+            CategoryDto newCategory = new CategoryDto
             {
-                MenuText = inputModel.MenuText,
-                MenuId = _categoryService.GetLastId() + 1,
-                MenuMainId = inputModel.MainMenuId
+                Name = inputModel.MenuText,
+                CategoryId = _categoryService.GetLastId() + 1,
+                ParentCategoryId = inputModel.MainMenuId
             };
 
             if (_categoryService.AddCategory(newCategory))
             {
-                inputModel.CategoryCreated = true; //Om allt OK...
+                inputModel.CategoryCreated = true;
                 inputModel.MainMenuId = null;
             }
         }
@@ -153,20 +216,21 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
         if (sida is null || sida < 1)
             sida = 1;
 
-        List<TblImage> displayTblImages = new List<TblImage>();
+        var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
+        var allImages = coreContext.TblImages.OrderByDescending(i => i.ImageId).ToList();
 
         UploadEditImagesViewModel viewModel = new UploadEditImagesViewModel()
         {
-            AllImagesList = _imageService.GetAll().OrderByDescending(i => i.ImageId).ToList(),
             CurrentPage = (int)sida,
             CurrentUrl = "./UploadAdmin/RedigeraBilder"
         };
-        viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)imagesPerPage);
-        displayTblImages = viewModel.AllImagesList
+        
+        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count() / (decimal)imagesPerPage);
+        var displayTblImages = allImages
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
-        viewModel.DisplayImagesList = new List<UploadImageInputModel>();
+        viewModel.DisplayImagesList = new List<UploadImageInputDto>();
 
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
         {
@@ -182,28 +246,24 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            UploadImageInputModel inputModel = new UploadImageInputModel()
-            {
-                ImageId = item.ImageId,
-                ImageHuvudfamilj = item.ImageHuvudfamilj,
-                ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageHuvudfamilj),
-                ImageFamilj = item.ImageFamilj,
-                ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilj),
-                ImageArt = item.ImageArt,
-                ImageArtNamn = _categoryService.GetNameById(item.ImageArt),
-                ImageDate = imgDate,
-                ImageUpdate = item.ImageUpdate,
-                ImageDescription = item.ImageDescription,
-                ImageUrl = item.ImageUrl
-            };
+            UploadImageInputDto inputModel = UploadImageInputDto.CreateEmpty();
+            inputModel.ImageId = item.ImageId ?? -1;
+            inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
+            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageFamilj = item.ImageFamilyId;
+            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageArt = item.ImageCategoryId ?? -1;
+            inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
+            inputModel.ImageDate = imgDate;
+            inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
+            inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
+            inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
 
-            inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
-            if (inputModel.ImageHuvudfamilj is not null)
-                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
-            if (inputModel.ImageFamilj is not null)
-                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
-
-            inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
+            // Get category path using the service method
+            var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
+            
+            // Build the full source URL with the correct path
+            inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/bilder/{categoryPath}/{inputModel.ImageUrl}";
 
             viewModel.DisplayImagesList.Add(inputModel);
         }
@@ -315,8 +375,8 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     {
         ViewData["Title"] = "Dela bilder på Facebook";
 
-        // Hämta de 25 senaste bilderna
-        var recentImages = _imageService.GetAll()
+        var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
+        var recentImages = coreContext.TblImages
             .OrderByDescending(i => i.ImageId)
             .Take(60)
             .ToList();
@@ -331,20 +391,18 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            var inputModel = new UploadImageInputModel()
-            {
-                ImageId = item.ImageId,
-                ImageHuvudfamilj = item.ImageHuvudfamilj,
-                ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageHuvudfamilj),
-                ImageFamilj = item.ImageFamilj,
-                ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilj),
-                ImageArt = item.ImageArt,
-                ImageArtNamn = _categoryService.GetNameById(item.ImageArt),
-                ImageDate = imgDate,
-                ImageUpdate = item.ImageUpdate,
-                ImageDescription = item.ImageDescription,
-                ImageUrl = item.ImageUrl
-            };
+            var inputModel = UploadImageInputDto.CreateEmpty();
+            inputModel.ImageId = item.ImageId ?? -1;
+            inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
+            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageFamilj = item.ImageFamilyId;
+            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageArt = item.ImageCategoryId ?? -1;
+            inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
+            inputModel.ImageDate = imgDate;
+            inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
+            inputModel.ImageDescription = item.ImageDescription ?? string.Empty;
+            inputModel.ImageUrl = item.ImageUrlName ?? string.Empty;
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
             if (inputModel.ImageHuvudfamilj is not null)
@@ -364,7 +422,7 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
     /// Skapar Facebook-inlägg med valda bilder
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateFacebookPost(FacebookUploadInputModel model)
+    public async Task<IActionResult> CreateFacebookPost(FacebookUploadInputDto model)
     {
         if (!ModelState.IsValid)
         {
@@ -378,10 +436,10 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
 
         try
         {
-            // Hämta de valda bilderna och bygg fullständiga URL:er
-            var selectedImages = _imageService.GetAll()
-                .Where(img => model.SelectedImageIds.Contains(img.ImageId))
-                .Take(10) // Max 10 bilder
+            var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
+            var selectedImages = coreContext.TblImages
+                .Where(img => model.SelectedImageIds.Contains(img.ImageId ?? 0))
+                .Take(10)
                 .ToList();
 
             if (selectedImages.Count == 0)
@@ -394,25 +452,24 @@ public class UploadAdminController(ArvidsonFotoDbContext context, UserManager<Ar
             {
                 string imageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
                 
-                if (image.ImageHuvudfamilj is not null)
+                if (image.ImageMainFamilyId is not null)
                 {
-                    var huvudfamiljNamn = _categoryService.GetNameById(image.ImageHuvudfamilj);
+                    var huvudfamiljNamn = _categoryService.GetNameById(image.ImageMainFamilyId);
                     imageUrlFullSrc += "/" + huvudfamiljNamn;
                 }
                 
-                if (image.ImageFamilj is not null)
+                if (image.ImageFamilyId is not null)
                 {
-                    var familjNamn = _categoryService.GetNameById(image.ImageFamilj);
+                    var familjNamn = _categoryService.GetNameById(image.ImageFamilyId);
                     imageUrlFullSrc += "/" + familjNamn;
                 }
                 
-                var artNamn = _categoryService.GetNameById(image.ImageArt);
-                imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrl;
+                var artNamn = _categoryService.GetNameById(image.ImageCategoryId);
+                imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrlName;
                 
                 imageUrls.Add(imageUrlFullSrc);
             }
 
-            // Skapa Facebook-inlägg
             var postUrl = await _facebookService.CreatePostAsync(imageUrls, model.Message);
 
             if (!string.IsNullOrEmpty(postUrl))

@@ -1,4 +1,6 @@
-﻿@using ArvidsonFoto.Views.Shared
+﻿@using ArvidsonFoto.Core.Interfaces
+@using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Views.Shared
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -6,7 +8,7 @@
 @{
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.Statistik;
 
-    List<TblPageCounter> allPagesCounts = _pageCounterService.GetAllPageCountsGroupedByPageCount();
+    List<ArvidsonFoto.Core.Models.TblPageCounter> allPagesCounts = _pageCounterService.GetAllPageCountsGroupedByPageCount();
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">

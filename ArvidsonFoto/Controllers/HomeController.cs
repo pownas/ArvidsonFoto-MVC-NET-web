@@ -1,20 +1,42 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;
+
 namespace ArvidsonFoto.Controllers;
 
-public class HomeController(ArvidsonFotoDbContext context) : Controller
+/// <summary>
+/// Controller for handling home page and general site functionality.
+/// </summary>
+public class HomeController : Controller
 {
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    private readonly IPageCounterService _pageCounterService;
+    private readonly IApiImageService _imageService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HomeController"/> class.
+    /// </summary>
+    /// <param name="pageCounterService">The page counter service for tracking page views</param>
+    /// <param name="imageService">The image service for fetching images</param>
+    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService)
+    {
+        _pageCounterService = pageCounterService;
+        _imageService = imageService;
+    }
 
     public IActionResult Index()
     {
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
-        var viewModel = new GalleryViewModel();
+        
+        var viewModel = new GalleryViewModel
+        {
+            DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
+        };
+        
         return View(viewModel);
     }
 

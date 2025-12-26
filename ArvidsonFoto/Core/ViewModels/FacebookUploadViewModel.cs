@@ -1,4 +1,6 @@
-namespace ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.DTOs;
+
+namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>
 /// ViewModel för Facebook-uppladdningssidan
@@ -8,7 +10,7 @@ public class FacebookUploadViewModel
     /// <summary>
     /// Lista med de senaste bilderna (max 25)
     /// </summary>
-    public List<UploadImageInputModel> RecentImages { get; set; } = new();
+    public List<UploadImageInputDto> RecentImages { get; set; } = new();
 
     /// <summary>
     /// Meddelande att visa för användaren (success/error)
@@ -23,5 +25,5 @@ public class FacebookUploadViewModel
     /// <summary>
     /// Inputmodellen för formuläret
     /// </summary>
-    public FacebookUploadInputModel InputModel { get; set; } = new();
+    public FacebookUploadInputDto InputModel { get; set; } = new();
 }

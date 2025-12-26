@@ -1,4 +1,5 @@
 ﻿@using ArvidsonFoto.Views.Shared
+@using ArvidsonFoto.Core.Models
 @model UploadGbViewModel
 
 @inject IGuestBookService _guestBookService
@@ -53,7 +54,6 @@
                     DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
                     string gbName = (gbPost.GbName is not null) ? gbPost.GbName : "Anonym användare";
 
-                    //bool unRead = false; //Kan läggas till för notifications!
                     <div class="col mb-4">
                         <div class="card text-left text-dark">
                             <div class="card-header row">
@@ -61,17 +61,14 @@
                                     <p class="my-1"><strong>@gbName</strong></p>
                                 </div>
                                 <div class="text-right col-6">
-                                    @if (gbPost.GbReadPost is not true) //Kan adderas för notifications
+                                    @if (gbPost.GbReadPost is not true)
                                     {
                                         <a title="Läsmarkera" href="/UploadAdmin/MarkGbPostAsRead?gbId=@gbPost.GbId" class="btn btn-sm btn-success my-1">
                                             <i class="bi bi-check2-square me-2"></i> Läsmarkera
                                         </a>
                                     }
-                                    @if (gbPost.GbEmail is not null && gbPost.GbEmail.Contains("@")) //Kollar om Email innehåller en e-postadress...
+                                    @if (gbPost.GbEmail is not null && gbPost.GbEmail.Contains("@"))
                                     {
-                                        @*<button title="Svara" type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#AnswerTo-@gbPost.GbId">
-                                            <i class="bi bi-pencil-square me-2"></i>Svara
-                                        </button>*@
                                         <a title="Svara via Outlook" class="btn btn-sm btn-primary my-1" href="mailto:@gbPost.GbEmail?subject=Svar%20på%20gästboks-inlägget%20du%20skrev%20på%20min%20hemsida:%20ArvidsonFoto.se" target="_blank" rel="noopener noreferrer">
                                             <i class="bi bi-pencil-square me-2"></i>Svara
                                         </a>
@@ -112,51 +109,13 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                         Avbryt <i class="bi bi-x-circle"></i>
                                     </button>
-                                    @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
-                                        Radera <i class="bi bi-trash"></i>
-                                    </a>*@
                                     <a href="/UploadAdmin/DeleteGbPost?gbId=@gbPost.GbId" class="btn btn-danger">
                                         Radera <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
-                    </div><!-- End of Bootstrap-Modal-->
-                    @*
-                    <!-- Bootstrap-Modal id=AnswerTo -->
-                    <div class="modal fade" id="AnswerTo-@gbPost.GbId" tabindex="-1" aria-labelledby="AnswerTo-@gbPost.GbId-Label" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content text-dark">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="AnswerTo-@gbPost.GbId-Label">
-                                        Skriv ett svar till: @gbName
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><strong>Meddelande text:</strong> @gbPost.GbText <br /></p>
-                                    <p><strong>Mottaget:</strong> @gbDate.ToString("yyyy-MM-dd HH:mm")</p>
-                                    <p>
-                                        <div class="mb-3">
-                                            <label for="message-text" class="col-form-label">Ditt svar:</label>
-                                            <textarea class="form-control" id="message-text-for-@gbPost.GbId"></textarea>
-                                        </div>
-                                    </p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        Avbryt <i class="bi bi-x-circle"></i>
-                                    </button>
-                                    <a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
-                                        Svara <i class="bi bi-pencil-square"></i> (fungerar ej)
-                                    </a>
-                                    <a class="btn btn-primary text-white" href="mailto:@gbPost.GbEmail?subject=Svar%20på%20gästboks-inlägget%20du%20skrev%20på%20min%20hemsida&body=test" target="_blank" rel="noopener noreferrer">
-                                        Svara via Outlook <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- End of Bootstrap-Modal-->*@
+                    </div>
                 }
             }
         </div>

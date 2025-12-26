@@ -33,4 +33,19 @@ public class MainMenuDto()
 
     /// <summary> Sorting URL för kategorin, används endast för att sortera länkarna korrekt, så att åäö hamnar rätt i sorteringen </summary>
     public string SortingUrlWithAao { get; set; } = "/Ej återfunnen/";
+
+    /// <summary>
+    /// Skapar en tom MainMenuDto med alla properties initialiserade
+    /// </summary>
+    /// <returns>En ny tom MainMenuDto</returns>
+    public static MainMenuDto CreateEmpty()
+    {
+        return new MainMenuDto
+        {
+            MenuUrl = "/404-NotFound",
+            MenuDisplayName = "404 - Not Found",
+            SubCategoryCount = 0,
+            SortingUrlWithAao = "/Ej återfunnen/"
+        };
+    }
 }

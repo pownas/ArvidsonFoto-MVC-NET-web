@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ArvidsonFoto.Data;
+using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Tests.Integration;
 
 /// <summary>
 /// Custom WebApplicationFactory for integration testing.
-/// Configures the test server to use an in-memory database.
+/// Configures the test server to use an in-memory database with Core models.
 /// </summary>
 public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
 {
@@ -18,7 +19,7 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
         {
             // Remove the existing DbContext registration
             var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<ArvidsonFotoDbContext>));
+                d => d.ServiceType == typeof(DbContextOptions<ArvidsonFotoCoreDbContext>));
 
             if (descriptor != null)
             {
@@ -26,7 +27,7 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
             }
 
             // Add DbContext using an in-memory database for testing
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
+            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
             {
                 options.UseInMemoryDatabase("InMemoryTestDb");
             });
@@ -38,7 +39,7 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
             using (var scope = sp.CreateScope())
             {
                 var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<ArvidsonFotoDbContext>();
+                var db = scopedServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
 
                 // Ensure the database is created
                 db.Database.EnsureCreated();
@@ -49,28 +50,28 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
         });
     }
 
-    private static void SeedTestData(ArvidsonFotoDbContext context)
+    private static void SeedTestData(ArvidsonFotoCoreDbContext context)
     {
         // Add any test data needed for integration tests
         // This data will be available to all tests
         
-        // Example: Seed some categories
+        // Example: Seed some categories using Core models
         if (!context.TblMenus.Any())
         {
             context.TblMenus.AddRange(
-                new Models.TblMenu
+                new TblMenu
                 {
-                    MenuId = 1,
-                    MenuMainId = null,
-                    MenuText = "Fåglar",
-                    MenuUrltext = "Faglar"
+                    MenuCategoryId = 1,
+                    MenuParentCategoryId = null,
+                    MenuDisplayName = "Fåglar",
+                    MenuUrlSegment = "faglar"
                 },
-                new Models.TblMenu
+                new TblMenu
                 {
-                    MenuId = 2,
-                    MenuMainId = 1,
-                    MenuText = "Tättingar",
-                    MenuUrltext = "Tattingar"
+                    MenuCategoryId = 2,
+                    MenuParentCategoryId = 1,
+                    MenuDisplayName = "Tättingar",
+                    MenuUrlSegment = "tattingar"
                 }
             );
             context.SaveChanges();

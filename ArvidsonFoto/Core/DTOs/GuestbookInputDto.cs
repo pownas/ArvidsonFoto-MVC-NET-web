@@ -43,4 +43,23 @@ public class GuestbookInputDto
     
     /// <summary>Indikerar om det uppstod ett fel vid publicering</summary>
     public bool DisplayErrorPublish { get; set; }
+
+    /// <summary>
+    /// Skapar en tom GuestbookInputDto med alla required fields initialiserade
+    /// </summary>
+    /// <returns>En ny tom GuestbookInputDto</returns>
+    public static GuestbookInputDto CreateEmpty()
+    {
+        return new GuestbookInputDto
+        {
+            Code = string.Empty,
+            Name = string.Empty,
+            Email = string.Empty,
+            Homepage = string.Empty,
+            Message = string.Empty,
+            FormSubmitDate = DateTime.Now,
+            DisplayPublished = false,
+            DisplayErrorPublish = false
+        };
+    }
 }

@@ -5,7 +5,7 @@ using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using Serilog;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
 /// Provides functionality for managing images, including adding, retrieving, updating, and deleting images.
@@ -235,6 +235,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         foreach (var image in images)
         {
             var categoryPath = "";
+            var categoryName = "";
+            
             if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
@@ -244,8 +246,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 // Otherwise, use the old category path
                 categoryPath = GetOldCategoryPathForImage(image);
             }
+            
+            // Get category name for display
+            categoryName = apiCategoryService.GetNameById(image.ImageCategoryId);
 
-            imageDtos.Add(image.ToImageDto(categoryPath));
+            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
         }
 
         return imageDtos;
@@ -288,12 +293,14 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
             else
             {
-                // Use old category path logic
+                // Use old category path logic with category name
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
                     var categoryPath = GetOldCategoryPathForImage(image);
-                    imageDtos.Add(image.ToImageDto(categoryPath));
+                    // Get the actual category name for THIS image, not the search category
+                    var categoryName = apiCategoryService.GetNameById(image.ImageCategoryId ?? -1);
+                    imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
                 }
                 return imageDtos;
             }
@@ -306,34 +313,69 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     }
 
     /// <summary>
-    /// Optimized method to get ImageDtos with category paths using bulk loading
+    /// Gets a paginated list of images by category ID with sorting
     /// </summary>
-    private List<ImageDto> GetImageDtosWithOptimizedCategoryPaths(List<TblImage> images)
+    /// <param name="categoryID">The ID of the category to find images for</param>
+    /// <param name="page">Page number (1-based)</param>
+    /// <param name="pageSize">Number of images per page</param>
+    /// <returns>Paginated list of images in the specified category</returns>
+    public List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize)
     {
-        // Get all unique category IDs from the images
-        var categoryIds = images
-            .Select(i => i.ImageCategoryId)
-            .Where(id => id.HasValue && id.Value > 0)
-            .Select(id => id!.Value)
-            .Distinct()
-            .ToList();
-
-        // Bulk load category paths for all unique category IDs
-        var categoryPaths = apiCategoryService.GetCategoryPathsBulk(categoryIds);
-
-        // Build ImageDtos with cached category paths
-        var imageDtos = new List<ImageDto>();
-        foreach (var image in images)
+        try
         {
-            var categoryPath = "";
-            if (image.ImageCategoryId.HasValue && categoryPaths.TryGetValue(image.ImageCategoryId.Value, out var path))
+            if (categoryID <= 0)
             {
-                categoryPath = path;
+                Log.Information("Invalid category ID for GetImagesByCategoryIDPaginated: {CategoryID}", categoryID);
+                return new List<ImageDto>();
             }
-            imageDtos.Add(image.ToImageDto(categoryPath));
-        }
+            
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 48;
+            
+            // OPTIMIZED: Get only the images we need with sorting applied in SQL
+            var images = _entityContext.TblImages
+                        .Where(i => i.ImageCategoryId == categoryID
+                                 || i.ImageFamilyId == categoryID
+                                 || i.ImageMainFamilyId == categoryID)
+                        .OrderByDescending(i => i.ImageId)
+                        .ThenByDescending(i => i.ImageDate)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
 
-        return imageDtos;
+            // Early return if no images found
+            if (!images.Any())
+            {
+                return new List<ImageDto>();
+            }
+
+            // Check feature flag once
+            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
+            
+            if (featureNewGalleryCategory?.Enabled == true)
+            {
+                // OPTIMIZED: Bulk load all category paths at once
+                return GetImageDtosWithOptimizedCategoryPaths(images);
+            }
+            else
+            {
+                // Use old category path logic with category name
+                var imageDtos = new List<ImageDto>();
+                foreach (var image in images)
+                {
+                    var categoryPath = GetOldCategoryPathForImage(image);
+                    // Get the actual category name for THIS image, not the search category
+                    var categoryName = apiCategoryService.GetNameById(image.ImageCategoryId ?? -1);
+                    imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+                }
+                return imageDtos;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Error in GetImagesByCategoryIDPaginated: {Message}", ex.Message);
+            return new List<ImageDto>();
+        }
     }
 
     /// <summary>
@@ -547,8 +589,39 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         return segments.Count > 0 ? string.Join("/", segments).ToLowerInvariant() : string.Empty;
     }
 
-    
+    /// <summary>
+    /// Optimized method to get ImageDtos with category paths using bulk loading
+    /// </summary>
+    private List<ImageDto> GetImageDtosWithOptimizedCategoryPaths(List<TblImage> images)
+    {
+        // Get all unique category IDs from the images
+        var categoryIds = images
+            .Select(i => i.ImageCategoryId)
+            .Where(id => id.HasValue && id.Value > 0)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
 
+        // Bulk load category paths for all unique category IDs
+        var categoryPaths = apiCategoryService.GetCategoryPathsBulk(categoryIds);
+
+        // Build ImageDtos with cached category paths and category names
+        var imageDtos = new List<ImageDto>();
+        foreach (var image in images)
+        {
+            var categoryPath = "";
+            var categoryName = "";
+            if (image.ImageCategoryId.HasValue && categoryPaths.TryGetValue(image.ImageCategoryId.Value, out var path))
+            {
+                categoryPath = path;
+                categoryName = apiCategoryService.GetNameById(image.ImageCategoryId.Value);
+            }
+            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+        }
+
+        return imageDtos;
+    }
+    
     /// <summary>
     /// Gets an image by its ID.
     /// </summary>

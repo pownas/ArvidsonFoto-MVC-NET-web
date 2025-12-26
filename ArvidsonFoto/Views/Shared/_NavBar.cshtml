@@ -1,38 +1,32 @@
 ﻿@using ArvidsonFoto.Views.Shared
+@using ArvidsonFoto.Core.Interfaces
+@using ArvidsonFoto.Core.DTOs
 @using System.Net
-@inject ICategoryService _categoryService
-@inject IImageService _imageService
+@inject IApiCategoryService CategoryService
+@inject IApiImageService ImageService
+
 @{
-    List<TblMenu> categories;
-    categories = _categoryService.GetAll();
+    var categories = CategoryService?.GetAll() ?? new List<CategoryDto>();
     
-    // Helper function to get popover attributes for a category
-    // Note: This is kept for backwards compatibility but the actual popover functionality
-    // is now handled by categoryTooltip.js which uses the Bootstrap 5.3 JavaScript API
-    string GetPopoverAttributes(TblMenu category, string imagePath)
+    string GetPopoverAttr(CategoryDto cat, string path)
     {
-        var image = _imageService.GetOneImageFromCategory(category.MenuId);
-        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrl))
-        {
-            return "";
-        }
+        var img = ImageService.GetOneImageFromCategory(cat.CategoryId ?? 0);
+        if (img == null || string.IsNullOrWhiteSpace(img.UrlImage)) return "";
         
-        // Sanitize the image URL to prevent path traversal
-        string safeImageUrl = image.ImageUrl.Replace("..", "").Replace("\\", "/");
+        // Extract filename from UrlImage path (e.g., "bilder/kategori/filnamn" -> "filnamn")
+        string fileName = img.UrlImage.Split('/').Last();
+        string safeUrl = fileName.Replace("..", "").Replace("\\", "/");
+        var imgUrl = $"{path}/{safeUrl}.thumb.jpg";
+        var catName = WebUtility.HtmlEncode(cat.Name);
+        var imgUrlEnc = WebUtility.HtmlEncode(imgUrl);
+        var content = $"<div class='category-tooltip'><img src='{imgUrlEnc}' alt='{catName}' class='img-fluid' /><div class='category-name'>{catName}</div></div>";
         
-        string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
-        
-        // Build the popover content - escape the values but not the HTML structure
-        string escapedCategoryName = WebUtility.HtmlEncode(category.MenuText);
-        string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
-        string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
-        
-        // Updated to Bootstrap 5.3 format with data-bs-* attributes
-        return $"data-bs-toggle=\"popover\" data-bs-trigger=\"hover\" data-bs-html=\"true\" data-bs-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-bs-placement=\"right\"";
+        return $"data-bs-toggle=\"popover\" data-bs-trigger=\"hover\" data-bs-html=\"true\" data-bs-content=\"{WebUtility.HtmlEncode(content)}\" data-bs-placement=\"right\"";
     }
 }
+
 <nav class="main-nav">
-    <input id="main-menu-state" type="checkbox" />@* Hamburger-meny knappen skrivs ut här:  *@
+    <input id="main-menu-state" type="checkbox" />
     <label class="main-menu-btn" for="main-menu-state">
         <span class="main-menu-btn-icon"></span> Växla menyns synlighet
     </label>
@@ -41,119 +35,112 @@
         <li class="pe-1">
             <partial name="_NavUploadAdmin" />
         </li>
-        @* Den synliga menyn börjar här *@
         <li class="pe-1">
             <a href="./Senast">Senast</a>
             <ul>
                 <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
                 <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> Uppladdad</a></li>
                 <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> Per kategori</a></li>
-                @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
             </ul>
         </li>
-        @if (_categoryService == null || categories == null)
+        
+        @if (categories == null || !categories.Any())
         {
-            <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Fåglar">Fåglar</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Insekter">Insekter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Kräldjur">Kräldjur</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Landskap">Landskap</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Resor">Resor</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Växter">Växter</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
-            <li><a href="./Bilder/Årstider">Årstider</a><ul><li><a href="#">Dummy Item</a></li></ul></li>
+            <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy</a></li></ul></li>
+            <li><a href="./Bilder/Fåglar">Fåglar</a><ul><li><a href="#">Dummy</a></li></ul></li>
+            <li><a href="./Bilder/Insekter">Insekter</a><ul><li><a href="#">Dummy</a></li></ul></li>
         }
         else
         {
-var headMenu = categories.Where(m => m.MenuMainId == 0).ToList(); // This will list main menu items on which we'll apply loop to display them.
-if (headMenu != null && headMenu.Count > 0)
-{
-foreach (var headItem in headMenu)
-{
-<li class="pe-1">
-@{
-var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
-if (sub1Menu != null && sub1Menu.Count > 0)
-{
-if (@headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
-{ <a href="./Bilder/Fåglar">@headItem.MenuText</a> }
-else
-{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)">@headItem.MenuText</a> }
-<ul>
-@foreach (var sub1Item in sub1Menu)
-{
-<li>
-@{
-var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
-if (sub2Menu != null && sub2Menu.Count > 0)
-{
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId" data-category-name="@sub1Item.MenuText">@sub1Item.MenuText</a>
-<ul>
-@foreach (var sub2Item in sub2Menu)
-{
-<li>
-@{
-var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
-if (sub3Menu != null && sub3Menu.Count > 0)
-{
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId" data-category-name="@sub2Item.MenuText">@sub2Item.MenuText</a>
-<ul>
-@foreach (var sub3Item in sub3Menu)
-{
-<li>
-@{
-    string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText);
-    string popoverAttrs = GetPopoverAttributes(sub3Item, imgPath);
-}
-<a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub3Item.MenuText)" class="has-category-tooltip" data-category-id="@sub3Item.MenuId" data-category-name="@sub3Item.MenuText" @Html.Raw(popoverAttrs)>@sub3Item.MenuText</a>
-</li>
-}
-</ul>
-}
-else
-{
-    string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText);
-    string popoverAttrs = GetPopoverAttributes(sub2Item, imgPath);
-    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub2Item.MenuText)" class="has-category-tooltip" data-category-id="@sub2Item.MenuId" data-category-name="@sub2Item.MenuText" @Html.Raw(popoverAttrs)>@sub2Item.MenuText</a>
-}
-}
-</li>
-}
-</ul>
-}
-else
-{
-    string imgPath = "https://arvidsonfoto.se/Bilder/" + SharedStaticFunctions.ReplaceUrlText(headItem.MenuText) + "/" + SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText);
-    string popoverAttrs = GetPopoverAttributes(sub1Item, imgPath);
-    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)/@SharedStaticFunctions.ReplaceUrlText(sub1Item.MenuText)" class="has-category-tooltip" data-category-id="@sub1Item.MenuId" data-category-name="@sub1Item.MenuText" @Html.Raw(popoverAttrs)>@sub1Item.MenuText</a>
-}
-}
-</li>
-}
-</ul>
-}
-else
-{ <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(headItem.MenuText)">@headItem.MenuText</a> }
-}
-</li>
-}
-}
+            var mainCategories = categories.Where(m => m.ParentCategoryId == 0 || m.ParentCategoryId == null).ToList();
+            foreach (var head in mainCategories)
+            {
+                var subs1 = categories.Where(m => m.ParentCategoryId == head.CategoryId).OrderBy(m => m.Name).ToList();
+                
+                <li class="pe-1">
+                    @if (subs1.Any())
+                    {
+                        if (head.Name == "Fåglar")
+                        {
+                            <a href="./Bilder/Fåglar">@head.Name</a>
+                        }
+                        else
+                        {
+                            <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
+                        }
+                        <ul>
+                            @foreach (var s1 in subs1)
+                            {
+                                var subs2 = categories.Where(m => m.ParentCategoryId == s1.CategoryId).OrderBy(m => m.Name).ToList();
+                                
+                                <li>
+                                    @if (subs2.Any())
+                                    {
+                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
+                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
+                                        <ul>
+                                            @foreach (var s2 in subs2)
+                                            {
+                                                var subs3 = categories.Where(m => m.ParentCategoryId == s2.CategoryId).OrderBy(m => m.Name).ToList();
+                                                
+                                                <li>
+                                                    @if (subs3.Any())
+                                                    {
+                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
+                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
+                                                        <ul>
+                                                            @foreach (var s3 in subs3)
+                                                            {
+                                                                var path3 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}/{SharedStaticFunctions.ReplaceUrlText(s3.Name)}";
+                                                                
+                                                                <li>
+                                                                    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)/@SharedStaticFunctions.ReplaceUrlText(s3.Name)" 
+                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name" @Html.Raw(GetPopoverAttr(s3, path3))>@s3.Name</a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    else
+                                                    {
+                                                        var path2 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}";
+                                                        
+                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
+                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name" @Html.Raw(GetPopoverAttr(s2, path2))>@s2.Name</a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        var path1 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}";
+                                        
+                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
+                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name" @Html.Raw(GetPopoverAttr(s1, path1))>@s1.Name</a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
+                    }
+                </li>
+            }
         }
+        
         <li class="pe-1">
             <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
             <ul>
-                @*<li><a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li>
-                <li class="divider"></li>  <!-- Kräver inloggning --> *@
                 <li><a href="./Info/Kop_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
-                @*<li><a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
                 <li><a href="./Info/Gastbok"><i class="bi bi-book"></i> Gästbok</a></li>
                 <li class="divider"></li>
-                @*<li class="disabled"><a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
                 <li><a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
                 <li><a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
                 <li class="divider"></li>
                 <li><a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
                 <li><a href="./Info/Copyright">&copy; Copyright</a></li>
-                @*Den synliga menyn slutar här*@
                 <partial name="_NavLoginPartial" />
             </ul>
         </li>

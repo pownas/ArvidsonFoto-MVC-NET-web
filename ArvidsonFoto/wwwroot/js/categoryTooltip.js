@@ -14,7 +14,8 @@
         delay: 1000,           // Delay before showing tooltip (ms)
         imageMaxWidth: 300,   // Max width of preview image
         imageMaxHeight: 200,  // Max height of preview image
-        apiEndpoint: '/api/image/GetOneImageFromCategory/'
+        apiEndpoint: '/api/image/GetOneImageFromCategory/',
+        imageBaseUrl: 'https://arvidsonfoto.se' // Base URL for images
     };
 
     /**
@@ -76,8 +77,8 @@
         if (!imagePath.startsWith('/')) {
             imagePath = '/' + imagePath;
         }
-        // Add .thumb.jpg extension for thumbnail
-        imagePath += '.thumb.jpg';
+        // Add .thumb.jpg extension for thumbnail and prepend the base URL
+        imagePath = config.imageBaseUrl + imagePath + '.thumb.jpg';
 
         var html = '<div class="category-tooltip-content">';
         html += '<img src="' + imagePath + '" alt="' + (imageData.name || 'Preview') + '" ';

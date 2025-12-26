@@ -1,6 +1,6 @@
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Models;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
 /// Service interface for managing contact form submissions

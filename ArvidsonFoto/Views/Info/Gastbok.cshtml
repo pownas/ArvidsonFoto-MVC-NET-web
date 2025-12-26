@@ -1,5 +1,7 @@
 ﻿@using System.Web
-@model GuestbookInputModel
+@using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Core.DTOs
+@model GuestbookInputDto
 
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
@@ -9,7 +11,7 @@
 
 @inject IGuestBookService _guestBookService
 @{
-    List<TblGb> gbListView = _guestBookService.GetAll();
+    List<ArvidsonFoto.Core.Models.TblGb> gbListView = _guestBookService.GetAll();
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
@@ -97,22 +99,17 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-person-circle me-2 fs-5"></i>
-                                <strong>
-                                    @if (gbPost.GbName is not null)
-                                    {@gbPost.GbName}
-                                else
-                                {@("Anonym användare")}
-                                </strong>
+                                <strong>@(gbPost.GbName ?? "Anonym användare")</strong>
                             </div>
                         </div>
                         <div class="card-body">
                             @* Decode HTML entities from database. Input is validated on submission. *@
-                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode(gbPost.GbText.Replace("<br>", "\n"))</p>
+                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode((gbPost.GbText ?? string.Empty).Replace("<br>", "\n"))</p>
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 <div>
-                                    @if (gbPost.GbHomepage is not null)
+                                    @if (!string.IsNullOrWhiteSpace(gbPost.GbHomepage))
                                     {
                                         <span class="badge bg-info text-dark"><i class="bi bi-globe2"></i> @gbPost.GbHomepage</span>
                                     }

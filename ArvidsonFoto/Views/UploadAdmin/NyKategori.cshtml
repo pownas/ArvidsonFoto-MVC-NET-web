@@ -1,6 +1,8 @@
 ﻿@using ArvidsonFoto.Views.Shared
-@model UploadNewCategoryModel
-@inject ICategoryService _categoryService
+@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Interfaces
+@model UploadNewCategoryDto
+@inject IApiCategoryService _categoryService
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -34,9 +36,9 @@
                 <label asp-for="MainMenuId">Vart ska kategorin ligga under?</label>
                 <select asp-for="MainMenuId" class="form-control">
                     <option selected disabled value="">Välj kategori...</option>
-                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.MenuText))
+                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.Name))
                     {
-                        <option value="@category.MenuId">@category.MenuText</option>
+                        <option value="@category.CategoryId">@category.Name</option>
                     }
                 </select>
                 <span asp-validation-for="MainMenuId"></span>

@@ -1,5 +1,4 @@
-﻿
-using ArvidsonFoto.Core.Models;
+﻿using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Core.Interfaces;
 
@@ -10,7 +9,7 @@ namespace ArvidsonFoto.Core.Interfaces;
 /// This interface defines methods for managing guestbook entries including creation,
 /// retrieval, deletion, and status management operations.
 /// </remarks>
-public interface IApiGuestBookService
+public interface IGuestBookService
 {
     /// <summary>Skapar ett nytt gästboksinlägg</summary>
     /// <param name="gb">Gästboksinlägget som ska skapas</param>

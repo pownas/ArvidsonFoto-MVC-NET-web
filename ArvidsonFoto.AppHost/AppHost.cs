@@ -1,13 +1,10 @@
-var builder = DistributedApplication.CreateBuilder(args);
+﻿var builder = DistributedApplication.CreateBuilder(args);
 
-// Add SQL Server resource for development
-var sqlServer = builder.AddSqlServer("sql")
-    .WithLifetime(ContainerLifetime.Persistent)  // Persist data across runs
-    .AddDatabase("ArvidsonFotoDb");
+// ArvidsonFoto already uses in-memory database in development (appsettings.Development.json)
+// No need for SQL Server container when UseInMemoryDatabase is true
 
 // Add the main ArvidsonFoto web application
 var arvidsonFoto = builder.AddProject<Projects.ArvidsonFoto>("arvidsonfoto")
-    .WithReference(sqlServer)
     .WithExternalHttpEndpoints();
 
 // Optionally add the LogReader application

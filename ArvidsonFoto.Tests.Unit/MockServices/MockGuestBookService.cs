@@ -1,10 +1,10 @@
-﻿using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
 /// <summary>
-/// Mock implementation of IGuestBookService for unit testing.
+/// Mock implementation of IGuestBookService for unit testing using Core.Models
 /// </summary>
 public class MockGuestBookService : IGuestBookService
 {
@@ -88,5 +88,32 @@ public class MockGuestBookService : IGuestBookService
     public List<TblGb> GetAll()
     {
         return _mockGuestbookEntries.OrderByDescending(g => g.GbId).ToList();
+    }
+
+    public int GetAllGuestbookEntriesCounted()
+    {
+        return _mockGuestbookEntries.Count;
+    }
+
+    // Async methods
+    public async Task<IEnumerable<TblGb>> GetAllGuestbookEntriesAsync()
+    {
+        return await Task.FromResult(GetAll());
+    }
+
+    public async Task<TblGb> GetOneGbEntryAsync(int id)
+    {
+        var entry = _mockGuestbookEntries.FirstOrDefault(gb => gb.GbId == id);
+        return await Task.FromResult(entry ?? new TblGb { GbId = -1 });
+    }
+
+    public async Task<bool> CreateGbEntryAsync(TblGb gb)
+    {
+        return await Task.FromResult(CreateGBpost(gb));
+    }
+
+    public async Task<bool> DeleteGbEntryAsync(int id)
+    {
+        return await Task.FromResult(DeleteGbPost(id));
     }
 }

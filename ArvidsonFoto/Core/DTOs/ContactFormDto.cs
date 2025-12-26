@@ -38,10 +38,10 @@ public class ContactFormDto
     public required string Message { get; set; }
 
     /// <summary>Placeholder-text för meddelandefältet</summary>
-    public required string MessagePlaceholder { get; set; } = "";
+    public string MessagePlaceholder { get; set; } = "";
 
     /// <summary>Datum och tid när formuläret skickades</summary>
-    public DateTime FormSubmitDate { get; set; }
+    public DateTime FormSubmitDate { get; set; } = DateTime.Now;
 
     /// <summary>Indikerar om e-post har skickats framgångsrikt</summary>
     public bool DisplayEmailSent { get; set; }
@@ -50,5 +50,26 @@ public class ContactFormDto
     public bool DisplayErrorSending { get; set; }
     
     /// <summary>URL för sidan att återvända till efter formulärinlämning</summary>
-    public required string ReturnPageUrl { get; set; } = "";
+    public string ReturnPageUrl { get; set; } = "";
+
+    /// <summary>
+    /// Skapar en tom ContactFormDto med alla required fields initialiserade
+    /// </summary>
+    /// <returns>En ny tom ContactFormDto</returns>
+    public static ContactFormDto CreateEmpty()
+    {
+        return new ContactFormDto
+        {
+            Code = string.Empty,
+            Email = string.Empty,
+            Name = string.Empty,
+            Subject = string.Empty,
+            Message = string.Empty,
+            MessagePlaceholder = string.Empty,
+            FormSubmitDate = DateTime.Now,
+            DisplayEmailSent = false,
+            DisplayErrorSending = false,
+            ReturnPageUrl = string.Empty
+        };
+    }
 }
