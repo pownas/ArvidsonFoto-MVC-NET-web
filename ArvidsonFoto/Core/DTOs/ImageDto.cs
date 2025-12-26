@@ -13,6 +13,11 @@ public class ImageDto()
     /// <example>Amiral</example>
     public string Name { get; set; } = string.Empty;
 
+    /// <summary> Kategorinamn för bilden </summary>
+    /// <remarks> Namnet på kategorin som bilden tillhör. Exempel: "Fasan", "Blommor", "Hackspettar" </remarks>
+    /// <example>Fasan</example>
+    public string CategoryName { get; set; } = string.Empty;
+
     /// <summary> Url för kategori </summary>
     /// <remarks> Exempel: "https://arvidsonfoto.se/bilder/insekter/fjarilar/amiral" </remarks>
     /// <example>https://arvidsonfoto.se/bilder/insekter/fjarilar/amiral</example>
@@ -57,6 +62,7 @@ public class ImageDto()
         return new ImageDto
         {
             Name = string.Empty,
+            CategoryName = string.Empty,
             UrlCategory = string.Empty,
             UrlImage = string.Empty,
             DateImageTaken = null,

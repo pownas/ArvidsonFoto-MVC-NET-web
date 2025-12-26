@@ -36,7 +36,7 @@ public class PageCounterService : IPageCounterService
             }
             else
             {
-                // Create new record
+                // Create new record - DO NOT set Id, let database generate it
                 TblPageCounter pageCounter = new TblPageCounter()
                 {
                     MonthViewed = monthViewed,
@@ -77,7 +77,7 @@ public class PageCounterService : IPageCounterService
             }
             else
             {
-                // Create new record
+                // Create new record - DO NOT set Id, let database generate it
                 TblPageCounter pageCounter = new TblPageCounter()
                 {
                     MonthViewed = monthViewed,
@@ -120,7 +120,7 @@ public class PageCounterService : IPageCounterService
             var pageName = listOfPages[i];
             TblPageCounter aCountedPage = new TblPageCounter()
             {
-                Id = i + 1,
+                // Don't set Id - this is just for display/aggregation, not for database insertion
                 PageName = pageName,
                 PageViews = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Sum(p => p.PageViews),
                 LastShowDate = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Max(p => p.LastShowDate)

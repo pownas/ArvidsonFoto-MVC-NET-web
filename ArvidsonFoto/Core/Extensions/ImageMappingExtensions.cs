@@ -34,6 +34,7 @@ public static class ImageMappingExtensions
             ImageId = image.ImageId ?? 0,
             CategoryId = image.ImageCategoryId ?? -1,
             Name = name,
+            CategoryName = categoryName ?? string.Empty,
             UrlImage = imgUrl,
             UrlCategory = string.IsNullOrEmpty(categoryPath) ? string.Empty : $"bilder/{categoryPath}",
             DateImageTaken = image.ImageDate,

@@ -33,6 +33,7 @@ else
             string imgName = imgPath.Substring(imgPath.LastIndexOf('/') + 1) + ".jpg";
             DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
             string categoryHref = !string.IsNullOrWhiteSpace(img.UrlCategory) ? $"https://arvidsonfoto.se/{img.UrlCategory}" : "";
+            string categoryName = !string.IsNullOrWhiteSpace(img.CategoryName) ? img.CategoryName : imgTitle;
 
             <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                 <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
@@ -44,7 +45,10 @@ Tryck för att förstora">
             </figure>
 
             <div class="glightbox-desc row @customDesc">
-                <p>@index av @imageList.Count - <strong>@imgTitle</strong>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
+                <p>@index av @imageList.Count - @if (!string.IsNullOrWhiteSpace(categoryHref))
+                {<a href="@categoryHref" title="Se alla bilder i kategorin @categoryName">@imgTitle</a>}
+                else
+                {<strong>@imgTitle</strong>}@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
                 <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
 
