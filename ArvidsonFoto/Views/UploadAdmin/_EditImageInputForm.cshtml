@@ -1,11 +1,12 @@
 ﻿@using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Core.Interfaces
 @model UploadImageInputModel
-@inject ICategoryService _categoryService
+@inject IApiCategoryService _categoryService
 
 @{
     string imgThumbSrc = Model.ImageUrlFullSrc + ".thumb.jpg";
 
-    ArvidsonFoto.Core.Models.TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
+    var selectedCategory = _categoryService.GetById(Model.ImageArt);
 }
 
 <form method="post" asp-controller="UploadAdmin" asp-action="@(nameof(UploadAdminController.EditImageLink))">

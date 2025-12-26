@@ -259,13 +259,11 @@ public class UploadAdminController : Controller
             inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
             inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
 
-            inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
-            if (inputModel.ImageHuvudfamilj is not null)
-                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
-            if (inputModel.ImageFamilj is not null)
-                inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
-
-            inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
+            // Get category path using the service method
+            var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
+            
+            // Build the full source URL with the correct path
+            inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/bilder/{categoryPath}/{inputModel.ImageUrl}";
 
             viewModel.DisplayImagesList.Add(inputModel);
         }

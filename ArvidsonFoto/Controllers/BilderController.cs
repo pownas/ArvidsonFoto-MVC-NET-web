@@ -7,11 +7,11 @@ using ArvidsonFoto.Views.Shared;
 namespace ArvidsonFoto.Controllers;
 
 public class BilderController(
-    IImageService imageService,
+    IApiImageService imageService,
     IApiCategoryService categoryService,
     IPageCounterService pageCounterService) : Controller
 {
-    private readonly IImageService _imageService = imageService;
+    private readonly IApiImageService _imageService = imageService;
     private readonly IApiCategoryService _categoryService = categoryService;
     private readonly IPageCounterService _pageCounterService = pageCounterService;
 
@@ -48,11 +48,8 @@ public class BilderController(
                 return NotFound();
             }
             viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4))
-                .OrderByDescending(i => i.ImageId)
-                .OrderByDescending(i => i.ImageDate)
-                .ToList();
-            viewModel.AllImagesList = images.Select(MapToImageDto).ToList();
+            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
+            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
@@ -64,11 +61,8 @@ public class BilderController(
                 return NotFound();
             }
             viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3))
-                .OrderByDescending(i => i.ImageId)
-                .OrderByDescending(i => i.ImageDate)
-                .ToList();
-            viewModel.AllImagesList = images.Select(MapToImageDto).ToList();
+            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
+            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
@@ -80,11 +74,8 @@ public class BilderController(
                 return NotFound();
             }
             viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2))
-                .OrderByDescending(i => i.ImageId)
-                .OrderByDescending(i => i.ImageDate)
-                .ToList();
-            viewModel.AllImagesList = images.Select(MapToImageDto).ToList();
+            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
+            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
@@ -96,11 +87,8 @@ public class BilderController(
                 return NotFound();
             }
             viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1))
-                .OrderByDescending(i => i.ImageId)
-                .OrderByDescending(i => i.ImageDate)
-                .ToList();
-            viewModel.AllImagesList = images.Select(MapToImageDto).ToList();
+            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
+            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
             viewModel.CurrentUrl = "/Bilder/" + subLevel1;
         }
 
@@ -123,8 +111,6 @@ public class BilderController(
         viewModel.DisplayImagesList = viewModel.AllImagesList
             .Skip(viewModel.CurrentPage * pageSize)
             .Take(pageSize)
-            .OrderByDescending(i => i.ImageId)
-            .OrderByDescending(i => i.DateImageTaken)
             .ToList();
         viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
         viewModel.CurrentPage = (int)sida;
@@ -175,8 +161,7 @@ public class BilderController(
             {
                 if (category.Name != null && category.Name.ToUpper().Contains(s.ToUpper()) && category.CategoryId.HasValue)
                 {
-                    var image = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
-                    var imageDto = MapToImageDto(image);
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
                     listOfFirstSearchedImages.Add(imageDto);
                 }
             }
@@ -189,53 +174,5 @@ public class BilderController(
                 Log.Warning("Hittade inget vid sökning: '" + s + "'");
         }
         return View(viewModel);
-    }
-
-    /// <summary>
-    /// Maps TblImage to ImageDto using IApiCategoryService for category names
-    /// </summary>
-    private ImageDto MapToImageDto(Core.Models.TblImage image)
-    {
-        var categoryName = _categoryService.GetNameById(image.ImageCategoryId);
-        
-        return new ImageDto
-        {
-            ImageId = image.ImageId ?? -1,
-            Name = categoryName ?? "Bild",
-            CategoryId = image.ImageCategoryId ?? -1,
-            Description = image.ImageDescription ?? string.Empty,
-            DateImageTaken = image.ImageDate,
-            DateUploaded = image.ImageUpdate,
-            UrlImage = image.ImageUrlName ?? string.Empty,
-            UrlCategory = BuildCategoryUrl(image)
-        };
-    }
-
-    /// <summary>
-    /// Builds category URL for an image using IApiCategoryService
-    /// </summary>
-    private string BuildCategoryUrl(Core.Models.TblImage image)
-    {
-        var parts = new List<string> { "https://arvidsonfoto.se/Bilder" };
-
-        if (image.ImageMainFamilyId.HasValue)
-        {
-            var mainFamily = _categoryService.GetNameById(image.ImageMainFamilyId);
-            if (!string.IsNullOrEmpty(mainFamily))
-                parts.Add(mainFamily);
-        }
-
-        if (image.ImageFamilyId.HasValue)
-        {
-            var family = _categoryService.GetNameById(image.ImageFamilyId);
-            if (!string.IsNullOrEmpty(family))
-                parts.Add(family);
-        }
-
-        var category = _categoryService.GetNameById(image.ImageCategoryId);
-        if (!string.IsNullOrEmpty(category))
-            parts.Add(category);
-
-        return string.Join("/", parts);
     }
 }

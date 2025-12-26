@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
 }
 
-@inject IImageService _imageService
+@inject IApiImageService _imageService
 @inject IApiCategoryService _categoryService
 @using ArvidsonFoto.Core.Interfaces
 @using ArvidsonFoto.Core.DTOs
@@ -37,13 +37,16 @@
     string GetPopoverAttributes(CategoryDto category, string imagePath)
     {
         var image = _imageService.GetOneImageFromCategory(category.CategoryId ?? 0);
-        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrlName))
+        if (image == null || string.IsNullOrWhiteSpace(image.UrlImage))
         {
             return "";
         }
         
+        // Extract filename from UrlImage path (e.g., "bilder/kategori/filnamn" -> "filnamn")
+        string fileName = image.UrlImage.Split('/').Last();
+        
         // Sanitize the image URL to prevent path traversal
-        string safeImageUrl = image.ImageUrlName.Replace("..", "").Replace("\\", "/");
+        string safeImageUrl = fileName.Replace("..", "").Replace("\\", "/");
         
         string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
         

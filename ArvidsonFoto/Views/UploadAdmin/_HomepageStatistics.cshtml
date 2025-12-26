@@ -1,6 +1,7 @@
 ﻿@using ArvidsonFoto.Core.Models
-@inject IImageService _imageService
-@inject ICategoryService _categoryService
+@using ArvidsonFoto.Core.Interfaces
+@inject IApiImageService _imageService
+@inject IApiCategoryService _categoryService
 @inject IPageCounterService _pageCounterService
 @{
     List<ArvidsonFoto.Core.Models.TblPageCounter> top10Categories = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), true)

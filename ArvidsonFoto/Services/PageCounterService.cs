@@ -19,24 +19,24 @@ public class PageCounterService : IPageCounterService
     public void AddPageCount(string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
-        List<TblPageCounter> tblPageCounters = _entityContext.TblPageCounter
-                                                             .Where(p => p.PicturePage == false && p.MonthViewed == monthViewed)
-                                                             .ToList();
+        
         try
         {
-            bool notExist = true;
-            foreach (var item in tblPageCounters)
+            // Check if the record already exists
+            var existingCounter = _entityContext.TblPageCounter
+                .FirstOrDefault(p => p.PicturePage == false 
+                                  && p.PageName == pageName
+                                  && p.MonthViewed == monthViewed);
+            
+            if (existingCounter != null)
             {
-                if (item.PageName != null && item.PageName.Equals(pageName) && item.MonthViewed != null && item.MonthViewed.Equals(monthViewed))
-                {
-                    notExist = false;
-                    item.PageViews = item.PageViews + 1;
-                    item.LastShowDate = DateTime.Now;
-                }
+                // Update existing record
+                existingCounter.PageViews = existingCounter.PageViews + 1;
+                existingCounter.LastShowDate = DateTime.Now;
             }
-
-            if (notExist)
+            else
             {
+                // Create new record
                 TblPageCounter pageCounter = new TblPageCounter()
                 {
                     MonthViewed = monthViewed,
@@ -49,7 +49,7 @@ public class PageCounterService : IPageCounterService
                 _entityContext.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChangesAsync().Wait();
+            _entityContext.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -90,7 +90,7 @@ public class PageCounterService : IPageCounterService
                 _entityContext.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChangesAsync().Wait();
+            _entityContext.SaveChanges();
         }
         catch (Exception ex)
         {

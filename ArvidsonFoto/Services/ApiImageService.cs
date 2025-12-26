@@ -235,6 +235,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         foreach (var image in images)
         {
             var categoryPath = "";
+            var categoryName = "";
+            
             if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
@@ -244,8 +246,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 // Otherwise, use the old category path
                 categoryPath = GetOldCategoryPathForImage(image);
             }
+            
+            // Get category name for display
+            categoryName = apiCategoryService.GetNameById(image.ImageCategoryId);
 
-            imageDtos.Add(image.ToImageDto(categoryPath));
+            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
         }
 
         return imageDtos;
@@ -288,12 +293,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
             else
             {
-                // Use old category path logic
+                // Use old category path logic with category name
+                var categoryName = apiCategoryService.GetNameById(categoryID);
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
                     var categoryPath = GetOldCategoryPathForImage(image);
-                    imageDtos.Add(image.ToImageDto(categoryPath));
+                    imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
                 }
                 return imageDtos;
             }
@@ -321,16 +327,18 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         // Bulk load category paths for all unique category IDs
         var categoryPaths = apiCategoryService.GetCategoryPathsBulk(categoryIds);
 
-        // Build ImageDtos with cached category paths
+        // Build ImageDtos with cached category paths and category names
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
             var categoryPath = "";
+            var categoryName = "";
             if (image.ImageCategoryId.HasValue && categoryPaths.TryGetValue(image.ImageCategoryId.Value, out var path))
             {
                 categoryPath = path;
+                categoryName = apiCategoryService.GetNameById(image.ImageCategoryId.Value);
             }
-            imageDtos.Add(image.ToImageDto(categoryPath));
+            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
         }
 
         return imageDtos;

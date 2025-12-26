@@ -82,8 +82,6 @@ public class Program
             .AddEntityFrameworkStores<IdentityContext>();
 
         // Add frontend services - all using Core now
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
         services.AddScoped<IContactService, ContactService>();

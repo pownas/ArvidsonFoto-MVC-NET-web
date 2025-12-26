@@ -1,16 +1,22 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Views.Shared;
-using ArvidsonFoto.Mappers;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ArvidsonFoto.Controllers;
 
-public class SenastController(ArvidsonFotoCoreDbContext context) : Controller
+public class SenastController(
+    ArvidsonFotoCoreDbContext coreContext, 
+    ILogger<ApiImageService> imageLogger,
+    ILogger<ApiCategoryService> categoryLogger,
+    IConfiguration configuration,
+    IMemoryCache memoryCache) : Controller
 {
-    internal IImageService _imageService = new ImageService(context);
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
+    internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
+    internal IPageCounterService _pageCounterService = new PageCounterService(coreContext);
 
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
@@ -32,16 +38,15 @@ public class SenastController(ArvidsonFotoCoreDbContext context) : Controller
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Per kategori");
             
-            List<Core.Models.TblMenu> categories = _categoryService.GetAll().OrderBy(c => c.MenuDisplayName).ToList();
+            var categories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
             viewModel.AllImagesList = new List<Core.DTOs.ImageDto>();
             
             foreach (var category in categories)
             {
-                if (category.MenuCategoryId.HasValue)
+                if (category.CategoryId.HasValue)
                 {
-                    Core.Models.TblImage image = _imageService.GetOneImageFromCategory(category.MenuCategoryId.Value);
-                    var imageDto = DtoMapper.MapToImageDto(image, _categoryService);
-                    imageDto.Name = category.MenuDisplayName ?? string.Empty;
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
+                    imageDto.Name = category.Name ?? string.Empty;
                     viewModel.AllImagesList.Add(imageDto);
                 }
             }
@@ -52,8 +57,8 @@ public class SenastController(ArvidsonFotoCoreDbContext context) : Controller
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
             
-            var images = _imageService.GetAll().OrderByDescending(i => i.ImageUpdate).ToList();
-            viewModel.AllImagesList = images.Select(i => DtoMapper.MapToImageDto(i, _categoryService)).ToList();
+            var images = _imageService.GetAll().OrderByDescending(i => i.DateUploaded).ToList();
+            viewModel.AllImagesList = images;
         }
         else if (sortOrder.Equals("Fotograferad"))
         {
@@ -61,8 +66,8 @@ public class SenastController(ArvidsonFotoCoreDbContext context) : Controller
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
             
-            var images = _imageService.GetAll().OrderByDescending(i => i.ImageDate).ToList();
-            viewModel.AllImagesList = images.Select(i => DtoMapper.MapToImageDto(i, _categoryService)).ToList();
+            var images = _imageService.GetAll().OrderByDescending(i => i.DateImageTaken).ToList();
+            viewModel.AllImagesList = images;
         }
         else
         {

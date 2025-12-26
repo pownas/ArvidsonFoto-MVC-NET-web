@@ -28,17 +28,14 @@ public class InfoControllerTests
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
         
         _mockGuestBookService = new MockGuestBookService();
-        var mockImageService = new MockImageService();
-        var mockCategoryService = new MockCategoryService();
-        var mockPageCounterService = new MockPageCounterService();
 
-        _controller = new InfoController(mockCoreDbContext)
-        {
-            _guestbookService = _mockGuestBookService,
-            _imageService = mockImageService,
-            _categoryService = mockCategoryService,
-            _pageCounterService = mockPageCounterService
-        };
+        _controller = new InfoController(mockCoreDbContext);
+        
+        // Override the services with mocks (they are internal fields)
+        _controller._guestbookService = _mockGuestBookService;
+        _controller._imageService = new MockImageService();
+        _controller._categoryService = new MockApiCategoryService();
+        _controller._pageCounterService = new MockPageCounterService();
 
         // Setup HttpContext for the controller
         var httpContext = new DefaultHttpContext();

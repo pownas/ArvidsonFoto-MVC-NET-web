@@ -1,11 +1,12 @@
-﻿@using ArvidsonFoto.Core.Models
+﻿@using ArvidsonFoto.Core.Interfaces
+@using ArvidsonFoto.Core.DTOs
 @section MetaData {
     <meta name="robots" content="noimageindex" />
 }
 
-@inject ICategoryService _categoryService
+@inject IApiCategoryService _categoryService
 @{
-    List<ArvidsonFoto.Core.Models.TblMenu> categories = _categoryService.GetAll();
+    var categories = _categoryService.GetAll();
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
@@ -39,7 +40,7 @@
     }
     else
     {
-        var headMenu = categories.Where(m => m.MenuParentCategoryId == 0 || m.MenuParentCategoryId == null).ToList();
+        var headMenu = categories.Where(m => m.ParentCategoryId == 0 || m.ParentCategoryId == null).ToList();
         if (headMenu != null && headMenu.Count > 0)
         {
             var lastHeadMenuItem = headMenu.Last();
@@ -47,20 +48,20 @@
             {
                 <li>
                     @{
-                        var sub1Menu = categories.Where(m => m.MenuParentCategoryId == headItem.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
+                        var sub1Menu = categories.Where(m => m.ParentCategoryId == headItem.CategoryId).OrderBy(m => m.Name).ToList();
                         if (sub1Menu != null && sub1Menu.Count > 0)
                         {
                             var lastSub1MenuItem = sub1Menu.Last();
-                            if (headItem.MenuDisplayName == "Fåglar")
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/Fåglar" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> }
+                            if (headItem.Name == "Fåglar")
+                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/Fåglar" title="@headItem.Name">@headItem.Name</a> }
                             else
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/@headItem.MenuDisplayName" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> }
+                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/@headItem.Name" title="@headItem.Name">@headItem.Name</a> }
                     <ul class="sitemap sub1Menu">
                         @foreach (var sub1Item in sub1Menu)
                         {
                         <li>
                             @{
-                                var sub2Menu = categories.Where(m => m.MenuParentCategoryId == sub1Item.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
+                                var sub2Menu = categories.Where(m => m.ParentCategoryId == sub1Item.CategoryId).OrderBy(m => m.Name).ToList();
                                 if (sub2Menu != null && sub2Menu.Count > 0)
                                 {
                                     var lastSub2MenuItem = sub2Menu.Last();
@@ -71,24 +72,24 @@
                                     else
                                     {
                                         <i class="bi bi-arrow-bar-right"></i>
-                                    } <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName" title="@sub1Item.MenuDisplayName">@sub1Item.MenuDisplayName</a>
+                                    } <a href="./Bilder/@headItem.Name/@sub1Item.Name" title="@sub1Item.Name">@sub1Item.Name</a>
                                     <ul class="sitemap sub2Menu">
                                         @foreach (var sub2Item in sub2Menu)
                                         {
                                             <li>
                                                 @{
-                                                    var sub3Menu = categories.Where(m => m.MenuParentCategoryId == sub2Item.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
+                                                    var sub3Menu = categories.Where(m => m.ParentCategoryId == sub2Item.CategoryId).OrderBy(m => m.Name).ToList();
                                                     if (sub3Menu != null && sub3Menu.Count > 0)
                                                     {
                                                         var lastSub3MenuItem = sub3Menu.Last();
-                                                        if (sub2Item.Equals(lastSub2MenuItem))
+                                                        if (sub2Item.Equals(lastSub3MenuItem))
                                                         {
                                                             <i class="bi bi-arrow-return-right"></i>
                                                         }
                                                         else
                                                         {
                                                             <i class="bi bi-arrow-bar-right"></i>
-                                                        } <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName" title="@sub2Item.MenuDisplayName">@sub2Item.MenuDisplayName</a>
+                                                        } <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name" title="@sub2Item.Name">@sub2Item.Name</a>
                                                         <ul class="sitemap sub3Menu">
                                                             @foreach (var sub3Item in sub3Menu)
                                                             {
@@ -101,7 +102,7 @@
                                                                     {
                                                                         <i class="bi bi-arrow-bar-right"></i>
                                                                     }
-                                                                    <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName/@sub3Item.MenuDisplayName" title="@sub3Item.MenuDisplayName">@sub3Item.MenuDisplayName</a>
+                                                                    <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name/@sub3Item.Name" title="@sub3Item.Name">@sub3Item.Name</a>
                                                                 </li>
                                                             }
                                                         </ul>
@@ -116,7 +117,7 @@
                                                         {
                                                             <i class="bi bi-arrow-bar-right"></i>
                                                         }
-                                                        <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName" title="@sub2Item.MenuDisplayName">@sub2Item.MenuDisplayName</a>
+                                                        <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name" title="@sub2Item.Name">@sub2Item.Name</a>
                                                     }
                                                 }
                                             </li>
@@ -133,7 +134,7 @@
                                     {
                                         <i class="bi bi-arrow-bar-right"></i>
                                     }
-                                    <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName" title="@sub1Item.MenuDisplayName">@sub1Item.MenuDisplayName</a>
+                                    <a href="./Bilder/@headItem.Name/@sub1Item.Name" title="@sub1Item.Name">@sub1Item.Name</a>
                                 }
                             }
                         </li>
@@ -150,7 +151,7 @@
                     {
                         <i class="bi bi-arrow-bar-right"></i>
                     }
-                    <a href="./Bilder/@headItem.MenuDisplayName" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> 
+                    <a href="./Bilder/@headItem.Name" title="@headItem.Name">@headItem.Name</a> 
                 }
                 }
                 </li>

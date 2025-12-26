@@ -1,26 +1,45 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
+using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ArvidsonFoto.Controllers;
 
 public class InfoController : Controller
 {
     private readonly ArvidsonFotoCoreDbContext _coreContext;
-    internal ICategoryService _categoryService;
-    internal IImageService _imageService;
+    internal IApiCategoryService _categoryService;
+    internal IApiImageService _imageService;
     internal IGuestBookService _guestbookService;
     internal IPageCounterService _pageCounterService;
     internal IContactService _contactService;
 
-    public InfoController(ArvidsonFotoCoreDbContext coreContext)
+    public InfoController(
+        ArvidsonFotoCoreDbContext coreContext,
+        ILogger<ApiImageService>? imageLogger = null,
+        ILogger<ApiCategoryService>? categoryLogger = null,
+        IConfiguration? configuration = null,
+        IMemoryCache? memoryCache = null)
     {
         _coreContext = coreContext;
-        _categoryService = new CategoryService(_coreContext);
-        _imageService = new ImageService(_coreContext);
+        
+        // Support both DI and manual instantiation (for tests)
+        _categoryService = new ApiCategoryService(
+            categoryLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiCategoryService>(),
+            _coreContext,
+            memoryCache ?? new MemoryCache(new MemoryCacheOptions()));
+            
+        _imageService = new ApiImageService(
+            imageLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiImageService>(),
+            _coreContext,
+            configuration ?? new ConfigurationBuilder().Build(),
+            _categoryService);
+            
         _guestbookService = new GuestBookService(_coreContext);
         _pageCounterService = new PageCounterService(_coreContext);
         _contactService = new ContactService(_coreContext);
@@ -166,6 +185,7 @@ public class InfoController : Controller
                     Name = string.Empty,
                     Subject = string.Empty,
                     Message = string.Empty,
+                    MessagePlaceholder = string.Empty,
                     DisplayEmailSent = true,
                     FormSubmitDate = DateTime.Now,
                     ReturnPageUrl = Page
@@ -305,9 +325,9 @@ public class InfoController : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    var imageArt = _categoryService.GetNameById(image.ImageCategoryId);
+                    var imageArt = image.Name ?? "okänd kategori";
 
-                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.ImageUrlName + ".jpg";
+                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.UrlImage.Split('/').Last() + ".jpg";
                 }
                 catch (Exception)
                 {
