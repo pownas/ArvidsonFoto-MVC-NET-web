@@ -1,0 +1,125 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager NavigationManager
+
+<EditForm Model="@searchModel" OnValidSubmit="@HandleSearch" FormName="SearchForm" class="@FormCssClass">
+    <div class="d-flex gap-2" role="search">
+        <div class="flex-grow-1">
+            <InputText @bind-Value="searchModel.Query" 
+                       class="form-control form-control-lg" 
+                       type="search" 
+                       placeholder="@Placeholder" 
+                       aria-label="Sök ruta"
+                       autofocus="@AutoFocus" />
+        </div>
+        <button class="btn btn-primary btn-lg" type="submit" disabled="@isSearching">
+            @if (isSearching)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span>Söker...</span>
+            }
+            else
+            {
+                <i class="bi bi-search"></i>
+                <span> @ButtonText</span>
+            }
+        </button>
+    </div>
+</EditForm>
+
+@if (ShowSuggestions && !string.IsNullOrEmpty(searchModel.Query) && searchSuggestions.Any())
+{
+    <div class="mt-2">
+        <small class="text-muted">Förslag:</small>
+        <div class="d-flex flex-wrap gap-2 mt-1">
+            @foreach (var suggestion in searchSuggestions.Take(5))
+            {
+                <button type="button" 
+                        class="badge bg-secondary text-decoration-none border-0" 
+                        @onclick="@(() => SelectSuggestion(suggestion))">
+                    @suggestion
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string InitialQuery { get; set; } = "";
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Sök efter kategori...";
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Sök";
+
+    [Parameter]
+    public bool AutoFocus { get; set; } = false;
+
+    [Parameter]
+    public bool ShowSuggestions { get; set; } = false;
+
+    [Parameter]
+    public string FormCssClass { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    [Parameter]
+    public string SearchAction { get; set; } = "/Search";
+
+    private SearchModel searchModel = new();
+    private bool isSearching = false;
+    private List<string> searchSuggestions = new();
+
+    protected override void OnInitialized()
+    {
+        searchModel.Query = InitialQuery;
+        
+        if (ShowSuggestions)
+        {
+            searchSuggestions = new List<string>
+            {
+                "Fjäril", "Havsörn", "Räv", "Landskap", "Fåglar", 
+                "Däggdjur", "Insekter", "Gotland", "Öland"
+            };
+        }
+    }
+
+    private async Task HandleSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchModel.Query))
+            return;
+
+        isSearching = true;
+        StateHasChanged();
+
+        try
+        {
+            if (OnSearch.HasDelegate)
+            {
+                await OnSearch.InvokeAsync(searchModel.Query);
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"{SearchAction}?s={Uri.EscapeDataString(searchModel.Query)}");
+            }
+        }
+        finally
+        {
+            isSearching = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SelectSuggestion(string suggestion)
+    {
+        searchModel.Query = suggestion;
+        await HandleSearch();
+    }
+
+    private class SearchModel
+    {
+        public string Query { get; set; } = "";
+    }
+}

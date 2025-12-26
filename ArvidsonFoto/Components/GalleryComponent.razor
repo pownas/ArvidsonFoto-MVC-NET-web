@@ -1,0 +1,144 @@
+﻿@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.ViewModels
+
+<div id="gallery" class="@GetGalleryClass()">
+    @if (Model?.DisplayImagesList is null || Model.DisplayImagesList.Count == 0)
+    {
+        @if (NoImagesContent != null)
+        {
+            @NoImagesContent
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="text-center text-muted">
+                    <i class="bi bi-image"></i> Det finns inga bilder att visa för tillfället.
+                </p>
+            </div>
+        }
+    }
+    else
+    {
+        var index = 1;
+        var rowSizeClass = GetRowSizeClass();
+        var imgCharWidth = GetImgCharWidth();
+        var figcaptionCharWidth = GetFigcaptionCharWidth();
+        
+        foreach (var img in Model.DisplayImagesList)
+        {
+            var customDesc = $"custom-desc{index}";
+            var imgHref = img.UrlCategory ?? BilderBase;
+            var imgTitle = GetImageTitle(img);
+            var imgDesc = GetImageDescription(img);
+            var imgThumbSrc = $"https://arvidsonfoto.se/{img.UrlImage}.thumb.jpg";
+            var imgSrc = $"https://arvidsonfoto.se/{img.UrlImage}.jpg";
+            var imgName = img.UrlImage.Split('/').Last() + ".jpg";
+            var imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
+            var isSearchPage = Model.SelectedCategory?.UrlCategoryPath == "/Search";
+            var titleAttr = $"{imgTitle}{imgDesc}";
+
+            <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+                @if (isSearchPage)
+                {
+                    <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" 
+                       title="@($"Tryck för att se alla bilder av {titleAttr}")">
+                        <img src="@imgThumbSrc" alt="@titleAttr" 
+                             class="figure-img img-fluid rounded @imgCharWidth" 
+                             width="120" height="120" loading="lazy"
+                             title="@($"Tryck för att se alla bilder av {titleAttr}")">
+                        <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">
+                            @imgTitle
+                        </figcaption>
+                    </a>
+                }
+                else
+                {
+                    <a href="@imgSrc" rel="nofollow" 
+                       class="glightbox rounded btn btn-light thumb-a-class" 
+                       data-gallery="gallery1" 
+                       data-glightbox="@($"title: {imgTitle}; description: .{customDesc}")" 
+                       title="@($"{titleAttr} - Tryck för att förstora")">
+                        <img src="@imgThumbSrc" alt="@titleAttr" 
+                             class="figure-img img-fluid rounded @imgCharWidth" 
+                             width="120" height="120" loading="lazy"
+                             title="@($"{titleAttr} - Tryck för att förstora")">
+                        <figcaption class="figure-caption d-inline-block text-truncate @figcaptionCharWidth">
+                            @imgTitle
+                        </figcaption>
+                    </a>
+
+                    <div class="glightbox-desc row @customDesc">
+                        <p>
+                            @index av @Model.DisplayImagesList.Count - 
+                            <a href="@imgHref" title="@($"Se alla bilder av {titleAttr}")">@imgTitle</a>@(imgDesc)
+                            Fotodatum: @imgDate.ToString("yyyy-MM-dd")
+                        </p>
+                        <p>
+                            Bildnamn: @imgName 
+                            <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. 
+                            Intresserad av bilden? Se: 
+                            <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a>
+                        </p>
+                    </div>
+                }
+            </figure>
+
+            index++;
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public GalleryViewModel? Model { get; set; }
+
+    [Parameter]
+    public RenderFragment? NoImagesContent { get; set; }
+
+    [Parameter]
+    public bool IsStartpage { get; set; }
+
+    [Parameter]
+    public string BilderBase { get; set; } = "https://arvidsonfoto.se/Bilder";
+
+    private string GetGalleryClass()
+    {
+        return Model?.DisplayImagesList?.Count > 0 ? "row" : "";
+    }
+
+    private string GetRowSizeClass()
+    {
+        return IsStartpage ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
+    }
+
+    private string GetImgCharWidth()
+    {
+        return IsStartpage ? "thumb-img-startpage" : "thumb-img-gallery";
+    }
+
+    private string GetFigcaptionCharWidth()
+    {
+        return IsStartpage ? "thumb-figcaption-startpage" : "thumb-figcaption-gallery";
+    }
+
+    private string GetImageTitle(ImageDto img)
+    {
+        if (!string.IsNullOrWhiteSpace(img.Name) && 
+            !img.Name.Equals("Bild") && 
+            !img.Name.Equals("404-NotFound"))
+        {
+            return img.Name;
+        }
+
+        return !string.IsNullOrWhiteSpace(img.UrlImage) 
+            ? img.UrlImage.Split('/').Last() 
+            : "Bild";
+    }
+
+    private string GetImageDescription(ImageDto img)
+    {
+        return !string.IsNullOrWhiteSpace(img.Description) 
+            ? $", {img.Description}." 
+            : "";
+    }
+}

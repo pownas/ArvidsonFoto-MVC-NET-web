@@ -3,9 +3,11 @@
 @inject IApiImageService ImageService
 @inject IJSRuntime JS
 
-<div class="category-tooltip-wrapper" 
+<div class="category-tooltip-wrapper position-relative" 
      @onmouseenter="OnMouseEnter" 
      @onmouseleave="OnMouseLeave"
+     @ontouchstart="OnTouchStart"
+     @ontouchend="OnTouchEnd"
      @ref="tooltipElement">
     
     @ChildContent
@@ -13,39 +15,50 @@
     @if (showTooltip && imageData != null)
     {
         <div class="category-tooltip-popover @(isMobile ? "mobile" : "")" 
-             style="@GetTooltipPosition()">
+             style="@GetTooltipPosition()"
+             @onclick:stopPropagation="true">
             <div class="popover-arrow"></div>
-            <div class="popover-body">
+            <div class="popover-body p-2">
                 @if (isLoading)
                 {
-                    <div class="text-center">
-                        <span class="spinner-border spinner-border-sm" role="status"></span>
-                        <span class="ms-2">Laddar...</span>
+                    <div class="text-center p-3">
+                        <span class="spinner-border spinner-border-sm text-light" role="status"></span>
+                        <span class="ms-2 text-light">Laddar...</span>
                     </div>
                 }
                 else if (imageData != null && !string.IsNullOrEmpty(imageData.UrlImage))
                 {
                     <div class="category-tooltip-content">
                         <img src="@GetImagePath()" 
-                             alt="@(imageData.Name ?? "Preview")" 
+                             alt="@(imageData.Name ?? CategoryName ?? "Preview")" 
+                             class="img-fluid rounded"
                              style="max-width: @(Config.ImageMaxWidth)px; max-height: @(Config.ImageMaxHeight)px; width: auto; height: auto; display: block;" />
                         
                         @if (!string.IsNullOrEmpty(CategoryName))
                         {
-                            <div class="mt-2 fw-bold" style="color: #ddd !important;">@CategoryName</div>
+                            <div class="mt-2 fw-bold text-light">@CategoryName</div>
                         }
 
                         @if (imageData.DateImageTaken.HasValue)
                         {
-                            <div class="mt-1 small text-muted" style="color: #aaa !important;">
-                                Fotograferad: @imageData.DateImageTaken.Value.ToString("yyyy-MM-dd")
+                            <div class="mt-1 small text-white-50">
+                                <i class="bi bi-camera"></i> @imageData.DateImageTaken.Value.ToString("yyyy-MM-dd")
+                            </div>
+                        }
+                        
+                        @if (ShowImageCount)
+                        {
+                            <div class="mt-1 small text-white-50">
+                                <i class="bi bi-images"></i> Klicka för att se bilder
                             </div>
                         }
                     </div>
                 }
                 else
                 {
-                    <div class="text-muted">Ingen bild tillgänglig</div>
+                    <div class="text-muted p-2">
+                        <i class="bi bi-image"></i> Ingen bild tillgänglig
+                    </div>
                 }
             </div>
         </div>
@@ -62,18 +75,24 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    [Parameter]
+    public bool ShowImageCount { get; set; } = true;
+
+    [Parameter]
+    public int DelayMs { get; set; } = 800;
+
     private ElementReference tooltipElement;
     private ImageDto? imageData;
     private bool showTooltip = false;
     private bool isLoading = false;
     private bool isMobile = false;
+    private bool isTouchDevice = false;
     private System.Threading.Timer? hoverTimer;
     private static readonly Dictionary<int, ImageDto> ImageCache = new();
 
     private TooltipConfig Config { get; set; } = new()
     {
-        Delay = 1000,
-        ImageMaxWidth = 300,
+        ImageMaxWidth = 280,
         ImageMaxHeight = 200,
         ImageBaseUrl = "https://arvidsonfoto.se"
     };
@@ -82,14 +101,24 @@
     {
         if (firstRender)
         {
-            // Check if mobile viewport
-            isMobile = await JS.InvokeAsync<bool>("eval", "window.innerWidth <= 767");
+            try
+            {
+                isMobile = await JS.InvokeAsync<bool>("eval", "window.innerWidth <= 767");
+                isTouchDevice = await JS.InvokeAsync<bool>("eval", "'ontouchstart' in window");
+            }
+            catch
+            {
+                // Fallback if JS is not available
+                isMobile = false;
+                isTouchDevice = false;
+            }
         }
     }
 
     private async Task OnMouseEnter()
     {
-        // Start timer for delayed tooltip
+        if (isTouchDevice) return; // Skip hover on touch devices
+        
         hoverTimer?.Dispose();
         hoverTimer = new System.Threading.Timer(async _ => 
         {
@@ -98,22 +127,43 @@
                 await ShowTooltipAsync();
                 StateHasChanged();
             });
-        }, null, Config.Delay, Timeout.Infinite);
+        }, null, DelayMs, Timeout.Infinite);
     }
 
     private void OnMouseLeave()
     {
-        // Cancel timer and hide tooltip
+        if (isTouchDevice) return;
+        
         hoverTimer?.Dispose();
         showTooltip = false;
         StateHasChanged();
+    }
+
+    private async Task OnTouchStart()
+    {
+        if (!isTouchDevice) return;
+        await ShowTooltipAsync();
+    }
+
+    private void OnTouchEnd()
+    {
+        if (!isTouchDevice) return;
+        
+        // Delay hiding to allow user to see the tooltip
+        Task.Delay(2000).ContinueWith(_ => 
+        {
+            InvokeAsync(() => 
+            {
+                showTooltip = false;
+                StateHasChanged();
+            });
+        });
     }
 
     private async Task ShowTooltipAsync()
     {
         showTooltip = true;
         
-        // Check cache first
         if (ImageCache.TryGetValue(CategoryId, out var cachedImage))
         {
             imageData = cachedImage;
@@ -121,17 +171,18 @@
             return;
         }
 
-        // Fetch from API
         isLoading = true;
         StateHasChanged();
 
         try
         {
-            imageData = ImageService.GetOneImageFromCategory(CategoryId);
+            await Task.Run(() =>
+            {
+                imageData = ImageService.GetOneImageFromCategory(CategoryId);
+            });
             
             if (imageData != null)
             {
-                // Cache the result
                 ImageCache[CategoryId] = imageData;
             }
         }
@@ -160,9 +211,9 @@
 
     private string GetTooltipPosition()
     {
-        // Calculate position based on mobile/desktop
-        var offset = isMobile ? "left: 40px; top: 10px;" : "left: 0px; top: 10px;";
-        return offset;
+        return isMobile 
+            ? "left: 50%; top: 100%; transform: translateX(-50%); margin-top: 10px;" 
+            : "left: 105%; top: 0; transform: translateY(-10px);";
     }
 
     public void Dispose()
@@ -172,7 +223,6 @@
 
     private class TooltipConfig
     {
-        public int Delay { get; set; }
         public int ImageMaxWidth { get; set; }
         public int ImageMaxHeight { get; set; }
         public string ImageBaseUrl { get; set; } = string.Empty;

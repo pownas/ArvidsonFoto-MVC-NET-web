@@ -1,0 +1,125 @@
+﻿@using ArvidsonFoto.Core.ViewModels
+
+@if (Model?.AllImagesList?.Count > 0)
+{
+    <p class="text-center @CssClass">
+        Antal @if (Model.SelectedCategory?.Name != null && Model.SelectedCategory.Name.Equals("Per kategori"))
+        {
+            <text>kategorier</text>
+        }
+        else
+        {
+            <text>bilder</text>
+        }: @(Model.AllImagesList.Count)st, sida: @Model.CurrentPage av @Model.TotalPages
+    </p>
+}
+
+@if (Model?.TotalPages > 1)
+{
+    <nav id="page-counter" aria-label="Sid-navigering" class="@NavigationCssClass">
+        <ul class="pagination @PaginationCssClass">
+            @* First page *@
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@GetPageUrl(1)" @onclick="@(() => OnPageChange(1))" @onclick:preventDefault="@PreventDefault">
+                        Första
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@GetPageUrl(Model.CurrentPage - 1)" 
+                       @onclick="@(() => OnPageChange(Model.CurrentPage - 1))" 
+                       @onclick:preventDefault="@PreventDefault"
+                       aria-label="Föregående">
+                        <span aria-hidden="true">« @(Model.CurrentPage - 1)</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">Första</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">«</a>
+                </li>
+            }
+
+            @* Current page *@
+            <li class="page-item active">
+                <a class="page-link" aria-label="Nuvarande">
+                    @Model.CurrentPage<span class="sr-only visually-hidden"> (nuvarande)</span>
+                </a>
+            </li>
+
+            @* Last page *@
+            @if (Model.CurrentPage == Model.TotalPages)
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">»</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true">Sista</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@GetPageUrl(Model.CurrentPage + 1)" 
+                       @onclick="@(() => OnPageChange(Model.CurrentPage + 1))" 
+                       @onclick:preventDefault="@PreventDefault"
+                       aria-label="Nästa">
+                        @(Model.CurrentPage + 1) »
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@GetPageUrl(Model.TotalPages)" 
+                       @onclick="@(() => OnPageChange(Model.TotalPages))" 
+                       @onclick:preventDefault="@PreventDefault">
+                        Sista
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+@code {
+    [Parameter]
+    public GalleryViewModel? Model { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = "";
+
+    [Parameter]
+    public string NavigationCssClass { get; set; } = "";
+
+    [Parameter]
+    public string PaginationCssClass { get; set; } = "justify-content-center";
+
+    [Parameter]
+    public bool PreventDefault { get; set; } = false;
+
+    private string GetPageUrl(int pageNumber)
+    {
+        if (Model?.CurrentUrl == null) return "#";
+        
+        var url = Model.CurrentUrl;
+        if (pageNumber > 1)
+        {
+            url += $"?sida={pageNumber}";
+        }
+        return url;
+    }
+
+    private async Task OnPageChange(int newPage)
+    {
+        if (OnPageChanged.HasDelegate)
+        {
+            await OnPageChanged.InvokeAsync(newPage);
+        }
+    }
+}
