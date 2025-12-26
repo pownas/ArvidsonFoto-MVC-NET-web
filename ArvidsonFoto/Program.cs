@@ -7,6 +7,7 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
+using Scalar.AspNetCore;
 
 namespace ArvidsonFoto;
 
@@ -14,15 +15,27 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // Configure Serilog
-        Log.Logger = new LoggerConfiguration()
+        // Determine if we're in development mode early
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var isDevelopment = environment.Equals("Development", StringComparison.OrdinalIgnoreCase);
+
+        // Configure Serilog with Console sink in Development
+        var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day);
+
+        // Add Console sink in Development for easier debugging
+        if (isDevelopment)
+        {
+            loggerConfig.WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+        }
+
+        Log.Logger = loggerConfig.CreateLogger();
 
         try
         {
-            Log.Information("Starting web application");
+            Log.Information("Starting web application in {Environment} mode", environment);
             
             var builder = WebApplication.CreateBuilder(args);
 
@@ -214,10 +227,23 @@ public class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
         
-        // Native .NET 10 OpenAPI endpoint - only in development
+        // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
         {
-            app.MapOpenApi("/api/openapi.json");
+            // Native .NET 10 OpenAPI JSON endpoint
+            app.MapOpenApi();
+            
+            // Scalar UI for interactive API documentation  
+            app.MapScalarApiReference(options =>
+            {
+                options
+                    .WithTitle("ArvidsonFoto API")
+                    .WithTheme(ScalarTheme.Purple)
+                    .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+            });
+            
+            Log.Information("OpenAPI documentation available at: /scalar/v1");
+            Log.Information("OpenAPI JSON schema available at: /openapi/v1.json");
         }
     }
 }

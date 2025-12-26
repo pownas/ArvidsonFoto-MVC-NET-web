@@ -17,6 +17,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 [ApiController]
 [Route("api/image")]
 [Route("api/bild")]
+[Tags("Images")]
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
     ArvidsonFotoCoreDbContext entityContext, //TODO: Bör bygga bort denna och enbart använda IApiImageService

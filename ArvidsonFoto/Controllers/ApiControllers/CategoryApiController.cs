@@ -17,6 +17,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 [ApiController]
 [Route("api/category")]
 [Route("api/kategori")]
+[Tags("Categories")]
 public class CategoryApiController(ILogger<CategoryApiController> logger,
     IApiCategoryService apiCategoryService) : ControllerBase
 {
