@@ -34,6 +34,11 @@ public class MockPageCounterService : IPageCounterService
             .Take(20)
             .ToList();
     
+    public List<TblPageCounter> GetAllPageCounts() =>
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters
+            .OrderByDescending(pc => pc.LastShowDate)
+            .ToList();
+    
     public Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage)
     {
         var result = new Dictionary<string, int>();
@@ -46,7 +51,7 @@ public class MockPageCounterService : IPageCounterService
             
             var views = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters
                 .Where(pc => pc.MonthViewed == yearMonth && pc.PicturePage == picturePage)
-                .Sum(pc => pc.PageViews); // PageViews is int, not int?
+                .Sum(pc => pc.PageViews);
             
             result[yearMonth] = views;
         }

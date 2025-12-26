@@ -12,17 +12,17 @@ namespace ArvidsonFoto.Controllers;
 /// </summary>
 public class HomeController : Controller
 {
-    private readonly IApiPageCounterService _pageCounterService;
+    private readonly IPageCounterService _pageCounterService;
     private readonly IApiImageService _imageService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HomeController"/> class.
     /// </summary>
-    /// <param name="coreContext">The Core database context</param>
+    /// <param name="pageCounterService">The page counter service for tracking page views</param>
     /// <param name="imageService">The image service for fetching images</param>
-    public HomeController(ArvidsonFotoCoreDbContext coreContext, IApiImageService imageService)
+    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService)
     {
-        _pageCounterService = new ApiPageCounterService(coreContext);
+        _pageCounterService = pageCounterService;
         _imageService = imageService;
     }
 

@@ -89,4 +89,31 @@ public class MockGuestBookService : IGuestBookService
     {
         return _mockGuestbookEntries.OrderByDescending(g => g.GbId).ToList();
     }
+
+    public int GetAllGuestbookEntriesCounted()
+    {
+        return _mockGuestbookEntries.Count;
+    }
+
+    // Async methods
+    public async Task<IEnumerable<TblGb>> GetAllGuestbookEntriesAsync()
+    {
+        return await Task.FromResult(GetAll());
+    }
+
+    public async Task<TblGb> GetOneGbEntryAsync(int id)
+    {
+        var entry = _mockGuestbookEntries.FirstOrDefault(gb => gb.GbId == id);
+        return await Task.FromResult(entry ?? new TblGb { GbId = -1 });
+    }
+
+    public async Task<bool> CreateGbEntryAsync(TblGb gb)
+    {
+        return await Task.FromResult(CreateGBpost(gb));
+    }
+
+    public async Task<bool> DeleteGbEntryAsync(int id)
+    {
+        return await Task.FromResult(DeleteGbPost(id));
+    }
 }

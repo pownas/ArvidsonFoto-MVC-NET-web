@@ -6,17 +6,30 @@ using Serilog;
 namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
-/// Page counter service - tracks page views and category views
+/// Service for managing page counters and tracking page views.
 /// </summary>
+/// <remarks>
+/// This service implements page view tracking functionality using the Core database context
+/// and Core models. It provides methods for adding page counts, retrieving statistics,
+/// and generating monthly page view charts.
+/// </remarks>
 public class PageCounterService : IPageCounterService
 {
-    private readonly ArvidsonFotoCoreDbContext _entityContext;
+    private readonly ArvidsonFotoCoreDbContext _context;
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PageCounterService"/> class.
+    /// </summary>
+    /// <param name="context">The Core database context</param>
     public PageCounterService(ArvidsonFotoCoreDbContext context)
     {
-        _entityContext = context;
+        _context = context;
     }
 
+    /// <summary>
+    /// Räknar upp en sidvisning och sätter datum till att sidan nu besöks.
+    /// </summary>
+    /// <param name="pageName">Namn på sidan som ska uppdateras</param>
     public void AddPageCount(string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
@@ -24,7 +37,7 @@ public class PageCounterService : IPageCounterService
         try
         {
             // Check if the record already exists
-            var existingCounter = _entityContext.TblPageCounter
+            var existingCounter = _context.TblPageCounter
                 .FirstOrDefault(p => p.PicturePage == false 
                                   && p.PageName == pageName
                                   && p.MonthViewed == monthViewed);
@@ -32,7 +45,7 @@ public class PageCounterService : IPageCounterService
             if (existingCounter != null)
             {
                 // Update existing record
-                existingCounter.PageViews = existingCounter.PageViews + 1;
+                existingCounter.PageViews += 1;
                 existingCounter.LastShowDate = DateTime.Now;
             }
             else
@@ -47,17 +60,22 @@ public class PageCounterService : IPageCounterService
                     PicturePage = false,
                     LastShowDate = DateTime.Now
                 };
-                _entityContext.TblPageCounter.Add(pageCounter);
+                _context.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChanges();
+            _context.SaveChanges();
         }
         catch (Exception ex)
         {
-            Log.Error("Error while updating PageCounter for the Page: " + pageName + ". Error-message: " + ex.Message);
+            Log.Error($"Error while updating PageCounter for the Page: {pageName}. Error-message: {ex.Message}");
         }
     }
 
+    /// <summary>
+    /// Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+    /// </summary>
+    /// <param name="categoryId">Kategori Id som ska uppdateras</param>
+    /// <param name="pageName">Namn på kategorin som ska uppdateras</param>
     public void AddCategoryCount(int categoryId, string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
@@ -65,7 +83,7 @@ public class PageCounterService : IPageCounterService
         try
         {
             // Check if the record already exists
-            var existingCounter = _entityContext.TblPageCounter
+            var existingCounter = _context.TblPageCounter
                 .FirstOrDefault(p => p.PicturePage == true 
                                   && p.CategoryId == categoryId 
                                   && p.MonthViewed == monthViewed);
@@ -73,7 +91,7 @@ public class PageCounterService : IPageCounterService
             if (existingCounter != null)
             {
                 // Update existing record
-                existingCounter.PageViews = existingCounter.PageViews + 1;
+                existingCounter.PageViews += 1;
                 existingCounter.LastShowDate = DateTime.Now;
             }
             else
@@ -88,56 +106,98 @@ public class PageCounterService : IPageCounterService
                     PicturePage = true,
                     LastShowDate = DateTime.Now
                 };
-                _entityContext.TblPageCounter.Add(pageCounter);
+                _context.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChanges();
+            _context.SaveChanges();
         }
         catch (Exception ex)
         {
-            Log.Error("Error while updating PageCounter for the CategoryId: " + categoryId + ". Error-message: " + ex.Message);
+            Log.Error($"Error while updating PageCounter for the CategoryId: {categoryId}. Error-message: {ex.Message}");
         }
     }
 
+    /// <summary>
+    /// Hämtar månadens sidvisningar.
+    /// </summary>
+    /// <param name="yearMonth">Månad i formatet "yyyy-MM", exempel: "2021-02"</param>
+    /// <param name="picturePage">true == en bild-kategori, false == en sida</param>
+    /// <returns>Lista med sidvisningar för den angivna månaden</returns>
     public List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage)
     {
-        return _entityContext.TblPageCounter
-                             .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
-                             .OrderByDescending(p => p.PageViews)
-                             .ToList();
+        return _context.TblPageCounter
+            .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
+            .OrderByDescending(p => p.PageViews)
+            .ToList();
     }
 
+    /// <summary>
+    /// Hämtar alla sidvisningar per sida och kategori, grupperade och summerade.
+    /// </summary>
+    /// <returns>Lista med alla sidvisningar grupperade per sida</returns>
     public List<TblPageCounter> GetAllPageCountsGroupedByPageCount()
     {
-        List<TblPageCounter> listToReturn = new List<TblPageCounter>();
-        var listOfPages = _entityContext.TblPageCounter
-                                        .Where(p => p.PageName != null)
-                                        .Select(p => p.PageName)
-                                        .Distinct()
-                                        .ToList();
-
-        for (int i = 0; i < listOfPages.Count; i++)
-        {
-            var pageName = listOfPages[i];
-            TblPageCounter aCountedPage = new TblPageCounter()
+        var groupedCounters = _context.TblPageCounter
+            .GroupBy(p => p.PageName)
+            .Select(g => new TblPageCounter
             {
-                // Don't set Id - this is just for display/aggregation, not for database insertion
-                PageName = pageName,
-                PageViews = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Sum(p => p.PageViews),
-                LastShowDate = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Max(p => p.LastShowDate)
-            };
+                Id = g.First().Id,
+                PageName = g.Key,
+                PageViews = g.Sum(p => p.PageViews),
+                LastShowDate = g.Max(p => p.LastShowDate),
+                CategoryId = g.First().CategoryId,
+                PicturePage = g.First().PicturePage,
+                MonthViewed = g.OrderByDescending(p => p.LastShowDate).First().MonthViewed
+            })
+            .OrderByDescending(p => p.PageViews)
+            .ToList();
 
-            listToReturn.Add(aCountedPage);
-        }
-
-        return listToReturn.OrderByDescending(p => p.PageViews).ToList();
+        return groupedCounters;
     }
 
+    /// <summary>
+    /// Hämtar de 20 mest besökta bild-kategorierna.
+    /// </summary>
+    /// <returns>Lista med de 20 mest besökta bild-kategorierna</returns>
     public List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount()
     {
-        throw new NotImplementedException();
+        var groupedCounters = _context.TblPageCounter
+            .Where(p => p.PicturePage == true)
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new TblPageCounter
+            {
+                Id = g.First().Id,
+                CategoryId = g.Key,
+                PageName = g.First().PageName,
+                PageViews = g.Sum(p => p.PageViews),
+                LastShowDate = g.Max(p => p.LastShowDate),
+                PicturePage = true,
+                MonthViewed = g.OrderByDescending(p => p.LastShowDate).First().MonthViewed
+            })
+            .OrderByDescending(p => p.PageViews)
+            .Take(20)
+            .ToList();
+
+        return groupedCounters;
     }
 
+    /// <summary>
+    /// Hämtar alla sidvisningar utan gruppering.
+    /// </summary>
+    /// <returns>Lista med alla sidvisningar</returns>
+    public List<TblPageCounter> GetAllPageCounts()
+    {
+        return _context.TblPageCounter
+            .OrderByDescending(p => p.LastShowDate)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Hämtar sidvisningar för de senaste månaderna grupperat per månad.
+    /// </summary>
+    /// <param name="monthsBack">Antal månader bakåt att hämta data för</param>
+    /// <param name="picturePage">true == en bild-kategori, false == en sida</param>
+    /// <returns>Dictionary med månad som nyckel och totala sidvisningar som värde</returns>
     public Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage)
     {
         var result = new Dictionary<string, int>();
@@ -148,9 +208,9 @@ public class PageCounterService : IPageCounterService
             var targetDate = currentDate.AddMonths(-i);
             var yearMonth = targetDate.ToString("yyyy-MM");
             
-            var monthlyViews = _entityContext.TblPageCounter
-                                            .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
-                                            .Sum(p => p.PageViews);
+            var monthlyViews = _context.TblPageCounter
+                .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
+                .Sum(p => p.PageViews);
             
             result[yearMonth] = monthlyViews;
         }
