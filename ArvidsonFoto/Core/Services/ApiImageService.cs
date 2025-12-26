@@ -5,7 +5,7 @@ using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using Serilog;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
 /// Provides functionality for managing images, including adding, retrieving, updating, and deleting images.

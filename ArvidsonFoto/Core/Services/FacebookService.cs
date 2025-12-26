@@ -1,9 +1,10 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 using System.Text;
 using System.Text.Json;
+using ArvidsonFoto.Core.Interfaces;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
 /// Service för att integrera med Facebook Graph API

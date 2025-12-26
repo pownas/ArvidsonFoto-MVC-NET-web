@@ -2,9 +2,9 @@
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Data;
-using ArvidsonFoto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;

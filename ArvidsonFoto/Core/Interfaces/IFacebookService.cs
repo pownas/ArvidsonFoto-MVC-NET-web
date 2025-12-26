@@ -1,4 +1,4 @@
-namespace ArvidsonFoto.Services;
+﻿namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
 /// Interface för Facebook Graph API-integration

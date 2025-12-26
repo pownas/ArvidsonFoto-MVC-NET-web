@@ -1,11 +1,12 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Interfaces;
 using Serilog;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
-/// Legacy page counter service - migrated to use Core namespace
+/// Page counter service - tracks page views and category views
 /// </summary>
 public class PageCounterService : IPageCounterService
 {

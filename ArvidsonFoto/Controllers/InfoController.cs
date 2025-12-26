@@ -2,7 +2,7 @@
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
-using ArvidsonFoto.Services;
+using ArvidsonFoto.Core.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

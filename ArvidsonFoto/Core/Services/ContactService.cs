@@ -1,8 +1,9 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Interfaces;
 using Serilog;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
 /// Service for managing contact form submissions

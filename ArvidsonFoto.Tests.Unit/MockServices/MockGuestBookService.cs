@@ -1,5 +1,5 @@
 ﻿using ArvidsonFoto.Core.Models;
-using ArvidsonFoto.Services;
+using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 

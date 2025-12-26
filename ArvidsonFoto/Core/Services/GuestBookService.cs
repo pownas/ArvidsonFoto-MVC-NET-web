@@ -1,14 +1,14 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Interfaces;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
-/// Legacy guestbook service - migrated to use Core namespace
+/// Guestbook service - manages guestbook entries
 /// </summary>
 public class GuestBookService : IGuestBookService
 {
-    // Databas koppling - uppdaterad till Core.Data
     private readonly ArvidsonFotoCoreDbContext _entityContext;
 
     public GuestBookService(ArvidsonFotoCoreDbContext context)

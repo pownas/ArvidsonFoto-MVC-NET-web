@@ -1,7 +1,6 @@
 ﻿using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
-using ArvidsonFoto.Services;
 using ArvidsonFoto.Views.Shared;
 
 namespace ArvidsonFoto.Controllers;

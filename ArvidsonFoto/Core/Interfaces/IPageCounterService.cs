@@ -1,6 +1,6 @@
 ﻿using ArvidsonFoto.Core.Models;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
 /// Legacy interface for page counter services - migrated to use Core namespace

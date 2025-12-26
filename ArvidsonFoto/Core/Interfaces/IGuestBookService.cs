@@ -1,9 +1,9 @@
 ﻿using ArvidsonFoto.Core.Models;
 
-namespace ArvidsonFoto.Services;
+namespace ArvidsonFoto.Core.Interfaces;
 
 /// <summary>
-/// Legacy interface for guestbook services - migrated to use Core namespace
+/// Interface for guestbook services
 /// </summary>
 public interface IGuestBookService
 {

@@ -1,7 +1,7 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
-using ArvidsonFoto.Services;
 using ArvidsonFoto.Views.Shared;
 using Microsoft.Extensions.Caching.Memory;
 

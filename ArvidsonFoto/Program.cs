@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
