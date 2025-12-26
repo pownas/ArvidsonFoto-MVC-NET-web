@@ -28,7 +28,7 @@ public class BilderController(
         if (sida is null || sida < 1)
             sida = 1;
 
-        viewModel.CurrentPage = (int)sida - 1;
+        viewModel.CurrentPage = (int)sida;
 
         if (subLevel4 is not null)
             subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
@@ -39,57 +39,57 @@ public class BilderController(
         if (subLevel1 is not null)
             subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
 
+        // Determine which category to load
+        string categoryName = null;
+        string currentUrl = null;
+        
         if (subLevel4 is not null)
         {
-            var selectedCategory = _categoryService.GetByName(subLevel4);
-            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
-            {
-                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}");
-                return NotFound();
-            }
-            viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel4));
-            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+            categoryName = subLevel4;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
         {
-            var selectedCategory = _categoryService.GetByName(subLevel3);
-            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
-            {
-                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}");
-                return NotFound();
-            }
-            viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel3));
-            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+            categoryName = subLevel3;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
         {
-            var selectedCategory = _categoryService.GetByName(subLevel2);
-            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
-            {
-                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}/{subLevel2}");
-                return NotFound();
-            }
-            viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel2));
-            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
+            categoryName = subLevel2;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
         {
-            var selectedCategory = _categoryService.GetByName(subLevel1);
+            categoryName = subLevel1;
+            currentUrl = "/Bilder/" + subLevel1;
+        }
+
+        if (categoryName != null)
+        {
+            var selectedCategory = _categoryService.GetByName(categoryName);
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
             {
-                Log.Warning($"Invalid category requested: /Bilder/{subLevel1}");
+                Log.Warning($"Invalid category requested: {currentUrl}");
                 return NotFound();
             }
+            
             viewModel.SelectedCategory = selectedCategory;
-            var images = _imageService.GetImagesByCategoryID(_categoryService.GetIdByName(subLevel1));
-            viewModel.AllImagesList = images.OrderByDescending(i => i.ImageId).ThenByDescending(i => i.DateImageTaken).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1;
+            viewModel.CurrentUrl = currentUrl;
+            
+            // OPTIMIZED: Use count method instead of loading all images into memory
+            var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
+            
+            // Calculate pagination
+            viewModel.TotalPages = (int)Math.Ceiling(totalImageCount / (decimal)pageSize);
+            
+            // OPTIMIZED: Get only the images for the current page with SQL-level sorting and pagination
+            viewModel.DisplayImagesList = _imageService.GetImagesByCategoryIDPaginated(
+                selectedCategory.CategoryId.Value, 
+                viewModel.CurrentPage, 
+                pageSize);
+                
+            // Set AllImagesList to empty list to save memory (we don't need all images in memory)
+            viewModel.AllImagesList = new List<ImageDto>();
         }
 
         if (subLevel5ImageName is not null)
@@ -103,17 +103,10 @@ public class BilderController(
             _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.Name);
         }
 
-        if (viewModel.AllImagesList == null)
+        if (viewModel.DisplayImagesList == null)
         {
-            viewModel.AllImagesList = new List<ImageDto>();
+            viewModel.DisplayImagesList = new List<ImageDto>();
         }
-
-        viewModel.DisplayImagesList = viewModel.AllImagesList
-            .Skip(viewModel.CurrentPage * pageSize)
-            .Take(pageSize)
-            .ToList();
-        viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
-        viewModel.CurrentPage = (int)sida;
 
         return View(viewModel);
     }

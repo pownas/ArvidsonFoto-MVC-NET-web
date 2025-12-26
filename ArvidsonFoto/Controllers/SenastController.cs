@@ -47,6 +47,7 @@ public class SenastController(
                 {
                     var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
                     imageDto.Name = category.Name ?? string.Empty;
+                    imageDto.CategoryName = category.Name ?? string.Empty;
                     viewModel.AllImagesList.Add(imageDto);
                 }
             }
@@ -58,6 +59,18 @@ public class SenastController(
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
             
             var images = _imageService.GetAll().OrderByDescending(i => i.DateUploaded).ToList();
+            
+            // Update each image with its category name
+            foreach (var image in images)
+            {
+                if (image.CategoryId > 0)
+                {
+                    var categoryName = _categoryService.GetNameById(image.CategoryId);
+                    image.Name = categoryName;
+                    image.CategoryName = categoryName;
+                }
+            }
+            
             viewModel.AllImagesList = images;
         }
         else if (sortOrder.Equals("Fotograferad"))
@@ -67,6 +80,18 @@ public class SenastController(
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
             
             var images = _imageService.GetAll().OrderByDescending(i => i.DateImageTaken).ToList();
+            
+            // Update each image with its category name
+            foreach (var image in images)
+            {
+                if (image.CategoryId > 0)
+                {
+                    var categoryName = _categoryService.GetNameById(image.CategoryId);
+                    image.Name = categoryName;
+                    image.CategoryName = categoryName;
+                }
+            }
+            
             viewModel.AllImagesList = images;
         }
         else

@@ -91,4 +91,16 @@ public class MockImageService : IApiImageService
     public Task<bool> CreateImageAsync(ImageDto image) => Task.FromResult(AddImage(image));
     
     public Task<bool> UpdateImageAsync(ImageDto image) => Task.FromResult(true);
+    
+    public List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize)
+    {
+        // Mock implementation - return paginated subset
+        var allImages = GetImagesByCategoryID(categoryID);
+        return allImages
+            .OrderByDescending(i => i.ImageId)
+            .ThenByDescending(i => i.DateImageTaken)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
 }

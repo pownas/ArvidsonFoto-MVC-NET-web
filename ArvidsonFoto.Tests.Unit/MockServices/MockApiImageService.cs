@@ -200,6 +200,18 @@ public class MockApiImageService : IApiImageService
         return DeleteImgId(id);
     }
 
+    public List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize)
+    {
+        // Mock implementation - return paginated subset
+        var allImages = GetImagesByCategoryID(categoryID);
+        return allImages
+            .OrderByDescending(i => i.ImageId)
+            .ThenByDescending(i => i.DateImageTaken)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
     private static ImageDto CreateNotFoundImage()
     {
         return new ImageDto
