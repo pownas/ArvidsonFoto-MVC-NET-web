@@ -28,10 +28,14 @@
                 </h1>
             }
 
-            <!-- Search bar in a card -->
+            <!-- Search bar component -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <partial name="_SearchBar" />
+                    <component type="typeof(ArvidsonFoto.Components.SearchBarComponent)" 
+                               render-mode="ServerPrerendered" 
+                               param-Placeholder="Sök efter kategori..."
+                               param-InitialQuery="@(ViewBag.SearchQuery ?? "")"
+                               param-ShowSuggestions="true" />
                     <small class="form-text text-muted d-block mt-2">
                         <i class="bi bi-info-circle"></i> Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".
                     </small>
@@ -157,7 +161,10 @@
 {
     <!-- Gallery - full width outside constrained container -->
     <div class="container-fluid px-3">
-        <partial name="_Gallery" model="Model" />
+        <component type="typeof(ArvidsonFoto.Components.GalleryComponent)" 
+                   render-mode="ServerPrerendered" 
+                   param-Model="Model"
+                   param-IsStartpage="false" />
     </div>
 
     <!-- Results footer with clear heading -->

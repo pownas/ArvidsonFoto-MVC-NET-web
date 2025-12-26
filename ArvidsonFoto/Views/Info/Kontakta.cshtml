@@ -66,15 +66,14 @@
                     <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
                 </div>
                 <div class="card-body">
-                    <partial name="_ContactForm" model="Model" />
+                    <component type="typeof(ArvidsonFoto.Components.ContactFormComponent)" 
+                               render-mode="ServerPrerendered" 
+                               param-ReturnPageUrl="Kontakta"
+                               param-MessagePlaceholder="Skriv ditt meddelande här..." />
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@*<!-- Kräver att man har denna för validerings-scriptet ska läsas in... -->*@
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/ContactForm.js"></script>
-}
+@*<!-- Blazor validation - no need for separate scripts -->*@}

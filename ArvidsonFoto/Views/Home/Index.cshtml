@@ -33,7 +33,10 @@
         </div>
     </div>
     <div id="page-gallery" class="mt-3 col-12 col-sm-7">
-        <partial name="../Bilder/_GalleryStartpage" model="Model" />
+        <component type="typeof(ArvidsonFoto.Components.GalleryComponent)" 
+                   render-mode="ServerPrerendered" 
+                   param-Model="Model"
+                   param-IsStartpage="true" />
         <div class="text-center">
             <small>Slumpmässigt utvalda bilder</small>
         </div>
