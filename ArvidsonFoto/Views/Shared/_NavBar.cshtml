@@ -1,29 +1,4 @@
 ﻿@using ArvidsonFoto.Views.Shared
-@using ArvidsonFoto.Core.Interfaces
-@using ArvidsonFoto.Core.DTOs
-@using System.Net
-@inject IApiCategoryService CategoryService
-@inject IApiImageService ImageService
-
-@{
-    var categories = CategoryService?.GetAll() ?? new List<CategoryDto>();
-    
-    string GetPopoverAttr(CategoryDto cat, string path)
-    {
-        var img = ImageService.GetOneImageFromCategory(cat.CategoryId ?? 0);
-        if (img == null || string.IsNullOrWhiteSpace(img.UrlImage)) return "";
-        
-        // Extract filename from UrlImage path (e.g., "bilder/kategori/filnamn" -> "filnamn")
-        string fileName = img.UrlImage.Split('/').Last();
-        string safeUrl = fileName.Replace("..", "").Replace("\\", "/");
-        var imgUrl = $"{path}/{safeUrl}.thumb.jpg";
-        var catName = WebUtility.HtmlEncode(cat.Name);
-        var imgUrlEnc = WebUtility.HtmlEncode(imgUrl);
-        var content = $"<div class='category-tooltip'><img src='{imgUrlEnc}' alt='{catName}' class='img-fluid' /><div class='category-name'>{catName}</div></div>";
-        
-        return $"data-bs-toggle=\"popover\" data-bs-trigger=\"hover\" data-bs-html=\"true\" data-bs-content=\"{WebUtility.HtmlEncode(content)}\" data-bs-placement=\"right\"";
-    }
-}
 
 <nav class="main-nav">
     <input id="main-menu-state" type="checkbox" />
@@ -44,91 +19,10 @@
             </ul>
         </li>
         
-        @if (categories == null || !categories.Any())
-        {
-            <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul><li><a href="#">Dummy</a></li></ul></li>
-            <li><a href="./Bilder/Fåglar">Fåglar</a><ul><li><a href="#">Dummy</a></li></ul></li>
-            <li><a href="./Bilder/Insekter">Insekter</a><ul><li><a href="#">Dummy</a></li></ul></li>
-        }
-        else
-        {
-            var mainCategories = categories.Where(m => m.ParentCategoryId == 0 || m.ParentCategoryId == null).ToList();
-            foreach (var head in mainCategories)
-            {
-                var subs1 = categories.Where(m => m.ParentCategoryId == head.CategoryId).OrderBy(m => m.Name).ToList();
-                
-                <li class="pe-1">
-                    @if (subs1.Any())
-                    {
-                        if (head.Name == "Fåglar")
-                        {
-                            <a href="./Bilder/Fåglar">@head.Name</a>
-                        }
-                        else
-                        {
-                            <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
-                        }
-                        <ul>
-                            @foreach (var s1 in subs1)
-                            {
-                                var subs2 = categories.Where(m => m.ParentCategoryId == s1.CategoryId).OrderBy(m => m.Name).ToList();
-                                
-                                <li>
-                                    @if (subs2.Any())
-                                    {
-                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
-                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
-                                        <ul>
-                                            @foreach (var s2 in subs2)
-                                            {
-                                                var subs3 = categories.Where(m => m.ParentCategoryId == s2.CategoryId).OrderBy(m => m.Name).ToList();
-                                                
-                                                <li>
-                                                    @if (subs3.Any())
-                                                    {
-                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
-                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
-                                                        <ul>
-                                                            @foreach (var s3 in subs3)
-                                                            {
-                                                                var path3 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}/{SharedStaticFunctions.ReplaceUrlText(s3.Name)}";
-                                                                
-                                                                <li>
-                                                                    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)/@SharedStaticFunctions.ReplaceUrlText(s3.Name)" 
-                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name" @Html.Raw(GetPopoverAttr(s3, path3))>@s3.Name</a>
-                                                                </li>
-                                                            }
-                                                        </ul>
-                                                    }
-                                                    else
-                                                    {
-                                                        var path2 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}";
-                                                        
-                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
-                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name" @Html.Raw(GetPopoverAttr(s2, path2))>@s2.Name</a>
-                                                    }
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
-                                    else
-                                    {
-                                        var path1 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}";
-                                        
-                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
-                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name" @Html.Raw(GetPopoverAttr(s1, path1))>@s1.Name</a>
-                                    }
-                                </li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
-                    }
-                </li>
-            }
-        }
+        @* Categories will be loaded here dynamically via JavaScript *@
+        <li id="categories-loading" class="pe-1 text-muted" style="display: none;">
+            <span>Laddar kategorier...</span>
+        </li>
         
         <li class="pe-1">
             <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
@@ -148,3 +42,179 @@
         <li class="pe-2"><a href="#" id="dark-mode-toggle" title="Tänd ljuset"><i class="bi bi-lightbulb"></i></a></li>
     </ul>
 </nav>
+
+@* Include the navigation menu cache manager *@
+<script src="~/js/navigationMenuCache.js" asp-append-version="true"></script>
+
+<script>
+(function() {
+    'use strict';
+    
+    /**
+     * Sanitizes a string for use in URLs by replacing Swedish characters
+     */
+    function replaceUrlText(text) {
+        if (!text) return '';
+        return text
+            .replace(/å/g, 'a').replace(/Å/g, 'A')
+            .replace(/ä/g, 'a').replace(/Ä/g, 'A')
+            .replace(/ö/g, 'o').replace(/Ö/g, 'O')
+            .replace(/é/g, 'e').replace(/É/g, 'E')
+            .replace(/ /g, '-')
+            .replace(/,/g, '')
+            .toLowerCase();
+    }
+    
+    /**
+     * Builds the category menu structure
+     */
+    function buildCategoryMenu(categories) {
+        if (!categories || categories.length === 0) {
+            console.warn('No categories to build menu');
+            return;
+        }
+        
+        console.log('Building menu with ' + categories.length + ' categories');
+        
+        // Find main categories (those with parentCategoryId === 0 or null)
+        var mainCategories = categories.filter(function(cat) {
+            return !cat.parentCategoryId || cat.parentCategoryId === 0;
+        }).sort(function(a, b) {
+            return (a.name || '').localeCompare(b.name || '');
+        });
+        
+        var menuHtml = '';
+        
+        mainCategories.forEach(function(head) {
+            // Find subcategories for this main category
+            var subs1 = categories.filter(function(cat) {
+                return cat.parentCategoryId === head.categoryId;
+            }).sort(function(a, b) {
+                return (a.name || '').localeCompare(b.name || '');
+            });
+            
+            menuHtml += '<li class="pe-1">';
+            
+            var headUrl = head.name === 'Fåglar' ? './Bilder/Fåglar' : './Bilder/' + replaceUrlText(head.name);
+            
+            if (subs1.length > 0) {
+                menuHtml += '<a href="' + headUrl + '">' + head.name + '</a>';
+                menuHtml += '<ul>';
+                
+                subs1.forEach(function(s1) {
+                    var subs2 = categories.filter(function(cat) {
+                        return cat.parentCategoryId === s1.categoryId;
+                    }).sort(function(a, b) {
+                        return (a.name || '').localeCompare(b.name || '');
+                    });
+                    
+                    menuHtml += '<li>';
+                    
+                    if (subs2.length > 0) {
+                        menuHtml += '<a href="./Bilder/' + replaceUrlText(head.name) + '/' + replaceUrlText(s1.name) + '" ';
+                        menuHtml += 'class="has-category-tooltip" data-category-id="' + s1.categoryId + '" data-category-name="' + s1.name + '">' + s1.name + '</a>';
+                        menuHtml += '<ul>';
+                        
+                        subs2.forEach(function(s2) {
+                            var subs3 = categories.filter(function(cat) {
+                                return cat.parentCategoryId === s2.categoryId;
+                            }).sort(function(a, b) {
+                                return (a.name || '').localeCompare(b.name || '');
+                            });
+                            
+                            menuHtml += '<li>';
+                            
+                            if (subs3.length > 0) {
+                                menuHtml += '<a href="./Bilder/' + replaceUrlText(head.name) + '/' + replaceUrlText(s1.name) + '/' + replaceUrlText(s2.name) + '" ';
+                                menuHtml += 'class="has-category-tooltip" data-category-id="' + s2.categoryId + '" data-category-name="' + s2.name + '">' + s2.name + '</a>';
+                                menuHtml += '<ul>';
+                                
+                                subs3.forEach(function(s3) {
+                                    menuHtml += '<li>';
+                                    menuHtml += '<a href="./Bilder/' + replaceUrlText(head.name) + '/' + replaceUrlText(s1.name) + '/' + replaceUrlText(s2.name) + '/' + replaceUrlText(s3.name) + '" ';
+                                    menuHtml += 'class="has-category-tooltip" data-category-id="' + s3.categoryId + '" data-category-name="' + s3.name + '">' + s3.name + '</a>';
+                                    menuHtml += '</li>';
+                                });
+                                
+                                menuHtml += '</ul>';
+                            } else {
+                                menuHtml += '<a href="./Bilder/' + replaceUrlText(head.name) + '/' + replaceUrlText(s1.name) + '/' + replaceUrlText(s2.name) + '" ';
+                                menuHtml += 'class="has-category-tooltip" data-category-id="' + s2.categoryId + '" data-category-name="' + s2.name + '">' + s2.name + '</a>';
+                            }
+                            
+                            menuHtml += '</li>';
+                        });
+                        
+                        menuHtml += '</ul>';
+                    } else {
+                        menuHtml += '<a href="./Bilder/' + replaceUrlText(head.name) + '/' + replaceUrlText(s1.name) + '" ';
+                        menuHtml += 'class="has-category-tooltip" data-category-id="' + s1.categoryId + '" data-category-name="' + s1.name + '">' + s1.name + '</a>';
+                    }
+                    
+                    menuHtml += '</li>';
+                });
+                
+                menuHtml += '</ul>';
+            } else {
+                menuHtml += '<a href="' + headUrl + '">' + head.name + '</a>';
+            }
+            
+            menuHtml += '</li>';
+        });
+        
+        // Insert the menu HTML before the Info menu
+        var infoMenu = document.querySelector('#main-menu > li:nth-last-child(3)'); // Info is 3rd from the end
+        if (infoMenu) {
+            infoMenu.insertAdjacentHTML('beforebegin', menuHtml);
+            console.log('Menu HTML inserted successfully');
+        } else {
+            console.error('Could not find Info menu to insert categories');
+        }
+        
+        // Remove loading indicator
+        var loadingIndicator = document.getElementById('categories-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+        
+        // Reinitialize SmartMenus to recognize new items
+        if (window.jQuery && jQuery.fn.smartmenus) {
+            jQuery('#main-menu').smartmenus('refresh');
+            console.log('SmartMenus refreshed');
+        }
+    }
+    
+    /**
+     * Initialize the navigation menu
+     */
+    function initNavigationMenu() {
+        // Show loading indicator
+        var loadingIndicator = document.getElementById('categories-loading');
+        if (loadingIndicator) {
+            loadingIndicator.style.display = '';
+        }
+        
+        // Get categories from cache or API
+        window.NavigationMenuCache.getCategories()
+            .then(function(categories) {
+                buildCategoryMenu(categories);
+            })
+            .catch(function(error) {
+                console.error('Failed to load navigation menu:', error);
+                // Hide loading indicator
+                if (loadingIndicator) {
+                    loadingIndicator.remove();
+                }
+                // Show fallback minimal menu
+                console.warn('Using fallback minimal menu');
+            });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavigationMenu);
+    } else {
+        initNavigationMenu();
+    }
+})();
+</script>

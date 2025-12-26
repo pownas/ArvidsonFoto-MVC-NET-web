@@ -150,6 +150,9 @@ public class Program
 
             pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
                 .UseContentRoot();
+            
+            pipeline.AddJavaScriptBundle("/js/navmenucache.min.js", "wwwroot/js/navigationMenuCache.js")
+                .UseContentRoot();
         });
     }
 
