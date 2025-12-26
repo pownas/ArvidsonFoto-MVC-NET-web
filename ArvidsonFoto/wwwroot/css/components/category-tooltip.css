@@ -1,0 +1,52 @@
+﻿/* Blazor Category Tooltip Styles */
+.category-tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.category-tooltip-popover {
+    position: absolute;
+    z-index: 1070;
+    background-color: #2b2b2b;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    padding: 0.75rem;
+    max-width: 320px;
+    animation: fadeIn 0.2s ease-in;
+}
+
+.category-tooltip-popover.mobile {
+    left: 40px !important;
+}
+
+.category-tooltip-popover .popover-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent #2b2b2b transparent;
+    top: -8px;
+    left: 20px;
+}
+
+.category-tooltip-content {
+    color: #ddd;
+}
+
+.category-tooltip-content img {
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,206 @@
+﻿@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Interfaces
+@inject IContactService ContactService
+@inject ILogger<ContactFormComponent> Logger
+
+<div class="contact-form-component">
+    <EditForm Model="@FormData" OnValidSubmit="@HandleSubmitAsync" FormName="ContactForm">
+        <DataAnnotationsValidator />
+        
+        @* Validation Summary *@
+        @if (showValidationSummary && !string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                <ValidationSummary />
+            </div>
+        }
+
+        @* Error Alert *@
+        @if (displayErrorSending)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> 
+                <p class="mb-2">Något gick fel när meddelandet skulle skickas via formuläret. Ditt meddelande har sparats som backup.</p>
+                <p class="mb-0"><strong>Alternativ:</strong> Skicka ett mail direkt till <a href="mailto:torbjorn@arvidsonfoto.se" class="alert-link">torbjorn@arvidsonfoto.se</a></p>
+                <button type="button" class="btn-close" @onclick="@(() => displayErrorSending = false)" aria-label="Stäng"></button>
+            </div>
+        }
+
+        @* Success Alert *@
+        @if (displayEmailSent)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt mejl!</strong> Jag återkommer inom 1-5 dagar med svar på ditt mejl.
+                <button type="button" class="btn-close" @onclick="@(() => displayEmailSent = false)" aria-label="Stäng"></button>
+            </div>
+        }
+
+        <div class="row g-3">
+            @* Name Field *@
+            <div class="col-12">
+                <label for="name" class="form-label">
+                    <i class="bi bi-person"></i> Namn <span class="text-danger">*</span>
+                </label>
+                <InputText id="name" @bind-Value="FormData.Name" 
+                           class="@($"form-control {IsFieldValid("Name")}")" 
+                           placeholder="Ditt namn" 
+                           aria-required="true" />
+                <ValidationMessage For="@(() => FormData.Name)" class="invalid-feedback d-block" />
+            </div>
+
+            @* Email Field *@
+            <div class="col-12">
+                <label for="email" class="form-label">
+                    <i class="bi bi-envelope"></i> Epost <span class="text-danger">*</span>
+                </label>
+                <InputText id="email" @bind-Value="FormData.Email" 
+                           type="email"
+                           class="@($"form-control {IsFieldValid("Email")}")" 
+                           placeholder="din.epost@exempel.se" 
+                           aria-required="true" />
+                <ValidationMessage For="@(() => FormData.Email)" class="invalid-feedback d-block" />
+            </div>
+
+            @* Subject Field *@
+            <div class="col-12">
+                <label for="subject" class="form-label">
+                    <i class="bi bi-tag"></i> Rubrik <span class="text-danger">*</span>
+                </label>
+                <InputText id="subject" @bind-Value="FormData.Subject" 
+                           class="@($"form-control {IsFieldValid("Subject")}")" 
+                           placeholder="Rubrik på ditt meddelande" 
+                           aria-required="true" />
+                <ValidationMessage For="@(() => FormData.Subject)" class="invalid-feedback d-block" />
+            </div>
+
+            @* Message Field *@
+            <div class="col-12">
+                <label for="message" class="form-label">
+                    <i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span>
+                </label>
+                <InputTextArea id="message" @bind-Value="FormData.Message" 
+                               rows="6"
+                               class="@($"form-control {IsFieldValid("Message")}")" 
+                               placeholder="@MessagePlaceholder" 
+                               aria-required="true" />
+                <ValidationMessage For="@(() => FormData.Message)" class="invalid-feedback d-block" />
+            </div>
+
+            @* CAPTCHA Image *@
+            <div class="col-12">
+                <img src="/img/a575grj5dgs575389aw.gif" 
+                     class="img-fluid rounded mb-2" 
+                     alt="CAPTCHA bild med siffror" 
+                     style="max-width: 200px;" />
+            </div>
+
+            @* CAPTCHA Code *@
+            <div class="col-12">
+                <label for="code" class="form-label">
+                    <i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span>
+                </label>
+                <InputText id="code" @bind-Value="FormData.Code" 
+                           class="@($"form-control {IsFieldValid("Code")}")" 
+                           placeholder="Siffror från bilden" 
+                           aria-required="true" />
+                <ValidationMessage For="@(() => FormData.Code)" class="invalid-feedback d-block" />
+            </div>
+
+            @* Submit Button *@
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-lg" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Skickar...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-send-fill"></i>
+                        <span> Skicka meddelandet</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public string ReturnPageUrl { get; set; } = "Kontakta";
+
+    [Parameter]
+    public string MessagePlaceholder { get; set; } = "Skriv ditt meddelande här...";
+
+    private ContactFormDto FormData { get; set; } = ContactFormDto.CreateEmpty();
+    private bool isSubmitting = false;
+    private bool showValidationSummary = false;
+    private bool displayErrorSending = false;
+    private bool displayEmailSent = false;
+    private string errorMessage = string.Empty;
+    private EditContext? editContext;
+
+    protected override void OnInitialized()
+    {
+        FormData = ContactFormDto.CreateEmpty();
+        FormData.MessagePlaceholder = MessagePlaceholder;
+        FormData.ReturnPageUrl = ReturnPageUrl;
+        editContext = new EditContext(FormData);
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        isSubmitting = true;
+        showValidationSummary = false;
+        displayErrorSending = false;
+        displayEmailSent = false;
+
+        try
+        {
+            Logger.LogInformation("Blazor ContactForm: Attempting to send message from {Email}", FormData.Email);
+
+            var result = await ContactService.SendContactMessageAsync(FormData);
+
+            if (result)
+            {
+                displayEmailSent = true;
+                Logger.LogInformation("Blazor ContactForm: Message sent successfully");
+                
+                // Reset form
+                FormData = ContactFormDto.CreateEmpty();
+                FormData.MessagePlaceholder = MessagePlaceholder;
+                FormData.ReturnPageUrl = ReturnPageUrl;
+                editContext = new EditContext(FormData);
+            }
+            else
+            {
+                displayErrorSending = true;
+                Logger.LogWarning("Blazor ContactForm: Failed to send message");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Blazor ContactForm: Exception while sending message");
+            displayErrorSending = true;
+            errorMessage = "Ett oväntat fel uppstod.";
+            showValidationSummary = true;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private string IsFieldValid(string fieldName)
+    {
+        if (editContext == null) return string.Empty;
+
+        var fieldIdentifier = editContext.Field(fieldName);
+        var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+        var isModified = editContext.IsModified(fieldIdentifier);
+
+        if (!isModified) return string.Empty;
+        
+        return isValid ? "is-valid" : "is-invalid";
+    }
+}

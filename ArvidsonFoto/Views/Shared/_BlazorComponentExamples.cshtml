@@ -1,0 +1,58 @@
+﻿@* EXEMPEL: Hur man använder CategoryTooltipComponent i en MVC-view *@
+
+@using Microsoft.AspNetCore.Components.Web
+@using ArvidsonFoto.Components
+
+<h3>Navigation med Blazor Tooltips</h3>
+
+<ul class="nav flex-column">
+    <li class="nav-item">
+        @* Traditionell JavaScript-version *@
+        <a href="/Bilder/Index/123" 
+           class="nav-link has-category-tooltip" 
+           data-category-id="123" 
+           data-category-name="Natur">
+            Natur
+        </a>
+    </li>
+
+    <li class="nav-item">
+        @* BLAZOR-VERSION - Inga JavaScript-dependencies! *@
+        <component type="typeof(CategoryTooltipComponent)" 
+                   render-mode="ServerPrerendered"
+                   param-CategoryId="124"
+                   param-CategoryName="@("Porträtt")">
+            <a href="/Bilder/Index/124" class="nav-link">Porträtt</a>
+        </component>
+    </li>
+
+    <li class="nav-item">
+        @* Blazor med dynamiska värden från ViewBag eller Model *@
+        @{
+            var categoryId = 125;
+            var categoryName = "Landskap";
+        }
+        <component type="typeof(CategoryTooltipComponent)" 
+                   render-mode="ServerPrerendered"
+                   param-CategoryId="@categoryId"
+                   param-CategoryName="@categoryName">
+            <a href="/Bilder/Index/@categoryId" class="nav-link">@categoryName</a>
+        </component>
+    </li>
+</ul>
+
+@* 
+    ALTERNATIV SYNTAX (i .NET 8+): 
+    Du kan också använda Tag Helpers istället för <component>
+*@
+
+@* I _ViewImports.cshtml, lägg till:
+    @@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+    @@addTagHelper *, ArvidsonFoto
+*@
+
+@* Sedan kan du använda:
+    <CategoryTooltipComponent CategoryId="123" CategoryName="Natur">
+        <a href="/Bilder/Index/123" class="nav-link">Natur</a>
+    </CategoryTooltipComponent>
+*@

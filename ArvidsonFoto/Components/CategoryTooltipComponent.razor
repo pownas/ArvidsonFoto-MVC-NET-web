@@ -1,0 +1,180 @@
+﻿@using ArvidsonFoto.Core.Interfaces
+@using ArvidsonFoto.Core.DTOs
+@inject IApiImageService ImageService
+@inject IJSRuntime JS
+
+<div class="category-tooltip-wrapper" 
+     @onmouseenter="OnMouseEnter" 
+     @onmouseleave="OnMouseLeave"
+     @ref="tooltipElement">
+    
+    @ChildContent
+
+    @if (showTooltip && imageData != null)
+    {
+        <div class="category-tooltip-popover @(isMobile ? "mobile" : "")" 
+             style="@GetTooltipPosition()">
+            <div class="popover-arrow"></div>
+            <div class="popover-body">
+                @if (isLoading)
+                {
+                    <div class="text-center">
+                        <span class="spinner-border spinner-border-sm" role="status"></span>
+                        <span class="ms-2">Laddar...</span>
+                    </div>
+                }
+                else if (imageData != null && !string.IsNullOrEmpty(imageData.UrlImage))
+                {
+                    <div class="category-tooltip-content">
+                        <img src="@GetImagePath()" 
+                             alt="@(imageData.Name ?? "Preview")" 
+                             style="max-width: @(Config.ImageMaxWidth)px; max-height: @(Config.ImageMaxHeight)px; width: auto; height: auto; display: block;" />
+                        
+                        @if (!string.IsNullOrEmpty(CategoryName))
+                        {
+                            <div class="mt-2 fw-bold" style="color: #ddd !important;">@CategoryName</div>
+                        }
+
+                        @if (imageData.DateImageTaken.HasValue)
+                        {
+                            <div class="mt-1 small text-muted" style="color: #aaa !important;">
+                                Fotograferad: @imageData.DateImageTaken.Value.ToString("yyyy-MM-dd")
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-muted">Ingen bild tillgänglig</div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int CategoryId { get; set; }
+
+    [Parameter]
+    public string? CategoryName { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private ElementReference tooltipElement;
+    private ImageDto? imageData;
+    private bool showTooltip = false;
+    private bool isLoading = false;
+    private bool isMobile = false;
+    private System.Threading.Timer? hoverTimer;
+    private static readonly Dictionary<int, ImageDto> ImageCache = new();
+
+    private TooltipConfig Config { get; set; } = new()
+    {
+        Delay = 1000,
+        ImageMaxWidth = 300,
+        ImageMaxHeight = 200,
+        ImageBaseUrl = "https://arvidsonfoto.se"
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Check if mobile viewport
+            isMobile = await JS.InvokeAsync<bool>("eval", "window.innerWidth <= 767");
+        }
+    }
+
+    private async Task OnMouseEnter()
+    {
+        // Start timer for delayed tooltip
+        hoverTimer?.Dispose();
+        hoverTimer = new System.Threading.Timer(async _ => 
+        {
+            await InvokeAsync(async () => 
+            {
+                await ShowTooltipAsync();
+                StateHasChanged();
+            });
+        }, null, Config.Delay, Timeout.Infinite);
+    }
+
+    private void OnMouseLeave()
+    {
+        // Cancel timer and hide tooltip
+        hoverTimer?.Dispose();
+        showTooltip = false;
+        StateHasChanged();
+    }
+
+    private async Task ShowTooltipAsync()
+    {
+        showTooltip = true;
+        
+        // Check cache first
+        if (ImageCache.TryGetValue(CategoryId, out var cachedImage))
+        {
+            imageData = cachedImage;
+            isLoading = false;
+            return;
+        }
+
+        // Fetch from API
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            imageData = ImageService.GetOneImageFromCategory(CategoryId);
+            
+            if (imageData != null)
+            {
+                // Cache the result
+                ImageCache[CategoryId] = imageData;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to fetch image for category {CategoryId}: {ex.Message}");
+            imageData = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string GetImagePath()
+    {
+        if (imageData == null || string.IsNullOrEmpty(imageData.UrlImage))
+            return string.Empty;
+
+        var imagePath = imageData.UrlImage;
+        if (!imagePath.StartsWith("/"))
+            imagePath = "/" + imagePath;
+
+        return $"{Config.ImageBaseUrl}{imagePath}.thumb.jpg";
+    }
+
+    private string GetTooltipPosition()
+    {
+        // Calculate position based on mobile/desktop
+        var offset = isMobile ? "left: 40px; top: 10px;" : "left: 0px; top: 10px;";
+        return offset;
+    }
+
+    public void Dispose()
+    {
+        hoverTimer?.Dispose();
+    }
+
+    private class TooltipConfig
+    {
+        public int Delay { get; set; }
+        public int ImageMaxWidth { get; set; }
+        public int ImageMaxHeight { get; set; }
+        public string ImageBaseUrl { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,82 @@
+﻿@using ArvidsonFoto.Core.DTOs
+@using Microsoft.AspNetCore.Components.Web
+@using ArvidsonFoto.Components
+@model ContactFormDto
+
+@section MetaData {
+    <meta name="robots" content="noimageindex" />
+}
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/Info">Info</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Kontakta<i class="bi bi-mailbox mx-1"></i></li>
+    </ol>
+</nav>
+
+<h2><i class="bi bi-mailbox"></i> @ViewData["Title"]</h2>
+
+<div id="page-content" class="brodtext">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100 d-flex flex-column">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> Kontaktinformation</h3>
+                </div>
+                <div class="card-body flex-grow-1">
+                    <p>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon.</p>
+                    
+                    <div class="mb-3">
+                        <h4><i class="bi bi-geo-alt-fill"></i> Adress</h4>
+                        <p class="ms-4">Hagmarksgatan 8, 70216 Örebro</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h4><i class="bi bi-telephone-fill"></i> Telefon</h4>
+                        <p class="ms-4"><a href="tel:019120412">019-12 04 12</a></p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h4><i class="bi bi-phone-fill"></i> Mobil</h4>
+                        <p class="ms-4"><a href="tel:0708120412">0708-12 04 12</a></p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h4><i class="bi bi-envelope-fill"></i> Epost</h4>
+                        <p class="ms-4"><a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <h4><i class="bi bi-facebook"></i> Facebook</h4>
+                        <div class="ms-4">
+                            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FArvidsonFoto%2F&tabs=timeline&width=300&height=70&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=true&appId=223060987754416" width="270" height="70" style="border: none;overflow: hidden;" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> Svarar vanligtvis inom 1-5 dagar
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
+                </div>
+                <div class="card-body">
+                    @* BLAZOR COMPONENT - Server-side rendering med interaktivitet *@
+                    <component type="typeof(ContactFormComponent)" 
+                               render-mode="ServerPrerendered" 
+                               param-ReturnPageUrl="@Model.ReturnPageUrl"
+                               param-MessagePlaceholder="@Model.MessagePlaceholder" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Blazor hanterar validering automatiskt - inget JavaScript behövs! *@

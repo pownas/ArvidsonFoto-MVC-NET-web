@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
@@ -25,6 +26,32 @@ public class MockContactService : IContactService
         kontakt.Id = _nextId++;
         _mockContactSubmissions.Add(kontakt);
         return true;
+    }
+
+    public Task<bool> SendContactMessageAsync(ContactFormDto contactForm)
+    {
+        if (contactForm == null || string.IsNullOrWhiteSpace(contactForm.Email))
+            return Task.FromResult(false);
+
+        // Validate CAPTCHA
+        if (contactForm.Code != "3568")
+            return Task.FromResult(false);
+
+        var kontakt = new TblKontakt
+        {
+            Id = _nextId++,
+            Name = contactForm.Name,
+            Email = contactForm.Email,
+            Subject = contactForm.Subject,
+            Message = contactForm.Message,
+            SourcePage = contactForm.ReturnPageUrl,
+            SubmitDate = contactForm.FormSubmitDate,
+            EmailSent = true,
+            ErrorMessage = string.Empty
+        };
+
+        _mockContactSubmissions.Add(kontakt);
+        return Task.FromResult(true);
     }
 
     // Helper methods for testing (not part of IContactService interface)

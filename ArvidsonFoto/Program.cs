@@ -127,6 +127,16 @@ public class Program
         services.AddControllersWithViews();
         services.AddRazorPages();
 
+        // ===== BLAZOR SERVER CONFIGURATION =====
+        services.AddServerSideBlazor(options =>
+        {
+            // Configure circuit options for better performance
+            options.DetailedErrors = environment.IsDevelopment();
+            options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+            options.DisconnectedCircuitMaxRetained = 100;
+            options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+        });
+
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
         services.AddOpenApi();
 
@@ -226,6 +236,9 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+        
+        // ===== BLAZOR ENDPOINTS =====
+        app.MapBlazorHub();
         
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
