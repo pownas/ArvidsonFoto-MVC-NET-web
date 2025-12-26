@@ -294,11 +294,12 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             else
             {
                 // Use old category path logic with category name
-                var categoryName = apiCategoryService.GetNameById(categoryID);
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
                     var categoryPath = GetOldCategoryPathForImage(image);
+                    // Get the actual category name for THIS image, not the search category
+                    var categoryName = apiCategoryService.GetNameById(image.ImageCategoryId ?? -1);
                     imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
                 }
                 return imageDtos;
