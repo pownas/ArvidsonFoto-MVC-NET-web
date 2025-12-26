@@ -47,4 +47,23 @@ public class ImageDto()
     /// <remarks> Används för att identifiera vilken kategori bilden tillhör, t.ex. 13 för Blåmes. </remarks>
     /// <example>13</example>
     public int CategoryId { get; set; } = -1; // Default value when not set
+
+    /// <summary>
+    /// Skapar en tom ImageDto med alla properties initialiserade
+    /// </summary>
+    /// <returns>En ny tom ImageDto</returns>
+    public static ImageDto CreateEmpty()
+    {
+        return new ImageDto
+        {
+            Name = string.Empty,
+            UrlCategory = string.Empty,
+            UrlImage = string.Empty,
+            DateImageTaken = null,
+            DateUploaded = null,
+            Description = string.Empty,
+            ImageId = -1,
+            CategoryId = -1
+        };
+    }
 }

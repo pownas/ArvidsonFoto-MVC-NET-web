@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ArvidsonFoto.Models;
+namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
 /// InputModel för att skapa Facebook-inlägg
 /// </summary>
-public class FacebookUploadInputModel
+public class FacebookUploadInputDto
 {
     /// <summary>
     /// Lista med valda bild-ID:n (1-10 bilder)
@@ -23,4 +23,17 @@ public class FacebookUploadInputModel
     [MaxLength(5000, ErrorMessage = "Meddelandet får max vara 5000 tecken")]
     [Display(Name = "Meddelande")]
     public string Message { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Skapar en tom FacebookUploadInputDto med alla properties initialiserade
+    /// </summary>
+    /// <returns>En ny tom FacebookUploadInputDto</returns>
+    public static FacebookUploadInputDto CreateEmpty()
+    {
+        return new FacebookUploadInputDto
+        {
+            SelectedImageIds = new List<int>(),
+            Message = string.Empty
+        };
+    }
 }

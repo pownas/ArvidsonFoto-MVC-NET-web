@@ -1,10 +1,10 @@
-﻿using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Services;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
 /// <summary>
-/// Mock implementation of IGuestBookService for unit testing.
+/// Mock implementation of IGuestBookService for unit testing using Core.Models
 /// </summary>
 public class MockGuestBookService : IGuestBookService
 {

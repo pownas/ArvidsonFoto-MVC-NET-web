@@ -1,6 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -10,7 +9,6 @@ namespace ArvidsonFoto.Controllers;
 
 public class InfoController : Controller
 {
-    private readonly ArvidsonFotoDbContext _oldContext;
     private readonly ArvidsonFotoCoreDbContext _coreContext;
     internal ICategoryService _categoryService;
     internal IImageService _imageService;
@@ -18,14 +16,13 @@ public class InfoController : Controller
     internal IPageCounterService _pageCounterService;
     internal IContactService _contactService;
 
-    public InfoController(ArvidsonFotoDbContext oldContext, ArvidsonFotoCoreDbContext coreContext)
+    public InfoController(ArvidsonFotoCoreDbContext coreContext)
     {
-        _oldContext = oldContext;
         _coreContext = coreContext;
-        _categoryService = new CategoryService(_oldContext);
-        _imageService = new ImageService(_oldContext);
-        _guestbookService = new GuestBookService(_oldContext);
-        _pageCounterService = new PageCounterService(_oldContext);
+        _categoryService = new CategoryService(_coreContext);
+        _imageService = new ImageService(_coreContext);
+        _guestbookService = new GuestBookService(_coreContext);
+        _pageCounterService = new PageCounterService(_coreContext);
         _contactService = new ContactService(_coreContext);
     }
 
@@ -37,7 +34,7 @@ public class InfoController : Controller
         return View();
     }
 
-    public IActionResult Gastbok(GuestbookInputModel inputModel)
+    public IActionResult Gastbok(GuestbookInputDto inputModel)
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
@@ -45,12 +42,7 @@ public class InfoController : Controller
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
         {
-            inputModel = new GuestbookInputModel()
-            {
-                FormSubmitDate = DateTime.Now,
-                DisplayPublished = false,
-                DisplayErrorPublish = false
-            };
+            inputModel = GuestbookInputDto.CreateEmpty();
         }
 
         return View(inputModel);
@@ -58,7 +50,7 @@ public class InfoController : Controller
 
     [HttpPost, ValidateAntiForgeryToken]
     [Route("Info/PostToGb")]
-    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputModel inputModel)
+    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");
         if (ModelState.IsValid)
@@ -80,7 +72,7 @@ public class InfoController : Controller
                     }
                 }
 
-                TblGb postToPublish = new TblGb()
+                Core.Models.TblGb postToPublish = new Core.Models.TblGb()
                 {
                     GbId = (_guestbookService.GetLastGbId() + 1),
                     GbName = inputModel.Name,
@@ -95,8 +87,17 @@ public class InfoController : Controller
                 if (_guestbookService.CreateGBpost(postToPublish))
                 {
                     Log.Information("GB-post, published OK.");
-                    inputModel = new GuestbookInputModel();
-                    inputModel.DisplayPublished = true;
+                    inputModel = new GuestbookInputDto
+                    {
+                        Code = string.Empty,
+                        Name = string.Empty,
+                        Email = string.Empty,
+                        Homepage = string.Empty,
+                        Message = string.Empty,
+                        FormSubmitDate = DateTime.Now,
+                        DisplayPublished = true,
+                        DisplayErrorPublish = false
+                    };
                 }
             }
             catch (Exception e)
@@ -108,10 +109,9 @@ public class InfoController : Controller
         }
         else
         {
-            //SKRIVS INTE UT???
-            Log.Fatal($"Name: '{inputModel.Name}' Email: '{inputModel.Email}' Homepage: '{inputModel.Homepage}'"); //SKRIVS INTE UT???
-            Log.Fatal($"GB-Message:\n {inputModel.Message}"); //SKRIVS INTE UT???
-            Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'."); //SKRIVS INTE UT???
+            Log.Fatal($"Name: '{inputModel.Name}' Email: '{inputModel.Email}' Homepage: '{inputModel.Homepage}'");
+            Log.Fatal($"GB-Message:\n {inputModel.Message}");
+            Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'.");
             inputModel.DisplayPublished = false;
         }
         return RedirectToAction("Gastbok", inputModel);
@@ -119,7 +119,7 @@ public class InfoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormModel contactFormModel, string Page)
+    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormDto contactFormModel, string Page)
     {
         if (ModelState.IsValid)
         {
@@ -138,7 +138,6 @@ public class InfoController : Controller
                 var fromName = Page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
                 message.To.Add(new MailboxAddress(fromName, svc_smtpadress));
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
                 message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
@@ -152,11 +151,7 @@ public class InfoController : Controller
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(svc_mailServer, 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
-                    //client.Connect(svc_mailServer, 465, true); //Alternativ anslutning, mindre säker...
-                    //client.Connect(svc_mailServer, 587, false); //Alternativ anslutning, mindre säker...
-
-                    // Note: only needed if the SMTP server requires authentication
+                    client.Connect(svc_mailServer, 587, SecureSocketOptions.StartTls);
                     client.Authenticate(svc_smtpadress, svc_smtppwd);
                     client.Send(message);
                     client.Disconnect(true);
@@ -164,8 +159,13 @@ public class InfoController : Controller
                     emailSent = true;
                 }
 
-                contactFormModel = new ContactFormModel()
+                contactFormModel = new ContactFormDto()
                 {
+                    Code = string.Empty,
+                    Email = string.Empty,
+                    Name = string.Empty,
+                    Subject = string.Empty,
+                    Message = string.Empty,
                     DisplayEmailSent = true,
                     FormSubmitDate = DateTime.Now,
                     ReturnPageUrl = Page
@@ -182,7 +182,7 @@ public class InfoController : Controller
             // Save to database as backup (regardless of email success/failure)
             try
             {
-                var kontaktRecord = new ArvidsonFoto.Core.Models.TblKontakt
+                var kontaktRecord = new Core.Models.TblKontakt
                 {
                     SubmitDate = DateTime.Now,
                     Name = contactFormModel.Name,
@@ -224,7 +224,7 @@ public class InfoController : Controller
         }
     }
 
-    public IActionResult Kontakta(ContactFormModel contactFormModel)
+    public IActionResult Kontakta(ContactFormDto contactFormModel)
     {
         ViewData["Title"] = "Kontaktinformation";
         if (User?.Identity?.IsAuthenticated is false)
@@ -244,8 +244,13 @@ public class InfoController : Controller
 
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormModel()
+            contactFormModel = new ContactFormDto()
             {
+                Code = string.Empty,
+                Email = string.Empty,
+                Name = string.Empty,
+                Subject = string.Empty,
+                Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
                 MessagePlaceholder = "Meddelande \n (Skriv gärna vad ni önskar kontakt om)", // \n = newLine
                 DisplayEmailSent = false,
@@ -255,14 +260,13 @@ public class InfoController : Controller
         }
         else
         {
-            // Preserve the ReturnPageUrl
             contactFormModel.ReturnPageUrl = "Kontakta";
         }
 
         return View(contactFormModel);
     }
 
-    public IActionResult Kop_av_bilder(ContactFormModel contactFormModel, string imgId)
+    public IActionResult Kop_av_bilder(ContactFormDto contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
@@ -282,8 +286,13 @@ public class InfoController : Controller
         
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormModel()
+            contactFormModel = new ContactFormDto()
             {
+                Code = string.Empty,
+                Email = string.Empty,
+                Name = string.Empty,
+                Subject = string.Empty,
+                Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
                 MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
                 DisplayEmailSent = false,
@@ -296,19 +305,18 @@ public class InfoController : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    var imageArt = _categoryService.GetNameById(image.ImageArt);
+                    var imageArt = _categoryService.GetNameById(image.ImageCategoryId);
 
-                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.ImageUrl + ".jpg";
+                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.ImageUrlName + ".jpg";
                 }
                 catch (Exception)
                 {
-
+                    // Ignore errors when trying to pre-fill message
                 }
             }
         }
         else
         {
-            // Preserve the ReturnPageUrl
             contactFormModel.ReturnPageUrl = "Kop_av_bilder";
         }
 

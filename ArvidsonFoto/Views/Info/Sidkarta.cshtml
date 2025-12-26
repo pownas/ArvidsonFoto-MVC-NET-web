@@ -1,10 +1,11 @@
-﻿@section MetaData {
+﻿@using ArvidsonFoto.Core.Models
+@section MetaData {
     <meta name="robots" content="noimageindex" />
 }
 
 @inject ICategoryService _categoryService
 @{
-    List<TblMenu> categories = _categoryService.GetAll();
+    List<ArvidsonFoto.Core.Models.TblMenu> categories = _categoryService.GetAll();
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
@@ -28,7 +29,6 @@
             <li><i class="bi bi-arrow-bar-right"></i> <a href="./Senast/Fotograferad"><i class="fa fa-camera-retro" aria-hidden="true"></i> Fotograferad</a></li>
             <li><i class="bi bi-arrow-bar-right"></i> <a href="./Senast/Uppladdad"><i class="fa fa-upload" aria-hidden="true"></i> Uppladdad</a></li>
             <li><i class="bi bi-arrow-return-right"></i> <a href="./Senast/Per kategori"><i class="fa fa-plus-square-o" aria-hidden="true"></i> Per kategori</a></li>
-            @*<li><a href="/Senast/Bildkalender/"><i class="fa fa-calendar"></i> Bildkalender</a></li> <!-- //Kräver inloggning -->*@
         </ul>
     </li>
     @if (_categoryService == null || categories == null)
@@ -36,39 +36,34 @@
         <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
         <li><a href="./Bilder/Fåglar">Fåglar</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
         <li><a href="./Bilder/Insekter">Insekter</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Kräldjur">Kräldjur</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Landskap">Landskap</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Resor">Resor</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Växter">Växter</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Årstider">Årstider</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
     }
     else
     {
-        var headMenu = categories.Where(m => m.MenuMainId == 0).ToList(); //Hämtar alla kategorier till en lista. Observera att denna har egen sortering och INTE: .OrderBy(m => m.MenuText)
+        var headMenu = categories.Where(m => m.MenuParentCategoryId == 0 || m.MenuParentCategoryId == null).ToList();
         if (headMenu != null && headMenu.Count > 0)
         {
-            var lastHeadMenuItem = headMenu.Last(); //Lagrar det sista itemet i listan i en variabel.
+            var lastHeadMenuItem = headMenu.Last();
             foreach (var headItem in headMenu)
             {
                 <li>
                     @{
-                        var sub1Menu = categories.Where(m => m.MenuMainId == headItem.MenuId).OrderBy(m => m.MenuText).ToList();
+                        var sub1Menu = categories.Where(m => m.MenuParentCategoryId == headItem.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
                         if (sub1Menu != null && sub1Menu.Count > 0)
                         {
-                            var lastSub1MenuItem = sub1Menu.Last(); //Lagrar det sista itemet i listan i en variabel.
-                            if (headItem.MenuText == "Fåglar") //Om det är "Fåglar" så ska det inte vara någon klickbar HREF:
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/Fåglar" title="@headItem.MenuText">@headItem.MenuText</a> }
+                            var lastSub1MenuItem = sub1Menu.Last();
+                            if (headItem.MenuDisplayName == "Fåglar")
+                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/Fåglar" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> }
                             else
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> }
+                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/@headItem.MenuDisplayName" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> }
                     <ul class="sitemap sub1Menu">
                         @foreach (var sub1Item in sub1Menu)
                         {
                         <li>
                             @{
-                                var sub2Menu = categories.Where(m => m.MenuMainId == sub1Item.MenuId).OrderBy(m => m.MenuText).ToList();
+                                var sub2Menu = categories.Where(m => m.MenuParentCategoryId == sub1Item.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
                                 if (sub2Menu != null && sub2Menu.Count > 0)
                                 {
-                                    var lastSub2MenuItem = sub2Menu.Last(); //Lagrar det sista itemet i listan i en variabel.
+                                    var lastSub2MenuItem = sub2Menu.Last();
                                     if (sub1Item.Equals(lastSub1MenuItem))
                                     {
                                         <i class="bi bi-arrow-return-right"></i>
@@ -76,16 +71,16 @@
                                     else
                                     {
                                         <i class="bi bi-arrow-bar-right"></i>
-                                    } <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a>
+                                    } <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName" title="@sub1Item.MenuDisplayName">@sub1Item.MenuDisplayName</a>
                                     <ul class="sitemap sub2Menu">
                                         @foreach (var sub2Item in sub2Menu)
                                         {
                                             <li>
                                                 @{
-                                                    var sub3Menu = categories.Where(m => m.MenuMainId == sub2Item.MenuId).OrderBy(m => m.MenuText).ToList();
+                                                    var sub3Menu = categories.Where(m => m.MenuParentCategoryId == sub2Item.MenuCategoryId).OrderBy(m => m.MenuDisplayName).ToList();
                                                     if (sub3Menu != null && sub3Menu.Count > 0)
                                                     {
-                                                        var lastSub3MenuItem = sub3Menu.Last(); //Lagrar det sista itemet i listan i en variabel.
+                                                        var lastSub3MenuItem = sub3Menu.Last();
                                                         if (sub2Item.Equals(lastSub2MenuItem))
                                                         {
                                                             <i class="bi bi-arrow-return-right"></i>
@@ -93,7 +88,7 @@
                                                         else
                                                         {
                                                             <i class="bi bi-arrow-bar-right"></i>
-                                                        } <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a>
+                                                        } <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName" title="@sub2Item.MenuDisplayName">@sub2Item.MenuDisplayName</a>
                                                         <ul class="sitemap sub3Menu">
                                                             @foreach (var sub3Item in sub3Menu)
                                                             {
@@ -106,7 +101,7 @@
                                                                     {
                                                                         <i class="bi bi-arrow-bar-right"></i>
                                                                     }
-                                                                    <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText/@sub3Item.MenuText" title="@sub3Item.MenuText">@sub3Item.MenuText</a>
+                                                                    <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName/@sub3Item.MenuDisplayName" title="@sub3Item.MenuDisplayName">@sub3Item.MenuDisplayName</a>
                                                                 </li>
                                                             }
                                                         </ul>
@@ -121,7 +116,7 @@
                                                         {
                                                             <i class="bi bi-arrow-bar-right"></i>
                                                         }
-                                                        <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText/@sub2Item.MenuText" title="@sub2Item.MenuText">@sub2Item.MenuText</a>
+                                                        <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName/@sub2Item.MenuDisplayName" title="@sub2Item.MenuDisplayName">@sub2Item.MenuDisplayName</a>
                                                     }
                                                 }
                                             </li>
@@ -138,7 +133,7 @@
                                     {
                                         <i class="bi bi-arrow-bar-right"></i>
                                     }
-                                    <a href="./Bilder/@headItem.MenuText/@sub1Item.MenuText" title="@sub1Item.MenuText">@sub1Item.MenuText</a>
+                                    <a href="./Bilder/@headItem.MenuDisplayName/@sub1Item.MenuDisplayName" title="@sub1Item.MenuDisplayName">@sub1Item.MenuDisplayName</a>
                                 }
                             }
                         </li>
@@ -155,7 +150,7 @@
                     {
                         <i class="bi bi-arrow-bar-right"></i>
                     }
-                    <a href="./Bilder/@headItem.MenuText" title="@headItem.MenuText">@headItem.MenuText</a> 
+                    <a href="./Bilder/@headItem.MenuDisplayName" title="@headItem.MenuDisplayName">@headItem.MenuDisplayName</a> 
                 }
                 }
                 </li>

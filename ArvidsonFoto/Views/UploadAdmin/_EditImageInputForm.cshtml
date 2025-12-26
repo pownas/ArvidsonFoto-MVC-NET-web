@@ -1,10 +1,11 @@
-﻿@model UploadImageInputModel
+﻿@using ArvidsonFoto.Core.Models
+@model UploadImageInputModel
 @inject ICategoryService _categoryService
 
 @{
     string imgThumbSrc = Model.ImageUrlFullSrc + ".thumb.jpg";
 
-    TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
+    ArvidsonFoto.Core.Models.TblMenu selectedCategory = _categoryService.GetById(Model.ImageArt);
 }
 
 <form method="post" asp-controller="UploadAdmin" asp-action="@(nameof(UploadAdminController.EditImageLink))">
@@ -15,37 +16,14 @@
         <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
             <input asp-for="ImageHuvudfamilj" hidden />
-            @*<label asp-for="ImageHuvudfamilj" class="control-label">Huvudfamilj: @Model.ImageHuvudfamiljNamn</label>*@
             <input asp-for="ImageFamilj" hidden />
-            @*<label asp-for="ImageFamilj" class="control-label">Familj: @Model.ImageFamiljNamn</label>*@
             <input asp-for="ImageArt" hidden />
             <input asp-for="ImageId" hidden />
-            @*<label asp-for="ImageArt" class="control-label">Art: @Model.ImageArtNamn</label>*@
             <p><strong>Bildnummer:</strong> @Model.ImageId</p>
             <p><strong>Art:</strong> @Model.ImageArtNamn</p>
             <p class="m-0">Är det fel art?</p>
             <p>Då behöver du <a title="Radera" class="text-danger" data-bs-toggle="modal" data-bs-target="#DeleteImage-@Model.ImageId">Radera</a> och göra en ny länkning.</p>
         </div>
-        @*<div class="form-group"> <!-- Listar alla Arter i en dropdown-list -->
-            <label asp-for="ImageArt" class="control-label">Art</label>
-            <div>
-                <select asp-for="ImageArt" class="form-control">
-
-                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.MenuText))
-                    {
-                        if (category.Equals(selectedCategory))
-                        {
-                            <option selected value="@Model.ImageArt">@Model.ImageArtNamn</option>
-                        }
-                        else
-                        {
-                            <option value="@category.MenuId">@category.MenuText</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="ImageArt"></span>
-            </div>
-        </div>*@
         <div class="form-group">
             <label asp-for="ImageUrl" class="control-label"></label>
             <div>
@@ -72,13 +50,8 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Avbryt <i class="bi bi-x-circle"></i>
         </button>
-        @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-primary text-white">
-            Spara ändring <i class="bi bi-pencil-square"></i> (fungerar ej)
-        </a>*@
-        @*<div class="m-3 p-2">*@
         <button id="SubmitButton" type="submit" class="btn btn-primary text-white">
             Spara ändring <i class="bi bi-pencil-square"></i>
         </button>
-        @*</div>*@
     </div>
 </form>

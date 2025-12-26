@@ -1,4 +1,5 @@
 ﻿@using System.Web
+@using ArvidsonFoto.Core.Models
 @model GuestbookInputModel
 
 @section MetaData {
@@ -9,7 +10,7 @@
 
 @inject IGuestBookService _guestBookService
 @{
-    List<TblGb> gbListView = _guestBookService.GetAll();
+    List<ArvidsonFoto.Core.Models.TblGb> gbListView = _guestBookService.GetAll();
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">

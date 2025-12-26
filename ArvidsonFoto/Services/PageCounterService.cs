@@ -1,12 +1,17 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Models;
+using Serilog;
 
 namespace ArvidsonFoto.Services;
 
+/// <summary>
+/// Legacy page counter service - migrated to use Core namespace
+/// </summary>
 public class PageCounterService : IPageCounterService
 {
-    private readonly ArvidsonFotoDbContext _entityContext;
-    public PageCounterService(ArvidsonFotoDbContext context)
+    private readonly ArvidsonFotoCoreDbContext _entityContext;
+    
+    public PageCounterService(ArvidsonFotoCoreDbContext context)
     {
         _entityContext = context;
     }
@@ -22,10 +27,10 @@ public class PageCounterService : IPageCounterService
             bool notExist = true;
             foreach (var item in tblPageCounters)
             {
-                if (item.PageName.Equals(pageName) && item.MonthViewed.Equals(monthViewed))
+                if (item.PageName != null && item.PageName.Equals(pageName) && item.MonthViewed != null && item.MonthViewed.Equals(monthViewed))
                 {
                     notExist = false;
-                    item.PageViews += 1;
+                    item.PageViews = item.PageViews + 1;
                     item.LastShowDate = DateTime.Now;
                 }
             }
@@ -44,7 +49,7 @@ public class PageCounterService : IPageCounterService
                 _entityContext.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChanges();
+            _entityContext.SaveChangesAsync().Wait();
         }
         catch (Exception ex)
         {
@@ -55,24 +60,24 @@ public class PageCounterService : IPageCounterService
     public void AddCategoryCount(int categoryId, string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
-        List<TblPageCounter> tblPageCounters = _entityContext.TblPageCounter
-                                                             .Where(p => p.PicturePage == true && p.MonthViewed == monthViewed)
-                                                             .ToList();
+        
         try
         {
-            bool notExist = true;
-            foreach (var item in tblPageCounters)
+            // Check if the record already exists
+            var existingCounter = _entityContext.TblPageCounter
+                .FirstOrDefault(p => p.PicturePage == true 
+                                  && p.CategoryId == categoryId 
+                                  && p.MonthViewed == monthViewed);
+            
+            if (existingCounter != null)
             {
-                if (item.CategoryId.Equals(categoryId) && item.MonthViewed.Equals(monthViewed))
-                {
-                    notExist = false;
-                    item.PageViews += 1;
-                    item.LastShowDate = DateTime.Now;
-                }
+                // Update existing record
+                existingCounter.PageViews = existingCounter.PageViews + 1;
+                existingCounter.LastShowDate = DateTime.Now;
             }
-
-            if (notExist)
+            else
             {
+                // Create new record
                 TblPageCounter pageCounter = new TblPageCounter()
                 {
                     MonthViewed = monthViewed,
@@ -85,7 +90,7 @@ public class PageCounterService : IPageCounterService
                 _entityContext.TblPageCounter.Add(pageCounter);
             }
 
-            _entityContext.SaveChanges();
+            _entityContext.SaveChangesAsync().Wait();
         }
         catch (Exception ex)
         {
@@ -95,39 +100,34 @@ public class PageCounterService : IPageCounterService
 
     public List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage)
     {
-        List<TblPageCounter> listToReturn = new List<TblPageCounter>();
-        listToReturn = _entityContext.TblPageCounter
-                                     .Where(p => p.MonthViewed.Equals(yearMonth) && p.PicturePage == picturePage)
-                                     .OrderByDescending(p => p.PageViews)
-                                     .ToList();
-        return listToReturn;
+        return _entityContext.TblPageCounter
+                             .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
+                             .OrderByDescending(p => p.PageViews)
+                             .ToList();
     }
 
     public List<TblPageCounter> GetAllPageCountsGroupedByPageCount()
     {
         List<TblPageCounter> listToReturn = new List<TblPageCounter>();
         var listOfPages = _entityContext.TblPageCounter
-                                        //.Where(p => p.PicturePage == false) //För att bara se sidor och inte bild-kategorier...
+                                        .Where(p => p.PageName != null)
                                         .Select(p => p.PageName)
                                         .Distinct()
                                         .ToList();
 
         for (int i = 0; i < listOfPages.Count; i++)
         {
+            var pageName = listOfPages[i];
             TblPageCounter aCountedPage = new TblPageCounter()
             {
                 Id = i + 1,
-                PageName = listOfPages[i],
-                PageViews = _entityContext.TblPageCounter.Where(p => p.PageName.Equals(listOfPages[i])).Sum(p => p.PageViews),
-                LastShowDate = _entityContext.TblPageCounter.Where(p => p.PageName.Equals(listOfPages[i])).Max(p => p.LastShowDate)
+                PageName = pageName,
+                PageViews = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Sum(p => p.PageViews),
+                LastShowDate = _entityContext.TblPageCounter.Where(p => p.PageName == pageName).Max(p => p.LastShowDate)
             };
 
             listToReturn.Add(aCountedPage);
         }
-
-        //Tidigare SQL-frågan som delats upp i PageViews och LastShowDate ovan...
-        //var SQLquery = "SELECT SUM(PageCounter_Views) AS PageCounter_Views, PageCounter_Name, MAX(PageCounter_LastShowDate) AS PageCounter_LastShowDate FROM tbl_PageCounter GROUP BY PageCounter_Name ORDER BY PageCounter_Views DESC";
-        //var groupedList = _entityContext.TblPageCounter.FromSqlRaw(SQLquery).ToList();
 
         return listToReturn.OrderByDescending(p => p.PageViews).ToList();
     }
@@ -148,7 +148,7 @@ public class PageCounterService : IPageCounterService
             var yearMonth = targetDate.ToString("yyyy-MM");
             
             var monthlyViews = _entityContext.TblPageCounter
-                                            .Where(p => p.MonthViewed.Equals(yearMonth) && p.PicturePage == picturePage)
+                                            .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
                                             .Sum(p => p.PageViews);
             
             result[yearMonth] = monthlyViews;

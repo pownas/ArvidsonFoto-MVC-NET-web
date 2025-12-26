@@ -1,23 +1,24 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Services;
 
+/// <summary>
+/// Legacy guestbook service - migrated to use Core namespace
+/// </summary>
 public class GuestBookService : IGuestBookService
 {
-    // Databas koppling
-    private readonly ArvidsonFotoDbContext _entityContext;
+    // Databas koppling - uppdaterad till Core.Data
+    private readonly ArvidsonFotoCoreDbContext _entityContext;
 
-    public GuestBookService(ArvidsonFotoDbContext context)
+    public GuestBookService(ArvidsonFotoCoreDbContext context)
     {
         _entityContext = context;
     }
 
     public List<TblGb> GetAll()
     {
-        List<TblGb> gbPosts;
-        gbPosts = _entityContext.TblGbs.OrderByDescending(g => g.GbId).ToList();
-        return gbPosts;
+        return _entityContext.TblGbs.OrderByDescending(g => g.GbId).ToList();
     }
 
     public bool CreateGBpost(TblGb gb)
@@ -42,10 +43,13 @@ public class GuestBookService : IGuestBookService
         bool succeeded = false;
         try
         {
-            TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
-            gb!.GbReadPost = true;
-            _entityContext.SaveChanges();
-            succeeded = true;
+            TblGb? gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
+            if (gb != null)
+            {
+                gb.GbReadPost = true;
+                _entityContext.SaveChanges();
+                succeeded = true;
+            }
         }
         catch (Exception ex)
         {
@@ -60,10 +64,13 @@ public class GuestBookService : IGuestBookService
         bool succeeded = false;
         try
         {
-            TblGb gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
-            _entityContext.TblGbs.Remove(gb!);
-            _entityContext.SaveChanges();
-            succeeded = true;
+            TblGb? gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
+            if (gb != null)
+            {
+                _entityContext.TblGbs.Remove(gb);
+                _entityContext.SaveChanges();
+                succeeded = true;
+            }
         }
         catch (Exception ex)
         {
@@ -78,7 +85,7 @@ public class GuestBookService : IGuestBookService
         int postCount = 0;
         try
         {
-            postCount = _entityContext.TblGbs.Count(gb => gb.GbReadPost == null || gb.GbReadPost.Equals(false));
+            postCount = _entityContext.TblGbs.Count(gb => gb.GbReadPost == null || gb.GbReadPost == false);
         }
         catch (Exception ex)
         {
@@ -90,9 +97,14 @@ public class GuestBookService : IGuestBookService
 
     public int GetLastGbId()
     {
-        int idToReturn = _entityContext.TblGbs.Max(gb => gb.GbId);
-        if (idToReturn is 0)
-            idToReturn = -1;
-        return idToReturn;
+        try
+        {
+            var maxId = _entityContext.TblGbs.Max(gb => (int?)gb.GbId);
+            return maxId ?? -1;
+        }
+        catch
+        {
+            return -1;
+        }
     }
 }

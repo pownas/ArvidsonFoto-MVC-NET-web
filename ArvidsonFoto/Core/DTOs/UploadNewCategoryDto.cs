@@ -21,4 +21,18 @@ public class UploadNewCategoryDto
 
     /// <summary>Indikerar om kategorin har skapats framgångsrikt</summary>
     public bool CategoryCreated { get; set; }
+
+    /// <summary>
+    /// Skapar en tom UploadNewCategoryDto med alla required fields initialiserade
+    /// </summary>
+    /// <returns>En ny tom UploadNewCategoryDto</returns>
+    public static UploadNewCategoryDto CreateEmpty()
+    {
+        return new UploadNewCategoryDto
+        {
+            MenuText = string.Empty,
+            MainMenuId = null,
+            CategoryCreated = false
+        };
+    }
 }

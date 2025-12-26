@@ -1,24 +1,21 @@
-﻿using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.DTOs;
 
 namespace ArvidsonFoto.Services;
 
+/// <summary>
+/// Legacy image service interface - migrated to use Core namespace
+/// </summary>
+/// <remarks>
+/// Consider migrating to ApiImageService for new functionality
+/// </remarks>
 public interface IImageService
 {
-    public bool AddImage(TblImage image);
-
-    public bool UpdateImage(UploadImageInputModel image);
-
-    bool DeleteImgId(int imgId);
-
-    int GetImageLastId();
-
-    TblImage GetById(int imageId);
-
-    TblImage GetOneImageFromCategory(int category);
-
+    TblImage GetById(int id);
+    TblImage GetOneImageFromCategory(int categoryID);
     List<TblImage> GetAll();
-
-    List<TblImage> GetRandomNumberOfImages(int count);
-
     List<TblImage> GetAllImagesByCategoryID(int categoryID);
+    bool AddImage(TblImage image);
+    bool UpdateImage(UploadImageInputDto image);
+    bool RemoveImage(int imageID);
 }

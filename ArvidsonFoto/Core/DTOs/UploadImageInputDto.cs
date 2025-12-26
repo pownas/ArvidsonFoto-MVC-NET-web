@@ -44,7 +44,7 @@ public class UploadImageInputDto
     /// <remarks>
     /// Dock utan ".thumb.jpg" eller ".jpg", på slutet
     /// </remarks>
-    public required string ImageUrlFullSrc { get; set; } = "";
+    public string ImageUrlFullSrc { get; set; } = "";
 
     /// <summary>Datum då bilden togs</summary>
     [Display(Name = "Fotodatum")]
@@ -63,4 +63,28 @@ public class UploadImageInputDto
 
     /// <summary>Datum och tid när bilden senast uppdaterades</summary>
     public DateTime ImageUpdate { get; set; }
+
+    /// <summary>
+    /// Skapar en tom UploadImageInputDto med alla required fields initialiserade
+    /// </summary>
+    /// <returns>En ny tom UploadImageInputDto</returns>
+    public static UploadImageInputDto CreateEmpty()
+    {
+        return new UploadImageInputDto
+        {
+            ImageId = 0,
+            ImageHuvudfamilj = null,
+            ImageHuvudfamiljNamn = string.Empty,
+            ImageFamilj = null,
+            ImageFamiljNamn = string.Empty,
+            ImageArt = 0,
+            ImageArtNamn = string.Empty,
+            ImageUrl = string.Empty,
+            ImageUrlFullSrc = string.Empty,
+            ImageDate = DateTime.Now,
+            ImageDescription = string.Empty,
+            ImageCreated = false,
+            ImageUpdate = DateTime.Now
+        };
+    }
 }

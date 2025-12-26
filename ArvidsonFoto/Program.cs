@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using ArvidsonFoto.Data;
 using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Data;
@@ -18,8 +17,7 @@ public class Program
         // Configure Serilog
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            //.WriteTo.Console() //Kräver nuget paketet: Serilog.Sinks.Console
-            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day) //Bör kanske försöka byta till Serilog DB-loggning...
+            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
         try
@@ -56,7 +54,7 @@ public class Program
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        // Database configuration
+        // Database configuration - ONLY Core DbContext now
         var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
                            configuration.GetConnectionString("UseInMemoryDatabase") == "true";
@@ -64,8 +62,6 @@ public class Program
         if (useInMemoryDb)
         {
             // Use In-Memory database in Codespaces or when configured
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
-                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
             services.AddDbContext<IdentityContext>(options =>
@@ -75,8 +71,6 @@ public class Program
         {
             // Use SQL Server locally
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
-                options.UseSqlServer(connectionString));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddDbContext<IdentityContext>(options =>
@@ -87,11 +81,12 @@ public class Program
         services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<IdentityContext>();
 
-        // Add frontend services
+        // Add frontend services - all using Core now
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
+        services.AddScoped<IContactService, ContactService>();
         services.AddScoped<IFacebookService, FacebookService>();
 
         // Add HttpClient for FacebookService
@@ -187,7 +182,6 @@ public class Program
         else
         {
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-            //app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }

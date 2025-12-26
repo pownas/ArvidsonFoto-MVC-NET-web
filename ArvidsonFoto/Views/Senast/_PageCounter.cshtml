@@ -31,7 +31,7 @@
 @if (Model.AllImagesList.Count > 0)
 {
     <p class="text-center">
-        Antal @if (Model.SelectedCategory.MenuText.Equals("Per kategori"))
+        Antal @if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Equals("Per kategori"))
         {<text>kategorier</text> }
     else
     { <text>bilder</text>}: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages

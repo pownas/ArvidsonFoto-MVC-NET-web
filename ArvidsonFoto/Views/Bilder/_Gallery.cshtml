@@ -1,10 +1,10 @@
 ﻿@model GalleryViewModel
 @inject IImageService _imageService
-@inject ICategoryService _categoryService
+@using ArvidsonFoto.Core.DTOs
 @using System.Net
 @{
     string bilder = "https://arvidsonfoto.se/Bilder";
-    List<TblImage> imageList = Model!.DisplayImagesList; //Hämtar (x)-antal bilder att visa på startsidan
+    List<ImageDto> imageList = Model!.DisplayImagesList;
 
     int imageCount = 0;
     if (imageList is not null)
@@ -51,10 +51,6 @@
         </div>
     }
 }
-else if (Model.ErrorMessage is not null)
-{
-    <p>Något gick fel... Felmeddelande: @Model.ErrorMessage</p>
-}
 else
 {
     <div id="gallery" class="row">
@@ -63,33 +59,20 @@ else
         {
             string customDesc = "custom-desc" + index;
 
-            string imgHref = bilder;
-            string imgTitle = _categoryService.GetNameById(img.ImageArt);
+            string imgHref = img.UrlCategory ?? bilder;
+            string imgTitle = img.Name ?? "Bild";
             string imgDesc = "";
 
-            if (String.IsNullOrWhiteSpace(img.ImageDescription) is false)
-                imgDesc = ", " + img.ImageDescription + ".";
+            if (String.IsNullOrWhiteSpace(img.Description) is false)
+                imgDesc = ", " + img.Description + ".";
 
-            if (img.ImageHuvudfamilj.HasValue)
-                imgHref += "/" + _categoryService.GetNameById(img.ImageHuvudfamilj);
-            if (img.ImageFamilj.HasValue)
-                imgHref += "/" + _categoryService.GetNameById(img.ImageFamilj);
-
-            imgHref += "/" + imgTitle;
-
-            if(img.Name is not null)
-            {
-                imgTitle = img.Name;
-            }
-
-            string imgThumbSrc = imgHref + "/" + img.ImageUrl + ".thumb.jpg";
-
-            string imgName = img.ImageUrl + ".jpg";
+            string imgThumbSrc = imgHref + "/" + img.UrlImage + ".thumb.jpg";
+            string imgName = img.UrlImage + ".jpg";
             string imgSrc = imgHref + "/" + imgName;
 
-            DateTime imgDate = img.ImageDate ?? new DateTime(1900, 01, 01);
+            DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
 
-            if (Model.SelectedCategory is not null && Model.SelectedCategory.MenuUrltext is not null && Model.SelectedCategory.MenuUrltext.Equals("/Search"))
+            if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPath is not null && Model.SelectedCategory.UrlCategoryPath.Equals("/Search"))
             {
                 <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                     <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
@@ -110,7 +93,7 @@ Tryck för att förstora">
                 </figure>
 
                 <div class="glightbox-desc row @customDesc">
-                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p> @* Rätta DateTime , så denna går att använda: @img.ImageDate.ToShortDateString() *@
+                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
                     <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
                 </div>
             }

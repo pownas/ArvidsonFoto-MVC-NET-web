@@ -1,6 +1,5 @@
 ﻿using ArvidsonFoto.Controllers;
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +13,12 @@ public class BilderControllerTests
     public BilderControllerTests()
     {
         var mockImageService = new MockImageService();
-        var mockCategoryService = new MockCategoryService();
+        var mockApiCategoryService = new MockApiCategoryService();
         var mockPageCounterService = new MockPageCounterService();
 
         _controller = new BilderController(
             mockImageService,
-            mockCategoryService,
+            mockApiCategoryService,
             mockPageCounterService);
 
         var httpContext = new DefaultHttpContext();
@@ -50,7 +49,7 @@ public class BilderControllerTests
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
         Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Fåglar", model.SelectedCategory.MenuText);
+        Assert.Equal("Fåglar", model.SelectedCategory.Name);
     }
 
     [Fact]
@@ -70,7 +69,7 @@ public class BilderControllerTests
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
         Assert.Equal("/Bilder/Tattingar/Mesar/Blames", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Blåmes", model.SelectedCategory.MenuText);
+        Assert.Equal("Blåmes", model.SelectedCategory.Name);
     }
 
     [Fact]
@@ -120,7 +119,7 @@ public class BilderControllerTests
     [Fact]
     public void Search_ReturnsViewResult_WithGalleryViewModel()
     {
-        // Arrange - Sök efter riktig kategori från DbSeederExtension
+        // Arrange - Sök efter riktigt kategori från DbSeederExtension
         string searchString = "Fåglar";
 
         // Act

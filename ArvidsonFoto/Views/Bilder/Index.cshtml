@@ -6,49 +6,49 @@
         int pageImgCount = Model!.AllImagesList is not null ? Model.AllImagesList.Count : 0;
     }
     <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st" />
-    @*<meta name="keywords" content="Bilder, Djur, Natur"> <!-- Här ska det sedan in sökord som ska också in i databasen och hämtas därifrån -->*@
     <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
 }
 
 @inject IImageService _imageService
-@inject ICategoryService _categoryService
+@inject IApiCategoryService _categoryService
+@using ArvidsonFoto.Core.Interfaces
+@using ArvidsonFoto.Core.DTOs
 @using System.Net
 @{
-    List<TblMenu> subCategories = new List<TblMenu>();
+    List<CategoryDto> subCategories = new List<CategoryDto>();
     try
     {
-        subCategories = _categoryService.GetSubsList(Model!.SelectedCategory.MenuId)
-                                        .OrderBy(c => c.MenuText)
+        subCategories = _categoryService.GetSubsList(Model!.SelectedCategory.CategoryId ?? 0)
+                                        .OrderBy(c => c.Name)
                                         .ToList();
 
-        if (Model.SelectedCategory.MenuText.Length > 0 || Model.SelectedCategory is null)
-            ViewData["Title"] = Model.SelectedCategory!.MenuText;
+        if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Length > 0 || Model.SelectedCategory is null)
+            ViewData["Title"] = Model.SelectedCategory!.Name;
         else
             ViewData["Title"] = "Ingen kategori skickades med...";
     }
     catch (Exception ex)
     {
         Model!.ErrorMessage = ex.Message;
-        //Log.Warning("Minor error on Galleryshow... URL: " + Model.CurrentUrl + " . Error-message: " + ex.Message);
         ViewData["Title"] = "Bilder-sidan hittades inte";
     }
     
     // Helper function to get popover attributes for a category
-    string GetPopoverAttributes(TblMenu category, string imagePath)
+    string GetPopoverAttributes(CategoryDto category, string imagePath)
     {
-        var image = _imageService.GetOneImageFromCategory(category.MenuId);
-        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrl))
+        var image = _imageService.GetOneImageFromCategory(category.CategoryId ?? 0);
+        if (image == null || string.IsNullOrWhiteSpace(image.ImageUrlName))
         {
             return "";
         }
         
         // Sanitize the image URL to prevent path traversal
-        string safeImageUrl = image.ImageUrl.Replace("..", "").Replace("\\", "/");
+        string safeImageUrl = image.ImageUrlName.Replace("..", "").Replace("\\", "/");
         
         string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
         
         // Build the popover content - escape the values but not the HTML structure
-        string escapedCategoryName = WebUtility.HtmlEncode(category.MenuText);
+        string escapedCategoryName = WebUtility.HtmlEncode(category.Name);
         string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
         string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
         
@@ -80,9 +80,9 @@
     </ol>
 </nav>
 
-@if (Model.SelectedCategory is not null) //Mest för att det ska gå att se vilket ID som är valt på sidan...
+@if (Model.SelectedCategory is not null)
 {
-    <h2 id="MenuId-@Model.SelectedCategory.MenuId">@ViewData["Title"]</h2>
+    <h2 id="CategoryId-@Model.SelectedCategory.CategoryId">@ViewData["Title"]</h2>
 }
 else
 {
@@ -98,9 +98,9 @@ else
     <div class="categories">
     @foreach (var category in subCategories)
     {
-        string imgPath = "https://arvidsonfoto.se" + Model.CurrentUrl + "/" + category.MenuText;
+        string imgPath = "https://arvidsonfoto.se" + Model.CurrentUrl + "/" + category.Name;
         string popoverAttrs = GetPopoverAttributes(category, imgPath);
-        <a id="MenuId-@category.MenuId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)" @Html.Raw(popoverAttrs)>@category.MenuText</a>
+        <a id="MenuId-@category.CategoryId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.Name)" @Html.Raw(popoverAttrs)>@category.Name</a>
     }
     </div>
 }
@@ -108,7 +108,7 @@ else
 
 @if (Model.TotalPages > 1)
 {
-    <partial name="_PageCounter" model="Model" /> @*<!-- Page-counter (Sidräknaren) via PartialView -->*@
+    <partial name="_PageCounter" model="Model" />
 }
 else
 {
@@ -118,11 +118,11 @@ else
     }
 }
 
-<partial name="_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
+<partial name="_Gallery" model="Model" />
 
-@if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
+@if (Model.TotalPages > 1)
 {
-    <partial name="_PageCounter" model="Model" /> @*<!-- Page-counter (Sidräknaren) via PartialView -->*@
+    <partial name="_PageCounter" model="Model" />
 }
 else
 {

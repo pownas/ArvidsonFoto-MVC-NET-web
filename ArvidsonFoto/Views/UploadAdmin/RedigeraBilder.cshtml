@@ -147,7 +147,7 @@
         }
     </section>
 
-    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.DisplayImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
     @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
     {
         <nav id="page-paging-bottom" aria-label="Page navigation example">

@@ -1,13 +1,20 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Services;
 
+/// <summary>
+/// Legacy category service - migrated to use Core namespace
+/// </summary>
+/// <remarks>
+/// Consider migrating to ApiCategoryService for new functionality
+/// </remarks>
 public class CategoryService : ICategoryService
 {
-    // Databas koppling
-    private readonly ArvidsonFotoDbContext _entityContext;
-    public CategoryService(ArvidsonFotoDbContext context)
+    // Databas koppling - uppdaterad till Core.Data
+    private readonly ArvidsonFotoCoreDbContext _entityContext;
+    
+    public CategoryService(ArvidsonFotoCoreDbContext context)
     {
         _entityContext = context;
     }
@@ -31,63 +38,76 @@ public class CategoryService : ICategoryService
 
     public int GetLastId()
     {
-        int highestID = -1;
-        highestID = _entityContext.TblMenus.OrderBy(c => c.MenuId).LastOrDefault()!.MenuId;
-        return highestID;
+        try
+        {
+            var lastCategory = _entityContext.TblMenus
+                .OrderByDescending(c => c.MenuCategoryId)
+                .FirstOrDefault();
+            return lastCategory?.MenuCategoryId ?? -1;
+        }
+        catch
+        {
+            return -1;
+        }
     }
 
     public TblMenu GetByName(string categoryName)
     {
-        TblMenu category = new TblMenu();
-        category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
+        TblMenu? category = _entityContext.TblMenus
+            .FirstOrDefault(c => c.MenuDisplayName != null && c.MenuDisplayName.Equals(categoryName));
+        
         if (category is null)
         {
             Log.Warning("Could not find category: '" + categoryName + "'");
+            return new TblMenu(); // Return empty instead of null
         }
         return category;
     }
 
     public TblMenu GetById(int? id)
     {
-        TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuId.Equals(id));
+        TblMenu? category = _entityContext.TblMenus
+            .FirstOrDefault(c => c.MenuCategoryId.Equals(id));
+        
         if (category is null)
         {
             Log.Information("Could not find id with number: " + id);
+            return new TblMenu(); // Return empty instead of null
         }
         return category;
     }
 
     public List<TblMenu> GetAll()
     {
-        List<TblMenu> categories;
-        categories = _entityContext.TblMenus.ToList();
-        return categories;
+        return _entityContext.TblMenus.ToList();
     }
 
     public List<TblMenu> GetSubsList(int categoryID)
     {
-        List<TblMenu> categories;
-        categories = _entityContext.TblMenus.Where(c => c.MenuMainId.Equals(categoryID)).ToList();
-        return categories;
+        return _entityContext.TblMenus
+            .Where(c => c.MenuParentCategoryId.Equals(categoryID))
+            .ToList();
     }
 
     public string GetNameById(int? id)
     {
-        string categoryName = "";
-        TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuId.Equals(id));
-        if (category is not null)
-            categoryName = category.MenuText;
+        if (id == null || id <= 0)
+            return "";
 
-        return categoryName;
+        var category = _entityContext.TblMenus
+            .FirstOrDefault(c => c.MenuCategoryId.Equals(id));
+        
+        return category?.MenuDisplayName ?? "";
     }
 
     public int GetIdByName(string categoryName)
     {
-        int menuID = -1;
-        TblMenu category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuText.Equals(categoryName));
-        if (category is not null)
-            menuID = category.MenuId;
+        if (string.IsNullOrEmpty(categoryName))
+            return -1;
 
-        return menuID;
+        var category = _entityContext.TblMenus
+            .FirstOrDefault(c => c.MenuDisplayName != null && c.MenuDisplayName.Equals(categoryName));
+        
+        return category?.MenuCategoryId ?? -1;
     }
 }
