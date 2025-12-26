@@ -77,8 +77,8 @@ public class InfoController : Controller
             inputModel.DisplayErrorPublish = false;
             try
             {
-                string homePage = "";
-                if (inputModel.Homepage is not null)
+                string? homePage = null;
+                if (!string.IsNullOrWhiteSpace(inputModel.Homepage))
                 {
                     homePage = inputModel.Homepage.Replace("https://", "");
                     homePage = homePage.Replace("http://", "");
@@ -94,8 +94,8 @@ public class InfoController : Controller
                 Core.Models.TblGb postToPublish = new Core.Models.TblGb()
                 {
                     GbId = (_guestbookService.GetLastGbId() + 1),
-                    GbName = inputModel.Name,
-                    GbEmail = inputModel.Email,
+                    GbName = string.IsNullOrWhiteSpace(inputModel.Name) ? null : inputModel.Name,
+                    GbEmail = string.IsNullOrWhiteSpace(inputModel.Email) ? null : inputModel.Email,
                     GbHomepage = homePage,
                     GbText = inputModel.Message,
                     GbDate = DateTime.Now

@@ -38,7 +38,7 @@ public class ContactFormDto
     public required string Message { get; set; }
 
     /// <summary>Placeholder-text för meddelandefältet</summary>
-    public required string MessagePlaceholder { get; set; } = "";
+    public string MessagePlaceholder { get; set; } = "";
 
     /// <summary>Datum och tid när formuläret skickades</summary>
     public DateTime FormSubmitDate { get; set; } = DateTime.Now;
@@ -50,7 +50,7 @@ public class ContactFormDto
     public bool DisplayErrorSending { get; set; }
     
     /// <summary>URL för sidan att återvända till efter formulärinlämning</summary>
-    public required string ReturnPageUrl { get; set; } = "";
+    public string ReturnPageUrl { get; set; } = "";
 
     /// <summary>
     /// Skapar en tom ContactFormDto med alla required fields initialiserade

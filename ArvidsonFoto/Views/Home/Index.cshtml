@@ -8,11 +8,6 @@
     <link rel="canonical" href="https://ArvidsonFoto.se/" />
 }
 
-@inject IApiImageService _imageService
-@{
-    Model!.DisplayImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
-}
-
 <div id="page-header">
     <h2>Torbjörn Arvidson Foto <small>Välkommen till mitt bildarkiv</small></h2>
 </div>

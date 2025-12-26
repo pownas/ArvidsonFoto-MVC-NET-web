@@ -13,14 +13,17 @@ namespace ArvidsonFoto.Controllers;
 public class HomeController : Controller
 {
     private readonly IApiPageCounterService _pageCounterService;
+    private readonly IApiImageService _imageService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HomeController"/> class.
     /// </summary>
     /// <param name="coreContext">The Core database context</param>
-    public HomeController(ArvidsonFotoCoreDbContext coreContext)
+    /// <param name="imageService">The image service for fetching images</param>
+    public HomeController(ArvidsonFotoCoreDbContext coreContext, IApiImageService imageService)
     {
         _pageCounterService = new ApiPageCounterService(coreContext);
+        _imageService = imageService;
     }
 
     public IActionResult Index()
@@ -28,7 +31,12 @@ public class HomeController : Controller
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
-        var viewModel = new GalleryViewModel();
+        
+        var viewModel = new GalleryViewModel
+        {
+            DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
+        };
+        
         return View(viewModel);
     }
 

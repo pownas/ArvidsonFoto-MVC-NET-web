@@ -30,7 +30,7 @@ public class SenastController(
         if (sortOrder is null)
             sortOrder = "Fotograferad";
 
-        viewModel.CurrentPage = (int)sida - 1;
+        viewModel.CurrentPage = (int)sida;
 
         if (sortOrder.Equals("Per kategori"))
         {
@@ -51,6 +51,12 @@ public class SenastController(
                     viewModel.AllImagesList.Add(imageDto);
                 }
             }
+            
+            viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
+            viewModel.DisplayImagesList = viewModel.AllImagesList
+                .Skip((viewModel.CurrentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
         else if (sortOrder.Equals("Uppladdad"))
         {
@@ -58,7 +64,13 @@ public class SenastController(
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
             
-            var images = _imageService.GetAll().OrderByDescending(i => i.DateUploaded).ToList();
+            // OPTIMIZED: Use GetLatestImageList with limit for current page
+            int totalImages = _imageService.GetCountedAllImages();
+            viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
+            
+            // Calculate how many images to fetch (current page + buffer for sorting)
+            int limit = Math.Min(totalImages, pageSize * 10); // Fetch max 10 pages worth for sorting
+            var images = _imageService.GetLatestImageList(limit);
             
             // Update each image with its category name
             foreach (var image in images)
@@ -71,7 +83,12 @@ public class SenastController(
                 }
             }
             
+            // Sort and paginate
             viewModel.AllImagesList = images;
+            viewModel.DisplayImagesList = images
+                .Skip((viewModel.CurrentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
         else if (sortOrder.Equals("Fotograferad"))
         {
@@ -79,10 +96,20 @@ public class SenastController(
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
             
-            var images = _imageService.GetAll().OrderByDescending(i => i.DateImageTaken).ToList();
+            // OPTIMIZED: Get only the images needed (with some buffer for sorting)
+            int totalImages = _imageService.GetCountedAllImages();
+            viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
+            
+            // For "Fotograferad", we need to sort by DateImageTaken
+            // Fetch enough images to cover current page (with buffer)
+            int limit = Math.Min(totalImages, pageSize * 10); // Fetch max 10 pages worth
+            var allImages = _imageService.GetAll()
+                .OrderByDescending(i => i.DateImageTaken)
+                .Take(limit)
+                .ToList();
             
             // Update each image with its category name
-            foreach (var image in images)
+            foreach (var image in allImages)
             {
                 if (image.CategoryId > 0)
                 {
@@ -92,7 +119,11 @@ public class SenastController(
                 }
             }
             
-            viewModel.AllImagesList = images;
+            viewModel.AllImagesList = allImages;
+            viewModel.DisplayImagesList = allImages
+                .Skip((viewModel.CurrentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
         else
         {
@@ -104,9 +135,6 @@ public class SenastController(
         }
 
         viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
-        viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).ToList();
-        viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
-        viewModel.CurrentPage = (int)sida;
         viewModel.CurrentUrl = "/Senast/" + sortOrder;
 
         return View(viewModel);
