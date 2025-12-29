@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using ArvidsonFoto.Core.Data;
-using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Tests.Integration;
 
@@ -50,56 +48,10 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
                 // Ensure the database is created
                 db.Database.EnsureCreated();
 
-                // Seed the database with test data if needed
-                SeedTestData(db);
+                // Seed the database with test data using the standard seeder
+                db.SeedInMemoryDatabase();
             }
         });
-    }
-
-    private static void SeedTestData(ArvidsonFotoCoreDbContext context)
-    {
-        // Only add data if it doesn't exist
-        if (context.TblMenus.Any())
-        {
-            return; // Already seeded
-        }
-        
-        // Add test data needed for integration tests
-        
-        // Seed some categories using Core models
-        context.TblMenus.AddRange(
-            new TblMenu
-            {
-                MenuCategoryId = 1,
-                MenuParentCategoryId = null,
-                MenuDisplayName = "Fåglar",
-                MenuUrlSegment = "faglar",
-                MenuDateUpdated = DateTime.Now
-            },
-            new TblMenu
-            {
-                MenuCategoryId = 2,
-                MenuParentCategoryId = 1,
-                MenuDisplayName = "Tättingar",
-                MenuUrlSegment = "tattingar",
-                MenuDateUpdated = DateTime.Now
-            }
-        );
-
-        // Seed some test guestbook entries
-        context.TblGbs.AddRange(
-            new TblGb
-            {
-                GbId = 1,
-                GbName = "Test User",
-                GbEmail = "test@example.com",
-                GbText = "Test guestbook entry",
-                GbDate = DateTime.Now,
-                GbReadPost = false
-            }
-        );
-
-        context.SaveChanges();
     }
 
     protected override void Dispose(bool disposing)
