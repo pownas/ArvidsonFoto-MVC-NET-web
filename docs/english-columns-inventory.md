@@ -63,7 +63,7 @@ Detta dokument listar alla textfält i databasen som får engelska motsvarighete
 
 1. **TblGb:** 2 kolumner (GbNameEn, GbTextEn)
 2. **TblMenu:** 2 kolumner (MenuDisplayNameEn, MenuUrlSegmentEn)
-3. **TblImage:** 2 kolumner (ImageDescriptionEn)
+3. **TblImage:** 1 kolumn (ImageDescriptionEn)
 
 ### Migrationsstrategi
 
