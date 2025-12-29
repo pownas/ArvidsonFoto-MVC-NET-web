@@ -2,7 +2,7 @@
 -- SQL Script: ROLLBACK - Drop tbl_kontakt
 -- Description: Removes the contact form table and all associated objects
 -- Author: ArvidsonFoto Migration
--- Date: 2025-01-20
+-- Date: 2025-12-29
 -- Version: 1.0
 -- WARNING: This will DELETE ALL DATA in tbl_kontakt!
 -- =============================================

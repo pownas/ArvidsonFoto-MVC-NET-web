@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
 
@@ -13,26 +14,31 @@ namespace ArvidsonFoto.Tests.Integration;
 /// </summary>
 public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
 {
+    public ArvidsonFotoWebApplicationFactory()
+    {
+        // Set environment variable to force in-memory database
+        Environment.SetEnvironmentVariable("UseInMemoryDatabase", "true");
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Set configuration to use in-memory database
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:UseInMemoryDatabase"] = "true",
+                ["SmtpSettings:Server"] = "smtp.test.com",
+                ["SmtpSettings:Port"] = "587",
+                ["SmtpSettings:SenderEmail"] = "test@test.com",
+                ["SmtpSettings:SenderPassword"] = "test-password",
+                ["SmtpSettings:EnableSsl"] = "true"
+            });
+        });
+
         builder.ConfigureServices(services =>
         {
-            // Remove the existing DbContext registration
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<ArvidsonFotoCoreDbContext>));
-
-            if (descriptor != null)
-            {
-                services.Remove(descriptor);
-            }
-
-            // Add DbContext using an in-memory database for testing
-            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("InMemoryTestDb");
-            });
-
-            // Build the service provider
+            // Build the service provider to seed data
             var sp = services.BuildServiceProvider();
 
             // Create a scope to obtain a reference to the database context
@@ -52,29 +58,57 @@ public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
 
     private static void SeedTestData(ArvidsonFotoCoreDbContext context)
     {
-        // Add any test data needed for integration tests
-        // This data will be available to all tests
-        
-        // Example: Seed some categories using Core models
-        if (!context.TblMenus.Any())
+        // Only add data if it doesn't exist
+        if (context.TblMenus.Any())
         {
-            context.TblMenus.AddRange(
-                new TblMenu
-                {
-                    MenuCategoryId = 1,
-                    MenuParentCategoryId = null,
-                    MenuDisplayName = "Fåglar",
-                    MenuUrlSegment = "faglar"
-                },
-                new TblMenu
-                {
-                    MenuCategoryId = 2,
-                    MenuParentCategoryId = 1,
-                    MenuDisplayName = "Tättingar",
-                    MenuUrlSegment = "tattingar"
-                }
-            );
-            context.SaveChanges();
+            return; // Already seeded
         }
+        
+        // Add test data needed for integration tests
+        
+        // Seed some categories using Core models
+        context.TblMenus.AddRange(
+            new TblMenu
+            {
+                MenuCategoryId = 1,
+                MenuParentCategoryId = null,
+                MenuDisplayName = "Fåglar",
+                MenuUrlSegment = "faglar",
+                MenuDateUpdated = DateTime.Now
+            },
+            new TblMenu
+            {
+                MenuCategoryId = 2,
+                MenuParentCategoryId = 1,
+                MenuDisplayName = "Tättingar",
+                MenuUrlSegment = "tattingar",
+                MenuDateUpdated = DateTime.Now
+            }
+        );
+
+        // Seed some test guestbook entries
+        context.TblGbs.AddRange(
+            new TblGb
+            {
+                GbId = 1,
+                GbName = "Test User",
+                GbEmail = "test@example.com",
+                GbText = "Test guestbook entry",
+                GbDate = DateTime.Now,
+                GbReadPost = false
+            }
+        );
+
+        context.SaveChanges();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Clean up environment variable
+            Environment.SetEnvironmentVariable("UseInMemoryDatabase", null);
+        }
+        base.Dispose(disposing);
     }
 }

@@ -2,7 +2,7 @@
 -- SQL Script: Create tbl_kontakt Table
 -- Description: Creates the contact form submission backup table
 -- Author: ArvidsonFoto Migration
--- Date: 2025-01-20
+-- Date: 2025-12-29
 -- Version: 1.0
 -- =============================================
 

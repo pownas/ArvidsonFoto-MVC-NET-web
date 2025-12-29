@@ -39,7 +39,7 @@ public class BilderControllerTests
     public void Index_ReturnsViewResult_WithGalleryViewModel()
     {
         // Arrange - Använd riktig kategori från DbSeederExtension (MenuId=1 = Fåglar)
-        string subLevel1 = "Faglar"; // MenuUrltext från DbSeederExtension
+        string subLevel1 = "Fåglar"; // MenuUrltext från DbSeederExtension
 
         // Act
         var result = _controller.Index(subLevel1, null, null, null, null, 1);
@@ -47,7 +47,7 @@ public class BilderControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
+        Assert.Equal("/Bilder/Fåglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Fåglar", model.SelectedCategory.Name);
     }
@@ -57,9 +57,9 @@ public class BilderControllerTests
     {
         // Arrange - Använd underkategori från DbSeederExtension
         // Blåmes (MenuId=243) -> Mesar (MenuId=208) -> Tättingar (MenuId=23) -> Fåglar (MenuId=1)
-        string subLevel1 = "Tattingar";
+        string subLevel1 = "Tättingar";
         string subLevel2 = "Mesar";
-        string subLevel3 = "Blames";
+        string subLevel3 = "Blåmes";
 
         // Act
         var result = _controller.Index(subLevel1, subLevel2, subLevel3, null, null, 1);
@@ -67,7 +67,7 @@ public class BilderControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/Tattingar/Mesar/Blames", model.CurrentUrl);
+        Assert.Equal("/Bilder/Tättingar/Mesar/Blåmes", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Blåmes", model.SelectedCategory.Name);
     }
@@ -195,7 +195,7 @@ public class BilderControllerTests
     public void Index_HandlesPaginationCorrectly()
     {
         // Arrange - Använd kategori med många bilder
-        string subLevel1 = "Faglar";
+        string subLevel1 = "Fåglar";
         int page = 2;
 
         // Act
@@ -211,7 +211,7 @@ public class BilderControllerTests
     public void Index_DefaultsToPageOne_WhenPageIsNull()
     {
         // Arrange
-        string subLevel1 = "Faglar";
+        string subLevel1 = "Fåglar";
 
         // Act
         var result = _controller.Index(subLevel1, null, null, null, null, null);
@@ -226,7 +226,7 @@ public class BilderControllerTests
     public void Index_DefaultsToPageOne_WhenPageIsLessThanOne()
     {
         // Arrange
-        string subLevel1 = "Faglar";
+        string subLevel1 = "Fåglar";
 
         // Act
         var result = _controller.Index(subLevel1, null, null, null, null, 0);

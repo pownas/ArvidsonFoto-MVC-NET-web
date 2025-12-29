@@ -472,7 +472,7 @@ public class InfoControllerTests
             Code = "3568",
             Name = "Test",
             Email = "test@example.com",
-            Homepage = "example.com", // Without https://
+            Homepage = "example.com", // Without "https://" = not valid
             Message = "Test message"
         };
 
@@ -483,7 +483,7 @@ public class InfoControllerTests
         var isValid = Validator.TryValidateObject(model, context, results, true);
 
         // Assert
-        Assert.True(isValid);
+        Assert.False(isValid);
     }
 
     [Fact]

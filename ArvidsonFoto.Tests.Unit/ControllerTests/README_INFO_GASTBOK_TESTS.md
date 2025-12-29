@@ -43,7 +43,7 @@ Tester som verifierar `GuestbookInputModel`-validering:
 
 - **GuestbookInputModel_RequiresCode**: Kod är obligatoriskt
 - **GuestbookInputModel_RequiresMessage**: Meddelande är obligatoriskt
-- **GuestbookInputModel_AcceptsValidHomepageWithoutProtocol**: `example.com` är giltigt
+- **GuestbookInputModel_AcceptsValidHomepageWithoutProtocol**: `example.com` är ogiltigt
 - **GuestbookInputModel_AcceptsValidHomepageWithProtocol**: `https://example.com` är giltigt
 - **GuestbookInputModel_RejectsInvalidCode**: Fel kod (inte 3568) avvisas
 - **GuestbookInputModel_EnforcesMaxLengths**: Max-längder följs (namn max 50 tecken)
