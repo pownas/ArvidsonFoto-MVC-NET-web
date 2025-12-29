@@ -17,14 +17,38 @@ public class MockContactService : IContactService
         _nextId = 1;
     }
 
-    public bool SaveContactSubmission(TblKontakt kontakt)
+    public int SaveContactSubmission(TblKontakt kontakt)
     {
         if (kontakt == null)
-            return false;
+            throw new ArgumentNullException(nameof(kontakt));
 
         kontakt.Id = _nextId++;
         _mockContactSubmissions.Add(kontakt);
+        return kontakt.Id;
+    }
+
+    public bool UpdateEmailStatus(int contactId, bool emailSent, string? errorMessage)
+    {
+        var kontakt = _mockContactSubmissions.FirstOrDefault(k => k.Id == contactId);
+        if (kontakt == null)
+            return false;
+
+        kontakt.EmailSent = emailSent;
+        kontakt.ErrorMessage = errorMessage;
         return true;
+    }
+
+    public TblKontakt? GetContactSubmission(int contactId)
+    {
+        return _mockContactSubmissions.FirstOrDefault(k => k.Id == contactId);
+    }
+
+    public IEnumerable<TblKontakt> GetFailedEmailSubmissions()
+    {
+        return _mockContactSubmissions
+            .Where(k => k.EmailSent == false)
+            .OrderByDescending(k => k.SubmitDate)
+            .ToList();
     }
 
     // Helper methods for testing (not part of IContactService interface)
@@ -36,5 +60,11 @@ public class MockContactService : IContactService
     internal TblKontakt? GetById(int id)
     {
         return _mockContactSubmissions.FirstOrDefault(k => k.Id == id);
+    }
+
+    internal void Clear()
+    {
+        _mockContactSubmissions.Clear();
+        _nextId = 1;
     }
 }

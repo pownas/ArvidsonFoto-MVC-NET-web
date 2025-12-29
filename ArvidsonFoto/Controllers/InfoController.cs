@@ -2,17 +2,22 @@
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
+using ArvidsonFoto.Core.Configuration;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace ArvidsonFoto.Controllers;
 
 public class InfoController : Controller
 {
     private readonly ArvidsonFotoCoreDbContext _coreContext;
+    private readonly IConfiguration _configuration;
+    private readonly SmtpSettings _smtpSettings;
     internal IApiCategoryService _categoryService;
     internal IApiImageService _imageService;
     internal IGuestBookService _guestbookService;
@@ -21,12 +26,15 @@ public class InfoController : Controller
 
     public InfoController(
         ArvidsonFotoCoreDbContext coreContext,
+        IConfiguration configuration,
+        IOptions<SmtpSettings> smtpSettings,
         ILogger<ApiImageService>? imageLogger = null,
         ILogger<ApiCategoryService>? categoryLogger = null,
-        IConfiguration? configuration = null,
         IMemoryCache? memoryCache = null)
     {
         _coreContext = coreContext;
+        _configuration = configuration;
+        _smtpSettings = smtpSettings.Value;
         
         // Support both DI and manual instantiation (for tests)
         _categoryService = new ApiCategoryService(
@@ -91,7 +99,7 @@ public class InfoController : Controller
                     }
                 }
 
-                Core.Models.TblGb postToPublish = new Core.Models.TblGb()
+                TblGb postToPublish = new()
                 {
                     GbId = (_guestbookService.GetLastGbId() + 1),
                     GbName = string.IsNullOrWhiteSpace(inputModel.Name) ? null : inputModel.Name,
@@ -145,19 +153,56 @@ public class InfoController : Controller
             contactFormModel.DisplayErrorSending = false;
             bool emailSent = false;
             string? errorMessage = null;
+            int? savedContactId = null;
 
+            // STEP 1: Save to database FIRST (as backup)
             try
             {
-                //Github-secrets, samt miljö variablar som krävs (Se dokumentation i OneDrive -> ArvidsonFoto -> Miljö-variabler) :
-                var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
-                var svc_smtpadress = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPADRESS");
-                var svc_smtppwd = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPPWD");
+                Log.Information("Saving contact form submission to database...");
+                
+                var kontaktRecord = new TblKontakt
+                {
+                    SubmitDate = DateTime.Now,
+                    Name = contactFormModel.Name,
+                    Email = contactFormModel.Email,
+                    Subject = contactFormModel.Subject,
+                    Message = contactFormModel.Message,
+                    SourcePage = Page,
+                    EmailSent = false, // Will be updated after email attempt
+                    ErrorMessage = null
+                };
 
-                Log.Information("User trying to send e-mail...");
+                savedContactId = _contactService.SaveContactSubmission(kontaktRecord);
+                Log.Information("Contact form saved to database with ID: {ContactId}", savedContactId);
+            }
+            catch (Exception dbEx)
+            {
+                Log.Error(dbEx, "Failed to save contact form to database");
+                errorMessage = "Database error: " + dbEx.Message;
+                contactFormModel.DisplayErrorSending = true;
+                contactFormModel.DisplayEmailSent = false;
+                
+                // Early return if we can't even save to database
+                TempData["DisplayEmailSent"] = false;
+                TempData["DisplayErrorSending"] = true;
+                return RedirectToActionBasedOnPage(Page);
+            }
+
+            // STEP 2: Try to send email
+            try
+            {
+                // Validate SMTP configuration
+                if (!_smtpSettings.IsConfigured())
+                {
+                    throw new InvalidOperationException("SMTP settings are not properly configured. Check appsettings.json or User Secrets.");
+                }
+
+                Log.Information("User trying to send e-mail from {SourcePage}...", Page);
+                
                 var fromName = Page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                message.To.Add(new MailboxAddress(fromName, svc_smtpadress));
+                message.To.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
                 message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
 
@@ -166,15 +211,16 @@ public class InfoController : Controller
                     Text = contactFormModel.Message
                 };
 
-                Log.Information("User message: " + message);
+                Log.Information("Sending email via SMTP server: {SmtpServer}", _smtpSettings.Server);
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(svc_mailServer, 587, SecureSocketOptions.StartTls);
-                    client.Authenticate(svc_smtpadress, svc_smtppwd);
+                    client.Connect(_smtpSettings.Server, _smtpSettings.Port, 
+                        _smtpSettings.EnableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                    client.Authenticate(_smtpSettings.SenderEmail, _smtpSettings.SenderPassword);
                     client.Send(message);
                     client.Disconnect(true);
-                    Log.Information("Email, sent OK.");
+                    Log.Information("Email sent successfully!");
                     emailSent = true;
                 }
 
@@ -191,34 +237,26 @@ public class InfoController : Controller
                     ReturnPageUrl = Page
                 };
             }
-            catch (Exception e)
+            catch (Exception emailEx)
             {
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
-                errorMessage = e.Message;
-                Log.Error("Error sending email. Error-message: " + e.Message);
+                errorMessage = emailEx.Message;
+                Log.Error(emailEx, "Error sending email from contact form");
             }
 
-            // Save to database as backup (regardless of email success/failure)
-            try
+            // STEP 3: Update database record with email status
+            if (savedContactId.HasValue)
             {
-                var kontaktRecord = new Core.Models.TblKontakt
+                try
                 {
-                    SubmitDate = DateTime.Now,
-                    Name = contactFormModel.Name,
-                    Email = contactFormModel.Email,
-                    Subject = contactFormModel.Subject,
-                    Message = contactFormModel.Message,
-                    SourcePage = Page,
-                    EmailSent = emailSent,
-                    ErrorMessage = errorMessage
-                };
-
-                _contactService.SaveContactSubmission(kontaktRecord);
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Failed to save contact form to database: {ex.Message}");
+                    _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
+                    Log.Information("Updated contact record {ContactId} - EmailSent: {EmailSent}", savedContactId, emailSent);
+                }
+                catch (Exception updateEx)
+                {
+                    Log.Error(updateEx, "Failed to update email status for contact ID: {ContactId}", savedContactId);
+                }
             }
         }
         else
@@ -230,18 +268,20 @@ public class InfoController : Controller
         TempData["DisplayEmailSent"] = contactFormModel.DisplayEmailSent;
         TempData["DisplayErrorSending"] = contactFormModel.DisplayErrorSending;
 
-        if (Page.Equals("Kontakta"))
+        return RedirectToActionBasedOnPage(Page);
+    }
+
+    /// <summary>
+    /// Redirects to the appropriate action based on the source page
+    /// </summary>
+    private IActionResult RedirectToActionBasedOnPage(string page)
+    {
+        return page switch
         {
-            return RedirectToAction("Kontakta");
-        }
-        else if (Page.Equals("Kop_av_bilder"))
-        {
-            return RedirectToAction("Kop_av_bilder");
-        }
-        else
-        {
-            return RedirectToAction("Kontakta");
-        }
+            "Kontakta" => RedirectToAction("Kontakta"),
+            "Kop_av_bilder" => RedirectToAction("Kop_av_bilder"),
+            _ => RedirectToAction("Kontakta")
+        };
     }
 
     public IActionResult Kontakta(ContactFormDto contactFormModel)
