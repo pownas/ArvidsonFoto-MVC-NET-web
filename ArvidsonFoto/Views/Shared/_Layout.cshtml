@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="ArvidsonFoto-version" content="Build: v3.10.4 - Date: 2025-12-15 - Time: 23:10 - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v3.10.4" />
+    <meta name="ArvidsonFoto-version" content="Build: v3.10.5 - Date: 2025-12-29 - Time: 23:30 - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v3.10.5" />
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
+    @* Blazor component styles *@
+    <link href="_content/Microsoft.AspNetCore.Components.Web/css/blazor-error-ui.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -31,5 +33,8 @@
     <script src="js/categoryTooltip.js"></script> @*<!-- Category tooltip with image preview -->*@
     <script src="js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
+    @* Blazor Server SignalR script - required for interactive components *@
+    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
