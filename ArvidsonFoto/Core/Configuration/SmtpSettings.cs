@@ -14,6 +14,10 @@ public class SmtpSettings
     /// <summary>Sender email address</summary>
     public string SenderEmail { get; set; } = string.Empty;
 
+    /// <summary>CC sent to email address</summary>
+    /// <remarks>This email address is a copy sent to.</remarks>
+    public string CcEmail { get; set; } = string.Empty;
+
     /// <summary>Sender email password</summary>
     public string SenderPassword { get; set; } = string.Empty;
 

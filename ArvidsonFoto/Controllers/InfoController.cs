@@ -202,6 +202,10 @@ public class InfoController : Controller
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
                 message.To.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
+                if (!string.IsNullOrWhiteSpace(_smtpSettings.CcEmail))
+                {
+                    message.Cc.Add(new MailboxAddress(fromName, _smtpSettings.CcEmail));
+                }
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
                 message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
 
