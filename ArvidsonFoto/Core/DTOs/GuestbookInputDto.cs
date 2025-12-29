@@ -28,7 +28,7 @@ public class GuestbookInputDto
     /// <summary>Hemsida för personen som skriver i gästboken (valfritt)</summary>
     [StringLength(250, ErrorMessage = "För lång rubrik (max 250 tecken)")] //StringLength
     [Url(ErrorMessage = "Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt")]
-    public required string Homepage { get; set; } = "";
+    public string? Homepage { get; set; } = "";
 
     /// <summary>Huvudinnehåll i gästboksinlägget</summary>
     [Required(ErrorMessage = "Ange ett meddelande")]

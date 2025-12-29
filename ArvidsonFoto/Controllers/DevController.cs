@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace ArvidsonFoto.Controllers;
+﻿namespace ArvidsonFoto.Controllers;
 
 /// <summary>
 /// Controller for development/admin landing page

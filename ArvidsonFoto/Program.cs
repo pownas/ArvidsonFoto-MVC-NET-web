@@ -67,6 +67,10 @@ public class Program
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
+        // Configure SMTP settings from appsettings
+        services.Configure<ArvidsonFoto.Core.Configuration.SmtpSettings>(
+            configuration.GetSection("SmtpSettings"));
+
         // Database configuration - ONLY Core DbContext now
         var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
@@ -126,6 +130,16 @@ public class Program
 
         services.AddControllersWithViews();
         services.AddRazorPages();
+
+        // ===== BLAZOR SERVER CONFIGURATION =====
+        services.AddServerSideBlazor(options =>
+        {
+            // Configure circuit options for better performance
+            options.DetailedErrors = environment.IsDevelopment();
+            options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+            options.DisconnectedCircuitMaxRetained = 100;
+            options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+        });
 
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
         services.AddOpenApi();

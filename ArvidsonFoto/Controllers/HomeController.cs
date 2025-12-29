@@ -1,6 +1,4 @@
-﻿using ArvidsonFoto.Core.Data;
-using ArvidsonFoto.Core.Interfaces;
-using ArvidsonFoto.Core.Services;
+﻿using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;

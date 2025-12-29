@@ -1,12 +1,15 @@
 ﻿using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
 
@@ -29,13 +32,37 @@ public class InfoControllerTests
         
         _mockGuestBookService = new MockGuestBookService();
 
-        _controller = new InfoController(mockCoreDbContext);
+        // Create mock configuration
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            {"SmtpSettings:Server", "smtp.test.com"},
+            {"SmtpSettings:Port", "587"},
+            {"SmtpSettings:SenderEmail", "test@test.com"},
+            {"SmtpSettings:SenderPassword", "test-password"},
+            {"SmtpSettings:EnableSsl", "true"}
+        };
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings!)
+            .Build();
+
+        // Create mock SmtpSettings
+        var smtpSettings = Options.Create(new SmtpSettings
+        {
+            Server = "smtp.test.com",
+            Port = 587,
+            SenderEmail = "test@test.com",
+            SenderPassword = "test-password",
+            EnableSsl = true
+        });
+
+        _controller = new InfoController(mockCoreDbContext, configuration, smtpSettings);
         
         // Override the services with mocks (they are internal fields)
         _controller._guestbookService = _mockGuestBookService;
         _controller._imageService = new MockImageService();
         _controller._categoryService = new MockApiCategoryService();
         _controller._pageCounterService = new MockPageCounterService();
+        _controller._contactService = new MockContactService();
 
         // Setup HttpContext for the controller
         var httpContext = new DefaultHttpContext();
@@ -64,6 +91,35 @@ public class InfoControllerTests
         var tempDataProvider = new MockTempDataProvider();
         var tempData = new TempDataDictionary(httpContext, tempDataProvider);
         _controller.TempData = tempData;
+    }
+
+    // Helper method to create InfoController with mocks
+    private static InfoController CreateTestController(ArvidsonFotoCoreDbContext dbContext)
+    {
+        // Create mock configuration
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            {"SmtpSettings:Server", "smtp.test.com"},
+            {"SmtpSettings:Port", "587"},
+            {"SmtpSettings:SenderEmail", "test@test.com"},
+            {"SmtpSettings:SenderPassword", "test-password"},
+            {"SmtpSettings:EnableSsl", "true"}
+        };
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings!)
+            .Build();
+
+        // Create mock SmtpSettings
+        var smtpSettings = Options.Create(new SmtpSettings
+        {
+            Server = "smtp.test.com",
+            Port = 587,
+            SenderEmail = "test@test.com",
+            SenderPassword = "test-password",
+            EnableSsl = true
+        });
+
+        return new InfoController(dbContext, configuration, smtpSettings);
     }
 
     #region PostToGb Action Tests
@@ -416,7 +472,7 @@ public class InfoControllerTests
             Code = "3568",
             Name = "Test",
             Email = "test@example.com",
-            Homepage = "example.com", // Without https://
+            Homepage = "example.com", // Without "https://" = not valid
             Message = "Test message"
         };
 
@@ -427,7 +483,7 @@ public class InfoControllerTests
         var isValid = Validator.TryValidateObject(model, context, results, true);
 
         // Assert
-        Assert.True(isValid);
+        Assert.False(isValid);
     }
 
     [Fact]
@@ -582,10 +638,8 @@ public class InfoControllerTests
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
         
-        var controller = new InfoController(mockCoreDbContext)
-        {
-            _contactService = mockContactService
-        };
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
 
         // Setup HttpContext
         var httpContext = new DefaultHttpContext();
@@ -640,10 +694,8 @@ public class InfoControllerTests
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
         
-        var controller = new InfoController(mockCoreDbContext)
-        {
-            _contactService = mockContactService
-        };
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
 
         // Setup HttpContext
         var httpContext = new DefaultHttpContext();
@@ -693,10 +745,8 @@ public class InfoControllerTests
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
         
-        var controller = new InfoController(mockCoreDbContext)
-        {
-            _contactService = mockContactService
-        };
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
 
         // Setup HttpContext
         var httpContext = new DefaultHttpContext();
