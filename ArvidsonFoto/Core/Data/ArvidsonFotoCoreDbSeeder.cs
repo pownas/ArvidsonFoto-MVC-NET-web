@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Core.Models;
-using ArvidsonFoto.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArvidsonFoto.Core.Data;

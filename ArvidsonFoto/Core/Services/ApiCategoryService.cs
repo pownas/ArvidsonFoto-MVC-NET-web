@@ -4,7 +4,6 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
-using Serilog;
 using System.Collections.Concurrent;
 using System.Net;
 using Microsoft.EntityFrameworkCore;

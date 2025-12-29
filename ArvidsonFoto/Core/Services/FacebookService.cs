@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Serilog;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto.Core.Services;

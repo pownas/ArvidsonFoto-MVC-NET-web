@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace ArvidsonFoto.Tests.Unit.Security.Mocks;
+﻿namespace ArvidsonFoto.Tests.Unit.Security.Mocks;
 
 /// <summary>
 /// Mock implementation of HttpMessageHandler for testing purposes

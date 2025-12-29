@@ -1,6 +1,5 @@
 ﻿using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Tests.Unit.Security.Mocks;
-using System.Net;
 using System.Text.Json;
 
 namespace ArvidsonFoto.Tests.Unit.ServiceTests;

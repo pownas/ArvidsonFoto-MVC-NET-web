@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Tests.Integration.Helpers;
-using System.Net.Http.Headers;
 
 namespace ArvidsonFoto.Tests.Integration.Controllers;
 

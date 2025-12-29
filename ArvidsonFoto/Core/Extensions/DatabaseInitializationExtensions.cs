@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ArvidsonFoto.Core.Services;
+﻿using ArvidsonFoto.Core.Services;
 
 namespace ArvidsonFoto.Core.Extensions;
 

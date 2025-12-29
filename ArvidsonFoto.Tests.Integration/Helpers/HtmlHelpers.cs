@@ -1,7 +1,4 @@
-﻿using AngleSharp;
-using AngleSharp.Html.Dom;
-
-namespace ArvidsonFoto.Tests.Integration.Helpers;
+﻿namespace ArvidsonFoto.Tests.Integration.Helpers;
 
 /// <summary>
 /// Helper class for parsing and interacting with HTML responses in integration tests.

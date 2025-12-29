@@ -1,8 +1,6 @@
-using ArvidsonFoto.Security;
+﻿using ArvidsonFoto.Security;
 using ArvidsonFoto.Tests.Unit.Security.Mocks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Xunit;
 
 namespace ArvidsonFoto.Tests.Unit.Security;
 

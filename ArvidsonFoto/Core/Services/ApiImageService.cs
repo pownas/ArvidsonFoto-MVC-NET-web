@@ -3,7 +3,6 @@ using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
-using Serilog;
 
 namespace ArvidsonFoto.Core.Services;
 

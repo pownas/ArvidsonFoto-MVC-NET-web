@@ -6,7 +6,6 @@ global using Microsoft.AspNetCore.Mvc;
 
 // Logging
 global using Serilog;
-global using Serilog.Events;
 
 // Common annotations
 global using System.ComponentModel.DataAnnotations.Schema;

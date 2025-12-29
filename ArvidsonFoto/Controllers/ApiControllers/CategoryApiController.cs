@@ -2,7 +2,6 @@
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
-using ArvidsonFoto.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ArvidsonFoto.Controllers.ApiControllers;

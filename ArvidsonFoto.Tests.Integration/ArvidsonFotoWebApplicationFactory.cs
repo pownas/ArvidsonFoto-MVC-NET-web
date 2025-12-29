@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using ArvidsonFoto.Core.Data;
+﻿using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto.Tests.Integration;
 
