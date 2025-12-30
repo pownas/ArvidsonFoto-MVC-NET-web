@@ -198,6 +198,43 @@ public class Program
             }
         }
 
+        // ===== EAGER LOAD CATEGORY CACHE AT STARTUP =====
+        // Pre-load all categories into cache to improve performance
+        // This reduces database queries from ~350k to <1k per 5 minutes
+        using (var scope = app.Services.CreateScope())
+        {
+            try
+            {
+                var categoryService = scope.ServiceProvider.GetRequiredService<IApiCategoryService>();
+                
+                Log.Information("Pre-loading category cache...");
+                var startTime = DateTime.UtcNow;
+                
+                // Load all categories - this will cache them with GetAll()
+                var allCategories = categoryService.GetAll();
+                
+                // Pre-cache all category names and paths for bulk operations
+                var allCategoryIds = allCategories
+                    .Where(c => c.CategoryId.HasValue)
+                    .Select(c => c.CategoryId!.Value)
+                    .ToList();
+                
+                if (allCategoryIds.Any())
+                {
+                    categoryService.GetCategoryNamesBulk(allCategoryIds);
+                    categoryService.GetCategoryPathsBulk(allCategoryIds);
+                }
+                
+                var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
+                Log.Information("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
+                    elapsed, allCategories.Count);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to pre-load category cache - will load on demand");
+            }
+        }
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

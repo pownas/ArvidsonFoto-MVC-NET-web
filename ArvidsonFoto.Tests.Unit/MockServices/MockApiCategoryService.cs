@@ -308,6 +308,16 @@ public class MockApiCategoryService : IApiCategoryService
         return result;
     }
 
+    public Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds)
+    {
+        var result = new Dictionary<int, string>();
+        foreach (var id in categoryIds)
+        {
+            result[id] = GetNameById(id);
+        }
+        return result;
+    }
+
     private static CategoryDto CreateNotFoundCategory()
     {
         return new CategoryDto

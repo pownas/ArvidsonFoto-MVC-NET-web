@@ -147,4 +147,11 @@ public interface IApiCategoryService
     /// <param name="categoryIds">List of category IDs to get paths for</param>
     /// <returns>Dictionary mapping category ID to its full path</returns>
     Dictionary<int, string> GetCategoryPathsBulk(List<int> categoryIds);
+
+    /// <summary>
+    /// Bulk load category names for multiple category IDs to optimize database queries
+    /// </summary>
+    /// <param name="categoryIds">List of category IDs to get names for</param>
+    /// <returns>Dictionary mapping category ID to its name</returns>
+    Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds);
 }

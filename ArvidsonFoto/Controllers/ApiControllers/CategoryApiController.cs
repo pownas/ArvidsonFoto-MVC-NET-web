@@ -650,4 +650,54 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             );
         }
     }
+
+    /// <summary>
+    /// Retrieves all categories in a lightweight format optimized for client-side caching.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint returns a minimal set of category data without image counts or last image filenames,
+    /// making it perfect for localStorage caching on the client. The response is cached in the browser 
+    /// for 24 hours to reduce server load. Categories are updated ~1 time per month, so aggressive 
+    /// caching is appropriate.
+    /// </remarks>
+    /// <returns>A lightweight list of all categories with only essential fields (ID, Name, URL paths, Parent ID)</returns>
+    [AllowAnonymous]
+    [ResponseCache(Duration = 86400, Location = ResponseCacheLocation.Any)] // Cache for 24 hours
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    [HttpGet("AllLightweight")]
+    [HttpGet("Lightweight")]
+    public IActionResult GetAllCategoriesLightweight()
+    {
+        try
+        {
+            logger.LogDebug("Category - GetAllCategoriesLightweight called (optimized for client cache)");
+            
+            var allCategories = apiCategoryService.GetAll();
+            
+            // Return lightweight version without image counts, last image, etc.
+            var lightweightCategories = allCategories.Select(c => new
+            {
+                categoryId = c.CategoryId,
+                name = c.Name,
+                urlCategoryPath = c.UrlCategoryPath,
+                urlCategoryPathFull = c.UrlCategoryPathFull,
+                parentCategoryId = c.ParentCategoryId
+            }).ToList();
+            
+            logger.LogDebug("Returned {Count} lightweight categories for client caching", lightweightCategories.Count);
+            
+            return Ok(lightweightCategories);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error retrieving lightweight categories");
+            return Problem(
+                title: "Internal Server Error",
+                detail: "An error occurred while retrieving categories",
+                statusCode: StatusCodes.Status500InternalServerError,
+                type: "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+            );
+        }
+    }
 }
