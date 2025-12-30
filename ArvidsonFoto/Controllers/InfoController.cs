@@ -306,7 +306,7 @@ public class InfoController : Controller
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
 
-        if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
+        if (string.IsNullOrWhiteSpace(contactFormModel.Message))
         {
             contactFormModel = new ContactFormInputDto()
             {
@@ -348,7 +348,7 @@ public class InfoController : Controller
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
         
-        if (contactFormModel.Message is null)
+        if (string.IsNullOrWhiteSpace(contactFormModel.Message))
         {
             contactFormModel = new ContactFormInputDto()
             {
