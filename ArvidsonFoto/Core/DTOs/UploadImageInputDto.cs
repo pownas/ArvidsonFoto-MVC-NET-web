@@ -18,25 +18,26 @@ public class UploadImageInputDto
     public int? ImageHuvudfamilj { get; set; }
     
     /// <summary>Huvudfamilj namn för taxonomisk klassificering</summary>
-    public required string ImageHuvudfamiljNamn { get; set; } = "";
+    public string? ImageHuvudfamiljNamn { get; set; } = "";
     
     /// <summary>Familj ID för taxonomisk klassificering</summary>
     public int? ImageFamilj { get; set; }
     
     /// <summary>Familj namn för taxonomisk klassificering</summary>
-    public required string ImageFamiljNamn { get; set; } = "";
+    public string? ImageFamiljNamn { get; set; } = "";
     
     /// <summary>Art ID för taxonomisk klassificering</summary>
     public int ImageArt { get; set; }
     
     /// <summary>Art namn för taxonomisk klassificering</summary>
-    public required string ImageArtNamn { get; set; } = "";
+    public string? ImageArtNamn { get; set; } = "";
 
     /// <summary>Filnamn för bilden</summary>
     [Display(Name = "Filnamn")]
     [Required(ErrorMessage = "Ange filnamn")]
+    [MinLength(2, ErrorMessage = "Filnamn måste vara minst 2 tecken...")]
     [DataType(DataType.Text)]
-    public required string ImageUrl { get; set; }
+    public required string ImageUrl { get; set; } = "";
 
     /// <summary>
     /// Fullständig källsökväg för bilden
