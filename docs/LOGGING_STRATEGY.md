@@ -311,6 +311,6 @@ Log.Information($"User {userId} submitted form with {items.Count} items");
 
 ---
 
-**Senast uppdaterad:** 2025-01-XX  
+**Senast uppdaterad:** 2025-12-30  
 **Version:** 1.0  
 **Ansvarig:** Development Team

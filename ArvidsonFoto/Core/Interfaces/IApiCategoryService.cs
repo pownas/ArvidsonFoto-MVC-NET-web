@@ -138,7 +138,7 @@ public interface IApiCategoryService
     /// Gets the display category path (with ÅÄÖ) for an image, matching the physical folder structure
     /// </summary>
     /// <param name="categoryId">The category ID to get the path for</param>
-    /// <returns>The category path with display names (e.g., "Fåglar/Blåmes")</returns>
+    /// <returns>The category path with display names (e.g., "Tättingar/Mesar/Blåmes")</returns>
     string GetCategoryDisplayPathForImage(int categoryId);
 
     /// <summary>

@@ -138,10 +138,8 @@ public class SenastController(
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
             
-            var categoryNames = categoryIds.ToDictionary(
-                id => id, 
-                id => _categoryService.GetNameById(id)
-            );
+            // Use bulk category name lookup to avoid N+1 queries
+            var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
             
             viewModel.DisplayImagesList = images.Select(image =>
             {
@@ -205,10 +203,7 @@ public class SenastController(
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
             
-            var categoryNames = categoryIds.ToDictionary(
-                id => id, 
-                id => _categoryService.GetNameById(id)
-            );
+            var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
             
             viewModel.DisplayImagesList = images.Select(image =>
             {

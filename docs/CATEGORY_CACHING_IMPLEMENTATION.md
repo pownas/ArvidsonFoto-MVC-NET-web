@@ -459,6 +459,6 @@ location.reload()
 
 ---
 
-**Implementerad:** 2025-01-XX  
+**Implementerad:** 2025-12-30  
 **Version:** 1.0  
 **Branch:** feature/reduce-db-load-on-gallery

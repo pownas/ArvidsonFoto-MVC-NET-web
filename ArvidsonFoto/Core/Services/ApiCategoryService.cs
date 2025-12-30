@@ -368,7 +368,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {currentId}";
             }
 
-            // Note: Keep "Fåglar" in sorting URL as it's used for menu ordering, not file paths
+            // Build sorting URL from raw menu display names (for menu ordering).
+            // Certain names (e.g., "Fåglar") are intentionally preserved here; any
+            // path-safe normalization is handled elsewhere when constructing file paths.
             if (!string.IsNullOrWhiteSpace(category.MenuDisplayName))
                 segments.Insert(0, category.MenuDisplayName);
 

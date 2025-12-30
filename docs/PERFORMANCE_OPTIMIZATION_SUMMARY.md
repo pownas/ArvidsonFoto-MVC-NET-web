@@ -305,6 +305,6 @@ if (window.CategoryCache) {
 
 **Största bidragande faktor:** Lazy loading av navbar popover-bilder eliminerade 650 queries per sidladdning.
 
-**Implementationsdatum:** 2025-01-XX  
+**Implementationsdatum:** 2025-12-30  
 **Branch:** `feature/reduce-db-load-on-gallery`  
 **Version:** 1.0
