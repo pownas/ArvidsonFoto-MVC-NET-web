@@ -3,26 +3,9 @@
 @using ArvidsonFoto.Core.DTOs
 @using System.Net
 @inject IApiCategoryService CategoryService
-@inject IApiImageService ImageService
 
 @{
     var categories = CategoryService?.GetAll() ?? new List<CategoryDto>();
-    
-    string GetPopoverAttr(CategoryDto cat, string path)
-    {
-        var img = ImageService.GetOneImageFromCategory(cat.CategoryId ?? 0);
-        if (img == null || string.IsNullOrWhiteSpace(img.UrlImage)) return "";
-        
-        // Extract filename from UrlImage path (e.g., "bilder/kategori/filnamn" -> "filnamn")
-        string fileName = img.UrlImage.Split('/').Last();
-        string safeUrl = fileName.Replace("..", "").Replace("\\", "/");
-        var imgUrl = $"{path}/{safeUrl}.thumb.jpg";
-        var catName = WebUtility.HtmlEncode(cat.Name);
-        var imgUrlEnc = WebUtility.HtmlEncode(imgUrl);
-        var content = $"<div class='category-tooltip'><img src='{imgUrlEnc}' alt='{catName}' class='img-fluid' /><div class='category-name'>{catName}</div></div>";
-        
-        return $"data-bs-toggle=\"popover\" data-bs-trigger=\"hover\" data-bs-html=\"true\" data-bs-content=\"{WebUtility.HtmlEncode(content)}\" data-bs-placement=\"right\"";
-    }
 }
 
 <nav class="main-nav">
@@ -91,21 +74,18 @@
                                                         <ul>
                                                             @foreach (var s3 in subs3)
                                                             {
-                                                                var path3 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}/{SharedStaticFunctions.ReplaceUrlText(s3.Name)}";
                                                                 
                                                                 <li>
                                                                     <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)/@SharedStaticFunctions.ReplaceUrlText(s3.Name)" 
-                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name" @Html.Raw(GetPopoverAttr(s3, path3))>@s3.Name</a>
+                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name">@s3.Name</a>
                                                                 </li>
                                                             }
                                                         </ul>
                                                     }
                                                     else
                                                     {
-                                                        var path2 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}/{SharedStaticFunctions.ReplaceUrlText(s2.Name)}";
-                                                        
                                                         <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
-                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name" @Html.Raw(GetPopoverAttr(s2, path2))>@s2.Name</a>
+                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
                                                     }
                                                 </li>
                                             }
@@ -113,10 +93,8 @@
                                     }
                                     else
                                     {
-                                        var path1 = $"https://arvidsonfoto.se/Bilder/{SharedStaticFunctions.ReplaceUrlText(head.Name)}/{SharedStaticFunctions.ReplaceUrlText(s1.Name)}";
-                                        
                                         <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
-                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name" @Html.Raw(GetPopoverAttr(s1, path1))>@s1.Name</a>
+                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
                                     }
                                 </li>
                             }

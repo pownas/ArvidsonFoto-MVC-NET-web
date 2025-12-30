@@ -9,8 +9,6 @@
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
-    @* Blazor component styles *@
-    <link href="_content/Microsoft.AspNetCore.Components.Web/css/blazor-error-ui.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -30,11 +28,9 @@
     <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
     <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
     <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
+    <script src="js/categoryCache.js"></script> @*<!-- Client-side category caching with localStorage -->*@
     <script src="js/categoryTooltip.js"></script> @*<!-- Category tooltip with image preview -->*@
     <script src="js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    
-    @* Blazor Server SignalR script - required for interactive components *@
-    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
