@@ -57,7 +57,7 @@ public class UploadImageInputDto
     [Display(Name = "Beskrivning")]
     [DataType(DataType.Text)]
     [MaxLength(150, ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
-    public required string ImageDescription { get; set; } = "";
+    public string ImageDescription { get; set; } = "";
 
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
@@ -73,12 +73,11 @@ public class UploadImageInputDto
     {
         return new UploadImageInputDto
         {
-            ImageId = 0,
             ImageHuvudfamilj = null,
             ImageHuvudfamiljNamn = string.Empty,
             ImageFamilj = null,
             ImageFamiljNamn = string.Empty,
-            ImageArt = 0,
+            ImageArt = -1,
             ImageArtNamn = string.Empty,
             ImageUrl = string.Empty,
             ImageUrlFullSrc = string.Empty,
