@@ -25,5 +25,5 @@ public class FacebookUploadViewModel
     /// <summary>
     /// Inputmodellen för formuläret
     /// </summary>
-    public FacebookUploadInputDto InputModel { get; set; } = new();
+    public UploadFacebookInputDto InputModel { get; set; } = new();
 }

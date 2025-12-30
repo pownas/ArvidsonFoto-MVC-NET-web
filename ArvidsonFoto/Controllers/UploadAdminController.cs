@@ -178,14 +178,14 @@ public class UploadAdminController : Controller
         return RedirectToAction("RedigeraBilder", model);
     }
 
-    public IActionResult NyKategori(UploadNewCategoryDto inputModel)
+    public IActionResult NyKategori(UploadNewCategoryInputDto inputModel)
     {
         ViewData["Title"] = "Länka till ny kategori";
-        return View(inputModel ?? UploadNewCategoryDto.CreateEmpty());
+        return View(inputModel ?? UploadNewCategoryInputDto.CreateEmpty());
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateCategory(UploadNewCategoryDto inputModel)
+    public IActionResult CreateCategory(UploadNewCategoryInputDto inputModel)
     {
         inputModel.CategoryCreated = false;
 
@@ -422,7 +422,7 @@ public class UploadAdminController : Controller
     /// Skapar Facebook-inlägg med valda bilder
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateFacebookPost(FacebookUploadInputDto model)
+    public async Task<IActionResult> CreateFacebookPost(UploadFacebookInputDto model)
     {
         if (!ModelState.IsValid)
         {

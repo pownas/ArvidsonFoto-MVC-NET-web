@@ -3,13 +3,13 @@
 namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// Data Transfer Object (DTO) for contact form submissions.
+/// Data Transfer Object (DTO) for contact input form model submissions.
 /// </summary>
 /// <remarks>
 /// Contains all the necessary fields for a contact form including validation requirements,
 /// submission tracking, and display state management.
 /// </remarks>
-public class ContactFormDto
+public class ContactFormInputDto
 {
     /// <summary>Koden som behövs för att kunna skicka formuläret</summary>
     [Required(ErrorMessage = "Vänligen fyll i en kod")] //Standard meddelande: "The Code field is required."
@@ -56,9 +56,9 @@ public class ContactFormDto
     /// Skapar en tom ContactFormDto med alla required fields initialiserade
     /// </summary>
     /// <returns>En ny tom ContactFormDto</returns>
-    public static ContactFormDto CreateEmpty()
+    public static ContactFormInputDto CreateEmpty()
     {
-        return new ContactFormDto
+        return new ContactFormInputDto
         {
             Code = string.Empty,
             Email = string.Empty,

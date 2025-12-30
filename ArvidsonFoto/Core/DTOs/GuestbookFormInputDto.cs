@@ -3,13 +3,13 @@
 namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// Data Transfer Object (DTO) for guestbook entries.
+/// Data Transfer Object (DTO) for guestbook entries input model.
 /// </summary>
 /// <remarks>
 /// Contains all the necessary fields for a guestbook submission including validation requirements,
 /// submission tracking, and display state management.
 /// </remarks>
-public class GuestbookInputDto
+public class GuestbookFormInputDto
 {
     /// <summary>Koden som behövs för att kunna skicka formuläret</summary>
     [Required(ErrorMessage = "Vänligen fyll i en kod")] //Standard meddelande: "The Code field is required."
@@ -48,9 +48,9 @@ public class GuestbookInputDto
     /// Skapar en tom GuestbookInputDto med alla required fields initialiserade
     /// </summary>
     /// <returns>En ny tom GuestbookInputDto</returns>
-    public static GuestbookInputDto CreateEmpty()
+    public static GuestbookFormInputDto CreateEmpty()
     {
-        return new GuestbookInputDto
+        return new GuestbookFormInputDto
         {
             Code = string.Empty,
             Name = string.Empty,

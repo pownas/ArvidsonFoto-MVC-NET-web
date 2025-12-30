@@ -167,7 +167,7 @@ public class InfoControllerTests
     public void PostToGb_WithValidModel_CreatesGuestbookEntry()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -192,7 +192,7 @@ public class InfoControllerTests
     public void PostToGb_WithValidModel_SetsDisplayPublishedTrue()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -216,7 +216,7 @@ public class InfoControllerTests
     public void PostToGb_WithInvalidCode_DoesNotCreateEntry()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "0000", // Invalid code
             Name = "Test User",
@@ -240,7 +240,7 @@ public class InfoControllerTests
     public void PostToGb_StripsHttpsFromHomepage()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -265,7 +265,7 @@ public class InfoControllerTests
     public void PostToGb_LimitsHomepageToThreeLevels()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -290,7 +290,7 @@ public class InfoControllerTests
     public void PostToGb_WithEmptyName_UsesAnonymous()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "", // Empty name
@@ -312,7 +312,7 @@ public class InfoControllerTests
     public void PostToGb_WithEmptyHomepage_CreatesEntryWithoutHomepage()
     {
         // Arrange
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -337,7 +337,7 @@ public class InfoControllerTests
     {
         // Arrange
         var lastId = _mockGuestBookService.GetLastGbId();
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -365,21 +365,21 @@ public class InfoControllerTests
     public void Gastbok_ReturnsViewResult()
     {
         // Arrange
-        var inputModel = GuestbookInputDto.CreateEmpty();
+        var inputModel = GuestbookFormInputDto.CreateEmpty();
 
         // Act
         var result = _controller.Gastbok(inputModel);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.IsType<GuestbookInputDto>(viewResult.Model);
+        Assert.IsType<GuestbookFormInputDto>(viewResult.Model);
     }
 
     [Fact]
     public void Gastbok_InitializesModelWhenEmpty()
     {
         // Arrange
-        var inputModel = GuestbookInputDto.CreateEmpty();
+        var inputModel = GuestbookFormInputDto.CreateEmpty();
         inputModel.FormSubmitDate = DateTime.MinValue;
         inputModel.Message = null!;
 
@@ -388,7 +388,7 @@ public class InfoControllerTests
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsType<GuestbookInputDto>(viewResult.Model);
+        var model = Assert.IsType<GuestbookFormInputDto>(viewResult.Model);
         Assert.NotEqual(DateTime.MinValue, model.FormSubmitDate);
         Assert.False(model.DisplayPublished);
         Assert.False(model.DisplayErrorPublish);
@@ -398,7 +398,7 @@ public class InfoControllerTests
     public void Gastbok_PreservesModelState_WhenProvidedWithData()
     {
         // Arrange
-        var inputModel = GuestbookInputDto.CreateEmpty();
+        var inputModel = GuestbookFormInputDto.CreateEmpty();
         inputModel.DisplayPublished = true;
         inputModel.Message = "Test";
 
@@ -407,7 +407,7 @@ public class InfoControllerTests
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsType<GuestbookInputDto>(viewResult.Model);
+        var model = Assert.IsType<GuestbookFormInputDto>(viewResult.Model);
         Assert.True(model.DisplayPublished);
     }
 
@@ -419,7 +419,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RequiresCode()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "", // Missing required field
             Name = "Test",
@@ -443,7 +443,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RequiresMessage()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -467,7 +467,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_AcceptsValidHomepageWithoutProtocol()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -490,7 +490,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_AcceptsValidHomepageWithProtocol()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -513,7 +513,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RejectsInvalidCode()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "1234", // Invalid code
             Name = "Test",
@@ -537,7 +537,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_EnforcesMaxLengths()
     {
         // Arrange
-        var model = new GuestbookInputDto
+        var model = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = new string('a', 51), // Too long (max 50)
@@ -565,7 +565,7 @@ public class InfoControllerTests
     public void PostToGb_FullWorkflow_Success()
     {
         // Arrange - Create a valid guestbook entry
-        var inputModel = new GuestbookInputDto
+        var inputModel = new GuestbookFormInputDto
         {
             Code = "3568",
             Name = "Integration Test User",
@@ -664,7 +664,7 @@ public class InfoControllerTests
         // Add model error to simulate invalid model state
         controller.ModelState.AddModelError("Email", "Invalid email");
 
-        var contactFormModel = new ContactFormDto
+        var contactFormModel = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -717,7 +717,7 @@ public class InfoControllerTests
         var tempDataProvider = new MockTempDataProvider();
         controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
 
-        var contactFormModel = new ContactFormDto
+        var contactFormModel = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -768,7 +768,7 @@ public class InfoControllerTests
         var tempDataProvider = new MockTempDataProvider();
         controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
 
-        var contactFormModel = new ContactFormDto
+        var contactFormModel = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -793,7 +793,7 @@ public class InfoControllerTests
     public void ContactFormModel_RequiresCode()
     {
         // Arrange
-        var model = new ContactFormDto
+        var model = new ContactFormInputDto
         {
             Code = "", // Missing required field
             Name = "Test",
@@ -817,7 +817,7 @@ public class InfoControllerTests
     public void ContactFormModel_RequiresValidEmail()
     {
         // Arrange
-        var model = new ContactFormDto
+        var model = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -841,7 +841,7 @@ public class InfoControllerTests
     public void ContactFormModel_RequiresSubject()
     {
         // Arrange
-        var model = new ContactFormDto
+        var model = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -865,7 +865,7 @@ public class InfoControllerTests
     public void ContactFormModel_RequiresMessage()
     {
         // Arrange
-        var model = new ContactFormDto
+        var model = new ContactFormInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -889,7 +889,7 @@ public class InfoControllerTests
     public void ContactFormModel_ValidatesCorrectCode()
     {
         // Arrange
-        var model = new ContactFormDto
+        var model = new ContactFormInputDto
         {
             Code = "1234", // Wrong code (should be 3568)
             Name = "Test",
