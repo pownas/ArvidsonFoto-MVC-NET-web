@@ -40,7 +40,9 @@ public class MockApiCategoryService : IApiCategoryService
         
         while (currentMenu != null)
         {
-            pathParts.Insert(0, currentMenu.MenuUrlSegment ?? $"category-{currentMenu.MenuCategoryId ?? 0}");
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuUrlSegment))
+                pathParts.Insert(0, currentMenu.MenuUrlSegment ?? $"category-{currentMenu.MenuCategoryId ?? 0}");
             
             if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
                 break;
@@ -268,6 +270,32 @@ public class MockApiCategoryService : IApiCategoryService
         
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == categoryId);
         return category?.UrlCategoryPathFull ?? string.Empty;
+    }
+
+    public string GetCategoryDisplayPathForImage(int categoryId)
+    {
+        if (categoryId <= 0) return string.Empty;
+        
+        // Build display path with ÅÄÖ from category names
+        var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == categoryId);
+        if (menu == null) return string.Empty;
+
+        var pathParts = new List<string>();
+        var currentMenu = menu;
+        
+        while (currentMenu != null)
+        {
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuDisplayName))
+                pathParts.Insert(0, currentMenu.MenuDisplayName);
+            
+            if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+                break;
+                
+            currentMenu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenu.MenuParentCategoryId);
+        }
+        
+        return string.Join("/", pathParts);
     }
 
     public Dictionary<int, string> GetCategoryPathsBulk(List<int> categoryIds)

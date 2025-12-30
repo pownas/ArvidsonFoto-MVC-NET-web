@@ -43,6 +43,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     /// <summary> Simple in-memory cache for category paths to improve performance </summary>
     private static readonly ConcurrentDictionary<int, string> _categoryPathCache = new();
+    
+    /// <summary> Simple in-memory cache for category names to improve performance </summary>
+    private static readonly ConcurrentDictionary<int, string> _categoryNameCache = new();
 
     /// <summary> Cache expiry time for category paths (5 minutes) </summary>
     private static DateTime _cacheLastUpdated = DateTime.MinValue;
@@ -186,13 +189,25 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
+            // Check cache first
+            if (_categoryNameCache.TryGetValue(id.Value, out var cachedName))
+            {
+                return cachedName;
+            }
+            
             var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id.Value);
             if (category == null)
             {
                 Log.Information("Could not find category name for id: {Id}", id);
                 return "Not found";
             }
-            return category.MenuDisplayName ?? "Not found";
+            
+            var name = category.MenuDisplayName ?? "Not found";
+            
+            // Cache the result
+            _categoryNameCache[id.Value] = name;
+            
+            return name;
         }
         catch (Exception ex)
         {
@@ -292,7 +307,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var category = _entityContext.TblMenus
                 .Where(c => c.MenuCategoryId == currentId)
-                .Select(c => new { c.MenuParentCategoryId, c.MenuUrlSegment, c.Id })
+                .Select(c => new { c.MenuCategoryId, c.MenuParentCategoryId, c.MenuUrlSegment, c.Id })
                 .FirstOrDefault();
 
             if (category == null)
@@ -301,7 +316,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {currentId}";
             }
 
-            if (!string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
                 segments.Insert(0, category.MenuUrlSegment);
 
             currentId = category.MenuParentCategoryId;
@@ -329,7 +345,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var category = _entityContext.TblMenus
                 .Where(c => c.MenuCategoryId == currentId)
-                .Select(c => new { c.MenuParentCategoryId, c.MenuDisplayName, c.Id })
+                .Select(c => new { c.MenuCategoryId, c.MenuParentCategoryId, c.MenuDisplayName, c.Id })
                 .FirstOrDefault();
 
             if (category == null)
@@ -338,6 +354,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {currentId}";
             }
 
+            // Note: Keep "Fåglar" in sorting URL as it's used for menu ordering, not file paths
             if (!string.IsNullOrWhiteSpace(category.MenuDisplayName))
                 segments.Insert(0, category.MenuDisplayName);
 
@@ -395,6 +412,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         _cache.Remove(MAIN_CATEGORIES_CACHE_KEY);
         _cache.Remove(MAIN_MENU_CACHE_KEY);
         _categoryPathCache.Clear();
+        _categoryNameCache.Clear();
         _cacheLastUpdated = DateTime.MinValue;
         Log.Information("All category caches cleared");
     }
@@ -581,19 +599,53 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var category = _entityContext.TblMenus
                 .Where(c => c.MenuCategoryId == currentId)
-                .Select(c => new { c.MenuParentCategoryId, c.MenuUrlSegment })
+                .Select(c => new { c.MenuCategoryId, c.MenuParentCategoryId, c.MenuUrlSegment })
                 .FirstOrDefault();
 
             if (category == null)
                 break;
 
-            if (!string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
                 segments.Insert(0, category.MenuUrlSegment);
 
             currentId = category.MenuParentCategoryId.GetValueOrDefault();
         }
 
         return segments.Count > 0 ? string.Join("/", segments).ToLowerInvariant() : string.Empty;
+    }
+
+    /// <summary>
+    /// Gets the display category path (with ÅÄÖ) for an image, matching the physical folder structure
+    /// </summary>
+    /// <param name="categoryId">The category ID to get the path for</param>
+    /// <returns>The category path with display names (e.g., "Tättingar/Mesar/Blåmes" without "Fåglar")</returns>
+    public string GetCategoryDisplayPathForImage(int categoryId)
+    {
+        if (categoryId <= 0)
+            return string.Empty;
+
+        var segments = new List<string>();
+        var currentId = categoryId;
+
+        while (currentId > 0)
+        {
+            var category = _entityContext.TblMenus
+                .Where(c => c.MenuCategoryId == currentId)
+                .Select(c => new { c.MenuCategoryId, c.MenuParentCategoryId, c.MenuDisplayName })
+                .FirstOrDefault();
+
+            if (category == null)
+                break;
+
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuDisplayName))
+                segments.Insert(0, category.MenuDisplayName);
+
+            currentId = category.MenuParentCategoryId.GetValueOrDefault();
+        }
+
+        return segments.Count > 0 ? string.Join("/", segments) : string.Empty;
     }
 
     public Dictionary<int, string> GetCategoryPathsBulk(List<int> categoryIds)
@@ -666,7 +718,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         while (currentId > 0 && categoryLookup.TryGetValue(currentId, out var category))
         {
-            if (!string.IsNullOrWhiteSpace(category.UrlSegment))
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (currentId != 1 && !string.IsNullOrWhiteSpace(category.UrlSegment))
                 segments.Insert(0, category.UrlSegment);
 
             currentId = category.ParentId.GetValueOrDefault();
