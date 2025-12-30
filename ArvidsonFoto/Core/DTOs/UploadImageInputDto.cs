@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ArvidsonFoto.Core.ViewModels;
+namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// ViewModel for uploading image input functionality.
+/// Data Transfer Object (DTO), Input model for uploading image input functionality.
 /// </summary>
 /// <remarks>
 /// Contains all the necessary fields for uploading and managing image metadata including 
 /// taxonomic classifications, dates, descriptions, and validation requirements.
 /// </remarks>
-public class UploadImageInputModel
+public class UploadImageInputDto
 {
     /// <summary>Bildens unika identifierare</summary>
     public int ImageId { get; set; }
@@ -68,9 +68,9 @@ public class UploadImageInputModel
     /// Skapar en tom UploadImageInputModel med alla required fields initialiserade
     /// </summary>
     /// <returns>En ny tom UploadImageInputModel</returns>
-    public static UploadImageInputModel CreateEmpty()
+    public static UploadImageInputDto CreateEmpty()
     {
-        return new UploadImageInputModel
+        return new UploadImageInputDto
         {
             ImageId = 0,
             ImageHuvudfamilj = null,

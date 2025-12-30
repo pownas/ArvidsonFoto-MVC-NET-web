@@ -1,4 +1,4 @@
-﻿using ArvidsonFoto.Core.ViewModels;
+﻿using ArvidsonFoto.Core.DTOs;
 
 namespace ArvidsonFoto.Core.ViewModels;
 
@@ -12,7 +12,7 @@ namespace ArvidsonFoto.Core.ViewModels;
 public class UploadEditImagesViewModel
 {
     /// <summary>Lista med bilder som ska visas på nuvarande sida för redigering</summary>
-    public List<UploadImageInputModel> DisplayImagesList { get; set; } = [];
+    public List<UploadImageInputDto> DisplayImagesList { get; set; } = [];
 
     /// <summary>Totalt antal sidor i bildredigeraren</summary>
     public int TotalPages { get; set; } = -1;

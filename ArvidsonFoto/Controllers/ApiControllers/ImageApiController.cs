@@ -3,7 +3,6 @@ using ArvidsonFoto.Core.Attributes;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
-using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ArvidsonFoto.Controllers.ApiControllers;
@@ -260,7 +259,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <remarks>This method requires authentication in production environments. It validates the input and
     /// updates the image's properties if the image exists in the database.</remarks>
     /// <param name="image">The data transfer object containing the updated properties of the image. The <see
-    /// cref="UploadImageInputModel.ImageId"/> must be greater than 0.</param>
+    /// cref="UploadImageInputDto.ImageId"/> must be greater than 0.</param>
     /// <returns><see langword="true"/> if the image was successfully updated; otherwise, <see langword="false"/> if the input is
     /// invalid or the image does not exist.</returns>
 #if !DEBUG  // This endpoint is secured and requires authentication in production, but can be accessed without authentication in debug mode
@@ -269,7 +268,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     //[SwaggerOperation(Summary = "Secured endpoint", Description = "Requires authentication")]
     [SwaggerSecurityRequirement("cookieAuth")] // This will add the lock icon for this endpoint
     [HttpPut("UpdateImage")]
-    public bool UpdateImage(UploadImageInputModel image)
+    public bool UpdateImage(UploadImageInputDto image)
     {
         // Validate the input
         if (image == null || image.ImageId <= 0)

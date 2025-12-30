@@ -3,9 +3,9 @@
 namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// InputModel för att skapa Facebook-inlägg
+/// Data Transfer Object (DTO), InputModel för att skapa Facebook-inlägg
 /// </summary>
-public class FacebookUploadInputDto
+public class UploadFacebookInputDto
 {
     /// <summary>
     /// Lista med valda bild-ID:n (1-10 bilder)
@@ -28,9 +28,9 @@ public class FacebookUploadInputDto
     /// Skapar en tom FacebookUploadInputDto med alla properties initialiserade
     /// </summary>
     /// <returns>En ny tom FacebookUploadInputDto</returns>
-    public static FacebookUploadInputDto CreateEmpty()
+    public static UploadFacebookInputDto CreateEmpty()
     {
-        return new FacebookUploadInputDto
+        return new UploadFacebookInputDto
         {
             SelectedImageIds = new List<int>(),
             Message = string.Empty

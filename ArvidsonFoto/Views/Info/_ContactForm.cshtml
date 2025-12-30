@@ -1,5 +1,5 @@
 ﻿@using ArvidsonFoto.Core.DTOs
-@model ContactFormDto
+@model ContactFormInputDto
 
 @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
 <form method="post" asp-action="@(nameof(InfoController.SendMessage))" asp-route-Page="@Model.ReturnPageUrl" class="needs-validation" novalidate>

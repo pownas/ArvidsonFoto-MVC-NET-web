@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Core.DTOs;
-using ArvidsonFoto.Core.ViewModels;
 
 namespace ArvidsonFoto.Core.ViewModels;
 
@@ -19,7 +18,7 @@ public class UploadImageViewModel
     public List<CategoryDto> SubCategories { get; set; } = [];
 
     /// <summary>Bilduppladdningsmodell med metadata</summary>
-    public UploadImageInputModel ImageInputModel { get; set; } = UploadImageInputModel.CreateEmpty();
+    public UploadImageInputDto ImageInputModel { get; set; } = UploadImageInputDto.CreateEmpty();
 
     /// <summary>Aktuell URL för sidan</summary>
     public string CurrentUrl { get; set; } = string.Empty;

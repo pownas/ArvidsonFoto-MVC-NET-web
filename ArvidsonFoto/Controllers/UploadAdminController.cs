@@ -48,11 +48,11 @@ public class UploadAdminController : Controller
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputModel inputModel)
+    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputDto inputModel)
     {
         ViewData["Title"] = "Länka till ny bild";
         UploadImageViewModel viewModel = new UploadImageViewModel();
-        viewModel.ImageInputModel = inputModel ?? UploadImageInputModel.CreateEmpty();
+        viewModel.ImageInputModel = inputModel ?? UploadImageInputDto.CreateEmpty();
 
         if (subLevel4 is not null)
         {
@@ -97,7 +97,7 @@ public class UploadAdminController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateImageLink(UploadImageInputModel model)
+    public IActionResult CreateImageLink(UploadImageInputDto model)
     {
         model.ImageCreated = false;
 
@@ -144,7 +144,7 @@ public class UploadAdminController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditImageLink(UploadImageInputModel model)
+    public async Task<IActionResult> EditImageLink(UploadImageInputDto model)
     {
         if (ModelState.IsValid)
         {
@@ -178,14 +178,14 @@ public class UploadAdminController : Controller
         return RedirectToAction("RedigeraBilder", model);
     }
 
-    public IActionResult NyKategori(UploadNewCategoryDto inputModel)
+    public IActionResult NyKategori(UploadNewCategoryInputDto inputModel)
     {
         ViewData["Title"] = "Länka till ny kategori";
-        return View(inputModel ?? UploadNewCategoryDto.CreateEmpty());
+        return View(inputModel ?? UploadNewCategoryInputDto.CreateEmpty());
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateCategory(UploadNewCategoryDto inputModel)
+    public IActionResult CreateCategory(UploadNewCategoryInputDto inputModel)
     {
         inputModel.CategoryCreated = false;
 
@@ -230,7 +230,7 @@ public class UploadAdminController : Controller
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
-        viewModel.DisplayImagesList = new List<UploadImageInputModel>();
+        viewModel.DisplayImagesList = new List<UploadImageInputDto>();
 
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
         {
@@ -246,7 +246,7 @@ public class UploadAdminController : Controller
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            UploadImageInputModel inputModel = UploadImageInputModel.CreateEmpty();
+            UploadImageInputDto inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
             inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
@@ -391,7 +391,7 @@ public class UploadAdminController : Controller
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            var inputModel = UploadImageInputModel.CreateEmpty();
+            var inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
             inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
@@ -422,7 +422,7 @@ public class UploadAdminController : Controller
     /// Skapar Facebook-inlägg med valda bilder
     /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateFacebookPost(FacebookUploadInputDto model)
+    public async Task<IActionResult> CreateFacebookPost(UploadFacebookInputDto model)
     {
         if (!ModelState.IsValid)
         {

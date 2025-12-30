@@ -60,7 +60,7 @@ public class InfoController : Controller
         return View();
     }
 
-    public IActionResult Gastbok(GuestbookInputDto inputModel)
+    public IActionResult Gastbok(GuestbookFormInputDto inputModel)
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
@@ -68,7 +68,7 @@ public class InfoController : Controller
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
         {
-            inputModel = GuestbookInputDto.CreateEmpty();
+            inputModel = GuestbookFormInputDto.CreateEmpty();
         }
 
         return View(inputModel);
@@ -76,7 +76,7 @@ public class InfoController : Controller
 
     [HttpPost, ValidateAntiForgeryToken]
     [Route("Info/PostToGb")]
-    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputDto inputModel)
+    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookFormInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");
         if (ModelState.IsValid)
@@ -113,7 +113,7 @@ public class InfoController : Controller
                 if (_guestbookService.CreateGBpost(postToPublish))
                 {
                     Log.Information("GB-post, published OK.");
-                    inputModel = new GuestbookInputDto
+                    inputModel = new GuestbookFormInputDto
                     {
                         Code = string.Empty,
                         Name = string.Empty,
@@ -145,7 +145,7 @@ public class InfoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormDto contactFormModel, string Page)
+    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormInputDto contactFormModel, string Page)
     {
         if (ModelState.IsValid)
         {
@@ -227,7 +227,7 @@ public class InfoController : Controller
                     emailSent = true;
                 }
 
-                contactFormModel = new ContactFormDto()
+                contactFormModel = new ContactFormInputDto()
                 {
                     Code = string.Empty,
                     Email = string.Empty,
@@ -287,7 +287,7 @@ public class InfoController : Controller
         };
     }
 
-    public IActionResult Kontakta(ContactFormDto contactFormModel)
+    public IActionResult Kontakta(ContactFormInputDto contactFormModel)
     {
         ViewData["Title"] = "Kontaktinformation";
         if (User?.Identity?.IsAuthenticated is false)
@@ -307,7 +307,7 @@ public class InfoController : Controller
 
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormDto()
+            contactFormModel = new ContactFormInputDto()
             {
                 Code = string.Empty,
                 Email = string.Empty,
@@ -329,7 +329,7 @@ public class InfoController : Controller
         return View(contactFormModel);
     }
 
-    public IActionResult Kop_av_bilder(ContactFormDto contactFormModel, string imgId)
+    public IActionResult Kop_av_bilder(ContactFormInputDto contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
@@ -349,7 +349,7 @@ public class InfoController : Controller
         
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormDto()
+            contactFormModel = new ContactFormInputDto()
             {
                 Code = string.Empty,
                 Email = string.Empty,
