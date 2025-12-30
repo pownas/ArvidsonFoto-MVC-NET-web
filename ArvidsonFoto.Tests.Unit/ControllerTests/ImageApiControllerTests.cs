@@ -1,6 +1,8 @@
 ﻿using ArvidsonFoto.Controllers.ApiControllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -282,7 +284,7 @@ public class ImageApiControllerTests : IDisposable
     public void UpdateImage_ValidImage_ReturnsTrue()
     {
         // Arrange - Använd verkliga värden från DbSeederExtension
-        var uploadImage = new UploadImageInputDto
+        var uploadImage = new UploadImageInputModel
         {
             ImageId = 1, // Första bilden från DbSeederExtension
             ImageHuvudfamilj = null,
@@ -297,7 +299,7 @@ public class ImageApiControllerTests : IDisposable
             ImageUrlFullSrc = "full/path/AP2D6321_Updated"
         };
 
-        var existingImage = new ArvidsonFoto.Core.Models.TblImage
+        var existingImage = new TblImage
         {
             Id = 1,
             ImageId = 1,
@@ -333,7 +335,7 @@ public class ImageApiControllerTests : IDisposable
     public void UpdateImage_NullImage_ReturnsFalse()
     {
         // Arrange
-        UploadImageInputDto? uploadImage = null;
+        UploadImageInputModel? uploadImage = null;
 
         // Act
         var result = _controller.UpdateImage(uploadImage!);
@@ -346,7 +348,7 @@ public class ImageApiControllerTests : IDisposable
     public void UpdateImage_InvalidImageId_ReturnsFalse()
     {
         // Arrange
-        var uploadImage = new UploadImageInputDto
+        var uploadImage = new UploadImageInputModel
         {
             ImageId = 0, // Invalid ID
             ImageHuvudfamilj = 10,

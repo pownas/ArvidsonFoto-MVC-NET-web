@@ -48,11 +48,11 @@ public class UploadAdminController : Controller
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputDto inputModel)
+    public IActionResult NyBild(string subLevel1, string subLevel2, string subLevel3, string subLevel4, UploadImageInputModel inputModel)
     {
         ViewData["Title"] = "Länka till ny bild";
         UploadImageViewModel viewModel = new UploadImageViewModel();
-        viewModel.ImageInputModel = inputModel ?? UploadImageInputDto.CreateEmpty();
+        viewModel.ImageInputModel = inputModel ?? UploadImageInputModel.CreateEmpty();
 
         if (subLevel4 is not null)
         {
@@ -97,7 +97,7 @@ public class UploadAdminController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateImageLink(UploadImageInputDto model)
+    public IActionResult CreateImageLink(UploadImageInputModel model)
     {
         model.ImageCreated = false;
 
@@ -144,7 +144,7 @@ public class UploadAdminController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditImageLink(UploadImageInputDto model)
+    public async Task<IActionResult> EditImageLink(UploadImageInputModel model)
     {
         if (ModelState.IsValid)
         {
@@ -230,7 +230,7 @@ public class UploadAdminController : Controller
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
-        viewModel.DisplayImagesList = new List<UploadImageInputDto>();
+        viewModel.DisplayImagesList = new List<UploadImageInputModel>();
 
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
         {
@@ -246,7 +246,7 @@ public class UploadAdminController : Controller
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            UploadImageInputDto inputModel = UploadImageInputDto.CreateEmpty();
+            UploadImageInputModel inputModel = UploadImageInputModel.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
             inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
@@ -391,7 +391,7 @@ public class UploadAdminController : Controller
         {
             DateTime imgDate = item.ImageDate ?? new DateTime(1900, 01, 01);
 
-            var inputModel = UploadImageInputDto.CreateEmpty();
+            var inputModel = UploadImageInputModel.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
             inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
