@@ -348,7 +348,7 @@ public class InfoController : Controller
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
         
-        if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
+        if (contactFormModel.Message is null)
         {
             contactFormModel = new ContactFormInputDto()
             {
@@ -369,9 +369,32 @@ public class InfoController : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    var imageArt = image.Name ?? "okänd kategori";
-
-                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.UrlImage.Split('/').Last() + ".jpg";
+                    
+                    // Get the category name from the category service
+                    var categoryName = string.Empty;
+                    if (image.CategoryId > 0)
+                    {
+                        categoryName = _categoryService.GetNameById(image.CategoryId);
+                    }
+                    
+                    var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
+                    
+                    // Build the message with both image name and category
+                    var messageParts = new List<string> { "Hej! Jag är intresserad av att köpa bilden: " };
+                    
+                    if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
+                    {
+                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                        messageParts.Add($"  - Från kategorin: {categoryName}");
+                        contactFormModel.Subject = $"Intresse att köpa en bild i kategorin: {categoryName}";
+                    }
+                    else
+                    {
+                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                    }
+                    messageParts.Add($" ");
+                    
+                    contactFormModel.Message = string.Join("\n", messageParts);
                 }
                 catch (Exception)
                 {
