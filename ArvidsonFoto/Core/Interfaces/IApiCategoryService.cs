@@ -135,9 +135,23 @@ public interface IApiCategoryService
     string GetCategoryPathForImage(int categoryId);
 
     /// <summary>
+    /// Gets the display category path (with ÅÄÖ) for an image, matching the physical folder structure
+    /// </summary>
+    /// <param name="categoryId">The category ID to get the path for</param>
+    /// <returns>The category path with display names (e.g., "Tättingar/Mesar/Blåmes")</returns>
+    string GetCategoryDisplayPathForImage(int categoryId);
+
+    /// <summary>
     /// Bulk load category paths for multiple category IDs to optimize database queries
     /// </summary>
     /// <param name="categoryIds">List of category IDs to get paths for</param>
     /// <returns>Dictionary mapping category ID to its full path</returns>
     Dictionary<int, string> GetCategoryPathsBulk(List<int> categoryIds);
+
+    /// <summary>
+    /// Bulk load category names for multiple category IDs to optimize database queries
+    /// </summary>
+    /// <param name="categoryIds">List of category IDs to get names for</param>
+    /// <returns>Dictionary mapping category ID to its name</returns>
+    Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds);
 }

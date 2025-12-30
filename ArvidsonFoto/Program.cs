@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Services;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
+using Scalar.AspNetCore;
 
 namespace ArvidsonFoto;
 
@@ -16,16 +15,27 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // Configure Serilog
-        Log.Logger = new LoggerConfiguration()
+        // Determine if we're in development mode early
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var isDevelopment = environment.Equals("Development", StringComparison.OrdinalIgnoreCase);
+
+        // Configure Serilog with Console sink in Development
+        var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            //.WriteTo.Console() //Kräver nuget paketet: Serilog.Sinks.Console
-            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day) //Bör kanske försöka byta till Serilog DB-loggning...
-            .CreateLogger();
+            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day);
+
+        // Add Console sink in Development for easier debugging
+        if (isDevelopment)
+        {
+            loggerConfig.WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+        }
+
+        Log.Logger = loggerConfig.CreateLogger();
 
         try
         {
-            Log.Information("Starting web application");
+            Log.Information("Starting web application in {Environment} mode", environment);
             
             var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +67,11 @@ public class Program
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        // Database configuration
+        // Configure SMTP settings from appsettings
+        services.Configure<ArvidsonFoto.Core.Configuration.SmtpSettings>(
+            configuration.GetSection("SmtpSettings"));
+
+        // Database configuration - ONLY Core DbContext now
         var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
                            configuration.GetConnectionString("UseInMemoryDatabase") == "true";
@@ -65,8 +79,6 @@ public class Program
         if (useInMemoryDb)
         {
             // Use In-Memory database in Codespaces or when configured
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
-                options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
             services.AddDbContext<IdentityContext>(options =>
@@ -76,8 +88,6 @@ public class Program
         {
             // Use SQL Server locally
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
-                options.UseSqlServer(connectionString));
             services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddDbContext<IdentityContext>(options =>
@@ -88,11 +98,10 @@ public class Program
         services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<IdentityContext>();
 
-        // Add frontend services
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<IImageService, ImageService>();
+        // Add frontend services - all using Core now
         services.AddScoped<IGuestBookService, GuestBookService>();
         services.AddScoped<IPageCounterService, PageCounterService>();
+        services.AddScoped<IContactService, ContactService>();
         services.AddScoped<IFacebookService, FacebookService>();
 
         // Add HttpClient for FacebookService
@@ -121,6 +130,16 @@ public class Program
 
         services.AddControllersWithViews();
         services.AddRazorPages();
+
+        // ===== BLAZOR SERVER CONFIGURATION =====
+        services.AddServerSideBlazor(options =>
+        {
+            // Configure circuit options for better performance
+            options.DetailedErrors = environment.IsDevelopment();
+            options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+            options.DisconnectedCircuitMaxRetained = 100;
+            options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+        });
 
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
         services.AddOpenApi();
@@ -159,9 +178,60 @@ public class Program
         {
             using (var scope = app.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoDbContext>();
-                context.Database.EnsureCreated();
-                context.SeedInMemoryDatabase();
+                var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
+                coreContext.Database.EnsureCreated();
+                
+                // Seeda data om databasen är tom
+                if (!coreContext.TblImages.Any())
+                {
+                    Log.Information("Seeding in-memory database with test data...");
+                    coreContext.SeedInMemoryDatabase();
+                    Log.Information("In-memory database seeded successfully with {ImageCount} images, {CategoryCount} categories, {GuestbookCount} guestbook entries",
+                        coreContext.TblImages.Count(),
+                        coreContext.TblMenus.Count(),
+                        coreContext.TblGbs.Count());
+                }
+                else
+                {
+                    Log.Information("In-memory database already contains data - skipping seed");
+                }
+            }
+        }
+
+        // ===== EAGER LOAD CATEGORY CACHE AT STARTUP =====
+        // Pre-load all categories into cache to improve performance
+        // This reduces database queries from ~350k to <1k per 5 minutes
+        using (var scope = app.Services.CreateScope())
+        {
+            try
+            {
+                var categoryService = scope.ServiceProvider.GetRequiredService<IApiCategoryService>();
+                
+                Log.Information("Pre-loading category cache...");
+                var startTime = DateTime.UtcNow;
+                
+                // Load all categories - this will cache them with GetAll()
+                var allCategories = categoryService.GetAll();
+                
+                // Pre-cache all category names and paths for bulk operations
+                var allCategoryIds = allCategories
+                    .Where(c => c.CategoryId.HasValue)
+                    .Select(c => c.CategoryId!.Value)
+                    .ToList();
+                
+                if (allCategoryIds.Any())
+                {
+                    categoryService.GetCategoryNamesBulk(allCategoryIds);
+                    categoryService.GetCategoryPathsBulk(allCategoryIds);
+                }
+                
+                var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
+                Log.Information("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
+                    elapsed, allCategories.Count);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to pre-load category cache - will load on demand");
             }
         }
 
@@ -174,7 +244,6 @@ public class Program
         else
         {
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-            //app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -209,10 +278,23 @@ public class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
         
-        // Native .NET 10 OpenAPI endpoint - only in development
+        // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
         {
-            app.MapOpenApi("/api/openapi.json");
+            // Native .NET 10 OpenAPI JSON endpoint
+            app.MapOpenApi();
+            
+            // Scalar UI for interactive API documentation  
+            app.MapScalarApiReference(options =>
+            {
+                options
+                    .WithTitle("ArvidsonFoto API")
+                    .WithTheme(ScalarTheme.Purple)
+                    .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+            });
+            
+            Log.Information("OpenAPI documentation available at: /scalar/v1");
+            Log.Information("OpenAPI JSON schema available at: /openapi/v1.json");
         }
     }
 }

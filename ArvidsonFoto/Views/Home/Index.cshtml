@@ -1,15 +1,11 @@
-﻿@*<!-- Home-Index (Startsidan) -->*@
-@model GalleryViewModel
+﻿@using ArvidsonFoto.Core.Interfaces
+@*<!-- Home-Index (Startsidan) -->*@
+@model ArvidsonFoto.Core.ViewModels.GalleryViewModel
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
     <meta name="description" content="Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv. Bilder på djur och natur." />
     <link rel="canonical" href="https://ArvidsonFoto.se/" />
-}
-
-@inject IImageService _imageService
-@{
-    Model!.DisplayImagesList = _imageService.GetRandomNumberOfImages(12); //Hämtar (x)-antal bilder att visa på startsidan
 }
 
 <div id="page-header">
@@ -37,7 +33,7 @@
         </div>
     </div>
     <div id="page-gallery" class="mt-3 col-12 col-sm-7">
-        <partial name="../Bilder/_Gallery" model="Model" />
+        <partial name="../Bilder/_GalleryStartpage" model="Model" />
         <div class="text-center">
             <small>Slumpmässigt utvalda bilder</small>
         </div>

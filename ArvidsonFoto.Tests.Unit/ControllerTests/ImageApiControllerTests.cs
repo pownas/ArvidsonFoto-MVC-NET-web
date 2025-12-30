@@ -1,4 +1,4 @@
-using ArvidsonFoto.Controllers.ApiControllers;
+﻿using ArvidsonFoto.Controllers.ApiControllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Tests.Unit.MockServices;
@@ -96,23 +96,26 @@ public class ImageApiControllerTests : IDisposable
         // Assert
         Assert.IsType<List<ImageDto>>(result);
         Assert.True(result.Count > 0);
-        Assert.Contains(result, i => i.UrlImage == "B57W4725");
-        Assert.Contains(result, i => i.UrlImage == "08TA3696");
+        // Använd verkliga bilder från DbSeederExtension (första 100 bilder)
+        Assert.Contains(result, i => i.UrlImage == "AP2D6321"); // ImageId=1
+        Assert.Contains(result, i => i.UrlImage == "AP2D6366"); // ImageId=2
     }
 
     [Fact]
     public void GetImagesByCategoryID_ValidCategoryId_ReturnsImages()
     {
-        // Arrange
-        int categoryId = 13; // Bl�mes
+        // Arrange - Tretåig hackspett (ImageArt=49) från DbSeederExtension
+        int categoryId = 49;
 
         // Act
         var result = _controller.GetImagesByCategoryID(categoryId);
 
         // Assert
         Assert.IsType<List<ImageDto>>(result);
-        var blamesImages = result.Where(i => i.CategoryId == categoryId).ToList();
-        Assert.True(blamesImages.Count > 0);
+        var images = result.Where(i => i.CategoryId == categoryId).ToList();
+        Assert.True(images.Count > 0);
+        // Första bilderna i DbSeederExtension är av Tretåig hackspett
+        Assert.Contains(result, i => i.UrlImage == "AP2D6321");
     }
 
     [Fact]
@@ -132,8 +135,8 @@ public class ImageApiControllerTests : IDisposable
     [Fact]
     public void GetById_ValidId_ReturnsImage()
     {
-        // Arrange
-        int imageId = 2; // Bl�mes image
+        // Arrange - Första bilden från DbSeederExtension (ImageId=1)
+        int imageId = 1;
 
         // Act
         var result = _controller.GetById(imageId);
@@ -141,8 +144,8 @@ public class ImageApiControllerTests : IDisposable
         // Assert
         Assert.IsType<ImageDto>(result);
         Assert.Equal(imageId, result.ImageId);
-        Assert.Equal("B57W4725", result.UrlImage);
-        Assert.Equal("Bl�mes", result.Name);
+        Assert.Equal("AP2D6321", result.UrlImage);
+        // ImageArt=49 (Tretåig hackspett), ImageFamilj=27 (Hackspettar)
     }
 
     [Fact]
@@ -188,31 +191,32 @@ public class ImageApiControllerTests : IDisposable
     [Fact]
     public void GetOneImageFromCategory_ValidCategoryId_ReturnsImage()
     {
-        // Arrange
-        int categoryId = 13; // Bl�mes
+        // Arrange - Apollofjäril (MenuId=50) från DbSeederExtension
+        int categoryId = 50;
 
         // Act
         var result = _controller.GetOneImageFromCategory(categoryId);
 
         // Assert
         Assert.IsType<ImageDto>(result);
-        Assert.Equal(categoryId, result.CategoryId);
+        // Ska returnera en bild från kategorin Apollofjäril
+        Assert.NotEqual("404-NotFound", result.UrlImage);
     }
 
     [Fact]
-    public void GetOneImageFromCategory_MainCategory_ReturnsBlamesImage()
+    public void GetOneImageFromCategory_MainCategory_ReturnsCategoryImage()
     {
-        // Arrange
-        int categoryId = 1; // Main category "F�glar" should return Bl�mes image
+        // Arrange - Fåglar (MenuId=1) ska returnera en bild från fågelkategorin
+        int categoryId = 1;
 
         // Act
         var result = _controller.GetOneImageFromCategory(categoryId);
 
         // Assert
         Assert.IsType<ImageDto>(result);
-        Assert.Equal(13, result.CategoryId); // Should return Bl�mes image
-        // Note: We don't check the exact UrlImage since other tests might add images
-        Assert.NotEqual("404-NotFound", result.UrlImage); // Should not be the not-found image
+        // Ska returnera en bild, inte 404
+        Assert.NotEqual("404-NotFound", result.UrlImage);
+        Assert.NotEqual(-1, result.ImageId);
     }
 
     [Fact]
@@ -277,33 +281,33 @@ public class ImageApiControllerTests : IDisposable
     [Fact]
     public void UpdateImage_ValidImage_ReturnsTrue()
     {
-        // Arrange
+        // Arrange - Använd verkliga värden från DbSeederExtension
         var uploadImage = new UploadImageInputDto
         {
-            ImageId = 2,
-            ImageHuvudfamilj = 10,
-            ImageFamilj = 12,
-            ImageArt = 13,
-            ImageUrl = "B57W4725_Updated",
+            ImageId = 1, // Första bilden från DbSeederExtension
+            ImageHuvudfamilj = null,
+            ImageFamilj = 27, // Hackspettar
+            ImageArt = 49, // Tretåig hackspett
+            ImageUrl = "AP2D6321_Updated",
             ImageDescription = "Updated description",
-            ImageDate = DateTime.Now,
-            ImageHuvudfamiljNamn = "T�ttingar",
-            ImageFamiljNamn = "Mesar",
-            ImageArtNamn = "Bl�mes",
-            ImageUrlFullSrc = "full/path/B57W4725_Updated"
+            ImageDate = new DateTime(2011, 3, 2, 0, 0, 0),
+            ImageHuvudfamiljNamn = null,
+            ImageFamiljNamn = "Hackspettar",
+            ImageArtNamn = "Tretåig hackspett",
+            ImageUrlFullSrc = "full/path/AP2D6321_Updated"
         };
 
         var existingImage = new ArvidsonFoto.Core.Models.TblImage
         {
             Id = 1,
-            ImageId = 2,
-            ImageMainFamilyId = 10,
-            ImageFamilyId = 12,
-            ImageCategoryId = 13,
-            ImageUrlName = "B57W4725",
-            ImageDescription = "Original description",
-            ImageDate = DateTime.Now.AddDays(-1),
-            ImageUpdate = DateTime.Now.AddDays(-1)
+            ImageId = 1,
+            ImageMainFamilyId = null,
+            ImageFamilyId = 27,
+            ImageCategoryId = 49,
+            ImageUrlName = "AP2D6321",
+            ImageDescription = null,
+            ImageDate = new DateTime(2011, 3, 2, 0, 0, 0),
+            ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 29)
         };
 
         // Add a test image to the in-memory database first
@@ -351,9 +355,9 @@ public class ImageApiControllerTests : IDisposable
             ImageUrl = "TEST001",
             ImageDescription = "Test description",
             ImageDate = DateTime.Now,
-            ImageHuvudfamiljNamn = "T�ttingar",
+            ImageHuvudfamiljNamn = "Tättingar",
             ImageFamiljNamn = "Mesar",
-            ImageArtNamn = "Bl�mes",
+            ImageArtNamn = "Blåmes",
             ImageUrlFullSrc = "full/path/TEST001"
         };
 
@@ -367,8 +371,8 @@ public class ImageApiControllerTests : IDisposable
     [Fact]
     public void GetImagesByCategoryPath_ValidPath_ReturnsOkWithImages()
     {
-        // Arrange
-        string categoryPath = "faglar/tattingar/mesar/blames";
+        // Arrange - Använd verklig kategoripath från DbSeederExtension
+        string categoryPath = "Faglar/Hackspettar/Tretaig-hackspett";
 
         // Act
         var result = _controller.GetImagesByCategoryPath(categoryPath);

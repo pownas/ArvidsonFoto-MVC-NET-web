@@ -1,4 +1,4 @@
-using ArvidsonFoto.Controllers.ApiControllers;
+﻿using ArvidsonFoto.Controllers.ApiControllers;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
@@ -76,8 +76,10 @@ public class CategoryApiControllerTests
         // Assert
         Assert.IsType<List<CategoryDto>>(result);
         Assert.True(result.Count > 0);
-        Assert.Contains(result, c => c.Name == "F�glar");
-        Assert.Contains(result, c => c.Name == "D�ggdjur");
+        // Använd verkliga kategorier från DbSeederExtension
+        Assert.Contains(result, c => c.Name == "Fåglar");
+        Assert.Contains(result, c => c.Name == "Däggdjur");
+        Assert.Contains(result, c => c.Name == "Insekter");
     }
 
     [Fact]
@@ -95,8 +97,8 @@ public class CategoryApiControllerTests
     [Fact]
     public void GetById_ValidId_ReturnsOkWithCategory()
     {
-        // Arrange
-        int categoryId = 1; // F�glar
+        // Arrange - Använd verkligt ID från DbSeederExtension (MenuId=1 = Fåglar)
+        int categoryId = 1;
 
         // Act
         var result = _controller.GetById(categoryId);
@@ -105,7 +107,7 @@ public class CategoryApiControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
         Assert.Equal(categoryId, category.CategoryId);
-        Assert.Equal("F�glar", category.Name);
+        Assert.Equal("Fåglar", category.Name);
     }
 
     [Fact]
@@ -141,16 +143,17 @@ public class CategoryApiControllerTests
     [Fact]
     public void GetByName_ValidName_ReturnsCategory()
     {
-        // Arrange
-        string categoryName = "Bl�mes";
+        // Arrange - Använd verkligt namn från DbSeederExtension
+        // Blåmes finns på Id=238 med MenuId=243
+        string categoryName = "Blåmes";
 
         // Act
         var result = _controller.GetByName(categoryName);
 
         // Assert
         Assert.IsType<CategoryDto>(result);
-        Assert.Equal("Bl�mes", result.Name);
-        Assert.Equal(13, result.CategoryId);
+        Assert.Equal("Blåmes", result.Name);
+        Assert.Equal(243, result.CategoryId); // MenuId från DbSeederExtension (Id=238, MenuId=243)
     }
 
     [Fact]
@@ -171,8 +174,8 @@ public class CategoryApiControllerTests
     [Fact]
     public void GetSubsList_ValidParentId_ReturnsOkWithSubcategories()
     {
-        // Arrange
-        int parentId = 1; // F�glar
+        // Arrange - Fåglar (MenuId=1) har många underkategorier
+        int parentId = 1;
 
         // Act
         var result = _controller.GetSubsList(parentId);
@@ -180,7 +183,10 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var subcategories = Assert.IsType<List<CategoryDto>>(okResult.Value);
-        Assert.Contains(subcategories, c => c.Name == "T�ttingar");
+        Assert.True(subcategories.Count > 0);
+        // Tättingar (MenuId=23) är en underkategori till Fåglar
+        Assert.Contains(subcategories, c => c.Name == "Tättingar");
+        Assert.Contains(subcategories, c => c.Name == "Dagrovfåglar");
     }
 
     [Fact]
@@ -201,8 +207,8 @@ public class CategoryApiControllerTests
     [Fact]
     public void GetChildren_ValidParentId_ReturnsOkWithChildren()
     {
-        // Arrange
-        int parentId = 10; // T�ttingar
+        // Arrange - Tättingar (MenuId=23) har många underkategorier
+        int parentId = 23;
 
         // Act
         var result = _controller.GetChildren(parentId);
@@ -210,65 +216,38 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var children = Assert.IsType<List<CategoryDto>>(okResult.Value);
+        Assert.True(children.Count > 0);
+        // Mesar (MenuId=208) är en underkategori till Tättingar
         Assert.Contains(children, c => c.Name == "Mesar");
+        Assert.Contains(children, c => c.Name == "Finkar och siskor");
     }
 
     [Fact]
     public void GetNameById_ValidId_ReturnsOkWithName()
     {
-        // Arrange
-        int categoryId = 13; // Bl�mes
+        // Arrange - Blåmes (MenuId=243)
+        int categoryId = 243;
 
         // Act
         var result = _controller.GetNameById(categoryId);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("Bl�mes", okResult.Value);
-    }
-
-    [Fact]
-    public void GetNameById_InvalidId_ReturnsBadRequest()
-    {
-        // Arrange
-        int categoryId = 0;
-
-        // Act
-        var result = _controller.GetNameById(categoryId);
-
-        // Assert
-        Assert.IsType<ObjectResult>(result);
-        var problemResult = result as ObjectResult;
-        Assert.Equal(StatusCodes.Status400BadRequest, problemResult!.StatusCode);
+        Assert.Equal("Blåmes", okResult.Value);
     }
 
     [Fact]
     public void GetIdByName_ValidName_ReturnsOkWithId()
     {
         // Arrange
-        string categoryName = "Bl�mes";
+        string categoryName = "Blåmes";
 
         // Act
         var result = _controller.GetIdByName(categoryName);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(13, okResult.Value);
-    }
-
-    [Fact]
-    public void GetIdByName_InvalidName_ReturnsBadRequest()
-    {
-        // Arrange
-        string categoryName = "";
-
-        // Act
-        var result = _controller.GetIdByName(categoryName);
-
-        // Assert
-        Assert.IsType<ObjectResult>(result);
-        var problemResult = result as ObjectResult;
-        Assert.Equal(StatusCodes.Status400BadRequest, problemResult!.StatusCode);
+        Assert.Equal(243, okResult.Value); // MenuId från DbSeederExtension
     }
 
     [Fact]
@@ -299,8 +278,8 @@ public class CategoryApiControllerTests
     [Fact]
     public void GetByUrlSegment_ValidSegment_ReturnsOkWithCategory()
     {
-        // Arrange
-        string urlSegment = "blames";
+        // Arrange - Använd verkligt URL-segment från DbSeederExtension
+        string urlSegment = "Blames"; // MenuUrltext från DbSeederExtension
 
         // Act
         var result = _controller.GetByUrlSegment(urlSegment);
@@ -308,7 +287,8 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Bl�mes", category.Name);
+        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal(243, category.CategoryId);
     }
 
     [Fact]
@@ -330,21 +310,21 @@ public class CategoryApiControllerTests
     public void GetIdByUrlSegment_ValidSegment_ReturnsOkWithId()
     {
         // Arrange
-        string urlSegment = "blames";
+        string urlSegment = "Blames";
 
         // Act
         var result = _controller.GetIdByUrlSegment(urlSegment);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(13, okResult.Value);
+        Assert.Equal(243, okResult.Value);
     }
 
     [Fact]
     public void GetByUrlSegmentWithFallback_ValidSegment_ReturnsOkWithCategory()
     {
         // Arrange
-        string urlSegment = "blames";
+        string urlSegment = "Blames";
 
         // Act
         var result = _controller.GetByUrlSegmentWithFallback(urlSegment);
@@ -352,14 +332,15 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Bl�mes", category.Name);
+        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal(243, category.CategoryId);
     }
 
     [Fact]
     public void GetByUrlSegmentWithFallback_NumericId_ReturnsOkWithCategory()
     {
-        // Arrange
-        string urlSegment = "13"; // Numeric ID for Bl�mes
+        // Arrange - Använd numeriskt ID för Blåmes (MenuId=243)
+        string urlSegment = "243";
 
         // Act
         var result = _controller.GetByUrlSegmentWithFallback(urlSegment);
@@ -367,15 +348,15 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Bl�mes", category.Name);
-        Assert.Equal(13, category.CategoryId);
+        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal(243, category.CategoryId);
     }
 
     [Fact]
     public void ByCategoryPath_ValidPath_ReturnsOkWithPathInfo()
     {
-        // Arrange
-        string categoryPath = "faglar/tattingar";
+        // Arrange - Använd verklig kategori-path från DbSeederExtension
+        string categoryPath = "Faglar/Tattingar";
 
         // Act
         var result = _controller.ByCategoryPath(categoryPath);

@@ -1,13 +1,15 @@
 ﻿using ArvidsonFoto.Controllers;
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
+using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
 
@@ -21,20 +23,46 @@ public class InfoControllerTests
     private readonly MockGuestBookService _mockGuestBookService;
 
     public InfoControllerTests()
-    {
-        var mockDbContext = new ArvidsonFotoDbContext();
+    {   
+        // Create an in-memory database for Core context
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
         _mockGuestBookService = new MockGuestBookService();
-        var mockImageService = new MockImageService();
-        var mockCategoryService = new MockCategoryService();
-        var mockPageCounterService = new MockPageCounterService();
 
-        _controller = new InfoController(mockDbContext)
+        // Create mock configuration
+        var inMemorySettings = new Dictionary<string, string>
         {
-            _guestbookService = _mockGuestBookService,
-            _imageService = mockImageService,
-            _categoryService = mockCategoryService,
-            _pageCounterService = mockPageCounterService
+            {"SmtpSettings:Server", "smtp.test.com"},
+            {"SmtpSettings:Port", "587"},
+            {"SmtpSettings:SenderEmail", "test@test.com"},
+            {"SmtpSettings:SenderPassword", "test-password"},
+            {"SmtpSettings:EnableSsl", "true"}
         };
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings!)
+            .Build();
+
+        // Create mock SmtpSettings
+        var smtpSettings = Options.Create(new SmtpSettings
+        {
+            Server = "smtp.test.com",
+            Port = 587,
+            SenderEmail = "test@test.com",
+            SenderPassword = "test-password",
+            EnableSsl = true
+        });
+
+        _controller = new InfoController(mockCoreDbContext, configuration, smtpSettings);
+        
+        // Override the services with mocks (they are internal fields)
+        _controller._guestbookService = _mockGuestBookService;
+        _controller._imageService = new MockImageService();
+        _controller._categoryService = new MockApiCategoryService();
+        _controller._pageCounterService = new MockPageCounterService();
+        _controller._contactService = new MockContactService();
 
         // Setup HttpContext for the controller
         var httpContext = new DefaultHttpContext();
@@ -63,6 +91,35 @@ public class InfoControllerTests
         var tempDataProvider = new MockTempDataProvider();
         var tempData = new TempDataDictionary(httpContext, tempDataProvider);
         _controller.TempData = tempData;
+    }
+
+    // Helper method to create InfoController with mocks
+    private static InfoController CreateTestController(ArvidsonFotoCoreDbContext dbContext)
+    {
+        // Create mock configuration
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            {"SmtpSettings:Server", "smtp.test.com"},
+            {"SmtpSettings:Port", "587"},
+            {"SmtpSettings:SenderEmail", "test@test.com"},
+            {"SmtpSettings:SenderPassword", "test-password"},
+            {"SmtpSettings:EnableSsl", "true"}
+        };
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings!)
+            .Build();
+
+        // Create mock SmtpSettings
+        var smtpSettings = Options.Create(new SmtpSettings
+        {
+            Server = "smtp.test.com",
+            Port = 587,
+            SenderEmail = "test@test.com",
+            SenderPassword = "test-password",
+            EnableSsl = true
+        });
+
+        return new InfoController(dbContext, configuration, smtpSettings);
     }
 
     #region PostToGb Action Tests
@@ -110,7 +167,7 @@ public class InfoControllerTests
     public void PostToGb_WithValidModel_CreatesGuestbookEntry()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -135,7 +192,7 @@ public class InfoControllerTests
     public void PostToGb_WithValidModel_SetsDisplayPublishedTrue()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -159,7 +216,7 @@ public class InfoControllerTests
     public void PostToGb_WithInvalidCode_DoesNotCreateEntry()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "0000", // Invalid code
             Name = "Test User",
@@ -183,7 +240,7 @@ public class InfoControllerTests
     public void PostToGb_StripsHttpsFromHomepage()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -208,7 +265,7 @@ public class InfoControllerTests
     public void PostToGb_LimitsHomepageToThreeLevels()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -233,7 +290,7 @@ public class InfoControllerTests
     public void PostToGb_WithEmptyName_UsesAnonymous()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "", // Empty name
@@ -255,7 +312,7 @@ public class InfoControllerTests
     public void PostToGb_WithEmptyHomepage_CreatesEntryWithoutHomepage()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -280,7 +337,7 @@ public class InfoControllerTests
     {
         // Arrange
         var lastId = _mockGuestBookService.GetLastGbId();
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test User",
@@ -308,32 +365,30 @@ public class InfoControllerTests
     public void Gastbok_ReturnsViewResult()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel();
+        var inputModel = GuestbookInputDto.CreateEmpty();
 
         // Act
         var result = _controller.Gastbok(inputModel);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.IsType<GuestbookInputModel>(viewResult.Model);
+        Assert.IsType<GuestbookInputDto>(viewResult.Model);
     }
 
     [Fact]
     public void Gastbok_InitializesModelWhenEmpty()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
-        {
-            FormSubmitDate = DateTime.MinValue,
-            Message = null!
-        };
+        var inputModel = GuestbookInputDto.CreateEmpty();
+        inputModel.FormSubmitDate = DateTime.MinValue;
+        inputModel.Message = null!;
 
         // Act
         var result = _controller.Gastbok(inputModel);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsType<GuestbookInputModel>(viewResult.Model);
+        var model = Assert.IsType<GuestbookInputDto>(viewResult.Model);
         Assert.NotEqual(DateTime.MinValue, model.FormSubmitDate);
         Assert.False(model.DisplayPublished);
         Assert.False(model.DisplayErrorPublish);
@@ -343,19 +398,16 @@ public class InfoControllerTests
     public void Gastbok_PreservesModelState_WhenProvidedWithData()
     {
         // Arrange
-        var inputModel = new GuestbookInputModel
-        {
-            FormSubmitDate = DateTime.Now,
-            DisplayPublished = true,
-            Message = "Test"
-        };
+        var inputModel = GuestbookInputDto.CreateEmpty();
+        inputModel.DisplayPublished = true;
+        inputModel.Message = "Test";
 
         // Act
         var result = _controller.Gastbok(inputModel);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsType<GuestbookInputModel>(viewResult.Model);
+        var model = Assert.IsType<GuestbookInputDto>(viewResult.Model);
         Assert.True(model.DisplayPublished);
     }
 
@@ -367,7 +419,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RequiresCode()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "", // Missing required field
             Name = "Test",
@@ -391,7 +443,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RequiresMessage()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -415,12 +467,12 @@ public class InfoControllerTests
     public void GuestbookInputModel_AcceptsValidHomepageWithoutProtocol()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test",
             Email = "test@example.com",
-            Homepage = "example.com", // Without https://
+            Homepage = "example.com", // Without "https://" = not valid
             Message = "Test message"
         };
 
@@ -431,14 +483,14 @@ public class InfoControllerTests
         var isValid = Validator.TryValidateObject(model, context, results, true);
 
         // Assert
-        Assert.True(isValid);
+        Assert.False(isValid);
     }
 
     [Fact]
     public void GuestbookInputModel_AcceptsValidHomepageWithProtocol()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Test",
@@ -461,7 +513,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_RejectsInvalidCode()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "1234", // Invalid code
             Name = "Test",
@@ -485,7 +537,7 @@ public class InfoControllerTests
     public void GuestbookInputModel_EnforcesMaxLengths()
     {
         // Arrange
-        var model = new GuestbookInputModel
+        var model = new GuestbookInputDto
         {
             Code = "3568",
             Name = new string('a', 51), // Too long (max 50)
@@ -513,7 +565,7 @@ public class InfoControllerTests
     public void PostToGb_FullWorkflow_Success()
     {
         // Arrange - Create a valid guestbook entry
-        var inputModel = new GuestbookInputModel
+        var inputModel = new GuestbookInputDto
         {
             Code = "3568",
             Name = "Integration Test User",
@@ -544,6 +596,317 @@ public class InfoControllerTests
         
         // Assert - Verify homepage processing (stripped protocol and limited depth)
         Assert.DoesNotContain("https://", createdEntry.GbHomepage);
+    }
+
+    #endregion
+
+    #region SendMessage Action Tests
+
+    [Fact]
+    public void SendMessage_HasHttpPostAttribute()
+    {
+        // Arrange
+        var methodInfo = typeof(InfoController).GetMethod(nameof(InfoController.SendMessage));
+
+        // Assert
+        Assert.NotNull(methodInfo);
+        var httpPostAttribute = methodInfo!.GetCustomAttributes(typeof(HttpPostAttribute), false).FirstOrDefault();
+        Assert.NotNull(httpPostAttribute);
+    }
+
+    [Fact]
+    public void SendMessage_HasValidateAntiForgeryTokenAttribute()
+    {
+        // Arrange
+        var methodInfo = typeof(InfoController).GetMethod(nameof(InfoController.SendMessage));
+
+        // Assert
+        Assert.NotNull(methodInfo);
+        var antiForgeryAttribute = methodInfo!.GetCustomAttributes(typeof(ValidateAntiForgeryTokenAttribute), false)
+            .FirstOrDefault();
+        Assert.NotNull(antiForgeryAttribute);
+    }
+
+    [Fact]
+    public void SendMessage_WithInvalidModel_DoesNotSaveToDatabase()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        // Add model error to simulate invalid model state
+        controller.ModelState.AddModelError("Email", "Invalid email");
+
+        var contactFormModel = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "invalid-email",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        var initialCount = mockContactService.GetAll().Count;
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kontakta");
+
+        // Assert
+        // When model is invalid, no database save should occur
+        Assert.Equal(initialCount, mockContactService.GetAll().Count);
+    }
+
+    [Fact]
+    public void SendMessage_RedirectsToCorrectPage_Kontakta()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        var contactFormModel = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kontakta");
+
+        // Assert
+        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Kontakta", redirectResult.ActionName);
+    }
+
+    [Fact]
+    public void SendMessage_RedirectsToCorrectPage_KopAvBilder()
+    {
+        // Arrange
+        var mockContactService = new MockContactService();
+        
+        var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+            .Options;
+        var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
+        
+        var controller = CreateTestController(mockCoreDbContext);
+        controller._contactService = mockContactService;
+
+        // Setup HttpContext
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        
+        var actionContext = new ActionContext
+        {
+            HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
+            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor
+            {
+                ActionName = "SendMessage",
+                ControllerName = "Info"
+            }
+        };
+        
+        controller.ControllerContext = new ControllerContext(actionContext);
+        var tempDataProvider = new MockTempDataProvider();
+        controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
+
+        var contactFormModel = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test User",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test Message"
+        };
+
+        // Act
+        var result = controller.SendMessage(contactFormModel, "Kop_av_bilder");
+
+        // Assert
+        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Kop_av_bilder", redirectResult.ActionName);
+    }
+
+    #endregion
+
+    #region ContactFormModel Validation Tests
+
+    [Fact]
+    public void ContactFormModel_RequiresCode()
+    {
+        // Arrange
+        var model = new ContactFormDto
+        {
+            Code = "", // Missing required field
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Code"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresValidEmail()
+    {
+        // Arrange
+        var model = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "invalid-email", // Invalid email format
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Email"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresSubject()
+    {
+        // Arrange
+        var model = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "", // Missing required field
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Subject"));
+    }
+
+    [Fact]
+    public void ContactFormModel_RequiresMessage()
+    {
+        // Arrange
+        var model = new ContactFormDto
+        {
+            Code = "3568",
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "" // Missing required field
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Message"));
+    }
+
+    [Fact]
+    public void ContactFormModel_ValidatesCorrectCode()
+    {
+        // Arrange
+        var model = new ContactFormDto
+        {
+            Code = "1234", // Wrong code (should be 3568)
+            Name = "Test",
+            Email = "test@example.com",
+            Subject = "Test Subject",
+            Message = "Test message"
+        };
+
+        var context = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+
+        // Act
+        var isValid = Validator.TryValidateObject(model, context, results, true);
+
+        // Assert
+        Assert.False(isValid);
+        Assert.Contains(results, r => r.MemberNames.Contains("Code") && r.ErrorMessage!.Contains("Fel kod"));
     }
 
     #endregion

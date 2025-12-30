@@ -1,6 +1,8 @@
 ﻿@using ArvidsonFoto.Views.Shared
+@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Interfaces
 @model UploadImageViewModel
-@inject ICategoryService _categoryService
+@inject IApiCategoryService _categoryService
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -28,17 +30,20 @@
         {
             <h5 class="alert alert-success bg-success text-dark">Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(Model.ImageInputModel.ImageArt), @Model.ImageInputModel.ImageUrl</span></h5>
         }
-        @if (Model.SelectedCategory is not null)
+        @if (Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
-            <h3>Vald kategori: @Model.SelectedCategory.MenuText</h3>
+            <h3>Vald kategori: @Model.SelectedCategory.Name</h3>
 
-            @if (_categoryService.GetSubsList(Model.SelectedCategory.MenuId).Count.Equals(0))
+            @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {
-                Model.ImageInputModel.ImageArt = Model.SelectedCategory.MenuId;
-                if (Model.SelectedCategory.MenuMainId is not null)
-                    Model.ImageInputModel.ImageFamilj = Model.SelectedCategory.MenuMainId;
-                if (_categoryService.GetById(Model.SelectedCategory.MenuMainId).MenuMainId is not null)
-                    Model.ImageInputModel.ImageHuvudfamilj = _categoryService.GetById(Model.SelectedCategory.MenuMainId).MenuMainId;
+                Model.ImageInputModel.ImageArt = Model.SelectedCategory.CategoryId.Value;
+                if (Model.SelectedCategory.ParentCategoryId is not null)
+                    Model.ImageInputModel.ImageFamilj = Model.SelectedCategory.ParentCategoryId;
+                
+                var parentCategory = _categoryService.GetById(Model.SelectedCategory.ParentCategoryId);
+                if (parentCategory != null && parentCategory.ParentCategoryId is not null)
+                    Model.ImageInputModel.ImageHuvudfamilj = parentCategory.ParentCategoryId;
+                    
                 <partial name="_ImageInputForm" model="Model.ImageInputModel" />
             }
         }
@@ -48,7 +53,7 @@
                 @foreach (var category in Model.SubCategories)
                 {
                     <li class="my-2">
-                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.MenuText)">@category.MenuText</a>
+                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.Name)">@category.Name</a>
                     </li>
                 }
             </ul>

@@ -28,7 +28,7 @@ public class GuestbookInputDto
     /// <summary>Hemsida för personen som skriver i gästboken (valfritt)</summary>
     [StringLength(250, ErrorMessage = "För lång rubrik (max 250 tecken)")] //StringLength
     [Url(ErrorMessage = "Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt")]
-    public required string Homepage { get; set; } = "";
+    public string? Homepage { get; set; } = "";
 
     /// <summary>Huvudinnehåll i gästboksinlägget</summary>
     [Required(ErrorMessage = "Ange ett meddelande")]
@@ -43,4 +43,23 @@ public class GuestbookInputDto
     
     /// <summary>Indikerar om det uppstod ett fel vid publicering</summary>
     public bool DisplayErrorPublish { get; set; }
+
+    /// <summary>
+    /// Skapar en tom GuestbookInputDto med alla required fields initialiserade
+    /// </summary>
+    /// <returns>En ny tom GuestbookInputDto</returns>
+    public static GuestbookInputDto CreateEmpty()
+    {
+        return new GuestbookInputDto
+        {
+            Code = string.Empty,
+            Name = string.Empty,
+            Email = string.Empty,
+            Homepage = string.Empty,
+            Message = string.Empty,
+            FormSubmitDate = DateTime.Now,
+            DisplayPublished = false,
+            DisplayErrorPublish = false
+        };
+    }
 }

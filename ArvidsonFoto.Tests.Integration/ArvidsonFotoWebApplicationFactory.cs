@@ -1,79 +1,62 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using ArvidsonFoto.Data;
+﻿using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto.Tests.Integration;
 
 /// <summary>
 /// Custom WebApplicationFactory for integration testing.
-/// Configures the test server to use an in-memory database.
+/// Configures the test server to use an in-memory database with Core models.
 /// </summary>
 public class ArvidsonFotoWebApplicationFactory : WebApplicationFactory<Program>
 {
+    public ArvidsonFotoWebApplicationFactory()
+    {
+        // Set environment variable to force in-memory database
+        Environment.SetEnvironmentVariable("UseInMemoryDatabase", "true");
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Set configuration to use in-memory database
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:UseInMemoryDatabase"] = "true",
+                ["SmtpSettings:Server"] = "smtp.test.com",
+                ["SmtpSettings:Port"] = "587",
+                ["SmtpSettings:SenderEmail"] = "test@test.com",
+                ["SmtpSettings:SenderPassword"] = "test-password",
+                ["SmtpSettings:EnableSsl"] = "true"
+            });
+        });
+
         builder.ConfigureServices(services =>
         {
-            // Remove the existing DbContext registration
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<ArvidsonFotoDbContext>));
-
-            if (descriptor != null)
-            {
-                services.Remove(descriptor);
-            }
-
-            // Add DbContext using an in-memory database for testing
-            services.AddDbContext<ArvidsonFotoDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("InMemoryTestDb");
-            });
-
-            // Build the service provider
+            // Build the service provider to seed data
             var sp = services.BuildServiceProvider();
 
             // Create a scope to obtain a reference to the database context
             using (var scope = sp.CreateScope())
             {
                 var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<ArvidsonFotoDbContext>();
+                var db = scopedServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
 
                 // Ensure the database is created
                 db.Database.EnsureCreated();
 
-                // Seed the database with test data if needed
-                SeedTestData(db);
+                // Seed the database with test data using the standard seeder
+                db.SeedInMemoryDatabase();
             }
         });
     }
 
-    private static void SeedTestData(ArvidsonFotoDbContext context)
+    protected override void Dispose(bool disposing)
     {
-        // Add any test data needed for integration tests
-        // This data will be available to all tests
-        
-        // Example: Seed some categories
-        if (!context.TblMenus.Any())
+        if (disposing)
         {
-            context.TblMenus.AddRange(
-                new Models.TblMenu
-                {
-                    MenuId = 1,
-                    MenuMainId = null,
-                    MenuText = "Fåglar",
-                    MenuUrltext = "Faglar"
-                },
-                new Models.TblMenu
-                {
-                    MenuId = 2,
-                    MenuMainId = 1,
-                    MenuText = "Tättingar",
-                    MenuUrltext = "Tattingar"
-                }
-            );
-            context.SaveChanges();
+            // Clean up environment variable
+            Environment.SetEnvironmentVariable("UseInMemoryDatabase", null);
         }
+        base.Dispose(disposing);
     }
 }

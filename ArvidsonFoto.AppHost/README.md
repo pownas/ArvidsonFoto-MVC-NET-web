@@ -1,4 +1,4 @@
-# ArvidsonFoto.AppHost - Aspire Orchestrator
+﻿# ArvidsonFoto.AppHost - Aspire Orchestrator
 
 This project is the Aspire AppHost for the ArvidsonFoto solution. It orchestrates all application components and provides access to the Aspire Dashboard with OpenTelemetry for local and Codespaces development.
 
@@ -8,19 +8,38 @@ The AppHost is the entry point for running the entire ArvidsonFoto solution with
 
 - **Aspire Dashboard** - Visual monitoring dashboard at http://localhost:15888
 - **OpenTelemetry** - Distributed tracing, metrics, and logs
-- **SQL Server** - Containerized SQL Server for development
 - **Service Discovery** - Automatic service-to-service communication
 - **Health Checks** - Monitor application health
+- **Multiple Instances** - Run different configurations simultaneously
+
+## Available Instances
+
+### 1. **arvidsonfoto** (Main Website)
+- **Purpose:** Public-facing website
+- **Default URL:** `https://localhost:5001` or `http://localhost:5000`
+- **Features:**
+  - Photo gallery
+  - Guestbook
+  - Contact forms
+  - Search functionality
+
+### 2. **arvidsonfoto-admin** (Admin & API Portal)
+- **Purpose:** Development tools, API documentation, and admin panel
+- **Default URL:** `https://localhost:7001` or `http://localhost:7000`
+- **Access Points:**
+  - `/dev` or `/admin` - Landing page with quick links
+  - `/scalar/v1` - Scalar API Documentation (interactive)
+  - `/openapi/v1.json` - OpenAPI schema (JSON)
+  - `/UploadAdmin` - Admin panel for image management
+  - `/UploadAdmin/RedigeraBilder` - Edit images
+  - `/UploadAdmin/HanteraGB` - Manage guestbook
 
 ## Quick Start
 
 ### Prerequisites
 
-1. **Docker Desktop** must be running
-   - Download from https://www.docker.com/products/docker-desktop/
-   - Make sure Docker is started before running AppHost
-
-2. **.NET 10 SDK** (already installed in this project)
+1. **.NET 10 SDK** (already installed in this project)
+2. **Docker Desktop** (optional, only needed if using SQL Server container)
 
 ### Running the AppHost
 
@@ -36,9 +55,9 @@ dotnet run
 ```
 
 This will:
-1. Start SQL Server in a Docker container
-2. Start the ArvidsonFoto web application
-3. Open the Aspire Dashboard in your browser
+1. Start both ArvidsonFoto instances (main website and admin portal)
+2. Open the Aspire Dashboard in your browser
+3. Configure In-Memory database for both instances
 
 ### Aspire Dashboard
 
@@ -46,17 +65,20 @@ Once running, the Aspire Dashboard will be available at:
 - **Dashboard URL**: http://localhost:15888 (or https://localhost:19234)
 
 The dashboard provides:
-- **Resources** - Status of all services and containers
-- **Console Logs** - Real-time logs from all components
+- **Resources** - Status of both website instances
+- **Console Logs** - Real-time logs from both applications
 - **Traces** - Distributed tracing for request flows
 - **Metrics** - Performance metrics and graphs
-- **Structured Logs** - Advanced log filtering and viewing
+- **Endpoints** - Click to open main website or admin portal
 
 ## Using in Visual Studio
 
 1. Set `ArvidsonFoto.AppHost` as the startup project
 2. Press **F5** or click **Start Debugging**
 3. The Aspire Dashboard will open automatically
+4. Click on the endpoint links to open:
+   - Main website (arvidsonfoto)
+   - Admin & API portal (arvidsonfoto-admin)
 
 ## Using in Visual Studio Code
 
@@ -72,23 +94,18 @@ The AppHost works seamlessly in Codespaces:
 1. Open the repository in a Codespace
 2. Run `dotnet run --project ArvidsonFoto.AppHost`
 3. Codespaces will automatically forward the ports
-4. Click on the forwarded port to open the dashboard
+4. Click on the forwarded ports to access:
+   - Aspire Dashboard
+   - Main website
+   - Admin portal
 
-## Project Structure
+## Port Configuration
 
-### Components Orchestrated
-
-#### SQL Server
-- **Container Image**: `mcr.microsoft.com/mssql/server:2022-latest`
-- **Database**: ArvidsonFotoDb
-- **Connection**: Automatically configured for the web app
-- **Data Persistence**: Container data persists across runs
-
-#### ArvidsonFoto Web Application
-- **Project**: ArvidsonFoto/ArvidsonFoto.csproj
-- **Dependencies**: SQL Server database
-- **OpenTelemetry**: Enabled via ServiceDefaults
-- **Health Checks**: Available at /health and /alive endpoints
+| Service | HTTPS | HTTP | Purpose |
+|---------|-------|------|---------|
+| Main Website (arvidsonfoto) | 5001 | 5000 | Public website |
+| Admin Portal (arvidsonfoto-admin) | 7001 | 7000 | API docs & Admin |
+| Aspire Dashboard | 19234 | 15888 | Monitoring |
 
 ## Configuration
 
@@ -99,44 +116,50 @@ The main configuration file that defines all resources:
 ```csharp
 var builder = DistributedApplication.CreateBuilder(args);
 
-// SQL Server with persistent data
-var sqlServer = builder.AddSqlServer("sql")
-    .WithLifetime(ContainerLifetime.Persistent)
-    .AddDatabase("ArvidsonFotoDb");
-
-// Main web application with SQL reference
+// Main public-facing website
 var arvidsonFoto = builder.AddProject<Projects.ArvidsonFoto>("arvidsonfoto")
-    .WithReference(sqlServer)
     .WithExternalHttpEndpoints();
+
+// Admin & API portal on different ports
+var arvidsonFotoAdmin = builder.AddProject<Projects.ArvidsonFoto>("arvidsonfoto-admin")
+    .WithExternalHttpEndpoints()
+    .WithEnvironment("ASPNETCORE_URLS", "https://localhost:7001;http://localhost:7000")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
 
 builder.Build().Run();
 ```
 
-### Adding More Services
+### Admin Portal Landing Page
 
-To add more services (like Redis, RabbitMQ, etc.):
+Navigate to `/dev` or `/admin` on the admin instance (https://localhost:7001/dev) to see:
+- Direct links to Scalar API documentation
+- Links to all admin features
+- Environment status
+- Quick navigation
 
-```csharp
-// Add Redis cache
-var redis = builder.AddRedis("cache")
-    .WithLifetime(ContainerLifetime.Persistent);
+## Development Workflow
 
-var arvidsonFoto = builder.AddProject<Projects.ArvidsonFoto>("arvidsonfoto")
-    .WithReference(sqlServer)
-    .WithReference(redis)
-    .WithExternalHttpEndpoints();
-```
+### Testing the API
 
-### Environment Variables
+1. Start Aspire AppHost
+2. Click on **arvidsonfoto-admin** endpoint in dashboard
+3. Navigate to `/scalar/v1`
+4. Explore and test all API endpoints interactively
 
-Configure behavior via environment variables in appsettings.json:
+### Admin Work
 
-```json
-{
-  "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
-  "ASPNETCORE_ENVIRONMENT": "Development"
-}
-```
+1. Start Aspire AppHost
+2. Click on **arvidsonfoto-admin** endpoint
+3. Navigate to `/admin` for landing page
+4. Click on desired admin feature (image management, guestbook, etc.)
+5. Login if required
+
+### Regular Website Testing
+
+1. Start Aspire AppHost
+2. Click on **arvidsonfoto** endpoint in dashboard
+3. Browse the public-facing website
+4. Test gallery, guestbook, contact forms, etc.
 
 ## OpenTelemetry Integration
 
@@ -144,13 +167,13 @@ Configure behavior via environment variables in appsettings.json:
 
 View distributed traces in the dashboard:
 1. Navigate to **Traces** tab
-2. Filter by service, operation, or time range
+2. Filter by service (arvidsonfoto or arvidsonfoto-admin)
 3. Click on a trace to see the full request flow
 4. Analyze performance bottlenecks
 
 ### Metrics
 
-Available metrics:
+Available metrics for both instances:
 - **HTTP metrics**: Request count, duration, status codes
 - **Runtime metrics**: CPU usage, memory, garbage collection
 - **.NET metrics**: Thread pool, exceptions, etc.
@@ -158,19 +181,25 @@ Available metrics:
 ### Logs
 
 Structured logging with:
+- **Console output** - Available in Development mode
+- **File logging** - `logs/appLog.txt` (rotates daily)
+- **Dashboard view** - Centralized logs from both instances
 - **Filtering** by level, service, or search terms
-- **Context** - See related traces for each log entry
-- **Scopes** - Hierarchical log organization
+
+## Database Configuration
+
+Both instances use **In-Memory Database** in Development:
+- No Docker or SQL Server installation needed
+- Data is seeded automatically on startup
+- Data persists only while the application runs
+- Perfect for testing and development
+
+To use SQL Server instead:
+1. Set `UseInMemoryDatabase` to `false` in appsettings.Development.json
+2. Add SQL Server container to AppHost.cs
+3. Reference the database in both project instances
 
 ## Troubleshooting
-
-### Docker Not Running
-
-```
-Error: Docker is not running
-```
-
-**Solution**: Start Docker Desktop
 
 ### Port Already in Use
 
@@ -179,42 +208,43 @@ Error: Address already in use
 ```
 
 **Solution**: 
-- Stop other applications using ports 15888 or 19234
-- Or change ports in launchSettings.json
+- Stop other applications using the configured ports
+- Or change ports in AppHost.cs:
 
-### SQL Server Fails to Start
-
-```
-Error: SQL Server container failed to start
+```csharp
+.WithEnvironment("ASPNETCORE_URLS", "https://localhost:8001;http://localhost:8000")
 ```
 
-**Solutions**:
-1. Check Docker has enough memory (at least 2GB)
-2. View container logs in Aspire Dashboard
-3. Try removing the container: `docker rm -f aspire-sql-1`
+### Admin Portal Not Accessible
 
-### Connection Strings
+**Solution**:
+- Ensure you're using the correct port (7001 for HTTPS, 7000 for HTTP)
+- Check Aspire Dashboard for the correct endpoint URL
+- Verify that ASPNETCORE_ENVIRONMENT is set to "Development"
 
-The AppHost automatically configures connection strings. If you need to override:
+### API Documentation Not Showing
 
-```json
-{
-  "ConnectionStrings": {
-    "ArvidsonFotoDb": "Server=localhost,1433;Database=ArvidsonFotoDb;..."
-  }
-}
-```
+**Solution**:
+- OpenAPI is only available in Development mode
+- Navigate to the admin instance (port 7001), not the main website (port 5001)
+- Ensure you're accessing `/scalar/v1` on the admin portal
 
-## Health Checks
+## Benefits of Dual Instances
 
-The application exposes health check endpoints:
+### Separation of Concerns
+- ✅ Public website isolated from admin/API traffic
+- ✅ Different ports prevent accidental exposure
+- ✅ Can apply different security policies
 
-- **/health** - Overall application health
-- **/alive** - Liveness probe (always returns healthy if running)
+### Development Efficiency
+- ✅ Test API and admin features without affecting public site
+- ✅ Dedicated instance for API development
+- ✅ Easy to demonstrate features to stakeholders
 
-Access via:
-- Dashboard: Resources tab → Click on service → View health status
-- Direct: http://localhost:PORT/health
+### Production-Like Setup
+- ✅ Mimics microservices architecture
+- ✅ Prepares for eventual service separation
+- ✅ Better observability practices
 
 ## Service Defaults
 
@@ -224,55 +254,28 @@ The `ArvidsonFoto.ServiceDefaults` project provides:
 - Service discovery
 - Resilience patterns (retry, circuit breaker)
 
-Every service in the solution should reference ServiceDefaults:
-
-```xml
-<ProjectReference Include="../ArvidsonFoto.ServiceDefaults/ArvidsonFoto.ServiceDefaults.csproj" />
-```
-
-And add in Program.cs:
+Both instances automatically include ServiceDefaults:
 
 ```csharp
 builder.AddServiceDefaults();
 app.MapDefaultEndpoints();
 ```
 
-## Benefits of Using Aspire
-
-### For Local Development
-
-1. **One Command Start** - Start entire solution with dependencies
-2. **No Manual Setup** - SQL Server, Redis, etc. in containers
-3. **Visual Dashboard** - See all services and logs in one place
-4. **Fast Debugging** - Distributed tracing shows exact flow
-
-### For Codespaces
-
-1. **Instant Setup** - No database installation needed
-2. **Port Forwarding** - Automatic port exposure
-3. **Consistent Environment** - Same setup for all developers
-
-### For Production Readiness
-
-1. **Observability** - Production-ready OpenTelemetry
-2. **Health Checks** - Kubernetes-ready health endpoints
-3. **Service Discovery** - Microservices communication patterns
-4. **Resilience** - Built-in retry and circuit breaker
-
 ## Learn More
 
 - [.NET Aspire Documentation](https://learn.microsoft.com/dotnet/aspire/)
 - [Aspire Dashboard](https://learn.microsoft.com/dotnet/aspire/fundamentals/dashboard)
+- [Scalar API Documentation](https://github.com/scalar/scalar)
 - [OpenTelemetry](https://opentelemetry.io/)
-- [Project Documentation](../docs/ASPIRE.md)
 
 ## Next Steps
 
-1. **Start the AppHost** - Run it and explore the dashboard
-2. **Make requests** - Use the web app and see traces in the dashboard
-3. **Add services** - Try adding Redis or other resources
-4. **Deploy** - Use the same observability in production
+1. **Start the AppHost** - Run it and explore both instances
+2. **Test the API** - Use Scalar on the admin portal
+3. **Manage Content** - Use admin features on port 7001
+4. **Browse the Site** - Use the public website on port 5001
+5. **Monitor Everything** - Use Aspire Dashboard for all instances
 
 ---
 
-**Note**: This is Aspire v13, the latest version with improved dashboard and OpenTelemetry integration.
+**Note**: This configuration uses .NET Aspire with dual instances for maximum development flexibility. Both instances share the same codebase but serve different purposes.

@@ -60,4 +60,24 @@ public class CategoryDto()
     /// <remarks> Används för att visa antal bilder i kategorin. </remarks>
     /// <example>25</example>
     public int ImageCount { get; set; } = 0;
+
+    /// <summary>
+    /// Skapar en tom CategoryDto med alla properties initialiserade
+    /// </summary>
+    /// <returns>En ny tom <see cref="CategoryDto"/></returns>
+    public static CategoryDto CreateEmpty()
+    {
+        return new CategoryDto
+        {
+            CategoryId = null,
+            Name = string.Empty,
+            UrlImage = string.Empty,
+            UrlCategory = string.Empty,
+            UrlCategoryPath = string.Empty,
+            UrlCategoryPathFull = string.Empty,
+            DateUpdated = null,
+            ParentCategoryId = null,
+            ImageCount = 0
+        };
+    }
 }

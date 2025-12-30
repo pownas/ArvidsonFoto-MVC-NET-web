@@ -1,12 +1,14 @@
-﻿@inject IImageService _imageService
-@inject ICategoryService _categoryService
+﻿@using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Core.Interfaces
+@inject IApiImageService _imageService
+@inject IApiCategoryService _categoryService
 @inject IPageCounterService _pageCounterService
 @{
-    List<TblPageCounter> top10Categories = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), true)
+    List<ArvidsonFoto.Core.Models.TblPageCounter> top10Categories = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), true)
                                                               .OrderByDescending(c => c.PageViews)
                                                               .Take(10)
                                                               .ToList();
-    List<TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false);
+    List<ArvidsonFoto.Core.Models.TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false);
 
     // Hämta data för de senaste 6 månaderna för grafen
     Dictionary<string, int> monthlyPageViews = _pageCounterService.GetMonthlyPageViewsChart(6, false);

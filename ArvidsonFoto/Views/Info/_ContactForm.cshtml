@@ -1,4 +1,5 @@
-﻿@model ContactFormModel
+﻿@using ArvidsonFoto.Core.DTOs
+@model ContactFormDto
 
 @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
 <form method="post" asp-action="@(nameof(InfoController.SendMessage))" asp-route-Page="@Model.ReturnPageUrl" class="needs-validation" novalidate>
@@ -6,14 +7,16 @@
     @if (Model!.DisplayErrorSending)
     {
         <div class="alert alert-danger alert-dismissible fade show">
-            <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
+            <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> 
+            <p class="mb-2">Något gick fel när meddelandet skulle skickas via formuläret. Ditt meddelande har sparats som backup.</p>
+            <p class="mb-0"><strong>Alternativ:</strong> Skicka ett mail direkt till <a href="mailto:torbjorn@arvidsonfoto.se" class="alert-link">torbjorn@arvidsonfoto.se</a></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
         </div>
     }
     @if (Model.DisplayEmailSent)
     {
         <div class="alert alert-success alert-dismissible fade show">
-            <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt mail!</strong> Förmodligen svarar jag på ditt mail inom 1-5 dagar.
+            <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt mejl!</strong> Jag återkommer inom 1-5 dagar med svar på ditt mejl.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
         </div>
     }

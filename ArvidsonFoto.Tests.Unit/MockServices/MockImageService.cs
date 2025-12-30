@@ -1,47 +1,106 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
-public class MockImageService : IImageService
+/// <summary>
+/// Mock implementation of IApiImageService for unit testing
+/// Returns ImageDto objects directly
+/// </summary>
+public class MockImageService : IApiImageService
 {
-    public bool AddImage(TblImage image) => true;
-    public bool UpdateImage(UploadImageInputModel image) => true;
+    public bool AddImage(ImageDto image) => true;
+    
+    public ImageDto GetById(int imageId) => new ImageDto 
+    { 
+        ImageId = imageId, 
+        Name = "Test Image",
+        UrlImage = "bilder/test/test-image",
+        CategoryId = 1
+    };
+    
+    public ImageDto GetOneImageFromCategory(int categoryId) => new ImageDto 
+    { 
+        ImageId = 1, 
+        CategoryId = categoryId,
+        Name = "Test Category Image",
+        UrlImage = "bilder/test/category-image"
+    };
+    
+    public List<ImageDto> GetAll() => new List<ImageDto> 
+    { 
+        new ImageDto 
+        { 
+            ImageId = 1, 
+            Name = "Test Image 1",
+            UrlImage = "bilder/test/image1",
+            CategoryId = 1
+        } 
+    };
+    
+    public List<ImageDto> GetImagesByCategoryID(int categoryID) => new List<ImageDto> 
+    { 
+        new ImageDto 
+        { 
+            ImageId = 1, 
+            CategoryId = categoryID,
+            Name = "Test Image",
+            UrlImage = "bilder/test/image"
+        } 
+    };
+    
     public bool DeleteImgId(int imgId) => true;
-
-    public int GetImageLastId() => 
-        DbSeederExtension.DbSeed_Tbl_Image.Max(x => x.Id);
-
-    public TblImage GetById(int imageId) =>
-        DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageId.Equals(imageId))
-            .FirstOrDefault() ?? new TblImage();
-
-    public TblImage GetOneImageFromCategory(int category) =>
-         DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt.Equals(category)
-                     || i.ImageFamilj.Equals(category)
-                     || i.ImageHuvudfamilj.Equals(category))
-            .OrderByDescending(i => i.ImageUpdate)
-            .FirstOrDefault() ?? DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt.Equals(13)) // 13 == Blåmes
-            .OrderByDescending(i => i.ImageUpdate)
-            .First();
-
-    public List<TblImage> GetAll() =>
-        DbSeederExtension.DbSeed_Tbl_Image ?? new List<TblImage>();
-
-    public List<TblImage> GetRandomNumberOfImages(int count) =>
-        DbSeederExtension.DbSeed_Tbl_Image
-            .OrderBy(r => Guid.NewGuid())
-            .Take(count)
-            .ToList() ?? new List<TblImage>();
-
-    public List<TblImage> GetAllImagesByCategoryID(int categoryID) =>
-        DbSeederExtension.DbSeed_Tbl_Image
-            .Where(i => i.ImageArt == categoryID
-                     || i.ImageFamilj == categoryID
-                     || i.ImageHuvudfamilj == categoryID)
-            .ToList() ?? new List<TblImage>();
+    
+    public int GetImageLastId() => 100;
+    
+    public List<ImageDto> GetRandomNumberOfImages(int count) => Enumerable.Range(1, count)
+        .Select(i => new ImageDto 
+        { 
+            ImageId = i,
+            Name = $"Random Image {i}",
+            UrlImage = $"bilder/test/random{i}",
+            CategoryId = 1
+        })
+        .ToList();
+    
+    public int GetCountedAllImages() => 100;
+    
+    public int GetCountedCategoryId(int categoryId) => 10;
+    
+    public Task<bool> DeleteImageAsync(int id) => Task.FromResult(true);
+    
+    public List<ImageDto> GetLatestImageList(int limit) => Enumerable.Range(1, limit)
+        .Select(i => new ImageDto 
+        { 
+            ImageId = i,
+            Name = $"Latest Image {i}",
+            UrlImage = $"bilder/test/latest{i}",
+            CategoryId = 1,
+            DateUploaded = DateTime.Now.AddDays(-i)
+        })
+        .ToList();
+    
+    public ImageDto GetImageById(int id) => GetById(id);
+    
+    public bool DeleteImage(int id) => DeleteImgId(id);
+    
+    public Task<IEnumerable<ImageDto>> GetAllImagesAsync() => Task.FromResult<IEnumerable<ImageDto>>(GetAll());
+    
+    public Task<ImageDto> GetOneImageAsync(int id) => Task.FromResult(GetById(id));
+    
+    public Task<bool> CreateImageAsync(ImageDto image) => Task.FromResult(AddImage(image));
+    
+    public Task<bool> UpdateImageAsync(ImageDto image) => Task.FromResult(true);
+    
+    public List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize)
+    {
+        // Mock implementation - return paginated subset
+        var allImages = GetImagesByCategoryID(categoryID);
+        return allImages
+            .OrderByDescending(i => i.ImageId)
+            .ThenByDescending(i => i.DateImageTaken)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
 }

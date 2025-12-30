@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using ArvidsonFoto.Core.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ArvidsonFoto.Core.Models;
@@ -298,12 +294,12 @@ public class DatabaseInitializationService
         }
 
         // Add Guestbook entries (always add all - they're lightweight)
-        logger.LogInformation("Adding seed data for TblGb ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.GuestbookEntries.Count);
-        context.TblGbs.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.GuestbookEntries);
+        logger.LogInformation("Adding seed data for TblGb ({Count} entries)", ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Guestbook.Count);
+        context.TblGbs.AddRange(ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Guestbook);
 
         // Smart seeding: When limiting data, ensure categories exist for all images
-        var allMenuCategories = ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.MenuCategories;
-        var allImages = ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.Images;
+        var allMenuCategories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories;
+        var allImages = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image;
 
         List<TblMenu> menuCategoriesToSeed;
         List<TblImage> imagesToSeed;
@@ -400,8 +396,8 @@ public class DatabaseInitializationService
         context.TblImages.AddRange(imagesToSeed);
 
         // Add Page Counters (always add all - they're lightweight)
-        logger.LogInformation("Adding seed data for TblPageCounter ({Count} entries)", ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.PageCounters.Count);
-        context.TblPageCounter.AddRange(ArvidsonFoto.Core.Data.ArvidsonFotoCoreDbSeeder.PageCounters);
+        logger.LogInformation("Adding seed data for TblPageCounter ({Count} entries)", ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters.Count);
+        context.TblPageCounter.AddRange(ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters);
 
         // Save all changes
         logger.LogInformation("💾 Saving seed data to database...");

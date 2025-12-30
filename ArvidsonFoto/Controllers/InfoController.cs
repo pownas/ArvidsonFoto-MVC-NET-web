@@ -1,17 +1,56 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Services;
+using ArvidsonFoto.Core.Configuration;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+
 namespace ArvidsonFoto.Controllers;
 
-public class InfoController(ArvidsonFotoDbContext context) : Controller
+public class InfoController : Controller
 {
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IImageService _imageService = new ImageService(context);
-    internal IGuestBookService _guestbookService = new GuestBookService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    private readonly ArvidsonFotoCoreDbContext _coreContext;
+    private readonly IConfiguration _configuration;
+    private readonly SmtpSettings _smtpSettings;
+    internal IApiCategoryService _categoryService;
+    internal IApiImageService _imageService;
+    internal IGuestBookService _guestbookService;
+    internal IPageCounterService _pageCounterService;
+    internal IContactService _contactService;
+
+    public InfoController(
+        ArvidsonFotoCoreDbContext coreContext,
+        IConfiguration configuration,
+        IOptions<SmtpSettings> smtpSettings,
+        ILogger<ApiImageService>? imageLogger = null,
+        ILogger<ApiCategoryService>? categoryLogger = null,
+        IMemoryCache? memoryCache = null)
+    {
+        _coreContext = coreContext;
+        _configuration = configuration;
+        _smtpSettings = smtpSettings.Value;
+        
+        // Support both DI and manual instantiation (for tests)
+        _categoryService = new ApiCategoryService(
+            categoryLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiCategoryService>(),
+            _coreContext,
+            memoryCache ?? new MemoryCache(new MemoryCacheOptions()));
+            
+        _imageService = new ApiImageService(
+            imageLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiImageService>(),
+            _coreContext,
+            configuration ?? new ConfigurationBuilder().Build(),
+            _categoryService);
+            
+        _guestbookService = new GuestBookService(_coreContext);
+        _pageCounterService = new PageCounterService(_coreContext);
+        _contactService = new ContactService(_coreContext);
+    }
 
     public IActionResult Index()
     {
@@ -21,7 +60,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         return View();
     }
 
-    public IActionResult Gastbok(GuestbookInputModel inputModel)
+    public IActionResult Gastbok(GuestbookInputDto inputModel)
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
@@ -29,12 +68,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
         {
-            inputModel = new GuestbookInputModel()
-            {
-                FormSubmitDate = DateTime.Now,
-                DisplayPublished = false,
-                DisplayErrorPublish = false
-            };
+            inputModel = GuestbookInputDto.CreateEmpty();
         }
 
         return View(inputModel);
@@ -42,7 +76,7 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
 
     [HttpPost, ValidateAntiForgeryToken]
     [Route("Info/PostToGb")]
-    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputModel inputModel)
+    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");
         if (ModelState.IsValid)
@@ -50,8 +84,8 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             inputModel.DisplayErrorPublish = false;
             try
             {
-                string homePage = "";
-                if (inputModel.Homepage is not null)
+                string? homePage = null;
+                if (!string.IsNullOrWhiteSpace(inputModel.Homepage))
                 {
                     homePage = inputModel.Homepage.Replace("https://", "");
                     homePage = homePage.Replace("http://", "");
@@ -64,11 +98,11 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                     }
                 }
 
-                TblGb postToPublish = new TblGb()
+                TblGb postToPublish = new()
                 {
                     GbId = (_guestbookService.GetLastGbId() + 1),
-                    GbName = inputModel.Name,
-                    GbEmail = inputModel.Email,
+                    GbName = string.IsNullOrWhiteSpace(inputModel.Name) ? null : inputModel.Name,
+                    GbEmail = string.IsNullOrWhiteSpace(inputModel.Email) ? null : inputModel.Email,
                     GbHomepage = homePage,
                     GbText = inputModel.Message,
                     GbDate = DateTime.Now
@@ -79,8 +113,17 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 if (_guestbookService.CreateGBpost(postToPublish))
                 {
                     Log.Information("GB-post, published OK.");
-                    inputModel = new GuestbookInputModel();
-                    inputModel.DisplayPublished = true;
+                    inputModel = new GuestbookInputDto
+                    {
+                        Code = string.Empty,
+                        Name = string.Empty,
+                        Email = string.Empty,
+                        Homepage = string.Empty,
+                        Message = string.Empty,
+                        FormSubmitDate = DateTime.Now,
+                        DisplayPublished = true,
+                        DisplayErrorPublish = false
+                    };
                 }
             }
             catch (Exception e)
@@ -92,10 +135,9 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
         }
         else
         {
-            //SKRIVS INTE UT???
-            Log.Fatal($"Name: '{inputModel.Name}' Email: '{inputModel.Email}' Homepage: '{inputModel.Homepage}'"); //SKRIVS INTE UT???
-            Log.Fatal($"GB-Message:\n {inputModel.Message}"); //SKRIVS INTE UT???
-            Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'."); //SKRIVS INTE UT???
+            Log.Fatal($"Name: '{inputModel.Name}' Email: '{inputModel.Email}' Homepage: '{inputModel.Homepage}'");
+            Log.Fatal($"GB-Message:\n {inputModel.Message}");
+            Log.Warning($"Failed to send GB-post... Probably an incorrect Code-input: '{inputModel.Code}'.");
             inputModel.DisplayPublished = false;
         }
         return RedirectToAction("Gastbok", inputModel);
@@ -103,25 +145,67 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormModel contactFormModel, string Page)
+    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormDto contactFormModel, string Page)
     {
         if (ModelState.IsValid)
         {
             contactFormModel.DisplayErrorSending = false;
+            bool emailSent = false;
+            string? errorMessage = null;
+            int? savedContactId = null;
 
+            // STEP 1: Save to database FIRST (as backup)
             try
             {
-                //Github-secrets, samt miljö variablar som krävs (Se dokumentation i OneDrive -> ArvidsonFoto -> Miljö-variabler) :
-                var svc_mailServer = Environment.GetEnvironmentVariable("ARVIDSONFOTO_MAILSERVER");
-                var svc_smtpadress = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPADRESS");
-                var svc_smtppwd = Environment.GetEnvironmentVariable("ARVIDSONFOTO_SMTPPWD");
+                Log.Information("Saving contact form submission to database...");
+                
+                var kontaktRecord = new TblKontakt
+                {
+                    SubmitDate = DateTime.Now,
+                    Name = contactFormModel.Name,
+                    Email = contactFormModel.Email,
+                    Subject = contactFormModel.Subject,
+                    Message = contactFormModel.Message,
+                    SourcePage = Page,
+                    EmailSent = false, // Will be updated after email attempt
+                    ErrorMessage = null
+                };
 
-                Log.Information("User trying to send e-mail...");
+                savedContactId = _contactService.SaveContactSubmission(kontaktRecord);
+                Log.Information("Contact form saved to database with ID: {ContactId}", savedContactId);
+            }
+            catch (Exception dbEx)
+            {
+                Log.Error(dbEx, "Failed to save contact form to database");
+                errorMessage = "Database error: " + dbEx.Message;
+                contactFormModel.DisplayErrorSending = true;
+                contactFormModel.DisplayEmailSent = false;
+                
+                // Early return if we can't even save to database
+                TempData["DisplayEmailSent"] = false;
+                TempData["DisplayErrorSending"] = true;
+                return RedirectToActionBasedOnPage(Page);
+            }
+
+            // STEP 2: Try to send email
+            try
+            {
+                // Validate SMTP configuration
+                if (!_smtpSettings.IsConfigured())
+                {
+                    throw new InvalidOperationException("SMTP settings are not properly configured. Check appsettings.json or User Secrets.");
+                }
+
+                Log.Information("User trying to send e-mail from {SourcePage}...", Page);
+                
                 var fromName = Page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                //message.To.Add(new MailboxAddress(fromName, "torbjorn_arvidson@hotmail.com"));
-                message.To.Add(new MailboxAddress(fromName, svc_smtpadress));
+                message.To.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
+                if (!string.IsNullOrWhiteSpace(_smtpSettings.CcEmail))
+                {
+                    message.Cc.Add(new MailboxAddress(fromName, _smtpSettings.CcEmail));
+                }
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
                 message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
 
@@ -130,32 +214,52 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                     Text = contactFormModel.Message
                 };
 
-                Log.Information("User message: " + message);
+                Log.Information("Sending email via SMTP server: {SmtpServer}", _smtpSettings.Server);
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(svc_mailServer, 587, SecureSocketOptions.StartTls); //Kräver @using MailKit.Security;
-                    //client.Connect(svc_mailServer, 465, true); //Alternativ anslutning, mindre säker...
-                    //client.Connect(svc_mailServer, 587, false); //Alternativ anslutning, mindre säker...
-
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(svc_smtpadress, svc_smtppwd);
+                    client.Connect(_smtpSettings.Server, _smtpSettings.Port, 
+                        _smtpSettings.EnableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                    client.Authenticate(_smtpSettings.SenderEmail, _smtpSettings.SenderPassword);
                     client.Send(message);
                     client.Disconnect(true);
-                    Log.Information("Email, sent OK.");
+                    Log.Information("Email sent successfully!");
+                    emailSent = true;
                 }
 
-                contactFormModel = new ContactFormModel()
+                contactFormModel = new ContactFormDto()
                 {
+                    Code = string.Empty,
+                    Email = string.Empty,
+                    Name = string.Empty,
+                    Subject = string.Empty,
+                    Message = string.Empty,
+                    MessagePlaceholder = string.Empty,
                     DisplayEmailSent = true,
-                    FormSubmitDate = DateTime.Now
+                    FormSubmitDate = DateTime.Now,
+                    ReturnPageUrl = Page
                 };
             }
-            catch (Exception e)
+            catch (Exception emailEx)
             {
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
-                Log.Error("Error sending email. Error-message: " + e.Message);
+                errorMessage = emailEx.Message;
+                Log.Error(emailEx, "Error sending email from contact form");
+            }
+
+            // STEP 3: Update database record with email status
+            if (savedContactId.HasValue)
+            {
+                try
+                {
+                    _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
+                    Log.Information("Updated contact record {ContactId} - EmailSent: {EmailSent}", savedContactId, emailSent);
+                }
+                catch (Exception updateEx)
+                {
+                    Log.Error(updateEx, "Failed to update email status for contact ID: {ContactId}", savedContactId);
+                }
             }
         }
         else
@@ -163,30 +267,53 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
             contactFormModel.DisplayEmailSent = false;
         }
 
-        if (Page.Equals("Kontakta"))
-        {
-            return RedirectToAction("Kontakta", contactFormModel);
-        }
-        else if (Page.Equals("Kop_av_bilder"))
-        {
-            return RedirectToAction("Kop_av_bilder", contactFormModel);
-        }
-        else
-        {
-            return RedirectToAction("Kontakta");
-        }
+        // Store display flags in TempData for the redirect
+        TempData["DisplayEmailSent"] = contactFormModel.DisplayEmailSent;
+        TempData["DisplayErrorSending"] = contactFormModel.DisplayErrorSending;
+
+        return RedirectToActionBasedOnPage(Page);
     }
 
-    public IActionResult Kontakta(ContactFormModel contactFormModel)
+    /// <summary>
+    /// Redirects to the appropriate action based on the source page
+    /// </summary>
+    private IActionResult RedirectToActionBasedOnPage(string page)
+    {
+        return page switch
+        {
+            "Kontakta" => RedirectToAction("Kontakta"),
+            "Kop_av_bilder" => RedirectToAction("Kop_av_bilder"),
+            _ => RedirectToAction("Kontakta")
+        };
+    }
+
+    public IActionResult Kontakta(ContactFormDto contactFormModel)
     {
         ViewData["Title"] = "Kontaktinformation";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Kontaktinformation");
 
+        // Retrieve display flags from TempData
+        if (TempData["DisplayEmailSent"] is bool displayEmailSent)
+        {
+            contactFormModel.DisplayEmailSent = displayEmailSent;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        if (TempData["DisplayErrorSending"] is bool displayErrorSending)
+        {
+            contactFormModel.DisplayErrorSending = displayErrorSending;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormModel()
+            contactFormModel = new ContactFormDto()
             {
+                Code = string.Empty,
+                Email = string.Empty,
+                Name = string.Empty,
+                Subject = string.Empty,
+                Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
                 MessagePlaceholder = "Meddelande \n (Skriv gärna vad ni önskar kontakt om)", // \n = newLine
                 DisplayEmailSent = false,
@@ -194,19 +321,41 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 ReturnPageUrl = "Kontakta"
             };
         }
+        else
+        {
+            contactFormModel.ReturnPageUrl = "Kontakta";
+        }
 
         return View(contactFormModel);
     }
 
-    public IActionResult Kop_av_bilder(ContactFormModel contactFormModel, string imgId)
+    public IActionResult Kop_av_bilder(ContactFormDto contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Köp av bilder");
+        
+        // Retrieve display flags from TempData
+        if (TempData["DisplayEmailSent"] is bool displayEmailSent)
+        {
+            contactFormModel.DisplayEmailSent = displayEmailSent;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        if (TempData["DisplayErrorSending"] is bool displayErrorSending)
+        {
+            contactFormModel.DisplayErrorSending = displayErrorSending;
+            contactFormModel.FormSubmitDate = DateTime.Now;
+        }
+        
         if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
         {
-            contactFormModel = new ContactFormModel()
+            contactFormModel = new ContactFormDto()
             {
+                Code = string.Empty,
+                Email = string.Empty,
+                Name = string.Empty,
+                Subject = string.Empty,
+                Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
                 MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
                 DisplayEmailSent = false,
@@ -219,15 +368,19 @@ public class InfoController(ArvidsonFotoDbContext context) : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    var imageArt = _categoryService.GetNameById(image.ImageArt);
+                    var imageArt = image.Name ?? "okänd kategori";
 
-                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.ImageUrl + ".jpg";
+                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.UrlImage.Split('/').Last() + ".jpg";
                 }
                 catch (Exception)
                 {
-
+                    // Ignore errors when trying to pre-fill message
                 }
             }
+        }
+        else
+        {
+            contactFormModel.ReturnPageUrl = "Kop_av_bilder";
         }
 
         return View(contactFormModel);
