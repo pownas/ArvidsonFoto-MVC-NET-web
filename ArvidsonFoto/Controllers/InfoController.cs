@@ -145,7 +145,7 @@ public class InfoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormInputDto contactFormModel, string Page)
+    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormInputDto contactFormModel, string page)
     {
         if (ModelState.IsValid)
         {
@@ -166,7 +166,7 @@ public class InfoController : Controller
                     Email = contactFormModel.Email,
                     Subject = contactFormModel.Subject,
                     Message = contactFormModel.Message,
-                    SourcePage = Page,
+                    SourcePage = page,
                     EmailSent = false, // Will be updated after email attempt
                     ErrorMessage = null
                 };
@@ -184,7 +184,7 @@ public class InfoController : Controller
                 // Early return if we can't even save to database
                 TempData["DisplayEmailSent"] = false;
                 TempData["DisplayErrorSending"] = true;
-                return RedirectToActionBasedOnPage(Page);
+                return RedirectToActionBasedOnPage(page);
             }
 
             // STEP 2: Try to send email
@@ -196,18 +196,19 @@ public class InfoController : Controller
                     throw new InvalidOperationException("SMTP settings are not properly configured. Check appsettings.json or User Secrets.");
                 }
 
-                Log.Information("User trying to send e-mail from {SourcePage}...", Page);
+                Log.Information("User trying to send e-mail from {SourcePage}...", page);
                 
-                var fromName = Page + "-ArvidsonFoto.se";
+                var fromName = page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                message.To.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
-                if (!string.IsNullOrWhiteSpace(_smtpSettings.CcEmail))
+                message.From.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
+                message.To.Add(new MailboxAddress("ArvidsonFoto.se", _smtpSettings.RecipientEmail));
+                message.Cc.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
+                if (!string.IsNullOrWhiteSpace(_smtpSettings.BccEmail))
                 {
-                    message.Cc.Add(new MailboxAddress(fromName, _smtpSettings.CcEmail));
+                    message.Bcc.Add(new MailboxAddress(fromName, _smtpSettings.BccEmail));
                 }
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
-                message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
+                message.Subject = "Arvidsonfoto.se/" + page + " - " + contactFormModel.Subject;
 
                 message.Body = new TextPart("plain")
                 {
@@ -237,7 +238,7 @@ public class InfoController : Controller
                     MessagePlaceholder = string.Empty,
                     DisplayEmailSent = true,
                     FormSubmitDate = DateTime.Now,
-                    ReturnPageUrl = Page
+                    ReturnPageUrl = page
                 };
             }
             catch (Exception emailEx)
@@ -271,7 +272,7 @@ public class InfoController : Controller
         TempData["DisplayEmailSent"] = contactFormModel.DisplayEmailSent;
         TempData["DisplayErrorSending"] = contactFormModel.DisplayErrorSending;
 
-        return RedirectToActionBasedOnPage(Page);
+        return RedirectToActionBasedOnPage(page);
     }
 
     /// <summary>
