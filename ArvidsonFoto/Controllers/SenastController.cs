@@ -46,12 +46,14 @@ public class SenastController(
             
             viewModel.AllImagesList = new List<Core.DTOs.ImageDto>();
             
-            // Get all category IDs that have images
-            var categoriesWithImages = (from cat in categories
-                                       join img in coreContext.TblImages on cat.MenuCategoryId equals img.ImageCategoryId
-                                       group img by cat.MenuCategoryId into g
-                                       select g.Key)
-                                       .ToList();
+            // Get all category IDs that have images (including family and main family relationships)
+            var categoriesWithImages = categories
+                .Where(cat => coreContext.TblImages.Any(img => 
+                    img.ImageCategoryId == cat.MenuCategoryId || 
+                    img.ImageFamilyId == cat.MenuCategoryId || 
+                    img.ImageMainFamilyId == cat.MenuCategoryId))
+                .Select(cat => cat.MenuCategoryId)
+                .ToList();
             
             // Fetch one image per category in a single optimized query
             foreach (var categoryId in categoriesWithImages)

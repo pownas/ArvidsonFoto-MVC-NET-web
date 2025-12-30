@@ -3,13 +3,13 @@
 namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// Data Transfer Object (DTO) for uploading new categories.
+/// Data Transfer Object (DTO) Input model for uploading new categories.
 /// </summary>
 /// <remarks>
 /// Contains the necessary fields for creating a new category including 
 /// validation requirements and tracking the creation status.
 /// </remarks>
-public class UploadNewCategoryDto
+public class UploadNewCategoryInputDto
 {
     /// <summary>Kategorinamn som ska visas i menyn</summary>
     [Required(ErrorMessage = "Ange ett kategorinamn")]
@@ -26,9 +26,9 @@ public class UploadNewCategoryDto
     /// Skapar en tom UploadNewCategoryDto med alla required fields initialiserade
     /// </summary>
     /// <returns>En ny tom UploadNewCategoryDto</returns>
-    public static UploadNewCategoryDto CreateEmpty()
+    public static UploadNewCategoryInputDto CreateEmpty()
     {
-        return new UploadNewCategoryDto
+        return new UploadNewCategoryInputDto
         {
             MenuText = string.Empty,
             MainMenuId = null,

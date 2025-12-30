@@ -60,7 +60,7 @@ public class InfoController : Controller
         return View();
     }
 
-    public IActionResult Gastbok(GuestbookInputDto inputModel)
+    public IActionResult Gastbok(GuestbookFormInputDto inputModel)
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
@@ -68,7 +68,7 @@ public class InfoController : Controller
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
         {
-            inputModel = GuestbookInputDto.CreateEmpty();
+            inputModel = GuestbookFormInputDto.CreateEmpty();
         }
 
         return View(inputModel);
@@ -76,7 +76,7 @@ public class InfoController : Controller
 
     [HttpPost, ValidateAntiForgeryToken]
     [Route("Info/PostToGb")]
-    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookInputDto inputModel)
+    public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookFormInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");
         if (ModelState.IsValid)
@@ -113,7 +113,7 @@ public class InfoController : Controller
                 if (_guestbookService.CreateGBpost(postToPublish))
                 {
                     Log.Information("GB-post, published OK.");
-                    inputModel = new GuestbookInputDto
+                    inputModel = new GuestbookFormInputDto
                     {
                         Code = string.Empty,
                         Name = string.Empty,
@@ -145,7 +145,7 @@ public class InfoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormDto contactFormModel, string Page)
+    public IActionResult SendMessage([Bind("Code,Email,Name,Subject,Message")] ContactFormInputDto contactFormModel, string page)
     {
         if (ModelState.IsValid)
         {
@@ -166,7 +166,7 @@ public class InfoController : Controller
                     Email = contactFormModel.Email,
                     Subject = contactFormModel.Subject,
                     Message = contactFormModel.Message,
-                    SourcePage = Page,
+                    SourcePage = page,
                     EmailSent = false, // Will be updated after email attempt
                     ErrorMessage = null
                 };
@@ -184,7 +184,7 @@ public class InfoController : Controller
                 // Early return if we can't even save to database
                 TempData["DisplayEmailSent"] = false;
                 TempData["DisplayErrorSending"] = true;
-                return RedirectToActionBasedOnPage(Page);
+                return RedirectToActionBasedOnPage(page);
             }
 
             // STEP 2: Try to send email
@@ -196,18 +196,19 @@ public class InfoController : Controller
                     throw new InvalidOperationException("SMTP settings are not properly configured. Check appsettings.json or User Secrets.");
                 }
 
-                Log.Information("User trying to send e-mail from {SourcePage}...", Page);
+                Log.Information("User trying to send e-mail from {SourcePage}...", page);
                 
-                var fromName = Page + "-ArvidsonFoto.se";
+                var fromName = page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
-                message.To.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
-                if (!string.IsNullOrWhiteSpace(_smtpSettings.CcEmail))
+                message.From.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
+                message.To.Add(new MailboxAddress("ArvidsonFoto.se", _smtpSettings.RecipientEmail));
+                message.Cc.Add(new MailboxAddress(contactFormModel.Name, contactFormModel.Email));
+                if (!string.IsNullOrWhiteSpace(_smtpSettings.BccEmail))
                 {
-                    message.Cc.Add(new MailboxAddress(fromName, _smtpSettings.CcEmail));
+                    message.Bcc.Add(new MailboxAddress(fromName, _smtpSettings.BccEmail));
                 }
                 message.Bcc.Add(new MailboxAddress(fromName, "jonas@arvidsonfoto.se"));
-                message.Subject = "Arvidsonfoto.se/" + Page + " - " + contactFormModel.Subject;
+                message.Subject = "Arvidsonfoto.se/" + page + " - " + contactFormModel.Subject;
 
                 message.Body = new TextPart("plain")
                 {
@@ -227,7 +228,7 @@ public class InfoController : Controller
                     emailSent = true;
                 }
 
-                contactFormModel = new ContactFormDto()
+                contactFormModel = new ContactFormInputDto()
                 {
                     Code = string.Empty,
                     Email = string.Empty,
@@ -237,7 +238,7 @@ public class InfoController : Controller
                     MessagePlaceholder = string.Empty,
                     DisplayEmailSent = true,
                     FormSubmitDate = DateTime.Now,
-                    ReturnPageUrl = Page
+                    ReturnPageUrl = page
                 };
             }
             catch (Exception emailEx)
@@ -271,7 +272,7 @@ public class InfoController : Controller
         TempData["DisplayEmailSent"] = contactFormModel.DisplayEmailSent;
         TempData["DisplayErrorSending"] = contactFormModel.DisplayErrorSending;
 
-        return RedirectToActionBasedOnPage(Page);
+        return RedirectToActionBasedOnPage(page);
     }
 
     /// <summary>
@@ -287,7 +288,7 @@ public class InfoController : Controller
         };
     }
 
-    public IActionResult Kontakta(ContactFormDto contactFormModel)
+    public IActionResult Kontakta(ContactFormInputDto contactFormModel)
     {
         ViewData["Title"] = "Kontaktinformation";
         if (User?.Identity?.IsAuthenticated is false)
@@ -305,9 +306,9 @@ public class InfoController : Controller
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
 
-        if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
+        if (string.IsNullOrWhiteSpace(contactFormModel.Message))
         {
-            contactFormModel = new ContactFormDto()
+            contactFormModel = new ContactFormInputDto()
             {
                 Code = string.Empty,
                 Email = string.Empty,
@@ -329,7 +330,7 @@ public class InfoController : Controller
         return View(contactFormModel);
     }
 
-    public IActionResult Kop_av_bilder(ContactFormDto contactFormModel, string imgId)
+    public IActionResult Kop_av_bilder(ContactFormInputDto contactFormModel, string imgId)
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
@@ -347,9 +348,9 @@ public class InfoController : Controller
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
         
-        if (contactFormModel.FormSubmitDate < new DateTime(2000, 01, 01) && contactFormModel.Message is null)
+        if (string.IsNullOrWhiteSpace(contactFormModel.Message))
         {
-            contactFormModel = new ContactFormDto()
+            contactFormModel = new ContactFormInputDto()
             {
                 Code = string.Empty,
                 Email = string.Empty,
@@ -368,9 +369,32 @@ public class InfoController : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    var imageArt = image.Name ?? "okänd kategori";
-
-                    contactFormModel.Message = "Hej!\nJag är intresserad av att köpa en bild på: " + imageArt + "\n som har bildnamnet: " + image.UrlImage.Split('/').Last() + ".jpg";
+                    
+                    // Get the category name from the category service
+                    var categoryName = string.Empty;
+                    if (image.CategoryId > 0)
+                    {
+                        categoryName = _categoryService.GetNameById(image.CategoryId);
+                    }
+                    
+                    var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
+                    
+                    // Build the message with both image name and category
+                    var messageParts = new List<string> { "Hej! Jag är intresserad av att köpa bilden: " };
+                    
+                    if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
+                    {
+                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                        messageParts.Add($"  - Från kategorin: {categoryName}");
+                        contactFormModel.Subject = $"Intresse att köpa en bild i kategorin: {categoryName}";
+                    }
+                    else
+                    {
+                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                    }
+                    messageParts.Add($" ");
+                    
+                    contactFormModel.Message = string.Join("\n", messageParts);
                 }
                 catch (Exception)
                 {

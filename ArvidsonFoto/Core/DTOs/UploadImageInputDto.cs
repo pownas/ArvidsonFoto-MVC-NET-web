@@ -3,7 +3,7 @@
 namespace ArvidsonFoto.Core.DTOs;
 
 /// <summary>
-/// Data Transfer Object (DTO) for uploading image information.
+/// Data Transfer Object (DTO), Input model for uploading image input functionality.
 /// </summary>
 /// <remarks>
 /// Contains all the necessary fields for uploading and managing image metadata including 
@@ -18,25 +18,26 @@ public class UploadImageInputDto
     public int? ImageHuvudfamilj { get; set; }
     
     /// <summary>Huvudfamilj namn för taxonomisk klassificering</summary>
-    public required string ImageHuvudfamiljNamn { get; set; } = "";
+    public string? ImageHuvudfamiljNamn { get; set; } = "";
     
     /// <summary>Familj ID för taxonomisk klassificering</summary>
     public int? ImageFamilj { get; set; }
     
     /// <summary>Familj namn för taxonomisk klassificering</summary>
-    public required string ImageFamiljNamn { get; set; } = "";
+    public string? ImageFamiljNamn { get; set; } = "";
     
     /// <summary>Art ID för taxonomisk klassificering</summary>
     public int ImageArt { get; set; }
     
     /// <summary>Art namn för taxonomisk klassificering</summary>
-    public required string ImageArtNamn { get; set; } = "";
+    public string? ImageArtNamn { get; set; } = "";
 
     /// <summary>Filnamn för bilden</summary>
     [Display(Name = "Filnamn")]
     [Required(ErrorMessage = "Ange filnamn")]
+    [MinLength(2, ErrorMessage = "Filnamn måste vara minst 2 tecken...")]
     [DataType(DataType.Text)]
-    public required string ImageUrl { get; set; }
+    public required string ImageUrl { get; set; } = "";
 
     /// <summary>
     /// Fullständig källsökväg för bilden
@@ -56,28 +57,27 @@ public class UploadImageInputDto
     [Display(Name = "Beskrivning")]
     [DataType(DataType.Text)]
     [MaxLength(150, ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
-    public required string ImageDescription { get; set; } = "";
+    public string ImageDescription { get; set; } = "";
 
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
 
     /// <summary>Datum och tid när bilden senast uppdaterades</summary>
-    public DateTime ImageUpdate { get; set; }
+    public DateTime ImageUpdate { get; set; } = DateTime.Now;
 
     /// <summary>
-    /// Skapar en tom UploadImageInputDto med alla required fields initialiserade
+    /// Skapar en tom UploadImageInputModel med alla required fields initialiserade
     /// </summary>
-    /// <returns>En ny tom UploadImageInputDto</returns>
+    /// <returns>En ny tom UploadImageInputModel</returns>
     public static UploadImageInputDto CreateEmpty()
     {
         return new UploadImageInputDto
         {
-            ImageId = 0,
             ImageHuvudfamilj = null,
             ImageHuvudfamiljNamn = string.Empty,
             ImageFamilj = null,
             ImageFamiljNamn = string.Empty,
-            ImageArt = 0,
+            ImageArt = -1,
             ImageArtNamn = string.Empty,
             ImageUrl = string.Empty,
             ImageUrlFullSrc = string.Empty,
