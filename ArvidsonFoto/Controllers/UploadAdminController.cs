@@ -48,11 +48,15 @@ public class UploadAdminController : Controller
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-    public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, UploadImageInputDto inputModel)
+    public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4)
     {
         ViewData["Title"] = "Länka till ny bild";
+        
+        // Rensa ModelState för GET-requests så att validering inte körs automatiskt
+        ModelState.Clear();
+        
         UploadImageViewModel viewModel = new UploadImageViewModel();
-        viewModel.ImageInputModel = inputModel ?? UploadImageInputDto.CreateEmpty();
+        viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
 
         var selectedCategory = CategoryDto.CreateEmpty();
         var subCategories = new List<CategoryDto>();
@@ -96,8 +100,6 @@ public class UploadAdminController : Controller
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult CreateImageLink(UploadImageInputDto model)
     {
-        model.ImageCreated = false;
-
         if (ModelState.IsValid)
         {
             if (model.ImageHuvudfamilj.Equals(0))
@@ -126,18 +128,25 @@ public class UploadAdminController : Controller
                 var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
                 coreContext.TblImages.Add(newImage);
                 coreContext.SaveChanges();
-                model.ImageCreated = true;
+                
+                // Använd TempData för att visa framgångsmeddelande
+                TempData["ImageCreated"] = true;
+                TempData["ImageCategoryId"] = model.ImageArt;
+                TempData["ImageUrl"] = model.ImageUrl;
+                
+                return RedirectToAction("NyBild");
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Fel vid skapande av bild");
-                model.ImageCreated = false;
+                TempData["ImageCreated"] = false;
+                TempData["ErrorMessage"] = "Ett fel uppstod vid skapande av bilden.";
             }
         }
-        if (model.ImageCreated)
-            return RedirectToAction("NyBild", new { model.ImageCreated, model.ImageArt, model.ImageUrl });
-        else
-            return RedirectToAction("NyBild", model);
+        
+        // Om validering misslyckades, skicka tillbaka till formuläret med felmeddelanden
+        TempData["ImageCreated"] = false;
+        return RedirectToAction("NyBild");
     }
 
     [HttpPost, ValidateAntiForgeryToken]
