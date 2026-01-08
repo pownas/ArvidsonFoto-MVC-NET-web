@@ -26,11 +26,24 @@
     </nav>
     <div class="col-12 col-md-8">
         <p>Här kan du länka till en ny bild på hemsidan:</p>
-        @if (Model!.ImageInputModel.ImageCreated)
+        
+        @* Visa framgångsmeddelande från TempData *@
+        @if (TempData["ImageCreated"] as bool? == true)
         {
-            <h5 class="alert alert-success bg-success text-dark">Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(Model.ImageInputModel.ImageArt), @Model.ImageInputModel.ImageUrl</span></h5>
+            var categoryId = TempData["ImageCategoryId"] as int? ?? 0;
+            var imageUrl = TempData["ImageUrl"] as string ?? "";
+            <h5 class="alert alert-success bg-success text-dark">
+                Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
+            </h5>
         }
-        @if (Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
+        else if (TempData["ImageCreated"] as bool? == false)
+        {
+            <div class="alert alert-danger">
+                @(TempData["ErrorMessage"] ?? "Ett fel uppstod vid skapande av bilden.")
+            </div>
+        }
+        
+        @if (Model!.ImageInputModel is not null && Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
             <h3>Vald kategori: @Model.SelectedCategory.Name</h3>
 

@@ -48,9 +48,9 @@
                     </div>
                 </div>
             }
-            else if (Model?.DisplayImagesList is not null && Model.DisplayImagesList.Count == 0)
+            else if ((ViewBag.SearchPerformed ?? false) && Model?.DisplayImagesList is not null && Model?.DisplayImagesList.Count == 0)
             {
-                <!-- No results found -->
+                <!-- No results found - only show when a search was actually performed -->
                 <div class="alert alert-warning d-flex align-items-start" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
                     <div>

@@ -37,7 +37,7 @@ public class UploadImageInputDto
     [Required(ErrorMessage = "Ange filnamn")]
     [MinLength(2, ErrorMessage = "Filnamn måste vara minst 2 tecken...")]
     [DataType(DataType.Text)]
-    public required string ImageUrl { get; set; } = "";
+    public string? ImageUrl { get; set; } = "";
 
     /// <summary>
     /// Fullständig källsökväg för bilden
@@ -57,7 +57,7 @@ public class UploadImageInputDto
     [Display(Name = "Beskrivning")]
     [DataType(DataType.Text)]
     [MaxLength(150, ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
-    public string ImageDescription { get; set; } = "";
+    public string? ImageDescription { get; set; } = "";
 
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
