@@ -35,7 +35,7 @@ public class Program
 
         try
         {
-            Log.Information("Starting web application in {Environment} mode", environment);
+            Log.Warning("Starting web application in {Environment} mode", environment);
             
             var builder = WebApplication.CreateBuilder(args);
 
@@ -215,7 +215,7 @@ public class Program
             {
                 var categoryService = scope.ServiceProvider.GetRequiredService<IApiCategoryService>();
                 
-                Log.Information("Pre-loading category cache...");
+                Log.Debug("Pre-loading category cache...");
                 var startTime = DateTime.UtcNow;
                 
                 // Load all categories - this will cache them with GetAll()
@@ -234,7 +234,7 @@ public class Program
                 }
                 
                 var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                Log.Information("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
+                Log.Debug("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
                     elapsed, allCategories.Count);
             }
             catch (Exception ex)
