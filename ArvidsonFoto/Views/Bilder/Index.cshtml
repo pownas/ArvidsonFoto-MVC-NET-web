@@ -10,24 +10,24 @@
     <!-- Robots -->
     <meta name="robots" content="noimageindex, nofollow" />
     @{
-        int pageImgCount = Model!.AllImagesList is not null ? Model.AllImagesList.Count : 0;
-        string firstImageUrl = Model.DisplayImagesList.FirstOrDefault()?.UrlImage ?? "";
+        int pageImgCount = Model!.DisplayImagesList is not null ? Model.DisplayImagesList.Count : 0;
+        string firstImageUrl = Model.DisplayImagesList?.FirstOrDefault()?.UrlImage ?? "";
         string fullImageUrl = !string.IsNullOrEmpty(firstImageUrl) ? $"https://ArvidsonFoto.se/{firstImageUrl}.jpg" : "";
     }
-    <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st" />
-    <link rel="canonical" href="https://ArvidsonFoto.se@(Model.CurrentUrl)" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st" />
+    <link rel="canonical" href="@Html.Raw($"https://ArvidsonFoto.se{Model.CurrentUrl}")" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Bilder på: @ViewData["Title"] - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st.">
+    <meta name="twitter:title" content="Bilder på: @Html.Raw(ViewData["Title"]) - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st.">
     <meta name="twitter:image" content="@Html.Raw(fullImageUrl)">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Bilder på: @ViewData["Title"] - Torbjörn Arvidson Foto">
-    <meta name="og:description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st." />
+    <meta property="og:title" content="Bilder på: @Html.Raw(ViewData["Title"]) - Torbjörn Arvidson Foto">
+    <meta name="og:description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st." />
     <meta property="og:image" content="@Html.Raw(fullImageUrl)">
-    <meta property="og:url" content="https://ArvidsonFoto.se@(Model.CurrentUrl)">
+    <meta property="og:url" content="@Html.Raw($"https://ArvidsonFoto.se{Model.CurrentUrl}")">
 }
 
 @{
@@ -40,7 +40,7 @@
 
         if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Length > 0 || Model.SelectedCategory is null)
         {
-            ViewData["Title"] = Model.SelectedCategory!.Name;
+            ViewData["Title"] = Html.Raw(Model.SelectedCategory!.Name);
         }
         else
         {

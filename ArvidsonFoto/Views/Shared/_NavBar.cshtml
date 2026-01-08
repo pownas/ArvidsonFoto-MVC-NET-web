@@ -45,11 +45,11 @@
                     {
                         if (head.Name == "Fåglar")
                         {
-                            <a href="./Bilder/Fåglar">@head.Name</a>
+                            <a href="./Bilder/Fåglar">@Html.Raw(head.Name)</a>
                         }
                         else
                         {
-                            <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
+                            <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))">@Html.Raw(head.Name)</a>
                         }
                         <ul>
                             @foreach (var s1 in subs1)
@@ -59,8 +59,8 @@
                                 <li>
                                     @if (subs2.Any())
                                     {
-                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
-                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
+                                        <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s1.Name))" 
+                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@Html.Raw(s1.Name)">@Html.Raw(s1.Name)</a>
                                         <ul>
                                             @foreach (var s2 in subs2)
                                             {
@@ -69,23 +69,23 @@
                                                 <li>
                                                     @if (subs3.Any())
                                                     {
-                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
-                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
+                                                        <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s1.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s2.Name))" 
+                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@Html.Raw(s2.Name)">@Html.Raw(s2.Name)</a>
                                                         <ul>
                                                             @foreach (var s3 in subs3)
                                                             {
                                                                 
                                                                 <li>
-                                                                    <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)/@SharedStaticFunctions.ReplaceUrlText(s3.Name)" 
-                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name">@s3.Name</a>
+                                                                    <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s1.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s2.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s3.Name))" 
+                                                                       class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@Html.Raw(s3.Name)">@Html.Raw(s3.Name)</a>
                                                                 </li>
                                                             }
                                                         </ul>
                                                     }
                                                     else
                                                     {
-                                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)/@SharedStaticFunctions.ReplaceUrlText(s2.Name)" 
-                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
+                                                        <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s1.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s2.Name))" 
+                                                           class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@Html.Raw(s2.Name)">@Html.Raw(s2.Name)</a>
                                                     }
                                                 </li>
                                             }
@@ -93,8 +93,8 @@
                                     }
                                     else
                                     {
-                                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)/@SharedStaticFunctions.ReplaceUrlText(s1.Name)" 
-                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
+                                        <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(s1.Name))" 
+                                           class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@Html.Raw(s1.Name)">@Html.Raw(s1.Name)</a>
                                     }
                                 </li>
                             }
@@ -102,7 +102,7 @@
                     }
                     else
                     {
-                        <a href="./Bilder/@SharedStaticFunctions.ReplaceUrlText(head.Name)">@head.Name</a>
+                        <a href="./Bilder/@Html.Raw(SharedStaticFunctions.ReplaceUrlText(head.Name))">@Html.Raw(head.Name)</a>
                     }
                 </li>
             }
