@@ -2,6 +2,7 @@
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
+using System.Web;
 
 namespace ArvidsonFoto.Controllers;
 
@@ -29,14 +30,27 @@ public class BilderController(
 
         viewModel.CurrentPage = (int)sida;
 
+        // URL decode and normalize the incoming parameters
         if (subLevel4 is not null)
+        {
+            subLevel4 = Uri.UnescapeDataString(subLevel4);
             subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
+        }
         if (subLevel3 is not null)
+        {
+            subLevel3 = Uri.UnescapeDataString(subLevel3);
             subLevel3 = SharedStaticFunctions.ReplaceAAO(subLevel3);
+        }
         if (subLevel2 is not null)
+        {
+            subLevel2 = Uri.UnescapeDataString(subLevel2);
             subLevel2 = SharedStaticFunctions.ReplaceAAO(subLevel2);
+        }
         if (subLevel1 is not null)
+        {
+            subLevel1 = Uri.UnescapeDataString(subLevel1);
             subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
+        }
 
         // Determine which category to load
         string categoryName = null;
@@ -65,10 +79,18 @@ public class BilderController(
 
         if (categoryName != null)
         {
+            // Try to find category by name (case-insensitive via GetByName)
             var selectedCategory = _categoryService.GetByName(categoryName);
+            
+            // If not found by display name, try by URL segment with fallback
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
             {
-                Log.Warning($"Invalid category requested: {currentUrl}");
+                selectedCategory = _categoryService.GetByUrlSegmentWithFallback(categoryName);
+            }
+            
+            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
+            {
+                Log.Warning($"Invalid category requested: {currentUrl} (categoryName: {categoryName})");
                 return NotFound();
             }
             

@@ -131,6 +131,14 @@ public class Program
         services.AddControllersWithViews();
         services.AddRazorPages();
 
+        // ===== ROUTING CONFIGURATION =====
+        // Enable case-insensitive and URL-decoding routing
+        services.Configure<RouteOptions>(options =>
+        {
+            options.LowercaseUrls = false; // Keep original casing in generated URLs
+            options.LowercaseQueryStrings = false;
+        });
+
         // ===== BLAZOR SERVER CONFIGURATION =====
         services.AddServerSideBlazor(options =>
         {
