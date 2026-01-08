@@ -35,7 +35,7 @@ public class Program
 
         try
         {
-            Log.Information("Starting web application in {Environment} mode", environment);
+            Log.Warning("Starting web application in {Environment} mode", environment);
             
             var builder = WebApplication.CreateBuilder(args);
 
@@ -131,6 +131,14 @@ public class Program
         services.AddControllersWithViews();
         services.AddRazorPages();
 
+        // ===== ROUTING CONFIGURATION =====
+        // Enable case-insensitive and URL-decoding routing
+        services.Configure<RouteOptions>(options =>
+        {
+            options.LowercaseUrls = false; // Keep original casing in generated URLs
+            options.LowercaseQueryStrings = false;
+        });
+
         // ===== BLAZOR SERVER CONFIGURATION =====
         services.AddServerSideBlazor(options =>
         {
@@ -207,7 +215,7 @@ public class Program
             {
                 var categoryService = scope.ServiceProvider.GetRequiredService<IApiCategoryService>();
                 
-                Log.Information("Pre-loading category cache...");
+                Log.Debug("Pre-loading category cache...");
                 var startTime = DateTime.UtcNow;
                 
                 // Load all categories - this will cache them with GetAll()
@@ -226,7 +234,7 @@ public class Program
                 }
                 
                 var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                Log.Information("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
+                Log.Debug("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
                     elapsed, allCategories.Count);
             }
             catch (Exception ex)

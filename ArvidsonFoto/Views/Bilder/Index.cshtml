@@ -1,19 +1,35 @@
 ﻿@*<!-- Bilder-index (Galleriet) -->*@
 @model GalleryViewModel
-@section MetaData {
-    <meta name="robots" content="noimageindex, nofollow" />
-    @{
-        int pageImgCount = Model!.AllImagesList is not null ? Model.AllImagesList.Count : 0;
-    }
-    <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @ViewData["Title"]. Antal bilder: @(pageImgCount)st" />
-    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
-}
-
 @inject IApiImageService _imageService
 @inject IApiCategoryService _categoryService
 @using ArvidsonFoto.Core.Interfaces
 @using ArvidsonFoto.Core.DTOs
 @using System.Net
+
+@section MetaData {
+    <!-- Robots -->
+    <meta name="robots" content="noimageindex, nofollow" />
+    @{
+        int pageImgCount = Model!.DisplayImagesList is not null ? Model.DisplayImagesList.Count : 0;
+        string firstImageUrl = Model.DisplayImagesList?.FirstOrDefault()?.UrlImage ?? "";
+        string fullImageUrl = !string.IsNullOrEmpty(firstImageUrl) ? $"https://ArvidsonFoto.se/{firstImageUrl}.jpg" : "";
+    }
+    <meta name="description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st" />
+    <link rel="canonical" href="@Html.Raw($"https://ArvidsonFoto.se{Model.CurrentUrl}")" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bilder på: @Html.Raw(ViewData["Title"]) - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st.">
+    <meta name="twitter:image" content="@Html.Raw(fullImageUrl)">
+
+    <!-- Open Graph for social media sharing -->
+    <meta property="og:title" content="Bilder på: @Html.Raw(ViewData["Title"]) - Torbjörn Arvidson Foto">
+    <meta name="og:description" content="Torbjörn Arvidson Foto - Bilder på: @Html.Raw(ViewData["Title"]). Antal bilder: @(pageImgCount)st." />
+    <meta property="og:image" content="@Html.Raw(fullImageUrl)">
+    <meta property="og:url" content="@Html.Raw($"https://ArvidsonFoto.se{Model.CurrentUrl}")">
+}
+
 @{
     List<CategoryDto> subCategories = new List<CategoryDto>();
     try
@@ -23,9 +39,13 @@
                                         .ToList();
 
         if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Length > 0 || Model.SelectedCategory is null)
-            ViewData["Title"] = Model.SelectedCategory!.Name;
+        {
+            ViewData["Title"] = Html.Raw(Model.SelectedCategory!.Name);
+        }
         else
+        {
             ViewData["Title"] = "Ingen kategori skickades med...";
+        }
     }
     catch (Exception ex)
     {
@@ -91,10 +111,11 @@ else
 {
     <h2>@ViewData["Title"]</h2>
 
-    if(ViewData["Title"]!.Equals("Bilder-sidan hittades inte"))
+    @if(ViewData["Title"]!.Equals("Bilder-sidan hittades inte"))
+    {
         Log.Fatal("Could not show the Image-URL: '" + currentUrl + "'");
+    }
 }
-
 
 @if (subCategories is not null)
 {
@@ -115,7 +136,7 @@ else
 }
 else
 {
-    @if (Model.AllImagesList.Count > 12)
+    if (Model.AllImagesList.Count > 12)
     {
         <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
     }
@@ -129,7 +150,7 @@ else
 }
 else
 {
-    @if (Model.AllImagesList.Count > 0)
+    if (Model.AllImagesList.Count > 0)
     {
         <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
     }

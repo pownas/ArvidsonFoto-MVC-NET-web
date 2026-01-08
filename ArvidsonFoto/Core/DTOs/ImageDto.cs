@@ -41,7 +41,7 @@ public class ImageDto()
     /// <summary> Bildens beskrivning </summary>
     /// <remarks> Beskrivning av bilden, kan vara tom sträng. </remarks>
     /// <example>Hane, beskrivning av amiral...</example>
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
 
     /// <summary> Bildens unika ID </summary>
     /// <remarks> Används för att identifiera bilden i databasen, t.ex. 8014. </remarks>
