@@ -158,8 +158,9 @@ public class BilderController(
         GalleryViewModel viewModel = new GalleryViewModel();
         
         ViewBag.SearchQuery = s ?? "";
+        ViewBag.SearchPerformed = !string.IsNullOrWhiteSpace(s); // Track if a search was actually performed
         
-        if (s is null)
+        if (string.IsNullOrWhiteSpace(s))
         {
             ViewData["Title"] = "Sök bland bild-kategorierna";
         }
