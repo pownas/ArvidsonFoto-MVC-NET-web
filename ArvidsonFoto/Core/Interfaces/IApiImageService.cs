@@ -38,8 +38,9 @@ public interface IApiImageService
     /// Gets one image from a category
     /// </summary>
     /// <param name="categoryId">The category ID</param>
+    /// <param name="categoryName">Optional category name to use for display</param>
     /// <returns>An image from the category</returns>
-    ImageDto GetOneImageFromCategory(int categoryId);
+    ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "");
 
     /// <summary>
     /// Gets all images

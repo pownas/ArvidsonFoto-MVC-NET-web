@@ -134,8 +134,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// Gets one image from a specific category.
     /// </summary>
     /// <param name="categoryId">The ID of the category to get an image from.</param>
+    /// <param name="categoryName">Optional category name to use for display</param>
     /// <returns>An image DTO from the specified category, or a default "not found" image if no image exists.</returns>
-    public ImageDto GetOneImageFromCategory(int categoryId)
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "")
     {
         try
         {
@@ -180,7 +181,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 categoryPath = GetOldCategoryPathForImage(image);
             }
 
-            return image.ToImageDto(categoryPath) ?? DefaultImageDtoNotFound;
+            return image.ToImageDto(categoryPath, categoryName) ?? DefaultImageDtoNotFound;
         }
         catch (Exception ex)
         {
