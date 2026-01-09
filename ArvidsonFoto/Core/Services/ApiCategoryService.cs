@@ -90,7 +90,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var category = _entityContext.TblMenus.Where(c => c.MenuDisplayName != null && c.MenuDisplayName.Equals(categoryName)).FirstOrDefault();
         if (category is null)
         {
-            Log.Warning("Could not find category: '" + categoryName + "'");
+            Log.Debug("Could not find category: '" + categoryName + "'");
             return DefaultCategoryNotFound;
         }
 
@@ -538,7 +538,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     {
         if (string.IsNullOrEmpty(urlSegment))
         {
-            Log.Information("Empty URL segment provided to GetByUrlSegmentWithFallback");
+            Log.Debug("Empty URL segment provided to GetByUrlSegmentWithFallback");
             return DefaultCategoryNotFound;
         }
 
@@ -558,7 +558,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == categoryId);
                 if (category != null)
                 {
-                    Log.Information("Found category by ID fallback: {Id}", categoryId);
+                    Log.Debug("Found category by ID fallback: {Id}", categoryId);
                     var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                     var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                     var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
@@ -569,7 +569,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLower() == urlSegment.ToLower());
             if (category != null)
             {
-                Log.Information("Found category by display name fallback: {Name}", urlSegment);
+                Log.Debug("Found category by display name fallback: {Name}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                 var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
@@ -579,7 +579,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower().Contains(urlSegment.ToLower()) || c.MenuDisplayName!.ToLower().Contains(urlSegment.ToLower()));
             if (category != null)
             {
-                Log.Information("Found category by partial match: {Segment}", urlSegment);
+                Log.Debug("Found category by partial match: {Segment}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                 var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();

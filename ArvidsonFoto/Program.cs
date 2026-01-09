@@ -19,9 +19,17 @@ public class Program
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
         var isDevelopment = environment.Equals("Development", StringComparison.OrdinalIgnoreCase);
 
-        // Configure Serilog with Console sink in Development
+        // Build a temporary configuration to get logging settings
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        // Configure Serilog from appsettings with Console sink in Development
         var loggerConfig = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .ReadFrom.Configuration(configuration) // Read from appsettings.json
             .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day);
 
         // Add Console sink in Development for easier debugging
