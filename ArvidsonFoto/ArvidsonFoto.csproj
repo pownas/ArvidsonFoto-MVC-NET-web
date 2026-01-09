@@ -46,8 +46,8 @@
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.29.1" /> <!-- JavaScript engine för SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.24.1" /> <!-- DI för JS engine -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" /> <!-- OpenAPI support -->
-    <PackageReference Include="Microsoft.OpenApi" Version="2.0.0" /> <!-- OpenAPI models -->
-    <PackageReference Include="Scalar.AspNetCore" Version="1.2.68" /> <!-- Scalar UI för OpenAPI dokumentation -->
+    <PackageReference Include="Microsoft.OpenApi" Version="2.4.2" /> <!-- OpenAPI models -->
+    <PackageReference Include="Scalar.AspNetCore" Version="2.12.4" /> <!-- Scalar UI för OpenAPI dokumentation -->
   </ItemGroup>
 
   <ItemGroup Label="Folders">
