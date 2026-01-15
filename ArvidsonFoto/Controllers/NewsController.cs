@@ -1,13 +1,14 @@
-using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.ViewModels;
+using ArvidsonFoto.Core.Services;
 
 namespace ArvidsonFoto.Controllers;
 
-public class NewsController(ArvidsonFotoDbContext context) : Controller
+public class NewsController(ArvidsonFotoCoreDbContext coreContext, INewsService newsService, IPageCounterService pageCounterService) : Controller
 {
-    internal INewsService _newsService = new NewsService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    internal INewsService _newsService = newsService;
+    internal IPageCounterService _pageCounterService = pageCounterService;
 
     [Route("[controller]")]
     public IActionResult Index()

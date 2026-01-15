@@ -2,6 +2,7 @@
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Data;
