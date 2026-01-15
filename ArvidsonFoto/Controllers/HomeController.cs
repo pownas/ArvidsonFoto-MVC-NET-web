@@ -12,16 +12,19 @@ public class HomeController : Controller
 {
     private readonly IPageCounterService _pageCounterService;
     private readonly IApiImageService _imageService;
+    private readonly INewsService _newsService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HomeController"/> class.
     /// </summary>
     /// <param name="pageCounterService">The page counter service for tracking page views</param>
     /// <param name="imageService">The image service for fetching images</param>
-    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService)
+    /// <param name="newsService">The news service for fetching news articles</param>
+    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService, INewsService newsService)
     {
         _pageCounterService = pageCounterService;
         _imageService = imageService;
+        _newsService = newsService;
     }
 
     public IActionResult Index()
@@ -34,6 +37,8 @@ public class HomeController : Controller
         {
             DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
         };
+        
+        ViewBag.LatestNews = _newsService.GetLatestPublished(3); // Get 3 latest news for home page
         
         return View(viewModel);
     }

@@ -12,11 +12,13 @@ public class SenastController(
     ILogger<ApiImageService> imageLogger,
     ILogger<ApiCategoryService> categoryLogger,
     IConfiguration configuration,
-    IMemoryCache memoryCache) : Controller
+    IMemoryCache memoryCache,
+    INewsService newsService) : Controller
 {
     internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
     internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
     internal IPageCounterService _pageCounterService = new PageCounterService(coreContext);
+    internal INewsService _newsService = newsService;
 
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
@@ -240,6 +242,9 @@ public class SenastController(
 
         viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
         viewModel.CurrentUrl = "/Senast/" + sortOrder;
+
+        // Add latest news to ViewBag
+        ViewBag.LatestNews = _newsService.GetLatestPublished(3);
 
         return View(viewModel);
     }

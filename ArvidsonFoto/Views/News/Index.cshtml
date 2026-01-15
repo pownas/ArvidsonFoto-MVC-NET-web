@@ -1,0 +1,58 @@
+@*<!-- News-Index -->*@
+@model NewsViewModel
+
+@section MetaData {
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Nyheter och uppdateringar om fotografering och bildarkiv." />
+    <link rel="canonical" href="https://ArvidsonFoto.se/Nyheter" />
+}
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"] <i class="bi bi-newspaper mx-1"></i></li>
+    </ol>
+</nav>
+
+<h2><i class="bi bi-newspaper"></i> @ViewData["Title"]</h2>
+
+<div id="page-content" class="brodtext">
+    @if (Model.NewsList.Count > 0)
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            @foreach (var news in Model.NewsList)
+            {
+                <div class="col mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">@news.NewsTitle</h5>
+                            <small class="text-muted">
+                                @news.NewsCreated?.ToString("yyyy-MM-dd HH:mm") av @news.NewsAuthor
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(news.NewsSummary))
+                            {
+                                <p class="card-text">@news.NewsSummary</p>
+                            }
+                            else
+                            {
+                                <p class="card-text">@Html.Raw(news.NewsContent.Length > 200 ? news.NewsContent.Substring(0, 200) + "..." : news.NewsContent)</p>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <a href="/Nyheter/@news.NewsId" class="btn btn-primary btn-sm">Läs mer</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            Inga nyheter att visa för tillfället.
+        </div>
+    }
+</div>

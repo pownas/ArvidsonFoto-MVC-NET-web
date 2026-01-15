@@ -45,6 +45,9 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
     /// <summary>DbSet för kontaktformulär inlämningar</summary>
     public virtual DbSet<TblKontakt> TblKontakt { get; set; } = null!;
 
+    /// <summary>DbSet för nyhetsartiklar</summary>
+    public virtual DbSet<TblNews> TblNews { get; set; } = null!;
+
 
     /// <summary>
     /// Konfigurerar databasmodellen och entitetsrelationer.
@@ -231,6 +234,45 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
             entity.Property(e => e.ErrorMessage)
                 .HasMaxLength(500)
                 .HasColumnName("ErrorMessage");
+
+            entity.HasKey(e => e.Id);
+        });
+
+        modelBuilder.Entity<TblNews>(entity =>
+        {
+            entity.ToTable("tbl_news");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+
+            entity.Property(e => e.NewsId)
+                .HasColumnName("News_ID");
+
+            entity.Property(e => e.NewsTitle)
+                .HasMaxLength(200)
+                .HasColumnName("News_Title");
+
+            entity.Property(e => e.NewsContent)
+                .HasColumnName("News_Content");
+
+            entity.Property(e => e.NewsAuthor)
+                .HasMaxLength(100)
+                .HasColumnName("News_Author");
+
+            entity.Property(e => e.NewsSummary)
+                .HasMaxLength(500)
+                .HasColumnName("News_Summary");
+
+            entity.Property(e => e.NewsPublished)
+                .HasColumnType("bit")
+                .HasColumnName("News_Published");
+
+            entity.Property(e => e.NewsCreated)
+                .HasColumnType("datetime")
+                .HasColumnName("News_Created");
+
+            entity.Property(e => e.NewsUpdated)
+                .HasColumnType("datetime")
+                .HasColumnName("News_Updated");
 
             entity.HasKey(e => e.Id);
         });

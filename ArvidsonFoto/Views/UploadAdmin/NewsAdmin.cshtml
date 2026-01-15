@@ -1,0 +1,79 @@
+@*<!-- UploadAdmin-NewsAdmin -->*@
+@model NewsViewModel
+
+<div class="row">
+    <div class="col-12">
+        <h2><i class="bi bi-newspaper"></i> @ViewData["Title"]</h2>
+        
+        <div class="mb-3">
+            <a href="/UploadAdmin/NyNyhet" class="btn btn-success">
+                <i class="bi bi-plus"></i> Ny nyhetsartikel
+            </a>
+        </div>
+
+        @if (Model.NewsList.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titel</th>
+                            <th>Författare</th>
+                            <th>Skapad</th>
+                            <th>Uppdaterad</th>
+                            <th>Publicerad</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var news in Model.NewsList)
+                        {
+                            <tr>
+                                <td>@news.NewsId</td>
+                                <td>@news.NewsTitle</td>
+                                <td>@news.NewsAuthor</td>
+                                <td>@news.NewsCreated?.ToString("yyyy-MM-dd")</td>
+                                <td>@news.NewsUpdated?.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (news.NewsPublished)
+                                    {
+                                        <span class="badge bg-success">Ja</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Nej</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (news.NewsPublished)
+                                    {
+                                        <a href="/Nyheter/@news.NewsId" class="btn btn-sm btn-info" target="_blank">
+                                            <i class="bi bi-eye"></i> Visa
+                                        </a>
+                                    }
+                                    <a href="/UploadAdmin/RedigeraNyhet/@news.Id" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Redigera
+                                    </a>
+                                    <form method="post" asp-action="DeleteNews" class="d-inline" onsubmit="return confirm('Är du säker på att du vill radera denna nyhetsartikel?');">
+                                        <input type="hidden" name="id" value="@news.Id" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Radera
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                Inga nyhetsartiklar finns ännu.
+            </div>
+        }
+    </div>
+</div>

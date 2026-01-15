@@ -111,6 +111,7 @@ public class Program
         services.AddScoped<IPageCounterService, PageCounterService>();
         services.AddScoped<IContactService, ContactService>();
         services.AddScoped<IFacebookService, FacebookService>();
+        services.AddScoped<INewsService, NewsService>();
 
         // Add HttpClient for FacebookService
         services.AddHttpClient<IFacebookService, FacebookService>();
