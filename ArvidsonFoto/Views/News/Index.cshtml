@@ -23,7 +23,9 @@
             @foreach (var news in Model.NewsList)
             {
                 <div class="col mb-4">
-                    <div class="card h-100">
+                    <div class="card h-100 news-card" onclick="location.href='/Nyheter/@news.NewsId'" role="button" tabindex="0" 
+                         onkeydown="if(event.key==='Enter'||event.key===' '){location.href='/Nyheter/@news.NewsId'}" 
+                         aria-label="Läs artikeln: @news.NewsTitle">
                         <div class="card-header">
                             <h5 class="card-title mb-0">@news.NewsTitle</h5>
                             <small class="text-muted">
@@ -41,7 +43,7 @@
                             }
                         </div>
                         <div class="card-footer">
-                            <a href="/Nyheter/@news.NewsId" class="btn btn-primary btn-sm">Läs mer</a>
+                            <span class="btn btn-outline-light btn-sm">Läs mer <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </div>
                 </div>

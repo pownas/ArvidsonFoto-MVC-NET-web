@@ -1,0 +1,2 @@
+2025-09-28 11:57:22.520 +00:00 [FTL] Navigation error to page: /Nyheter
+2025-09-28 12:02:55.679 +00:00 [FTL] Navigation error to page: /Nyheter

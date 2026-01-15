@@ -11,10 +11,11 @@
     <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Hoppa till huvudinnehåll</a>
     <header>
         <partial name="_NavBar" />
     </header>
-    <main class="container-md pb-5">
+    <main id="main-content" class="container-md pb-5">
         @RenderBody()
     </main>
     <footer class="footer overridden-footer">
