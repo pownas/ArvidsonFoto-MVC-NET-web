@@ -1,12 +1,13 @@
-using ArvidsonFoto.Core.ApiResponses;
+ï»¿using ArvidsonFoto.Core.ApiResponses;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Data;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
 /// <summary>
 /// Mock implementation of IApiCategoryService for unit testing
-/// Uses in-memory test data without external dependencies
+/// Uses data from ArvidsonFotoCoreDbSeeder to match production data structure
 /// </summary>
 public class MockApiCategoryService : IApiCategoryService
 {
@@ -14,70 +15,57 @@ public class MockApiCategoryService : IApiCategoryService
 
     public MockApiCategoryService()
     {
-        // Create a fresh copy for each instance to avoid test interference
-        _testCategories = new List<CategoryDto>
+        // Convert ArvidsonFotoCoreDbSeeder data to CategoryDto format
+        _testCategories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.Select(menu => new CategoryDto
         {
-            new CategoryDto
-            {
-                CategoryId = 1,
-                Name = "Fåglar",
-                UrlCategoryPath = "faglar",
-                UrlCategoryPathFull = "faglar",
-                UrlCategory = "bilder/faglar",
-                UrlImage = "B57W4725",
-                ParentCategoryId = null,
-                ImageCount = 5,
-                DateUpdated = DateTime.UtcNow
-            },
-            new CategoryDto
-            {
-                CategoryId = 10,
-                Name = "Tättingar",
-                UrlCategoryPath = "tattingar",
-                UrlCategoryPathFull = "faglar/tattingar",
-                UrlCategory = "bilder/faglar/tattingar",
-                UrlImage = "B57W4725",
-                ParentCategoryId = 1,
-                ImageCount = 3,
-                DateUpdated = DateTime.UtcNow
-            },
-            new CategoryDto
-            {
-                CategoryId = 12,
-                Name = "Mesar",
-                UrlCategoryPath = "mesar",
-                UrlCategoryPathFull = "faglar/tattingar/mesar",
-                UrlCategory = "bilder/faglar/tattingar/mesar",
-                UrlImage = "B57W4725",
-                ParentCategoryId = 10,
-                ImageCount = 2,
-                DateUpdated = DateTime.UtcNow
-            },
-            new CategoryDto
-            {
-                CategoryId = 13,
-                Name = "Blåmes",
-                UrlCategoryPath = "blames",
-                UrlCategoryPathFull = "faglar/tattingar/mesar/blames",
-                UrlCategory = "bilder/faglar/tattingar/mesar/blames",
-                UrlImage = "B57W4725",
-                ParentCategoryId = 12,
-                ImageCount = 1,
-                DateUpdated = DateTime.UtcNow
-            },
-            new CategoryDto
-            {
-                CategoryId = 2,
-                Name = "Däggdjur",
-                UrlCategoryPath = "daggdjur",
-                UrlCategoryPathFull = "daggdjur",
-                UrlCategory = "bilder/daggdjur",
-                UrlImage = "B59W4837",
-                ParentCategoryId = null,
-                ImageCount = 1,
-                DateUpdated = DateTime.UtcNow
-            }
-        };
+            CategoryId = menu.MenuCategoryId ?? 0,
+            Name = menu.MenuDisplayName ?? string.Empty,
+            UrlCategoryPath = menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}",
+            UrlCategoryPathFull = BuildCategoryPath(menu.MenuCategoryId ?? 0),
+            UrlCategory = $"bilder/{menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}"}",
+            UrlImage = GetDefaultImageForCategory(menu.MenuCategoryId ?? 0),
+            ParentCategoryId = menu.MenuParentCategoryId == 0 ? null : menu.MenuParentCategoryId,
+            ImageCount = GetImageCountForCategory(menu.MenuCategoryId ?? 0),
+            DateUpdated = menu.MenuDateUpdated ?? DateTime.UtcNow
+        }).ToList();
+    }
+
+    private static string BuildCategoryPath(int menuId)
+    {
+        var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == menuId);
+        if (menu == null) return string.Empty;
+
+        var pathParts = new List<string>();
+        var currentMenu = menu;
+        
+        while (currentMenu != null)
+        {
+            // Skip "FÃ¥glar" category (ID = 1) as it's not a physical folder
+            if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuUrlSegment))
+                pathParts.Insert(0, currentMenu.MenuUrlSegment ?? $"category-{currentMenu.MenuCategoryId ?? 0}");
+            
+            if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+                break;
+                
+            currentMenu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenu.MenuParentCategoryId);
+        }
+        
+        return string.Join("/", pathParts);
+    }
+
+    private static string GetDefaultImageForCategory(int menuId)
+    {
+        // Try to find an image for this category
+        var image = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .FirstOrDefault(i => i.ImageCategoryId == menuId || i.ImageFamilyId == menuId || i.ImageMainFamilyId == menuId);
+        
+        return image?.ImageUrlName ?? "default-image";
+    }
+
+    private static int GetImageCountForCategory(int menuId)
+    {
+        return ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image
+            .Count(i => i.ImageCategoryId == menuId || i.ImageFamilyId == menuId || i.ImageMainFamilyId == menuId);
     }
 
     public bool AddCategory(CategoryDto category)
@@ -284,12 +272,48 @@ public class MockApiCategoryService : IApiCategoryService
         return category?.UrlCategoryPathFull ?? string.Empty;
     }
 
+    public string GetCategoryDisplayPathForImage(int categoryId)
+    {
+        if (categoryId <= 0) return string.Empty;
+        
+        // Build display path with Ã…Ã„Ã– from category names
+        var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == categoryId);
+        if (menu == null) return string.Empty;
+
+        var pathParts = new List<string>();
+        var currentMenu = menu;
+        
+        while (currentMenu != null)
+        {
+            // Skip "FÃ¥glar" category (ID = 1) as it's not a physical folder
+            if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuDisplayName))
+                pathParts.Insert(0, currentMenu.MenuDisplayName);
+            
+            if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+                break;
+                
+            currentMenu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenu.MenuParentCategoryId);
+        }
+        
+        return string.Join("/", pathParts);
+    }
+
     public Dictionary<int, string> GetCategoryPathsBulk(List<int> categoryIds)
     {
         var result = new Dictionary<int, string>();
         foreach (var id in categoryIds)
         {
             result[id] = GetCategoryPathForImage(id);
+        }
+        return result;
+    }
+
+    public Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds)
+    {
+        var result = new Dictionary<int, string>();
+        foreach (var id in categoryIds)
+        {
+            result[id] = GetNameById(id);
         }
         return result;
     }

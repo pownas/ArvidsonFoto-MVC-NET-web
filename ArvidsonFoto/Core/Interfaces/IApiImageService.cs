@@ -61,6 +61,15 @@ public interface IApiImageService
     /// <returns>A list of images in the category</returns>
     List<ImageDto> GetImagesByCategoryID(int categoryID);
 
+    /// <summary>
+    /// Gets a paginated list of images by category ID with sorting
+    /// </summary>
+    /// <param name="categoryID">The ID of the category to find images for</param>
+    /// <param name="page">Page number (1-based)</param>
+    /// <param name="pageSize">Number of images per page</param>
+    /// <returns>Paginated list of images in the specified category</returns>
+    List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize);
+
     /// <summary>Räknar alla bilder</summary>
     /// <returns>Totalt antal bilder</returns>
     int GetCountedAllImages();

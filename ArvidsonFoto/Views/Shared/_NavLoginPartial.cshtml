@@ -4,7 +4,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    string username = User.Identity!.Name;
+    string username = User.Identity!.Name ?? "";
     string[] splittedUser = username!.Split("@");
     username = splittedUser[0];
     <li class="nav-item">

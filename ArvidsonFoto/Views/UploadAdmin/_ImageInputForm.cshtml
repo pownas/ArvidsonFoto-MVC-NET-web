@@ -1,4 +1,4 @@
-﻿@model UploadImageInputModel
+﻿@model UploadImageInputDto
 <form method="post" asp-controller="UploadAdmin" asp-action="@(nameof(UploadAdminController.CreateImageLink))" class="col-12 col-sm-6">
     @Html.AntiForgeryToken()
     <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>

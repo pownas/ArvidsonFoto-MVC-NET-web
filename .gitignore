@@ -352,3 +352,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 ArvidsonFoto/appsettings.json
+
+# E2E Test Screenshots (keep project screenshots, ignore build output)
+ArvidsonFoto.Tests.E2E/bin/
+ArvidsonFoto.Tests.E2E/obj/

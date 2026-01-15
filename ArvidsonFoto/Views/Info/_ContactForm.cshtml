@@ -1,69 +1,58 @@
-﻿@model ContactFormModel
+﻿@using ArvidsonFoto.Core.DTOs
+@model ContactFormInputDto
 
 @* //Raden nedanför översätts till: <form method="post" action="/Info/SendMessage?Page=Kontakta"> *@
-<form method="post" asp-action="@(nameof(InfoController.SendMessage))" asp-route-Page="@Model.ReturnPageUrl">
-    <div id="validationSummary" asp-validation-summary="All" class="text-danger"></div>
+<form method="post" asp-action="@(nameof(InfoController.SendMessage))" asp-route-Page="@Model.ReturnPageUrl" class="needs-validation" novalidate>
+    <div id="validationSummary" asp-validation-summary="All" class="alert alert-danger d-none" role="alert"></div>
     @if (Model!.DisplayErrorSending)
     {
-        <div class="alert alert-danger alert-dismissible fade show ml-3 col-11 col-md-8 col-lg-9" role="alert">
-            <strong>Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
-            <button type="button" class="close" data-dismiss="alert" aria-label="Stäng">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> 
+            <p class="mb-2">Något gick fel när meddelandet skulle skickas via formuläret. Ditt meddelande har sparats som backup.</p>
+            <p class="mb-0"><strong>Alternativ:</strong> Skicka ett mail direkt till <a href="mailto:torbjorn@arvidsonfoto.se" class="alert-link">torbjorn@arvidsonfoto.se</a></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
         </div>
     }
     @if (Model.DisplayEmailSent)
     {
-        <div class="alert alert-success alert-dismissible fade show ml-3 col-11 col-md-8 col-lg-9" role="alert">
-            <strong>Tack för ditt mail!</strong> Förmodligen svarar jag på ditt mail inom 1-5 dagar.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Stäng">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="alert alert-success alert-dismissible fade show">
+            <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt mejl!</strong> Jag återkommer inom 1-5 dagar med svar på ditt mejl.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
         </div>
     }
-    <div class="form-group">
-        <label asp-for="Name" class="col-md-4 col-lg-3 control-label">Namn</label>
-        <div class="col-md-8 col-lg-9">
-            <input asp-for="Name" type="text" placeholder="Namn" class="form-control" />
-            <span id="validationName" asp-validation-for="Name"></span>
+    <div class="row g-3">
+        <div class="col-12">
+            <label asp-for="Name" class="form-label"><i class="bi bi-person"></i> Namn <span class="text-danger">*</span></label>
+            <input asp-for="Name" type="text" placeholder="Ditt namn" class="form-control" required aria-required="true" aria-describedby="validationName" />
+            <div id="validationName" class="invalid-feedback" asp-validation-for="Name"></div>
         </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-4 col-lg-3 control-label">Epost</label>
-        <div class="col-md-8 col-lg-9">
-            <input asp-for="Email" type="email" placeholder="Epost-adress" class="form-control" />
-            <span id="validationEmail" asp-validation-for="Email"></span>
+        <div class="col-12">
+            <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Epost <span class="text-danger">*</span></label>
+            <input asp-for="Email" type="email" placeholder="din.epost@exempel.se" class="form-control" required aria-required="true" aria-describedby="validationEmail" />
+            <div id="validationEmail" class="invalid-feedback" asp-validation-for="Email"></div>
         </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Subject" class="col-md-4 col-lg-3 control-label">Rubrik</label>
-        <div class="col-md-8 col-lg-9">
-            <input asp-for="Subject" type="text" placeholder="Rubrik" class="form-control" />
-            <span id="validationSubject" asp-validation-for="Subject"></span>
+        <div class="col-12">
+            <label asp-for="Subject" class="form-label"><i class="bi bi-tag"></i> Rubrik <span class="text-danger">*</span></label>
+            <input asp-for="Subject" type="text" placeholder="Rubrik på ditt meddelande" class="form-control" required aria-required="true" aria-describedby="validationSubject" />
+            <div id="validationSubject" class="invalid-feedback" asp-validation-for="Subject"></div>
         </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Message" class="col-md-4 col-lg-3 control-label">Meddelande</label>
-        <div class="col-md-8 col-lg-9">
-            <textarea asp-for="Message" placeholder="@Model.MessagePlaceholder" rows="4" class="form-control"></textarea>
-            <span id="validationMessage" asp-validation-for="Message"></span>
+        <div class="col-12">
+            <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span></label>
+            <textarea asp-for="Message" placeholder="@Model.MessagePlaceholder" rows="6" class="form-control" required aria-required="true" aria-describedby="validationMessage"></textarea>
+            <div id="validationMessage" class="invalid-feedback" asp-validation-for="Message"></div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-            <img src="/img/a575grj5dgs575389aw.gif" class="img-responsive" />
+        <div class="col-12">
+            <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid rounded mb-2" alt="CAPTCHA bild med siffror" style="max-width: 200px;" />
         </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Code" class="col-md-4 col-lg-3 control-label">Ange siffrorna från bilden</label>
-        <div class="col-md-8 col-lg-9">
-            <input asp-for="Code" placeholder="Siffror" class="form-control" />
-            <span id="validationCode" asp-validation-for="Code"></span>
+        <div class="col-12">
+            <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span></label>
+            <input asp-for="Code" placeholder="Siffror från bilden" class="form-control" required aria-required="true" aria-describedby="validationCode" />
+            <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
-            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark">Skicka meddelandet</button>
+        <div class="col-12">
+            <button id="SubmitButton" type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-send-fill"></i> Skicka meddelandet
+            </button>
         </div>
     </div>
 </form>

@@ -1,4 +1,4 @@
-using ArvidsonFoto.Core.ApiResponses;
+Ôªøusing ArvidsonFoto.Core.ApiResponses;
 using ArvidsonFoto.Core.Attributes;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
@@ -17,13 +17,14 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 [ApiController]
 [Route("api/image")]
 [Route("api/bild")]
+[Tags("Images")]
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
-    ArvidsonFotoCoreDbContext entityContext, //TODO: Bˆr bygga bort denna och enbart anv‰nda IApiImageService
+    ArvidsonFotoCoreDbContext entityContext, //TODO: B√∂r bygga bort denna och enbart anv√§nda IApiImageService
     IApiCategoryService categoryService,
-    IConfiguration configuration) : ControllerBase
+    IConfiguration _) : ControllerBase
 {
-    // TODO: Att anv‰nda senare om vi vill spara eller l‰sa bilder frÂn filsystemet
+    // TODO: Att anv√§nda senare om vi vill spara eller l√§sa bilder fr√•n filsystemet
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
 
     /// <summary>
@@ -276,7 +277,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         }
 
         // Find the existing image in the database
-        var existingImage = entityContext.TblImages.Find(image.ImageId);
+        var existingImage = entityContext.TblImages.FirstOrDefault(x => x.ImageId == image.ImageId);
         if (existingImage == null)
         {
             return false; // Image not found
@@ -285,8 +286,13 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         // Update the image properties
         existingImage.ImageMainFamilyId = image.ImageHuvudfamilj;
         existingImage.ImageFamilyId = image.ImageFamilj;
-        //existingImage.ImageHuvudfamiljNamn = image.ImageHuvudfamiljNamn;
-        //existingImage.ImageFamiljNamn = image.ImageFamiljNamn;
+        existingImage.ImageDescription = image.ImageDescription;
+        existingImage.ImageDate = image.ImageDate;
+        existingImage.ImageCategoryId = image.ImageArt;
+        existingImage.ImageUpdate = DateTime.Now;
+        existingImage.ImageUrlName = image.ImageUrl;
+        existingImage.Name = image.ImageArtNamn;
+        //TODO: Kanske uppdatera fler f√§lt om det beh√∂vs
 
         // Save changes to the database
         entityContext.SaveChanges();

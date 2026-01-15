@@ -24,26 +24,27 @@
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 text-center">
+            <h3>Sök bland kategorierna</h3>
+            <p>
+                Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
+                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
+            </p>
+        </div>
+        <div class="mb-4">
+            <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
+        </div>
+    </div>
+}
+
+@if (ViewData["Title"]!.Equals("Per kategori"))
+{
     <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
 <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
-@if (ViewData["Title"]!.Equals("Per kategori"))
-{
-    <div class="row justify-content-center mt-4">
-        <div class="col-12 text-center">
-            <h3>Sök bland kategorierna</h3>
-            <p>
-                Du kan även söka bland kategorierna här nedan eller se alla kategorier via: 
-                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
-            </p>
-        </div>
-        <div id="searchbar" class="mb-4">
-            <partial name="../Bilder/_SearchBar" /> @*<!-- Sökruta via PartialView -->*@
-        </div>
-    </div>
-}
 
 @* News Section with Divider *@
 @if (ViewBag.LatestNews != null && ((List<TblNews>)ViewBag.LatestNews).Count > 0)
@@ -57,29 +58,34 @@
                 @foreach (var news in (List<TblNews>)ViewBag.LatestNews)
                 {
                     <div class="col mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h6 class="card-title">@news.NewsTitle</h6>
-                                <p class="card-text small">
-                                    @if (!string.IsNullOrEmpty(news.NewsSummary))
-                                    {
-                                        @news.NewsSummary
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(news.NewsContent.Length > 100 ? news.NewsContent.Substring(0, 100) + "..." : news.NewsContent)
-                                    }
-                                </p>
-                                <small class="text-muted">@news.NewsCreated?.ToString("yyyy-MM-dd")</small>
+                        <a href="/Nyheter/@news.NewsId" class="news-card-link">
+                            <div class="card news-card h-100">
+                                <div class="card-header bg-dark text-white">
+                                    <h6 class="card-title mb-0">@news.NewsTitle</h6>
+                                    <small class="text-secondary">@news.NewsCreated?.ToString("yyyy-MM-dd") av @news.NewsAuthor</small>
+                                </div>
+                                <div class="card-body bg-light">
+                                    <p class="card-text text-dark">
+                                        @if (!string.IsNullOrEmpty(news.NewsSummary))
+                                        {
+                                            @news.NewsSummary
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(news.NewsContent.Length > 100 ? news.NewsContent.Substring(0, 100) + "..." : news.NewsContent)
+                                        }
+                                    </p>
+                                    <small class="text-secondary">@news.NewsCreated?.ToString("yyyy-MM-dd")</small>
+                                </div>
+                                <div class="card-footer bg-primary text-white">
+                                    <small>Läs mer <i class="bi bi-arrow-right"></i></small>
+                                </div>
                             </div>
-                            <div class="card-footer p-2">
-                                <a href="/Nyheter/@news.NewsId" class="btn btn-sm btn-outline-primary">Läs mer</a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 }
             </div>
-            <div class="text-center">
+            <div class="text-center mt-3">
                 <a href="/Nyheter" class="btn btn-primary">
                     <i class="bi bi-newspaper"></i> Visa alla nyheter
                 </a>

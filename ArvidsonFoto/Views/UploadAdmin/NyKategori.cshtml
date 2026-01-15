@@ -1,6 +1,8 @@
 ﻿@using ArvidsonFoto.Views.Shared
-@model UploadNewCategoryModel
-@inject ICategoryService _categoryService
+@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Interfaces
+@model UploadNewCategoryInputDto
+@inject IApiCategoryService _categoryService
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
@@ -11,10 +13,10 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-font ml-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-font ms-1"></i></li>
     </ol>
 </nav>
-<h2 class="offset-md-4"><i class="bi bi-file-font mr-2"></i>@ViewData["Title"]</h2>
+<h2 class="offset-md-4"><i class="bi bi-file-font me-2"></i>@ViewData["Title"]</h2>
 
 <div class="row">
     <nav class="nav nav-pills col-12 col-md-4 p-0">
@@ -34,9 +36,9 @@
                 <label asp-for="MainMenuId">Vart ska kategorin ligga under?</label>
                 <select asp-for="MainMenuId" class="form-control">
                     <option selected disabled value="">Välj kategori...</option>
-                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.MenuText))
+                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.Name))
                     {
-                        <option value="@category.MenuId">@category.MenuText</option>
+                        <option value="@category.CategoryId">@category.Name</option>
                     }
                 </select>
                 <span asp-validation-for="MainMenuId"></span>

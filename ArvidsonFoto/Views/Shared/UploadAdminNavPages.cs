@@ -25,6 +25,9 @@ public static class UploadAdminNavPages
     public static string VisaLoggboken => "VisaLoggboken";
     public static string VisaLoggbokenNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, VisaLoggboken);
 
+    public static string FacebookUpload => "FacebookUpload";
+    public static string FacebookUploadNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, FacebookUpload);
+
     public static string HanteraKontot => "HanteraKontot";
     public static string HanteraKontotNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, HanteraKontot);
 

@@ -1,22 +1,45 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using System.Diagnostics;
+
 namespace ArvidsonFoto.Controllers;
 
-public class HomeController(ArvidsonFotoDbContext context) : Controller
+/// <summary>
+/// Controller for handling home page and general site functionality.
+/// </summary>
+public class HomeController : Controller
 {
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
-    internal INewsService _newsService = new NewsService(context);
+    private readonly IPageCounterService _pageCounterService;
+    private readonly IApiImageService _imageService;
+    private readonly INewsService _newsService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HomeController"/> class.
+    /// </summary>
+    /// <param name="pageCounterService">The page counter service for tracking page views</param>
+    /// <param name="imageService">The image service for fetching images</param>
+    /// <param name="newsService">The news service for fetching news articles</param>
+    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService, INewsService newsService)
+    {
+        _pageCounterService = pageCounterService;
+        _imageService = imageService;
+        _newsService = newsService;
+    }
 
     public IActionResult Index()
     {
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
-        var viewModel = new GalleryViewModel();
+        
+        var viewModel = new GalleryViewModel
+        {
+            DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
+        };
+        
         ViewBag.LatestNews = _newsService.GetLatestPublished(3); // Get 3 latest news for home page
+        
         return View(viewModel);
     }
 

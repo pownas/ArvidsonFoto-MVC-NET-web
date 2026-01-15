@@ -1,15 +1,19 @@
-﻿using ArvidsonFoto.Data;
-using ArvidsonFoto.Models;
-using ArvidsonFoto.Services;
+﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
+using System.Web;
 
 namespace ArvidsonFoto.Controllers;
 
-public class BilderController(ArvidsonFotoDbContext context) : Controller
+public class BilderController(
+    IApiImageService imageService,
+    IApiCategoryService categoryService,
+    IPageCounterService pageCounterService) : Controller
 {
-    internal IImageService _imageService = new ImageService(context);
-    internal ICategoryService _categoryService = new CategoryService(context);
-    internal IPageCounterService _pageCounterService = new PageCounterService(context);
+    private readonly IApiImageService _imageService = imageService;
+    private readonly IApiCategoryService _categoryService = categoryService;
+    private readonly IPageCounterService _pageCounterService = pageCounterService;
 
     [Route("/[controller]/{subLevel1}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}")]
@@ -24,41 +28,89 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
         if (sida is null || sida < 1)
             sida = 1;
 
-        viewModel.CurrentPage = (int)sida - 1;
+        viewModel.CurrentPage = (int)sida;
 
-        if (subLevel4 is not null)
-            subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
-        if (subLevel3 is not null)
-            subLevel3 = SharedStaticFunctions.ReplaceAAO(subLevel3);
-        if (subLevel2 is not null)
-            subLevel2 = SharedStaticFunctions.ReplaceAAO(subLevel2);
-        if (subLevel1 is not null)
-            subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
-
-
+        // URL decode and normalize the incoming parameters
         if (subLevel4 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel4);
-            viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel4)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+            subLevel4 = Uri.UnescapeDataString(subLevel4);
+            subLevel4 = SharedStaticFunctions.ReplaceAAO(subLevel4);
+        }
+        if (subLevel3 is not null)
+        {
+            subLevel3 = Uri.UnescapeDataString(subLevel3);
+            subLevel3 = SharedStaticFunctions.ReplaceAAO(subLevel3);
+        }
+        if (subLevel2 is not null)
+        {
+            subLevel2 = Uri.UnescapeDataString(subLevel2);
+            subLevel2 = SharedStaticFunctions.ReplaceAAO(subLevel2);
+        }
+        if (subLevel1 is not null)
+        {
+            subLevel1 = Uri.UnescapeDataString(subLevel1);
+            subLevel1 = SharedStaticFunctions.ReplaceAAO(subLevel1);
+        }
+
+        // Determine which category to load
+        string categoryName = null;
+        string currentUrl = null;
+        
+        if (subLevel4 is not null)
+        {
+            categoryName = subLevel4;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel3);
-            viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel3)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+            categoryName = subLevel3;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel2);
-            viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel2)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
+            categoryName = subLevel2;
+            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
         {
-            viewModel.SelectedCategory = _categoryService.GetByName(subLevel1);
-            viewModel.AllImagesList = _imageService.GetAllImagesByCategoryID(_categoryService.GetIdByName(subLevel1)).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
-            viewModel.CurrentUrl = "/Bilder/" + subLevel1;
+            categoryName = subLevel1;
+            currentUrl = "/Bilder/" + subLevel1;
+        }
+
+        if (categoryName != null)
+        {
+            // Try to find category by name (case-insensitive via GetByName)
+            var selectedCategory = _categoryService.GetByName(categoryName);
+            
+            // If not found by display name, try by URL segment with fallback
+            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
+            {
+                selectedCategory = _categoryService.GetByUrlSegmentWithFallback(categoryName);
+            }
+            
+            if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
+            {
+                Log.Warning($"Invalid category requested: {currentUrl} (categoryName: {categoryName})");
+                return NotFound();
+            }
+            
+            viewModel.SelectedCategory = selectedCategory;
+            viewModel.CurrentUrl = currentUrl;
+            
+            // OPTIMIZED: Use count method instead of loading all images into memory
+            var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
+            
+            // Calculate pagination
+            viewModel.TotalPages = (int)Math.Ceiling(totalImageCount / (decimal)pageSize);
+            
+            // OPTIMIZED: Get only the images for the current page with SQL-level sorting and pagination
+            viewModel.DisplayImagesList = _imageService.GetImagesByCategoryIDPaginated(
+                selectedCategory.CategoryId.Value, 
+                viewModel.CurrentPage, 
+                pageSize);
+                
+            // Set AllImagesList to empty list to save memory (we don't need all images in memory)
+            viewModel.AllImagesList = new List<ImageDto>();
         }
 
         if (subLevel5ImageName is not null)
@@ -66,15 +118,16 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
             Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
         }
 
-        if (User?.Identity?.IsAuthenticated is false)
-        {   //Räkar upp sidvisningar om användaren inte är inloggad: 
-            _pageCounterService.AddPageCount("Bilder"); //Räkar upp att sidan "Bilder" besöks. 
-            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.Id, viewModel.SelectedCategory.MenuText); //Räknar upp kategorins sidvisare och sätter datum till att sidan nu besöks.
+        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null && viewModel.SelectedCategory.CategoryId.HasValue && viewModel.SelectedCategory.Name != null)
+        {
+            _pageCounterService.AddPageCount("Bilder");
+            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.Name);
         }
 
-        viewModel.DisplayImagesList = viewModel.AllImagesList.Skip(viewModel.CurrentPage * pageSize).Take(pageSize).OrderByDescending(i => i.ImageId).OrderByDescending(i => i.ImageDate).ToList();
-        viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count() / (decimal)pageSize);
-        viewModel.CurrentPage = (int)sida;
+        if (viewModel.DisplayImagesList == null)
+        {
+            viewModel.DisplayImagesList = new List<ImageDto>();
+        }
 
         return View(viewModel);
     }
@@ -93,40 +146,47 @@ public class BilderController(ArvidsonFotoDbContext context) : Controller
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
             return RedirectPermanent(redirectUrl);
         }
-        //Log.Fatal($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
         return Redirect("./Senast/Fotograferad");
     }
 
     [Route("/search")]
-    [Route("/Sök")]
-    [Route("/sok")]
     public IActionResult Search(string s)
     {
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("search");
 
         GalleryViewModel viewModel = new GalleryViewModel();
-        if (s is null) //Besöker sidan utan att skrivit in någon sökning
+        
+        ViewBag.SearchQuery = s ?? "";
+        ViewBag.SearchPerformed = !string.IsNullOrWhiteSpace(s); // Track if a search was actually performed
+        
+        if (string.IsNullOrWhiteSpace(s))
         {
             ViewData["Title"] = "Sök bland bild-kategorierna";
         }
-        else //Annars, om man skickar med en söksträng likt: /search?s=SöktText
+        else
         {
-            Log.Information("En användare sökte efter: '" + s + "'"); //Borde logga i databas eller separat sök-fil... 
+            Log.Information("En användare sökte efter: '" + s + "'");
             ViewData["Title"] = "Söker efter: " + s;
-            s = s.Trim(); // tar bort blankspace i början och slutet. Använd annars TrimEnd/TrimStart. 
+            s = s.Trim();
             s = s.Replace("+", " ");
-            List<TblMenu> allCategories = _categoryService.GetAll().OrderBy(c => c.MenuText).ToList();
-            List<TblImage> listOfFirstSearchedImages = new List<TblImage>();
+            List<CategoryDto> allCategories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
+            List<ImageDto> listOfFirstSearchedImages = new List<ImageDto>();
             foreach (var category in allCategories)
             {
-                if (category.MenuText.ToUpper().Contains(s.ToUpper()))
-                    listOfFirstSearchedImages.Add(_imageService.GetOneImageFromCategory(category.MenuId));
+                if (category.Name != null && category.Name.ToUpper().Contains(s.ToUpper()) && category.CategoryId.HasValue)
+                {
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
+                    listOfFirstSearchedImages.Add(imageDto);
+                }
             }
             viewModel.DisplayImagesList = listOfFirstSearchedImages;
-            viewModel.SelectedCategory = new TblMenu() { MenuText = "SearchFor: " + s, MenuUrltext = "/Search" }; //För att _Gallery.cshtml , inte ska tolka detta som startsidan.
+            viewModel.SelectedCategory = CategoryDto.CreateEmpty();
+            viewModel.SelectedCategory.Name = "SearchFor: " + s;
+            viewModel.SelectedCategory.UrlCategoryPath = "/Search";
+            
             if (listOfFirstSearchedImages.Count == 0)
-                Log.Warning("Hittade inget vid sökning: '" + s + "'"); //Borde logga i databas och då sätta ett "found" värde till false.
+                Log.Warning("Hittade inget vid sökning: '" + s + "'");
         }
         return View(viewModel);
     }

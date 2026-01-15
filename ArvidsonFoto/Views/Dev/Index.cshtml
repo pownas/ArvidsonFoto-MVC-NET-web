@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Development & Admin Portal";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4">
+                    <i class="bi bi-tools"></i> ArvidsonFoto
+                </h1>
+                <h2>Development & Admin Portal</h2>
+                <p class="text-muted">Quick access to development tools and admin features</p>
+            </div>
+
+            <!-- API Documentation Card -->
+            <div class="card mb-4 shadow hover-shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-file-code"></i> API Documentation
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Interactive API documentation powered by Scalar. Explore all endpoints, test requests, 
+                        and view response schemas.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <a href="/scalar/v1" class="btn btn-primary btn-lg" target="_blank">
+                            <i class="bi bi-rocket-takeoff"></i> Open Scalar API Docs
+                        </a>
+                        <a href="/openapi/v1.json" class="btn btn-outline-secondary" target="_blank">
+                            <i class="bi bi-file-earmark-code"></i> View OpenAPI JSON
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel Card -->
+            <div class="card mb-4 shadow hover-shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-shield-lock"></i> Admin Panel
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Manage images, categories, and view statistics. 
+                        <strong>Note:</strong> Authentication required.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <a href="/UploadAdmin" class="btn btn-success btn-lg">
+                            <i class="bi bi-gear"></i> Open Admin Panel
+                        </a>
+                        <a href="/UploadAdmin/RedigeraBilder" class="btn btn-outline-success">
+                            <i class="bi bi-pencil-square"></i> Edit Images
+                        </a>
+                        <a href="/UploadAdmin/HanteraGB" class="btn btn-outline-success">
+                            <i class="bi bi-book"></i> Manage Guestbook
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Database & Tools Card -->
+            <div class="card mb-4 shadow hover-shadow-lg">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-database"></i> Development Tools
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="bi bi-check-circle"></i> Environment</h5>
+                            <ul class="list-unstyled">
+                                <li>✅ In-Memory Database</li>
+                                <li>✅ Development Mode</li>
+                                <li>✅ Console Logging</li>
+                                <li>✅ CORS Enabled</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="bi bi-link-45deg"></i> Quick Links</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="/"><i class="bi bi-house"></i> Main Website</a></li>
+                                <li><a href="/Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sitemap</a></li>
+                                <li><a href="/Identity/Account/Login"><i class="bi bi-box-arrow-in-right"></i> Login</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aspire Dashboard Info -->
+            <div class="alert alert-light border" role="alert">
+                <h5 class="alert-heading"><i class="bi bi-info-circle"></i> Running via .NET Aspire</h5>
+                <p class="mb-0">
+                    This portal is accessible through the Aspire AppHost. 
+                    Check the Aspire dashboard for more monitoring and debugging tools.
+                </p>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    <small>
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        This page is only accessible in Development mode
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-shadow-lg:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+    
+    .card-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .btn-lg i {
+        margin-right: 0.5rem;
+    }
+</style>
