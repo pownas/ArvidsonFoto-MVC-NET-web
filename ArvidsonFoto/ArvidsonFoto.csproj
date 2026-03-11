@@ -27,7 +27,7 @@
   <ItemGroup Label="PackageReferences">
     <PackageReference Include="Azure.Identity" Version="1.17.1" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="MailKit" Version="4.14.1" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
-    <PackageReference Include="MimeKit" Version="4.14.0" /> <!-- Används för kryptering av skicka mail -->
+    <PackageReference Include="MimeKit" Version="4.15.1" /> <!-- Används för kryptering av skicka mail -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.1" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" /> <!-- Används för inloggning på sidan -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.1" /> <!-- Används som utökning av inloggningens UI  -->
