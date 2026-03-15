@@ -24,6 +24,9 @@ public class LoginModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; }
 
+    [BindProperty]
+    public PasskeyLoginInputModel PasskeyInput { get; set; }
+
     public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     public string ReturnUrl { get; set; }
@@ -76,6 +79,32 @@ public class LoginModel : PageModel
 
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+        // Handle passkey sign-in
+        if (!string.IsNullOrEmpty(PasskeyInput?.Error))
+        {
+            ModelState.AddModelError(string.Empty, $"Passkey-fel: {PasskeyInput.Error}");
+            return Page();
+        }
+
+        if (!string.IsNullOrEmpty(PasskeyInput?.CredentialJson))
+        {
+            var passkeyResult = await _signInManager.PasskeySignInAsync(PasskeyInput.CredentialJson);
+            if (passkeyResult.Succeeded)
+            {
+                Log.Information("User signed in with a passkey.");
+                return LocalRedirect(returnUrl);
+            }
+            if (passkeyResult.IsLockedOut)
+            {
+                Log.Warning("User account locked out (passkey sign-in).");
+                return RedirectToPage("./Lockout");
+            }
+
+            ModelState.AddModelError(string.Empty, "Ogiltig passkey-inloggning.");
+            return Page();
+        }
+
+        // Handle password sign-in
         if (ModelState.IsValid)
         {
             // This doesn't count login failures towards account lockout
@@ -105,4 +134,10 @@ public class LoginModel : PageModel
         // If we got this far, something failed, redisplay form
         return Page();
     }
+}
+
+public class PasskeyLoginInputModel
+{
+    public string? CredentialJson { get; set; }
+    public string? Error { get; set; }
 }

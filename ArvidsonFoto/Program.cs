@@ -8,6 +8,7 @@ using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArvidsonFoto;
 
@@ -103,8 +104,22 @@ public class Program
         }
 
         // Identity configuration (moved from IdentityHostingStartup.cs)
-        services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddDefaultIdentity<ArvidsonFotoUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                // Enable passkey table storage (requires AspNetUserPasskeys migration)
+                options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+            })
             .AddEntityFrameworkStores<IdentityContext>();
+
+        // Passkey (WebAuthn) configuration
+        services.Configure<IdentityPasskeyOptions>(options =>
+        {
+            // ServerDomain defaults to the host header if not set.
+            // In production, set this to your domain to prevent subdomain attacks.
+            // options.ServerDomain = "arvidsonfoto.se";
+            options.AuthenticatorTimeout = TimeSpan.FromMinutes(5);
+        });
 
         // Add frontend services - all using Core now
         services.AddScoped<IGuestBookService, GuestBookService>();
@@ -179,6 +194,9 @@ public class Program
                 .UseContentRoot();
 
             pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
+                .UseContentRoot();
+
+            pipeline.AddJavaScriptBundle("/js/passkey.min.js", "wwwroot/js/passkey.js")
                 .UseContentRoot();
         });
     }
@@ -293,6 +311,54 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+
+        // Passkey (WebAuthn) API endpoints
+        // These are called by the browser-side JavaScript (passkey.js) to obtain
+        // WebAuthn challenge options before the actual credential is submitted via a normal form POST.
+
+        // Endpoint: generate creation options for registering a new passkey (authenticated users only)
+        app.MapPost("/Account/PasskeyCreationOptions", async (
+                HttpContext context,
+                UserManager<ArvidsonFotoUser> userManager,
+                SignInManager<ArvidsonFotoUser> signInManager) =>
+            {
+                var user = await userManager.GetUserAsync(context.User);
+                if (user is null)
+                {
+                    return Results.NotFound();
+                }
+
+                var userId = await userManager.GetUserIdAsync(user);
+                var userName = await userManager.GetUserNameAsync(user) ?? string.Empty;
+
+                var optionsJson = await signInManager.MakePasskeyCreationOptionsAsync(new PasskeyUserEntity
+                {
+                    Id = userId,
+                    Name = userName,
+                    DisplayName = userName,
+                });
+
+                return TypedResults.Content(optionsJson, "application/json");
+            })
+            .RequireAuthorization()
+            .DisableAntiforgery();
+
+        // Endpoint: generate request options for signing in with a passkey (anonymous)
+        app.MapPost("/Account/PasskeyRequestOptions", async (
+                SignInManager<ArvidsonFotoUser> signInManager,
+                UserManager<ArvidsonFotoUser> userManager,
+                string? username) =>
+            {
+                var user = string.IsNullOrEmpty(username)
+                    ? null
+                    : await userManager.FindByNameAsync(username);
+
+                var optionsJson = await signInManager.MakePasskeyRequestOptionsAsync(user);
+
+                return TypedResults.Content(optionsJson, "application/json");
+            })
+            .AllowAnonymous()
+            .DisableAntiforgery();
         
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
