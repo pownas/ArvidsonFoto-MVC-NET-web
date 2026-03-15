@@ -12,6 +12,8 @@
             .Cast<System.Reflection.AssemblyInformationalVersionAttribute>()
             .FirstOrDefault()
             ?.InformationalVersion ?? "unknown";
+        var appVersionInfo = appVersion.Split('+');
+        var commitId = appVersionInfo.Length > 1 ? appVersionInfo[1] : appVersion;
 
         var assemblyPath = typeof(ArvidsonFoto.Controllers.HomeController).Assembly.Location;
         var lastModifiedUtc = !string.IsNullOrWhiteSpace(assemblyPath) && System.IO.File.Exists(assemblyPath)
@@ -20,7 +22,8 @@
 
         var lastModifiedLocal = lastModifiedUtc.ToLocalTime();
     }
-    <meta name="ArvidsonFoto-version" content="Build: v@appVersion - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v@(appVersion)" />
+    <meta name="ArvidsonFoto-version" content="v@(appVersion)" />
+    <meta name="ArvidsonFoto-commit" content="https://github.com/pownas/ArvidsonFoto-MVC-NET-web/commit/@(commitId)" />
     <meta name="last-modified" content="@lastModifiedLocal.ToString("O")">
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
