@@ -13,14 +13,21 @@ namespace ArvidsonFoto.Tests.E2E;
 /// Playwright can connect via HTTP without requiring the application to be
 /// started manually before running the tests.
 ///
+/// Implements <see cref="IAsyncLifetime"/> so xUnit calls
+/// <see cref="InitializeAsync"/> on the fixture before any test class instance
+/// is created.  The host is therefore fully bound before the first test runs.
+///
 /// A free TCP port is chosen before Kestrel starts by briefly binding a
 /// <see cref="TcpListener"/> to port 0 and reading back the OS-assigned port.
-/// The concrete port number is then passed to <c>UseUrls</c>, so
-/// <see cref="ServerAddress"/> always contains a usable URL rather than the
-/// placeholder <c>http://localhost:0</c> that Kestrel leaves in
-/// <c>IServerAddressesFeature.Addresses</c> when port 0 is used directly.
+/// The concrete port number is then passed to <c>UseUrls</c> inside
+/// <see cref="CreateHost"/> — not in <see cref="ConfigureWebHost"/> — so that
+/// Kestrel is registered on the DI container <em>after</em> the in-memory
+/// <c>TestServer</c> that <c>WebApplicationFactory</c> registers first.
+/// Because DI resolves to the <em>last</em> registered <c>IServer</c>,
+/// Kestrel wins and a real TCP socket is opened on
+/// <see cref="ServerAddress"/>.
 /// </summary>
-public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
+public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly string _serverAddress;
 
@@ -31,15 +38,30 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
 
     /// <summary>
     /// The HTTP base address that the test server is listening on.
-    /// Available as soon as the factory is constructed.
+    /// Available immediately after <see cref="InitializeAsync"/> completes.
     /// </summary>
     public string ServerAddress => _serverAddress;
 
-    /// <summary>
-    /// Triggers lazy host creation so that Kestrel is bound before the first
-    /// test navigates to a URL.  Call this once in <c>InitializeAsync</c>.
-    /// </summary>
-    public void EnsureStarted() => _ = Services;
+    // -------------------------------------------------------------------------
+    // IAsyncLifetime — called by xUnit before the fixture is injected into
+    // any test class constructor.
+    // -------------------------------------------------------------------------
+
+    /// <summary>Triggers lazy host creation, binding Kestrel to the port.</summary>
+    public Task InitializeAsync()
+    {
+        // Accessing Services triggers WebApplicationFactory.EnsureServer(),
+        // which calls CreateHost() and starts Kestrel synchronously.
+        _ = Services;
+        return Task.CompletedTask;
+    }
+
+    /// <summary>Delegates to WebApplicationFactory's own async disposal.</summary>
+    Task IAsyncLifetime.DisposeAsync() => base.DisposeAsync().AsTask();
+
+    // -------------------------------------------------------------------------
+    // WebApplicationFactory overrides
+    // -------------------------------------------------------------------------
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -59,15 +81,25 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
             });
         });
 
-        // Bind Kestrel to the pre-selected concrete port so that
-        // ServerAddress is always a valid, non-zero URL.
-        builder.UseKestrel().UseUrls(_serverAddress);
+        // NOTE: UseKestrel().UseUrls() is intentionally NOT called here.
+        // WebApplicationFactory registers TestServer via UseTestServer() on
+        // the same IWebHostBuilder wrapper.  Any UseKestrel() call here would
+        // be overridden because the wrapper does not guarantee ordering with
+        // respect to the factory's own UseTestServer() call.
+        // See CreateHost() below where Kestrel is registered last and wins.
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        // Build and start the Kestrel host.  We do NOT call base.CreateHost()
-        // because that would start the in-memory TestServer instead of Kestrel.
+        // Register Kestrel here, on the raw IHostBuilder, AFTER
+        // WebApplicationFactory has already registered TestServer via its
+        // internal ConfigureWebHost call.  DI resolves IServer to the last
+        // registered implementation — so Kestrel (registered last) wins and
+        // opens a real TCP socket on _serverAddress.
+        builder.ConfigureWebHost(webBuilder =>
+            webBuilder.UseKestrel().UseUrls(_serverAddress));
+
+        // Build and start the host with Kestrel as IServer.
         var host = builder.Build();
         host.Start();
 
@@ -86,11 +118,15 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
         }
 
         // Store the address on ClientOptions so callers can use CreateClient()
-        // for non-Playwright assertions if needed.
+        // for non-Playwright HTTP assertions if needed.
         ClientOptions.BaseAddress = new Uri(_serverAddress);
 
         return host;
     }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
 
     /// <summary>
     /// Finds a free TCP port on the loopback interface by briefly binding a

@@ -23,8 +23,8 @@ public class ContactFormTests : IClassFixture<PlaywrightWebApplicationFactory>, 
 
     public ContactFormTests(PlaywrightWebApplicationFactory factory)
     {
-        // Trigger lazy host creation so Kestrel is bound before any test runs.
-        factory.EnsureStarted();
+        // IAsyncLifetime.InitializeAsync on the fixture has already been called
+        // by xUnit before this constructor runs — Kestrel is bound and ready.
         _baseUrl = factory.ServerAddress;
     }
 
