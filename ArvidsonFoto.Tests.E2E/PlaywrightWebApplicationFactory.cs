@@ -1,7 +1,7 @@
+using System.Net;
+using System.Net.Sockets;
 using ArvidsonFoto.Core.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,27 +13,31 @@ namespace ArvidsonFoto.Tests.E2E;
 /// Playwright can connect via HTTP without requiring the application to be
 /// started manually before running the tests.
 ///
-/// The recommended .NET 10 pattern (see
-/// https://learn.microsoft.com/aspnet/core/test/integration-tests) is to
-/// override <see cref="CreateHost"/> so that Kestrel is used in place of the
-/// default in-memory TestServer.  Port 0 lets the OS assign a free port, and
-/// <see cref="ServerAddress"/> exposes the resulting URL to each test.
+/// A free TCP port is chosen before Kestrel starts by briefly binding a
+/// <see cref="TcpListener"/> to port 0 and reading back the OS-assigned port.
+/// The concrete port number is then passed to <c>UseUrls</c>, so
+/// <see cref="ServerAddress"/> always contains a usable URL rather than the
+/// placeholder <c>http://localhost:0</c> that Kestrel leaves in
+/// <c>IServerAddressesFeature.Addresses</c> when port 0 is used directly.
 /// </summary>
 public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private string _serverAddress = string.Empty;
+    private readonly string _serverAddress;
+
+    public PlaywrightWebApplicationFactory()
+    {
+        _serverAddress = $"http://localhost:{GetFreePort()}";
+    }
 
     /// <summary>
     /// The HTTP base address that the test server is listening on.
-    /// Available once the factory has been initialised (i.e. after
-    /// <see cref="EnsureStarted"/> has been called).
+    /// Available as soon as the factory is constructed.
     /// </summary>
     public string ServerAddress => _serverAddress;
 
     /// <summary>
-    /// Triggers lazy host creation so that <see cref="ServerAddress"/> is
-    /// populated before the first test navigates to a URL.
-    /// Call this once at the start of each test class.
+    /// Triggers lazy host creation so that Kestrel is bound before the first
+    /// test navigates to a URL.  Call this once in <c>InitializeAsync</c>.
     /// </summary>
     public void EnsureStarted() => _ = Services;
 
@@ -55,9 +59,9 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
             });
         });
 
-        // Use Kestrel with a random available port so the test server never
-        // conflicts with the developer's locally running instance on port 5001.
-        builder.UseKestrel().UseUrls("http://localhost:0");
+        // Bind Kestrel to the pre-selected concrete port so that
+        // ServerAddress is always a valid, non-zero URL.
+        builder.UseKestrel().UseUrls(_serverAddress);
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
@@ -81,18 +85,23 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
             }
         }
 
-        // Discover the port that Kestrel bound to and expose it as a URL.
-        var server = host.Services.GetRequiredService<IServer>();
-        var addresses = server.Features.Get<IServerAddressesFeature>();
-        if (addresses?.Addresses.Count > 0)
-        {
-            _serverAddress = addresses.Addresses.First();
-        }
-
         // Store the address on ClientOptions so callers can use CreateClient()
         // for non-Playwright assertions if needed.
         ClientOptions.BaseAddress = new Uri(_serverAddress);
 
         return host;
+    }
+
+    /// <summary>
+    /// Finds a free TCP port on the loopback interface by briefly binding a
+    /// listener to port 0 and reading back the OS-assigned port number.
+    /// </summary>
+    private static int GetFreePort()
+    {
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+        return port;
     }
 }
