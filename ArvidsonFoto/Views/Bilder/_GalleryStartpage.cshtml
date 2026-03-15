@@ -32,6 +32,7 @@ else
             string imgDesc = !string.IsNullOrWhiteSpace(img.Description) ? $", {img.Description}." : "";
             string imgName = imgPath.Substring(imgPath.LastIndexOf('/') + 1) + ".jpg";
             DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
+            string imgDateDisplay = imgDate.Year == 1900 ? "saknas" : imgDate.ToString("yyyy-MM-dd");
             string categoryHref = !string.IsNullOrWhiteSpace(img.UrlCategory) ? $"https://arvidsonfoto.se/{img.UrlCategory}" : "";
             string categoryName = !string.IsNullOrWhiteSpace(img.CategoryName) ? img.CategoryName : imgTitle;
 
@@ -48,7 +49,7 @@ Tryck för att förstora">
                 <p>@index av @imageList.Count - @if (!string.IsNullOrWhiteSpace(categoryHref))
                 {<a href="@categoryHref" title="Se alla bilder i kategorin @categoryName">@imgTitle</a>}
                 else
-                {<strong>@imgTitle</strong>}@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
+                {<strong>@imgTitle</strong>}@imgDesc Fotodatum: @imgDateDisplay</p>
                 <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
             </div>
 

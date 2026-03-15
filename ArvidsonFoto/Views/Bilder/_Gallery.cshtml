@@ -80,6 +80,7 @@ else
             string imgName = img.UrlImage.Split('/').Last() + ".jpg";
 
             DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
+            string imgDateDisplay = imgDate.Year == 1900 ? "saknas" : imgDate.ToString("yyyy-MM-dd");
 
             if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPath is not null && Model.SelectedCategory.UrlCategoryPath.Equals("/Search"))
             {
@@ -102,7 +103,7 @@ Tryck för att förstora">
                 </figure>
 
                 <div class="glightbox-desc row @customDesc">
-                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDate.ToString("yyyy-MM-dd")</p>
+                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDateDisplay</p>
                     <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
                 </div>
             }
