@@ -10,10 +10,17 @@ public class ContactFormTests : IAsyncLifetime
 {
     private IPlaywright? _playwright;
     private IBrowser? _browser;
-    private const string BaseUrl = "https://localhost:5001"; // Default local URL
+    private PlaywrightWebApplicationFactory? _factory;
+    private string _baseUrl = string.Empty;
 
     public async Task InitializeAsync()
     {
+        // Start the web application in-process on a random available port so
+        // no manual "dotnet run" step is required before running the tests.
+        _factory = new PlaywrightWebApplicationFactory();
+        _factory.EnsureStarted();
+        _baseUrl = _factory.ServerAddress;
+
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
@@ -25,8 +32,9 @@ public class ContactFormTests : IAsyncLifetime
     {
         if (_browser != null)
             await _browser.CloseAsync();
-        
+
         _playwright?.Dispose();
+        _factory?.Dispose();
     }
 
     [Fact]
@@ -40,7 +48,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Take screenshot
@@ -72,7 +80,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Try to submit without filling fields
@@ -105,7 +113,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form
@@ -144,7 +152,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form with correct code
@@ -211,7 +219,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form with correct code
@@ -310,7 +318,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kop_av_bilder");
+        await page.GotoAsync($"{_baseUrl}/Info/Kop_av_bilder");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Take screenshot
@@ -341,7 +349,7 @@ public class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kop_av_bilder");
+        await page.GotoAsync($"{_baseUrl}/Info/Kop_av_bilder");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form
