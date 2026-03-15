@@ -1,34 +1,32 @@
 using System.Net;
 using System.Net.Sockets;
-using ArvidsonFoto.Core.Data;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace ArvidsonFoto.Tests.E2E;
 
 /// <summary>
-/// Custom WebApplicationFactory that starts a real Kestrel HTTP server so that
-/// Playwright can connect via HTTP without requiring the application to be
-/// started manually before running the tests.
+/// Self-hosted Kestrel server fixture used by Playwright E2E tests.
 ///
-/// Implements <see cref="IAsyncLifetime"/> so xUnit calls
-/// <see cref="InitializeAsync"/> on the fixture before any test class instance
-/// is created.  The host is therefore fully bound before the first test runs.
+/// Builds and starts a real <see cref="WebApplication"/> on a randomly-chosen
+/// free port, using exactly the same service and middleware configuration as
+/// <c>Program.cs</c> (<see cref="Program.ConfigureServices"/> and
+/// <see cref="Program.ConfigureMiddleware"/>).  An in-memory database and
+/// stub SMTP settings are injected so no external infrastructure is required.
 ///
-/// A free TCP port is chosen before Kestrel starts by briefly binding a
-/// <see cref="TcpListener"/> to port 0 and reading back the OS-assigned port.
-/// The concrete port number is then passed to <c>UseUrls</c> inside
-/// <see cref="CreateHost"/> — not in <see cref="ConfigureWebHost"/> — so that
-/// Kestrel is registered on the DI container <em>after</em> the in-memory
-/// <c>TestServer</c> that <c>WebApplicationFactory</c> registers first.
-/// Because DI resolves to the <em>last</em> registered <c>IServer</c>,
-/// Kestrel wins and a real TCP socket is opened on
-/// <see cref="ServerAddress"/>.
+/// Implements <see cref="IAsyncLifetime"/> so xUnit starts the server before
+/// any <c>IClassFixture</c>-consuming test class is constructed, and stops it
+/// cleanly after all tests in the class finish.
+///
+/// The previous approach (inheriting from
+/// <see cref="Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory{TEntryPoint}"/>
+/// and overriding <c>CreateHost</c> to add Kestrel) caused an
+/// <see cref="InvalidCastException"/> because <c>WebApplicationFactory</c>
+/// internally casts <c>IServer</c> to <c>TestServer</c> after
+/// <c>CreateHost</c> returns — an invariant that cannot be avoided while
+/// inheriting from that class.
 /// </summary>
-public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class PlaywrightWebApplicationFactory : IAsyncLifetime
 {
+    private WebApplication? _app;
     private readonly string _serverAddress;
 
     public PlaywrightWebApplicationFactory()
@@ -36,92 +34,69 @@ public class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>, I
         _serverAddress = $"http://localhost:{GetFreePort()}";
     }
 
-    /// <summary>
-    /// The HTTP base address that the test server is listening on.
-    /// Available immediately after <see cref="InitializeAsync"/> completes.
-    /// </summary>
+    /// <summary>The HTTP base address Kestrel is listening on.</summary>
     public string ServerAddress => _serverAddress;
 
     // -------------------------------------------------------------------------
-    // IAsyncLifetime — called by xUnit before the fixture is injected into
-    // any test class constructor.
+    // IAsyncLifetime
     // -------------------------------------------------------------------------
 
-    /// <summary>Triggers lazy host creation, binding Kestrel to the port.</summary>
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        // Accessing Services triggers WebApplicationFactory.EnsureServer(),
-        // which calls CreateHost() and starts Kestrel synchronously.
-        _ = Services;
-        return Task.CompletedTask;
-    }
+        // Locate the content root so that WebOptimizer can find wwwroot assets.
+        // typeof(Program).Assembly.Location resolves to the ArvidsonFoto.dll
+        // that was copied to this test project's output directory.
+        var contentRoot = Path.GetDirectoryName(typeof(Program).Assembly.Location)!;
 
-    /// <summary>Delegates to WebApplicationFactory's own async disposal.</summary>
-    Task IAsyncLifetime.DisposeAsync() => base.DisposeAsync().AsTask();
-
-    // -------------------------------------------------------------------------
-    // WebApplicationFactory overrides
-    // -------------------------------------------------------------------------
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        // Use an in-memory database – no SQL Server instance required.
-        builder.ConfigureAppConfiguration((_, config) =>
+        var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:UseInMemoryDatabase"] = "true",
-                // Provide stub SMTP settings so the contact-form controller
-                // can initialise without a real mail server.
-                ["SmtpSettings:Server"] = "smtp.test.local",
-                ["SmtpSettings:Port"] = "587",
-                ["SmtpSettings:SenderEmail"] = "test@test.local",
-                ["SmtpSettings:SenderPassword"] = "test-password",
-                ["SmtpSettings:EnableSsl"] = "true"
-            });
+            EnvironmentName = "Development",
+            ContentRootPath = contentRoot,
         });
 
-        // NOTE: UseKestrel().UseUrls() is intentionally NOT called here.
-        // WebApplicationFactory registers TestServer via UseTestServer() on
-        // the same IWebHostBuilder wrapper.  Any UseKestrel() call here would
-        // be overridden because the wrapper does not guarantee ordering with
-        // respect to the factory's own UseTestServer() call.
-        // See CreateHost() below where Kestrel is registered last and wins.
+        // Inject test-specific configuration on top of any appsettings files.
+        // AddInMemoryCollection is added last and therefore takes highest precedence.
+        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["ConnectionStrings:UseInMemoryDatabase"] = "true",
+            // Provide stub SMTP settings so the contact-form controller
+            // can initialise without a real mail server.
+            ["SmtpSettings:Server"]         = "smtp.test.local",
+            ["SmtpSettings:Port"]           = "587",
+            ["SmtpSettings:SenderEmail"]    = "test@test.local",
+            ["SmtpSettings:SenderPassword"] = "test-password",
+            ["SmtpSettings:EnableSsl"]      = "true",
+        });
+
+        // MapHealthChecks (called by ConfigureMiddleware → MapDefaultEndpoints in
+        // Development mode) requires HealthCheckService to be registered.
+        // AddServiceDefaults() is only called in Program.Main, so we register
+        // the bare minimum here to satisfy that requirement.
+        builder.Services.AddHealthChecks();
+
+        // Apply the same service registrations as the real application.
+        Program.ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
+
+        // Bind Kestrel to the pre-selected concrete port.
+        builder.WebHost.UseUrls(_serverAddress);
+
+        _app = builder.Build();
+
+        // Apply the same middleware pipeline as the real application.
+        // ConfigureMiddleware also seeds the in-memory database because
+        // "ConnectionStrings:UseInMemoryDatabase" is "true".
+        Program.ConfigureMiddleware(_app, _app.Environment, _app.Configuration);
+
+        await _app.StartAsync();
     }
 
-    protected override IHost CreateHost(IHostBuilder builder)
+    public async Task DisposeAsync()
     {
-        // Register Kestrel here, on the raw IHostBuilder, AFTER
-        // WebApplicationFactory has already registered TestServer via its
-        // internal ConfigureWebHost call.  DI resolves IServer to the last
-        // registered implementation — so Kestrel (registered last) wins and
-        // opens a real TCP socket on _serverAddress.
-        builder.ConfigureWebHost(webBuilder =>
-            webBuilder.UseKestrel().UseUrls(_serverAddress));
-
-        // Build and start the host with Kestrel as IServer.
-        var host = builder.Build();
-        host.Start();
-
-        // Seed the in-memory database with representative test data.
-        using (var scope = host.Services.CreateScope())
+        if (_app != null)
         {
-            var db = scope.ServiceProvider.GetService<ArvidsonFotoCoreDbContext>();
-            if (db != null)
-            {
-                db.Database.EnsureCreated();
-                if (!db.TblImages.Any())
-                {
-                    db.SeedInMemoryDatabase();
-                }
-            }
+            await _app.StopAsync();
+            await _app.DisposeAsync();
         }
-
-        // Store the address on ClientOptions so callers can use CreateClient()
-        // for non-Playwright HTTP assertions if needed.
-        ClientOptions.BaseAddress = new Uri(_serverAddress);
-
-        return host;
     }
 
     // -------------------------------------------------------------------------

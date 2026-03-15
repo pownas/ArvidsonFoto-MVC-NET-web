@@ -71,7 +71,7 @@ public class Program
         }
     }
 
-    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    internal static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -183,7 +183,7 @@ public class Program
         });
     }
 
-    private static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env, IConfiguration configuration)
+    internal static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env, IConfiguration configuration)
     {
         // Seed in-memory database if using in-memory database
         var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
