@@ -6,8 +6,20 @@
     <!-- Viewport for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Site version and last modified content -->
-    <meta name="ArvidsonFoto-version" content="Build: v3.10.7 - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v3.10.7" />
-    <meta name="last-modified" content="2026-01-09T00:28:03">
+    @{
+        var appVersion = typeof(ArvidsonFoto.Controllers.HomeController).Assembly
+            .GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), inherit: false)
+            .Cast<System.Reflection.AssemblyInformationalVersionAttribute>()
+            .FirstOrDefault()
+            ?.InformationalVersion ?? "unknown";
+
+        var assemblyPath = typeof(ArvidsonFoto.Controllers.HomeController).Assembly.Location;
+        var lastModifiedUtc = !string.IsNullOrWhiteSpace(assemblyPath) && System.IO.File.Exists(assemblyPath)
+            ? System.IO.File.GetLastWriteTimeUtc(assemblyPath)
+            : DateTime.UtcNow;
+    }
+    <meta name="ArvidsonFoto-version" content="Build: v@appVersion - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v@(appVersion)" />
+    <meta name="last-modified" content="@lastModifiedUtc.ToString("yyyy-MM-ddTHH:mm:ss'Z'")">
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
