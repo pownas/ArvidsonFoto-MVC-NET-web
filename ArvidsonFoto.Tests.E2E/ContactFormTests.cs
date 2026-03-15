@@ -3,24 +3,33 @@
 namespace ArvidsonFoto.Tests.E2E;
 
 /// <summary>
-/// End-to-end tests for contact form functionality
-/// Tests both contact page and image purchase page forms
+/// End-to-end tests for contact form functionality.
+/// Tests both contact page and image purchase page forms.
+///
+/// Follows the Microsoft integration-test pattern:
+/// https://learn.microsoft.com/aspnet/core/test/integration-tests
+///
+/// <see cref="PlaywrightWebApplicationFactory"/> is shared across all tests in
+/// this class via <see cref="IClassFixture{T}"/> — the Kestrel server starts
+/// once and is disposed by xUnit when the class is torn down.
+/// <see cref="IAsyncLifetime"/> is used for the per-test Playwright
+/// browser lifecycle (create browser before each test, close after).
 /// </summary>
-public class ContactFormTests : IAsyncLifetime
+public class ContactFormTests : IClassFixture<PlaywrightWebApplicationFactory>, IAsyncLifetime
 {
+    private readonly string _baseUrl;
     private IPlaywright? _playwright;
     private IBrowser? _browser;
-    private PlaywrightWebApplicationFactory? _factory;
-    private string _baseUrl = string.Empty;
+
+    public ContactFormTests(PlaywrightWebApplicationFactory factory)
+    {
+        // Trigger lazy host creation so Kestrel is bound before any test runs.
+        factory.EnsureStarted();
+        _baseUrl = factory.ServerAddress;
+    }
 
     public async Task InitializeAsync()
     {
-        // Start the web application in-process on a random available port so
-        // no manual "dotnet run" step is required before running the tests.
-        _factory = new PlaywrightWebApplicationFactory();
-        _factory.EnsureStarted();
-        _baseUrl = _factory.ServerAddress;
-
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
@@ -34,7 +43,8 @@ public class ContactFormTests : IAsyncLifetime
             await _browser.CloseAsync();
 
         _playwright?.Dispose();
-        _factory?.Dispose();
+        // Factory lifecycle is managed by IClassFixture — xUnit disposes it
+        // after all tests in this class have run.
     }
 
     [Fact]
