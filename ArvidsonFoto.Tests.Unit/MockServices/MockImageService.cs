@@ -19,7 +19,7 @@ public class MockImageService : IApiImageService
         CategoryId = 1
     };
     
-    public ImageDto GetOneImageFromCategory(int categoryId) => new ImageDto 
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "") => new ImageDto 
     { 
         ImageId = 1, 
         CategoryId = categoryId,
