@@ -283,6 +283,9 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+
+        // .NET 10: endpoint-based static asset serving with fingerprinting and compression
+        app.MapStaticAssets();
         
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
