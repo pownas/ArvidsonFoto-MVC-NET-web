@@ -358,5 +358,6 @@ ArvidsonFoto.Tests.E2E/bin/
 ArvidsonFoto.Tests.E2E/obj/
 
 # Application logs directory
+ArvidsonFoto/logs
 ArvidsonFoto/logs/
 ArvidsonFoto/logs[\\]*
