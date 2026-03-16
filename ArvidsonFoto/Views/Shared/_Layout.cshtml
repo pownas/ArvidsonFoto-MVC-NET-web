@@ -29,7 +29,7 @@
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
     <header>
@@ -43,15 +43,15 @@
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
-    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
-    <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
-    <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
-    <script src="js/categoryCache.js"></script> @*<!-- Client-side category caching with localStorage -->*@
-    <script src="js/categoryTooltip.js"></script> @*<!-- Category tooltip with image preview -->*@
-    <script src="js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
+    <script src="~/lib/jQuery.smartmenus/jquery.smartmenus.min.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="~/lib/jQuery.smartmenus/smartmenu.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="~/lib/glightbox/js/glightbox.min.js" asp-append-version="true"></script> @*<!-- version: 3.0.7 -->*@
+    <script src="~/js/gLightBoxOptions.js" asp-append-version="true"></script> @*<!-- Egna inställningar till glightbox -->*@
+    <script src="~/js/categoryCache.js" asp-append-version="true"></script> @*<!-- Client-side category caching with localStorage -->*@
+    <script src="~/js/categoryTooltip.js" asp-append-version="true"></script> @*<!-- Category tooltip with image preview -->*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
