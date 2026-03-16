@@ -1,18 +1,35 @@
 ﻿<!DOCTYPE html>
-<html lang="sv-se" data-bs-theme="light">
+<html lang="sv-se" data-bs-theme="dark">
 <head>
     <!-- Character encoding -->
     <meta charset="utf-8" />
     <!-- Viewport for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Site version and last modified content -->
-    <meta name="ArvidsonFoto-version" content="Build: v3.10.7 - Tag: https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases/tag/v3.10.7" />
-    <meta name="last-modified" content="2026-01-09T00:28:03">
+    @{
+        var appVersion = typeof(ArvidsonFoto.Controllers.HomeController).Assembly
+            .GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), inherit: false)
+            .Cast<System.Reflection.AssemblyInformationalVersionAttribute>()
+            .FirstOrDefault()
+            ?.InformationalVersion ?? "unknown";
+        var appVersionInfo = appVersion.Split('+');
+        var commitId = appVersionInfo.Length > 1 ? appVersionInfo[1] : appVersion;
+
+        var assemblyPath = typeof(ArvidsonFoto.Controllers.HomeController).Assembly.Location;
+        var lastModifiedUtc = !string.IsNullOrWhiteSpace(assemblyPath) && System.IO.File.Exists(assemblyPath)
+            ? new DateTimeOffset(System.IO.File.GetLastWriteTimeUtc(assemblyPath), TimeSpan.Zero)
+            : DateTimeOffset.UtcNow;
+
+        var lastModifiedLocal = lastModifiedUtc.ToLocalTime();
+    }
+    <meta name="ArvidsonFoto-version" content="v@(appVersion)" />
+    <meta name="ArvidsonFoto-commit" content="https://github.com/pownas/ArvidsonFoto-MVC-NET-web/commit/@(commitId)" />
+    <meta name="last-modified" content="@lastModifiedLocal.ToString("O")">
     <partial name="_MetaData" />
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/site.min.css" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
     <header>
@@ -26,15 +43,15 @@
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="lib/jquery/dist/jquery.min.js"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
-    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
-    <script src="lib/jQuery.smartmenus/jquery.smartmenus.min.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/jQuery.smartmenus/smartmenu.js"></script> @*<!-- version: 1.1.1 -->*@
-    <script src="lib/glightbox/js/glightbox.min.js"></script> @*<!-- version: 3.0.7 -->*@
-    <script src="js/gLightBoxOptions.js"></script> @*<!-- Egna inställningar till glightbox -->*@
-    <script src="js/categoryCache.js"></script> @*<!-- Client-side category caching with localStorage -->*@
-    <script src="js/categoryTooltip.js"></script> @*<!-- Category tooltip with image preview -->*@
-    <script src="js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
+    <script src="~/lib/jQuery.smartmenus/jquery.smartmenus.min.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="~/lib/jQuery.smartmenus/smartmenu.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
+    <script src="~/lib/glightbox/js/glightbox.min.js" asp-append-version="true"></script> @*<!-- version: 3.0.7 -->*@
+    <script src="~/js/gLightBoxOptions.js" asp-append-version="true"></script> @*<!-- Egna inställningar till glightbox -->*@
+    <script src="~/js/categoryCache.js" asp-append-version="true"></script> @*<!-- Client-side category caching with localStorage -->*@
+    <script src="~/js/categoryTooltip.js" asp-append-version="true"></script> @*<!-- Category tooltip with image preview -->*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

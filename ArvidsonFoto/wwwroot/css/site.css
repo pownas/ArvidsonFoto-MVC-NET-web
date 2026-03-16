@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
     (Använder NuGet-paketet: BuildWebCompiler, för detta). 
 
@@ -467,18 +467,28 @@ body {
   background-color: rgba(34, 34, 34, 0.75);
 }
 
-/* ----------end of gllightbox config------------ */
+/* ----------end of glightbox config------------ */
 /* ---------- Gallery-fix på mobil ------------- */
-.thumb-figcaption-startpage {
-  width: 9rem;
-}
-
-.thumb-figcaption-gallery {
-  width: 10.4rem;
-}
-
+/* Make the thumbnail card a container for CSS Container Queries,
+   and display as block so it fills the column width.
+   Use zero horizontal padding so the figcaption text can occupy the
+   full card width, preventing premature ellipsis truncation. */
 .thumb-a-class {
-  padding: inherit;
+  padding: 0.25rem 0;
+  display: block;
+  width: 100%;
+  container-type: inline-size;
+}
+
+/* Figcaption spans the full card width so text reaches the edge before
+   being truncated with an ellipsis. display:block overrides Bootstrap's
+   d-inline-block utility class. text-align:center centers the label
+   under each thumbnail on all screen sizes. */
+.thumb-figcaption-startpage,
+.thumb-figcaption-gallery {
+  display: block !important;
+  width: 100%;
+  text-align: center;
 }
 
 .thumb-img-startpage {
@@ -489,41 +499,12 @@ body {
   min-width: 8rem;
 }
 
-@media (max-width: 1200px) {
-  .thumb-figcaption-startpage {
-    width: 6.9rem;
-  }
-  .thumb-figcaption-gallery {
-    width: 8.3rem;
-  }
-}
-@media (max-width: 630px) {
-  .thumb-figcaption-startpage {
-    width: 6rem;
-  }
-}
-@media (max-width: 575px) {
-  .thumb-figcaption-startpage {
-    width: 8.5rem;
-  }
-}
-@media (max-width: 450px) {
-  .thumb-figcaption-startpage {
-    width: 7rem;
-  }
-  .thumb-figcaption-gallery {
-    width: 6rem;
-  }
-}
+/* On mobile screens remove the button's horizontal padding so the full
+   column width is available for the figcaption text, reducing the risk
+   of early ellipsis truncation. */
 @media (max-width: 404px) {
-  .thumb-figcaption-startpage {
-    width: 4rem;
-  }
-  .thumb-figcaption-gallery {
-    width: 4.5rem;
-  }
   .thumb-a-class {
-    padding: 1em 5px;
+    padding: 0.5rem 0;
   }
   .thumb-img-startpage {
     min-width: 4rem;
@@ -533,14 +514,8 @@ body {
   }
 }
 @media (max-width: 240px) {
-  .thumb-figcaption-startpage {
-    width: 3rem;
-  }
-  .thumb-figcaption-gallery {
-    width: 3rem;
-  }
   .thumb-a-class {
-    padding: 0.5em 2px;
+    padding: 0.25rem 0;
   }
   .thumb-img-startpage {
     min-width: 2.5rem;
@@ -580,10 +555,6 @@ body {
 }
 
 /* Mobile-specific positioning - move tooltip to the right to avoid covering +/- buttons */
-@media (max-width: 767px) {
-  .category-tooltip-popover.bs-popover-end, .category-tooltip-popover.bs-popover-start, .category-tooltip-popover.bs-popover-right, .category-tooltip-popover.bs-popover-left {
-  }
-}
 .category-tooltip-content {
   text-align: center;
 }
@@ -731,3 +702,5 @@ body {
 }
 
 /* -------- End Info Pages Modern Design -------- */
+
+/*# sourceMappingURL=site.css.map */

@@ -8,6 +8,7 @@ using ArvidsonFoto.Security;
 using ArvidsonFoto.Areas.Identity.Data;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArvidsonFoto;
 
@@ -30,7 +31,7 @@ public class Program
         // Configure Serilog from appsettings with Console sink in Development
         var loggerConfig = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration) // Read from appsettings.json
-            .WriteTo.File("logs\\appLog.txt", rollingInterval: RollingInterval.Day);
+            .WriteTo.File("logs/appLog.txt", rollingInterval: RollingInterval.Day);
 
         // Add Console sink in Development for easier debugging
         if (isDevelopment)
@@ -103,8 +104,22 @@ public class Program
         }
 
         // Identity configuration (moved from IdentityHostingStartup.cs)
-        services.AddDefaultIdentity<ArvidsonFotoUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddDefaultIdentity<ArvidsonFotoUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                // Enable passkey table storage (requires AspNetUserPasskeys migration)
+                options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+            })
             .AddEntityFrameworkStores<IdentityContext>();
+
+        // Passkey (WebAuthn) configuration
+        services.Configure<IdentityPasskeyOptions>(options =>
+        {
+            // ServerDomain defaults to the host header if not set.
+            // In production, set this to your domain to prevent subdomain attacks.
+            // options.ServerDomain = "arvidsonfoto.se";
+            options.AuthenticatorTimeout = TimeSpan.FromMinutes(5);
+        });
 
         // Add frontend services - all using Core now
         services.AddScoped<IGuestBookService, GuestBookService>();
@@ -147,16 +162,6 @@ public class Program
             options.LowercaseQueryStrings = false;
         });
 
-        // ===== BLAZOR SERVER CONFIGURATION =====
-        services.AddServerSideBlazor(options =>
-        {
-            // Configure circuit options for better performance
-            options.DetailedErrors = environment.IsDevelopment();
-            options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
-            options.DisconnectedCircuitMaxRetained = 100;
-            options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
-        });
-
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
         services.AddOpenApi();
 
@@ -179,6 +184,9 @@ public class Program
                 .UseContentRoot();
 
             pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
+                .UseContentRoot();
+
+            pipeline.AddJavaScriptBundle("/js/passkey.min.js", "wwwroot/js/passkey.js")
                 .UseContentRoot();
         });
     }
@@ -293,6 +301,12 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+
+        // .NET 10: endpoint-based static asset serving with fingerprinting and compression
+        app.MapStaticAssets();
+
+        // Passkey (WebAuthn) endpoints (excluded from OpenAPI/Scalar). Used by passkey.js.
+        app.MapPasskeyEndpoints();
         
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())

@@ -87,7 +87,7 @@ dotnet dev-certs https --trust
 
 
 ## Systemdokumentation
-![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
+![ArvidsonFoto](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/blob/main/wiki/Anvandningsfalls-modell-version1.0-2021-01-27.jpg?raw=true)
 
 ## Diagram och Beskrivningar
 
@@ -188,7 +188,7 @@ Projektet har nyligen moderniserats med följande förbättringar:
 
 ### Ytterligare moderniseringsmöjligheter
 
-För fullständig lista över rekommenderade moderniseringar, se [MODERNIZATION.md](docs/MODERNIZATION.md). Sammanfattning:
+För fullständig lista över rekommenderade moderniseringar, se [MODERNIZATION.md](wiki/MODERNIZATION.md). Sammanfattning:
 
 1. **Nullable reference types**: Använd `required` keyword för att eliminera warnings
 2. **Records**: Konvertera ViewModels och DTOs till records för immutabilitet
@@ -198,6 +198,6 @@ För fullständig lista över rekommenderade moderniseringar, se [MODERNIZATION.
 
 ### Dokumentation
 
-- 📖 [ASPIRE.md](docs/ASPIRE.md) - Guide för .NET Aspire integration och lokal utveckling
-- 📖 [MODERNIZATION.md](docs/MODERNIZATION.md) - Detaljerade moderniseringsrekommendationer
-- 📖 [Use case-diagram](docs/Anvandningsfalls-modell-version1.0-2021-01-27.jpg) - Systemöversikt
+- 📖 [ASPIRE.md](wiki/ASPIRE.md) - Guide för .NET Aspire integration och lokal utveckling
+- 📖 [MODERNIZATION.md](wiki/MODERNIZATION.md) - Detaljerade moderniseringsrekommendationer
+- 📖 [Use case-diagram](wiki/Anvandningsfalls-modell-version1.0-2021-01-27.jpg) - Systemöversikt

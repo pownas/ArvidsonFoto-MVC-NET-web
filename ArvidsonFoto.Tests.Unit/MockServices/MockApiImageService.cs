@@ -86,7 +86,7 @@ public class MockApiImageService : IApiImageService
         return _testImages.Count > 0 ? _testImages.Max(i => i.ImageId) : 0;
     }
 
-    public ImageDto GetOneImageFromCategory(int categoryId)
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "")
     {
         // Check if there are images directly in this category
         var image = _testImages
@@ -100,7 +100,7 @@ public class MockApiImageService : IApiImageService
         var subcategories = _categoryService.GetChildrenByParentId(categoryId);
         foreach (var subcategory in subcategories)
         {
-            image = GetOneImageFromCategory(subcategory.CategoryId ?? -1);
+            image = GetOneImageFromCategory(subcategory.CategoryId ?? -1, categoryName);
             if (image.ImageId != -1) return image;
         }
             

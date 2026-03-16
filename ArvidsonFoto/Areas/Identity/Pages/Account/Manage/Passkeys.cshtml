@@ -1,0 +1,61 @@
+@page
+@using System.Buffers.Text
+@using ArvidsonFoto.Views.Shared
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@model PasskeysModel
+@{
+    ViewData["Title"] = "Hantera passkeys";
+    ViewData["ActivePage"] = ManageNavPages.Passkeys;
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
+    var antiforgeryTokens = Antiforgery.GetTokens(ViewContext.HttpContext);
+}
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<h4>@ViewData["Title"]</h4>
+
+@if (Model.CurrentPasskeys is { Count: > 0 })
+{
+    <table class="table">
+        <tbody>
+            @foreach (var passkey in Model.CurrentPasskeys)
+            {
+                var credentialId = Base64Url.EncodeToString(passkey.CredentialId);
+                <tr>
+                    <td>@(passkey.Name ?? "Namnlös passkey")</td>
+                    <td>
+                        <a asp-page="./RenamePasskey" asp-route-id="@credentialId" class="btn btn-sm btn-primary">Byt namn</a>
+                        <form method="post" asp-page-handler="DeletePasskey" asp-route-credentialId="@credentialId" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Är du säker på att du vill ta bort den här passkeyn?')">Ta bort</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Inga passkeys är registrerade.</p>
+}
+
+@if (Model.CurrentPasskeys.Count >= 100)
+{
+    <p class="text-danger">Du har nått det maximala antalet tillåtna passkeys. Ta bort en innan du lägger till en ny.</p>
+}
+else
+{
+    <form method="post" asp-page-handler="AddPasskey" id="passkey-add-form">
+        <passkey-submit
+            operation="Create"
+            name="Input"
+            request-token-name="@antiforgeryTokens.HeaderName"
+            request-token-value="@antiforgeryTokens.RequestToken">
+        </passkey-submit>
+        <button type="submit" name="__passkeySubmit" class="btn btn-primary">Lägg till ny passkey</button>
+    </form>
+}
+
+@section Scripts {
+    <script src="~/js/passkey.min.js" asp-append-version="true"></script>
+}

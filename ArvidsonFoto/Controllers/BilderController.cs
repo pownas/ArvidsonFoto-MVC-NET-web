@@ -176,7 +176,7 @@ public class BilderController(
             {
                 if (category.Name != null && category.Name.ToUpper().Contains(s.ToUpper()) && category.CategoryId.HasValue)
                 {
-                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
                     listOfFirstSearchedImages.Add(imageDto);
                 }
             }

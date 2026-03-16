@@ -489,47 +489,45 @@ body {
 /* ----------end of glightbox config------------ */
 
 /* ---------- Gallery-fix på mobil ------------- */
-.thumb-figcaption-startpage { width: 9rem; }
-.thumb-figcaption-gallery { width: 10.4rem; }
 
-.thumb-a-class { padding: inherit; }
+/* Make the thumbnail card a container for CSS Container Queries,
+   and display as block so it fills the column width.
+   Use zero horizontal padding so the figcaption text can occupy the
+   full card width, preventing premature ellipsis truncation. */
+.thumb-a-class {
+    padding: 0.25rem 0;
+    display: block;
+    width: 100%;
+    container-type: inline-size;
+}
+
+/* Figcaption spans the full card width so text reaches the edge before
+   being truncated with an ellipsis. display:block overrides Bootstrap's
+   d-inline-block utility class. text-align:center centers the label
+   under each thumbnail on all screen sizes. */
+.thumb-figcaption-startpage,
+.thumb-figcaption-gallery {
+    display: block !important;
+    width: 100%;
+    text-align: center;
+}
+
 .thumb-img-startpage { min-width: 5.8rem; }
-.thumb-img-gallery{ min-width: 8rem; }
+.thumb-img-gallery { min-width: 8rem; }
 
-@media (max-width: 1200px) {
-    .thumb-figcaption-startpage { width: 6.9rem; }
-    .thumb-figcaption-gallery { width: 8.3rem; }
-}
-
-@media (max-width: 630px) {
-    .thumb-figcaption-startpage { width: 6rem; }
-}
-
-@media (max-width: 575px) {
-    .thumb-figcaption-startpage { width: 8.5rem; }
-}
-
-@media (max-width: 450px) {
-    .thumb-figcaption-startpage { width: 7rem; }
-    .thumb-figcaption-gallery { width: 6rem; }
-}
-
+/* On mobile screens remove the button's horizontal padding so the full
+   column width is available for the figcaption text, reducing the risk
+   of early ellipsis truncation. */
 @media (max-width: 404px) {
-    .thumb-figcaption-startpage { width: 4rem; }
-    .thumb-figcaption-gallery { width: 4.5rem; }
-
-    .thumb-a-class { padding: 1em 5px; }
+    .thumb-a-class { padding: 0.5rem 0; }
     .thumb-img-startpage { min-width: 4rem; }
-    .thumb-img-gallery{ min-width: 4rem; }
+    .thumb-img-gallery { min-width: 4rem; }
 }
 
 @media (max-width: 240px) {
-    .thumb-figcaption-startpage { width: 3rem; }
-    .thumb-figcaption-gallery { width: 3rem; }
-
-    .thumb-a-class { padding: 0.5em 2px; }
+    .thumb-a-class { padding: 0.25rem 0; }
     .thumb-img-startpage { min-width: 2.5rem; }
-    .thumb-img-gallery{ min-width: 2.5rem; }
+    .thumb-img-gallery { min-width: 2.5rem; }
 }
 
 /* Category Tooltip Popover Styles */

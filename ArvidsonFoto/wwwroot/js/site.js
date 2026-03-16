@@ -28,13 +28,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check for saved theme preference or use system preference
         const savedTheme = localStorage.getItem('theme');
         let isDarkMode = false;
+
+        const canDetectSystemTheme = !!window.matchMedia;
+        const systemPrefersDark = canDetectSystemTheme && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const systemPrefersLight = canDetectSystemTheme && window.matchMedia('(prefers-color-scheme: light)').matches;
         
         if (savedTheme) {
             // User has explicitly chosen a theme
             isDarkMode = savedTheme === 'dark';
+        } else if (systemPrefersDark) {
+            isDarkMode = true;
+        } else if (systemPrefersLight) {
+            isDarkMode = false;
         } else {
-            // Check system preference
-            isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // No system preference (or browser can't determine) -> default to dark
+            isDarkMode = true;
         }
         
         // Apply theme
@@ -48,18 +56,28 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Listen for system theme changes (if user hasn't set preference)
         if (!savedTheme && window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const lightQuery = window.matchMedia('(prefers-color-scheme: light)');
+
+            const applySystemTheme = function () {
                 // Only apply if user hasn't manually set a preference
-                if (!localStorage.getItem('theme')) {
-                    if (e.matches) {
-                        document.documentElement.setAttribute('data-bs-theme', 'dark');
-                        updateIcon(true);
-                    } else {
-                        document.documentElement.removeAttribute('data-bs-theme');
-                        updateIcon(false);
-                    }
+                if (localStorage.getItem('theme')) return;
+
+                if (darkQuery.matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                    updateIcon(true);
+                } else if (lightQuery.matches) {
+                    document.documentElement.removeAttribute('data-bs-theme');
+                    updateIcon(false);
+                } else {
+                    // No system preference -> default dark
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                    updateIcon(true);
                 }
-            });
+            };
+
+            darkQuery.addEventListener('change', applySystemTheme);
+            lightQuery.addEventListener('change', applySystemTheme);
         }
 
         // Toggle dark mode on click
