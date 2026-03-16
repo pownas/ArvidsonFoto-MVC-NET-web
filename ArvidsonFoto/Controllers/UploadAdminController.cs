@@ -4,7 +4,6 @@ using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
-using ArvidsonFoto.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
@@ -341,7 +340,7 @@ public class UploadAdminController : Controller
     {
         ViewData["Title"] = "Läser loggboken för: " + datum.ToString("yyyy-MM-dd dddd");
 
-        AppLogReader logReader = new AppLogReader();
+        AppLogReaderService logReader = new AppLogReaderService();
         string appLogFile = "appLog" + datum.ToString("yyyyMMdd") + ".txt";
 
         UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel();

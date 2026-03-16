@@ -1,6 +1,6 @@
-﻿namespace ArvidsonFoto.Data;
+﻿namespace ArvidsonFoto.Core.Services;
 
-public class AppLogReader()
+public class AppLogReaderService
 {
     string folderDataPath = @".\logs\"; //Pekar på mappen där loggfilen ligger
 

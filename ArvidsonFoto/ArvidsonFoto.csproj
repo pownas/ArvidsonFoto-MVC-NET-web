@@ -51,7 +51,6 @@
   </ItemGroup>
 
   <ItemGroup Label="Folders">
-    <Folder Include="Core\OpenApi\" />
     <Folder Include="logs\" /> <!-- Mapp dit jag styrt att Serilog, ska lägga sina .log-filer -->
   </ItemGroup>
 
