@@ -35,19 +35,19 @@ Detta dokument sammanfattar migreringen från den gamla `Startup.cs`-baserade ko
 
 ### 3. Nya dokumentationsfiler
 
-#### `docs/ASPIRE.md` (7551 tecken)
+#### `wiki/ASPIRE.md` (7551 tecken)
 - Komplett guide för .NET Aspire integration
 - Steg-för-steg installationsinstruktioner
 - Exempel på avancerad konfiguration
 - Felsökningstips och best practices
 
-#### `docs/MODERNIZATION.md` (10309 tecken)
+#### `wiki/MODERNIZATION.md` (10309 tecken)
 - Detaljerade moderniseringsrekommendationer
 - Prioriterade förbättringsområden
 - Kodexempel för varje rekommendation
 - Riskanalys och implementeringsplan
 
-#### `docs/MIGRATION_SUMMARY.md` (denna fil)
+#### `wiki/MIGRATION_SUMMARY.md` (denna fil)
 - Sammanfattning av alla ändringar
 - Teknisk analys
 - Valideringsresultat
@@ -172,11 +172,11 @@ Projektet är nu redo för .NET Aspire integration:
 4. Lägg till `builder.AddServiceDefaults()` i Program.cs
 5. Lägg till `app.MapDefaultEndpoints()` i middleware
 
-**Se**: [docs/ASPIRE.md](ASPIRE.md) för fullständig guide.
+**Se**: [ASPIRE.md](ASPIRE.md) för fullständig guide.
 
 ## Nästa steg (Rekommenderade moderniseringar)
 
-Se [docs/MODERNIZATION.md](MODERNIZATION.md) för fullständig lista. Prioriterade:
+Se [MODERNIZATION.md](MODERNIZATION.md) för fullständig lista. Prioriterade:
 
 ### Fas 1: Kritiska förbättringar
 1. **Nullable warnings** - Använd `required` keyword (ca 50 warnings)
@@ -222,7 +222,7 @@ Se [docs/MODERNIZATION.md](MODERNIZATION.md) för fullständig lista. Prioritera
 
 För frågor om migreringen eller moderniseringsrekommendationerna:
 - Öppna en issue i GitHub repository
-- Se dokumentation i `docs/`-mappen
+- Se dokumentation i `wiki/`-mappen
 - Referera till denna sammanfattning
 
 ---

@@ -99,10 +99,10 @@
 
 ### **Documentation** (3 new files)
 ```
-🆕 docs/CATEGORY_CACHING_IMPLEMENTATION.md
-🆕 docs/PERFORMANCE_OPTIMIZATION_SUMMARY.md
-🆕 docs/TESTING_GUIDE.md
-🆕 docs/GIT_COMMIT_MESSAGE.md
+🆕 wiki/CATEGORY_CACHING_IMPLEMENTATION.md
+🆕 wiki/PERFORMANCE_OPTIMIZATION_SUMMARY.md
+🆕 wiki/TESTING_GUIDE.md
+🆕 wiki/GIT_COMMIT_MESSAGE.md
 ```
 
 **Total:** 13 files changed, 4 files created
@@ -144,7 +144,7 @@
 # Start application
 dotnet run --project ArvidsonFoto
 
-# Open browser and follow docs/TESTING_GUIDE.md
+# Open browser and follow wiki/TESTING_GUIDE.md
 ```
 
 ### 2. **Performance Benchmarking** (Recommended)
@@ -185,7 +185,7 @@ if (_categoryService.AddCategory(newCategory))
 
 ## 📚 Documentation
 
-All documentation is available in the `docs/` folder:
+All documentation is available in the `wiki/` folder:
 
 1. **CATEGORY_CACHING_IMPLEMENTATION.md** - Complete implementation guide
 2. **PERFORMANCE_OPTIMIZATION_SUMMARY.md** - Detailed change summary
@@ -237,8 +237,8 @@ The biggest wins came from:
 ## 📞 Support
 
 For questions or issues:
-1. Check `docs/TESTING_GUIDE.md` for troubleshooting
-2. Review `docs/PERFORMANCE_OPTIMIZATION_SUMMARY.md` for details
+1. Check `wiki/TESTING_GUIDE.md` for troubleshooting
+2. Review `wiki/PERFORMANCE_OPTIMIZATION_SUMMARY.md` for details
 3. Consult SQL Profiler logs for query analysis
 
 ---

@@ -448,9 +448,9 @@ Log.Error(updateEx, "Failed to update email status for contact ID: {ContactId}",
 
 ## 📚 Relaterade Dokument
 
-- [01-Create-tbl_kontakt.sql](../docs/SQL-script/01-Create-tbl_kontakt.sql) - SQL script
-- [INSTALLATION_GUIDE.md](../docs/SQL-script/INSTALLATION_GUIDE.md) - Installation guide
-- [README_tbl_kontakt.md](../docs/SQL-script/README_tbl_kontakt.md) - Detaljerad dokumentation
+- [01-Create-tbl_kontakt.sql](SQL-script/01-Create-tbl_kontakt.sql) - SQL script
+- [INSTALLATION_GUIDE.md](SQL-script/INSTALLATION_GUIDE.md) - Installation guide
+- [README_tbl_kontakt.md](SQL-script/README_tbl_kontakt.md) - Detaljerad dokumentation
 
 ---
 
