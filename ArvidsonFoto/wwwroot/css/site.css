@@ -470,9 +470,11 @@ body {
 /* ----------end of glightbox config------------ */
 /* ---------- Gallery-fix på mobil ------------- */
 /* Make the thumbnail card a container for CSS Container Queries,
-   and display as block so it fills the column width. */
+   and display as block so it fills the column width.
+   Use zero horizontal padding so the figcaption text can occupy the
+   full card width, preventing premature ellipsis truncation. */
 .thumb-a-class {
-  padding: inherit;
+  padding: 0.25rem 0;
   display: block;
   width: 100%;
   container-type: inline-size;
@@ -480,11 +482,13 @@ body {
 
 /* Figcaption spans the full card width so text reaches the edge before
    being truncated with an ellipsis. display:block overrides Bootstrap's
-   d-inline-block utility class. */
+   d-inline-block utility class. text-align:center centers the label
+   under each thumbnail on all screen sizes. */
 .thumb-figcaption-startpage,
 .thumb-figcaption-gallery {
   display: block !important;
   width: 100%;
+  text-align: center;
 }
 
 .thumb-img-startpage {
@@ -495,9 +499,12 @@ body {
   min-width: 8rem;
 }
 
+/* On mobile screens remove the button's horizontal padding so the full
+   column width is available for the figcaption text, reducing the risk
+   of early ellipsis truncation. */
 @media (max-width: 404px) {
   .thumb-a-class {
-    padding: 1em 5px;
+    padding: 0.5rem 0;
   }
   .thumb-img-startpage {
     min-width: 4rem;
@@ -508,7 +515,7 @@ body {
 }
 @media (max-width: 240px) {
   .thumb-a-class {
-    padding: 0.5em 2px;
+    padding: 0.25rem 0;
   }
   .thumb-img-startpage {
     min-width: 2.5rem;
@@ -695,3 +702,5 @@ body {
 }
 
 /* -------- End Info Pages Modern Design -------- */
+
+/*# sourceMappingURL=site.css.map */
