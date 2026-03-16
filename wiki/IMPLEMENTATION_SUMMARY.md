@@ -84,7 +84,7 @@ GET /latest.asp?page=69 or (1,2)=(select*from(select name_const(...
 - SQL keyword detection (5 tests)
 
 ### 4. Documentation
-✅ **Security Documentation**: `/docs/SECURITY.md`  
+✅ **Security Documentation**: `/wiki/SECURITY.md`  
 ✅ **Implementation Summary**: This file
 
 **Documentation Contents:**
@@ -115,8 +115,8 @@ GET /latest.asp?page=69 or (1,2)=(select*from(select name_const(...
 ### New Files:
 1. `ArvidsonFoto/Security/InputValidationMiddleware.cs` - Input validation middleware
 2. `ArvidsonFoto.Tests.Unit/Security/InputValidationMiddlewareTests.cs` - Unit tests
-3. `docs/SECURITY.md` - Security documentation
-4. `docs/IMPLEMENTATION_SUMMARY.md` - This file
+3. `wiki/SECURITY.md` - Security documentation
+4. `wiki/IMPLEMENTATION_SUMMARY.md` - This file
 
 ### Modified Files:
 1. `ArvidsonFoto/Startup.cs` - Registered middleware

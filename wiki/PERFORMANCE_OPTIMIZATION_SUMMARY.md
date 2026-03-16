@@ -240,7 +240,7 @@ private static readonly TimeSpan _longCacheExpiry = TimeSpan.FromHours(24);
 - ✅ `ArvidsonFoto.Tests.Unit/MockServices/MockApiCategoryService.cs` - Ny metod mock
 
 ### Documentation
-- ✅ `docs/CATEGORY_CACHING_IMPLEMENTATION.md` - Komplett dokumentation
+- ✅ `wiki/CATEGORY_CACHING_IMPLEMENTATION.md` - Komplett dokumentation
 
 ---
 
