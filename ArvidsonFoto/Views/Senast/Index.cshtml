@@ -40,8 +40,8 @@
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
-    <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+    <partial name="../Bilder/_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-top" } })" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
-<partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+<partial name="../Bilder/_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-bottom" } })" /> @*<!-- Sidräknare via PartialView -->*@

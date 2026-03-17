@@ -133,7 +133,7 @@ else
 
 @if (Model.TotalPages > 1)
 {
-  <partial name="_PageCounter" model="Model" />
+  <partial name="_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-top" } })" />
 }
 else
 {
@@ -147,7 +147,7 @@ else
 
 @if (Model.TotalPages > 1)
 {
-  <partial name="_PageCounter" model="Model" />
+  <partial name="_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-bottom" } })" />
 }
 else
 {

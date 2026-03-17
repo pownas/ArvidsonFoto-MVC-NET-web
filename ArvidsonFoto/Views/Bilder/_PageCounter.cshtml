@@ -1,4 +1,7 @@
 ﻿@model GalleryViewModel
+@{
+    string idSuffix = ViewData["suffix"] as string ?? "";
+}
 
 @if (Model!.TotalImageCount > 0)
 {
@@ -12,7 +15,7 @@
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-  <nav id="page-counter" aria-label="Sid-navigering">
+  <nav id="page-counter@(idSuffix)" aria-label="Sid-navigering">
     <ul class="pagination justify-content-center">
     @if (Model.CurrentPage > 1)
     {
