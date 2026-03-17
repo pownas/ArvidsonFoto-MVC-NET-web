@@ -384,6 +384,45 @@ public class ImageApiControllerTests : IDisposable
     }
 
     [Fact]
+    public void GetImagesByCategoryPath_ParentCategoryPath_ReturnsOkWithImagesFromSubcategories()
+    {
+        // Arrange - "Faglar" är en förälderkategori (categoryId=1) utan direkta bilder,
+        // men med underkategorier som innehåller bilder.
+        string categoryPath = "Faglar";
+
+        // Act
+        var result = _controller.GetImagesByCategoryPath(categoryPath);
+
+        // Assert - Ska returnera Ok, inte 404 eller tom bildlista
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+
+        var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
+        // Fåglar-kategorin ska ha bilder från sina underkategorier
+        Assert.True(response.ImageResultCount > 0, "Parent category 'Faglar' should return images from subcategories");
+        Assert.True(response.Images.Count > 0, "Images list should not be empty for parent category");
+        // Kategorinamnet ska vara korrekt, inte 'Unknown'
+        Assert.Equal("Fåglar", response.CategoryName);
+    }
+
+    [Fact]
+    public void GetImagesByCategoryPath_ParentCategoryPath_HasCorrectCategoryName()
+    {
+        // Arrange - Besöker förälderkategorin "Fåglar" direkt via en enda segment
+        string categoryPath = "Faglar";
+
+        // Act
+        var result = _controller.GetImagesByCategoryPath(categoryPath);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
+        // CategoryName ska vara "Fåglar", INTE "Unknown"
+        Assert.NotEqual("Unknown", response.CategoryName);
+        Assert.Equal(1, response.CategoryId);
+    }
+
+    [Fact]
     public void GetImagesByCategoryPath_EmptyPath_ReturnsBadRequest()
     {
         // Arrange

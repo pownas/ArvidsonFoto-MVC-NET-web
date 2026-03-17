@@ -318,6 +318,31 @@ public class MockApiCategoryService : IApiCategoryService
         return result;
     }
 
+    public List<int> GetAllDescendantCategoryIds(int categoryId)
+    {
+        var result = new List<int>();
+        var queue = new Queue<int>();
+        queue.Enqueue(categoryId);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            var children = _testCategories
+                .Where(c => c.ParentCategoryId == current)
+                .ToList();
+            foreach (var child in children)
+            {
+                if (child.CategoryId.HasValue)
+                {
+                    result.Add(child.CategoryId.Value);
+                    queue.Enqueue(child.CategoryId.Value);
+                }
+            }
+        }
+
+        return result;
+    }
+
     private static CategoryDto CreateNotFoundCategory()
     {
         return new CategoryDto

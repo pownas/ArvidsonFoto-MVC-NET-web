@@ -752,6 +752,49 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         _categoryPathCache[categoryId] = path;
     }
 
+    public List<int> GetAllDescendantCategoryIds(int categoryId)
+    {
+        if (categoryId <= 0)
+            return new List<int>();
+
+        try
+        {
+            // Load the full flat list of (id, parentId) pairs in a single query for efficiency
+            var allCategories = _entityContext.TblMenus
+                .Where(c => c.MenuCategoryId.HasValue)
+                .Select(c => new { Id = c.MenuCategoryId!.Value, ParentId = c.MenuParentCategoryId })
+                .ToList();
+
+            var parentLookup = allCategories
+                .GroupBy(c => c.ParentId ?? 0)
+                .ToDictionary(g => g.Key, g => g.Select(c => c.Id).ToList());
+
+            var result = new List<int>();
+            var queue = new Queue<int>();
+            queue.Enqueue(categoryId);
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                if (parentLookup.TryGetValue(current, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        result.Add(child);
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Error in GetAllDescendantCategoryIds: {Message}", ex.Message);
+            return new List<int>();
+        }
+    }
+
     public Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds)
     {
         var result = new Dictionary<int, string>();
