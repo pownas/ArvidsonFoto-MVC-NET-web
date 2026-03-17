@@ -24,6 +24,7 @@ public class BilderController(
     {
         GalleryViewModel viewModel = new GalleryViewModel();
         int pageSize = 48;
+        viewModel.PageSize = pageSize;
 
         if (sida is null || sida < 1)
             sida = 1;
