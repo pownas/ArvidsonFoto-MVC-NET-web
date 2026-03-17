@@ -8,14 +8,9 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ConfirmEmailModel : PageModel
+public class ConfirmEmailModel(UserManager<ArvidsonFotoUser> userManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-
-    public ConfirmEmailModel(UserManager<ArvidsonFotoUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
 
     [TempData]
     public string? StatusMessage { get; set; }

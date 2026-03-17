@@ -12,24 +12,16 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ExternalLoginModel : PageModel
+public class ExternalLoginModel(
+    SignInManager<ArvidsonFotoUser> signInManager,
+    UserManager<ArvidsonFotoUser> userManager,
+    ILogger<ExternalLoginModel> logger,
+    IEmailSender emailSender) : PageModel
 {
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly IEmailSender _emailSender;
-    private readonly ILogger<ExternalLoginModel> _logger;
-
-    public ExternalLoginModel(
-        SignInManager<ArvidsonFotoUser> signInManager,
-        UserManager<ArvidsonFotoUser> userManager,
-        ILogger<ExternalLoginModel> logger,
-        IEmailSender emailSender)
-    {
-        _signInManager = signInManager;
-        _userManager = userManager;
-        _logger = logger;
-        _emailSender = emailSender;
-    }
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly IEmailSender _emailSender = emailSender;
+    private readonly ILogger<ExternalLoginModel> _logger = logger;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -63,7 +55,7 @@ public class ExternalLoginModel : PageModel
 
     public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl = null, string? remoteError = null)
     {
-        returnUrl = returnUrl ?? Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
         if (remoteError != null)
         {
             ErrorMessage = $"Error from external provider: {remoteError}";
@@ -105,7 +97,7 @@ public class ExternalLoginModel : PageModel
 
     public async Task<IActionResult> OnPostConfirmationAsync(string? returnUrl = null)
     {
-        returnUrl = returnUrl ?? Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
         // Get the information about the user from the external login provider
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
@@ -132,7 +124,7 @@ public class ExternalLoginModel : PageModel
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code },
+                        values: new { area = "Identity", userId, code },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -141,7 +133,9 @@ public class ExternalLoginModel : PageModel
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+#pragma warning disable IDE0037 // Use inferred member name
                         return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+#pragma warning restore IDE0037 // Use inferred member name
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
