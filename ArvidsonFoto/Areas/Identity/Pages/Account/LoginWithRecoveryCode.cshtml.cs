@@ -29,7 +29,7 @@ public class LoginWithRecoveryCodeModel : PageModel
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Recovery Code")]
-        public required string RecoveryCode { get; set; }
+        public string RecoveryCode { get; set; } = null!;
     }
 
     public async Task<IActionResult> OnGetAsync(string? returnUrl = null)

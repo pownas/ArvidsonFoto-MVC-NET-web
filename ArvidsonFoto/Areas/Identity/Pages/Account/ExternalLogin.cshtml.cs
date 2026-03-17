@@ -45,7 +45,7 @@ public class ExternalLoginModel : PageModel
     {
         [Required]
         [EmailAddress]
-        public required string Email { get; set; }
+        public string Email { get; set; } = null!;
     }
 
     public IActionResult OnGetAsync()

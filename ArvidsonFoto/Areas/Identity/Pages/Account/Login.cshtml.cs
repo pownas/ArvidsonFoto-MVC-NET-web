@@ -39,12 +39,12 @@ public class LoginModel : PageModel
         [Required]
         [EmailAddress]
         [Display(Name = "E-postadress")]
-        public required string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Lösenord")]
-        public required string Password { get; set; }
+        public string Password { get; set; } = null!;
 
         [Display(Name = "Kom ihåg inloggningen?")]
         public bool RememberMe { get; set; }

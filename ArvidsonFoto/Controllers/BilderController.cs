@@ -141,7 +141,7 @@ public class BilderController(
     public IActionResult Bilder(int? ID)
     {
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = url != null ? (url.GetRawUrl() ?? "") : "";
+        string visitedUrl = url?.GetRawUrl() ?? "";
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
@@ -153,7 +153,7 @@ public class BilderController(
     }
 
     [Route("/search")]
-    public IActionResult Search(string s)
+    public IActionResult Search(string? s)
     {
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("search");

@@ -31,7 +31,7 @@ public class LoginWith2faModel : PageModel
         [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Text)]
         [Display(Name = "Authenticator code")]
-        public required string TwoFactorCode { get; set; }
+        public string TwoFactorCode { get; set; } = null!;
 
         [Display(Name = "Remember this machine")]
         public bool RememberMachine { get; set; }
