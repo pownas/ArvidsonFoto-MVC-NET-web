@@ -15,5 +15,5 @@ public class ErrorViewModel
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     /// <summary>URL som besöktes när felet uppstod</summary>
-    public string VisitedUrl { get; set; } = string.Empty;
+    public string? VisitedUrl { get; set; }
 }

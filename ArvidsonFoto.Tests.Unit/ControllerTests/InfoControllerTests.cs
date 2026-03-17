@@ -282,7 +282,7 @@ public class InfoControllerTests
         var createdEntry = _mockGuestBookService.GetAll()
             .FirstOrDefault(g => g.GbName == "Test User");
         Assert.NotNull(createdEntry);
-        var parts = createdEntry!.GbHomepage.Split('/');
+        var parts = (createdEntry!.GbHomepage ?? "").Split('/');
         Assert.True(parts.Length <= 3);
     }
 

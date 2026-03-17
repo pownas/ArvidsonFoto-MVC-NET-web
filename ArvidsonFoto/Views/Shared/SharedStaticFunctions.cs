@@ -45,8 +45,9 @@ public static class SharedStaticFunctions
         return replaceAAO;
     }
 
-    public static string ReplaceUrlText(string urlText)
+    public static string ReplaceUrlText(string? urlText)
     {
+        if (urlText == null) return string.Empty;
         urlText = urlText.Replace(" ", "%20");
 
         return urlText;
@@ -55,7 +56,7 @@ public static class SharedStaticFunctions
 
 public static class HttpRequestExtensions
 {
-    public static string GetRawUrl(this HttpContext httpContext)
+    public static string? GetRawUrl(this HttpContext httpContext)
     {
         var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
         return requestFeature?.RawTarget.ToString();

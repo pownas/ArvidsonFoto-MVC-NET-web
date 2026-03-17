@@ -232,7 +232,7 @@ public class SenastController(
         else
         {
             var url = Url.ActionContext.HttpContext;
-            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
 
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });

@@ -20,7 +20,7 @@ public class BilderController(
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
-    public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, string subLevel5ImageName, int? sida)
+    public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
         GalleryViewModel viewModel = new GalleryViewModel();
         int pageSize = 48;
@@ -53,8 +53,8 @@ public class BilderController(
         }
 
         // Determine which category to load
-        string categoryName = null;
-        string currentUrl = null;
+        string? categoryName = null;
+        string? currentUrl = null;
         
         if (subLevel4 is not null)
         {
@@ -95,7 +95,7 @@ public class BilderController(
             }
             
             viewModel.SelectedCategory = selectedCategory;
-            viewModel.CurrentUrl = currentUrl;
+            viewModel.CurrentUrl = currentUrl ?? string.Empty;
             
             // OPTIMIZED: Use count method instead of loading all images into memory
             var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
@@ -140,8 +140,8 @@ public class BilderController(
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
     {
-        var url = Url.ActionContext.HttpContext ?? null;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url) ?? "";
+        var url = Url.ActionContext.HttpContext;
+        string visitedUrl = url?.GetRawUrl() ?? "";
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
@@ -153,7 +153,7 @@ public class BilderController(
     }
 
     [Route("/search")]
-    public IActionResult Search(string s)
+    public IActionResult Search(string? s)
     {
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("search");

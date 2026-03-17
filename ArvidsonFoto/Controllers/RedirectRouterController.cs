@@ -11,7 +11,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To startpage: /");
 
         return RedirectToActionPermanent(actionName: nameof(HomeController.Index), controllerName: nameof(HomeController).Replace("Controller", ""));
@@ -27,7 +27,7 @@ public class RedirectRouterController() : Controller
     {
         ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         //var url = Url.ActionContext.HttpContext;
-        //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        //string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
 
         return RedirectToActionPermanent(actionName: nameof(BilderController.Search), controllerName: nameof(BilderController).Replace("Controller", ""));
@@ -44,7 +44,7 @@ public class RedirectRouterController() : Controller
     {
         ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         //var url = Url.ActionContext.HttpContext;
-        //string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        //string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Senast/Fotograferad");
 
         return RedirectToActionPermanent(actionName: nameof(SenastController.Index), controllerName: nameof(SenastController).Replace("Controller", ""), routeValues: new { sortOrder = "Fotograferad" });
@@ -55,7 +55,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Index), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -69,7 +69,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Gastbok");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Gastbok), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -82,7 +82,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Kontakta");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Kontakta), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -97,7 +97,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Kop_av_bilder");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Kop_av_bilder), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -109,7 +109,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Om_mig");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Om_mig), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -122,7 +122,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Sidkarta");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Sidkarta), controllerName: nameof(InfoController).Replace("Controller", ""));
@@ -134,7 +134,7 @@ public class RedirectRouterController() : Controller
     {
         //Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Info/Copyright");
 
         return RedirectToActionPermanent(actionName: nameof(InfoController.Copyright), controllerName: nameof(InfoController).Replace("Controller", ""));

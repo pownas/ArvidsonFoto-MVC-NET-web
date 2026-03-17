@@ -19,9 +19,9 @@ public class LoginWithRecoveryCodeModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
     public class InputModel
     {
@@ -29,10 +29,10 @@ public class LoginWithRecoveryCodeModel : PageModel
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Recovery Code")]
-        public string RecoveryCode { get; set; }
+        public string RecoveryCode { get; set; } = null!;
     }
 
-    public async Task<IActionResult> OnGetAsync(string returnUrl = null)
+    public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
     {
         // Ensure the user has gone through the username & password screen first
         var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -46,7 +46,7 @@ public class LoginWithRecoveryCodeModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
         if (!ModelState.IsValid)
         {
