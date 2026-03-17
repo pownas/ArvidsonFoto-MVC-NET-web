@@ -137,9 +137,9 @@ else
 }
 else
 {
-  if (Model.AllImagesList.Count > 12)
+  if (Model.TotalImageCount > 12)
   {
-    <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <p id="page-image-counter-top" class="text-center">Antal bilder: @(Model.TotalImageCount)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
   }
 }
 
@@ -151,8 +151,8 @@ else
 }
 else
 {
-  if (Model.AllImagesList.Count > 0)
+  if (Model.TotalImageCount > 0)
   {
-    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.AllImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.TotalImageCount)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
   }
 }
