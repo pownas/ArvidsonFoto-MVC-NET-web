@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
@@ -200,7 +201,9 @@ public class UploadAdminController : Controller
             {
                 Name = inputModel.MenuText,
                 CategoryId = _categoryService.GetLastId() + 1,
-                ParentCategoryId = inputModel.MainMenuId
+                ParentCategoryId = inputModel.MainMenuId,
+                UrlCategoryPath = CategoryMappingExtensions.GenerateUrlSegment(inputModel.MenuText),
+                DateUpdated = DateTime.UtcNow
             };
 
             if (_categoryService.AddCategory(newCategory))

@@ -1,5 +1,6 @@
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Models;
+using System.Text.RegularExpressions;
 
 namespace ArvidsonFoto.Core.Extensions;
 
@@ -55,8 +56,39 @@ public static class CategoryMappingExtensions
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.Name,
             MenuUrlSegment = categoryDto.UrlCategoryPath,
-            MenuParentCategoryId = categoryDto.ParentCategoryId
+            MenuParentCategoryId = categoryDto.ParentCategoryId,
+            MenuDateUpdated = categoryDto.DateUpdated
         };
+    }
+
+    /// <summary>
+    /// Generates a URL-safe segment from a display name by replacing Swedish characters and spaces.
+    /// </summary>
+    /// <remarks>
+    /// Replaces å→a, ä→a, ö→o (and uppercase equivalents) and spaces with hyphens,
+    /// matching the existing convention used in <c>menu_URLtext</c> (e.g. "Turkos blåvinge" → "Turkos-blavinge").
+    /// Any remaining non-alphanumeric characters (except hyphens) are removed, and consecutive
+    /// hyphens are collapsed into one.
+    /// </remarks>
+    /// <param name="displayName">The display name to convert</param>
+    /// <returns>A URL-safe segment string</returns>
+    public static string GenerateUrlSegment(string? displayName)
+    {
+        if (string.IsNullOrEmpty(displayName)) return string.Empty;
+
+        var segment = displayName
+            .Replace("å", "a").Replace("Å", "A")
+            .Replace("ä", "a").Replace("Ä", "A")
+            .Replace("ö", "o").Replace("Ö", "O")
+            .Replace(" ", "-");
+
+        // Remove any remaining characters that are not alphanumeric or hyphens
+        segment = Regex.Replace(segment, @"[^a-zA-Z0-9\-]", string.Empty);
+
+        // Collapse consecutive hyphens and trim leading/trailing hyphens
+        segment = Regex.Replace(segment, @"-{2,}", "-").Trim('-');
+
+        return segment;
     }
 
     /// <summary>
