@@ -100,6 +100,9 @@ public class BilderController(
             // OPTIMIZED: Use count method instead of loading all images into memory
             var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
             
+            // Store total image count for metadata (SEO)
+            viewModel.TotalImageCount = totalImageCount;
+            
             // Calculate pagination
             viewModel.TotalPages = (int)Math.Ceiling(totalImageCount / (decimal)pageSize);
             

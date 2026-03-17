@@ -1,18 +1,21 @@
 ﻿@model GalleryViewModel
+@{
+    string idSuffix = ViewData["suffix"] as string ?? "";
+}
 
-@if (Model!.AllImagesList.Count > 0)
+@if (Model!.TotalImageCount > 0)
 {
   <p class="text-center">
       Antal @if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Equals("Per kategori"))
       {<text>kategorier</text> }
     else
-    { <text>bilder</text>}: @(Model.AllImagesList.Count())st , sida: @Model.CurrentPage av @Model.TotalPages
+    { <text>bilder</text>}: @(Model.TotalImageCount)st , sida: @Model.CurrentPage av @Model.TotalPages
   </p>
 }
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-  <nav id="page-counter" aria-label="Sid-navigering">
+  <nav id="page-counter@(idSuffix)" aria-label="Sid-navigering">
     <ul class="pagination justify-content-center">
     @if (Model.CurrentPage > 1)
     {
