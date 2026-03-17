@@ -31,7 +31,7 @@ public class Program
         // Configure Serilog from appsettings with Console sink in Development
         var loggerConfig = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration) // Read from appsettings.json
-            .WriteTo.File("logs/appLog.txt", rollingInterval: RollingInterval.Day);
+            .WriteTo.File("logs/appLog.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 150, retainedFileTimeLimit: TimeSpan.FromDays(90));
 
         // Add Console sink in Development for easier debugging
         if (isDevelopment)
