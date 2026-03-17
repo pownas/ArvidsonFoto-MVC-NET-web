@@ -396,11 +396,27 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
                 var totalCategoryImageCount = imageService.GetCountedCategoryId(currentCategoryId.Value);
 
+                // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
+                // In that case look up the category by ID so we can populate name and URL correctly.
+                string categoryName;
+                string categoryUrl;
+                if (matchingChildCategory != null)
+                {
+                    categoryName = matchingChildCategory.Name ?? "Unknown";
+                    categoryUrl = matchingChildCategory.UrlCategoryPathFull ?? "Unknown";
+                }
+                else
+                {
+                    var resolvedCategory = categoryService.GetById(currentCategoryId.Value);
+                    categoryName = resolvedCategory.Name ?? "Unknown";
+                    categoryUrl = resolvedCategory.UrlCategoryPath ?? "Unknown";
+                }
+
                 var response = new ImageListResponse
                 {
                     CategoryId = currentCategoryId.Value,
-                    CategoryName = $"{matchingChildCategory?.Name ?? "Unknown"}",
-                    CategoryUrl =  $"{matchingChildCategory?.UrlCategoryPathFull ?? "Unknown"}",
+                    CategoryName = categoryName,
+                    CategoryUrl = categoryUrl,
                     CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
                     ImageCategoryTotalCount = totalCategoryImageCount,
                     ImageResultCount = sortedImages.Count,

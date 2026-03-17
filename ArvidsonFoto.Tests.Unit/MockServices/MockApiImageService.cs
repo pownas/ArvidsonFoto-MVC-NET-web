@@ -122,9 +122,23 @@ public class MockApiImageService : IApiImageService
 
     public List<ImageDto> GetImagesByCategoryID(int categoryID)
     {
-        return _testImages
+        var direct = _testImages
             .Where(i => i.CategoryId == categoryID)
             .ToList();
+
+        if (direct.Any())
+            return direct;
+
+        // Fall back to descendant categories (mirrors ApiImageService behaviour for parent categories)
+        var descendantIds = _categoryService.GetAllDescendantCategoryIds(categoryID);
+        if (descendantIds.Any())
+        {
+            return _testImages
+                .Where(i => descendantIds.Contains(i.CategoryId))
+                .ToList();
+        }
+
+        return new List<ImageDto>();
     }
 
     public ImageDto GetById(int imageId)

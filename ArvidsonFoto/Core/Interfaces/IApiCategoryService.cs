@@ -154,4 +154,11 @@ public interface IApiCategoryService
     /// <param name="categoryIds">List of category IDs to get names for</param>
     /// <returns>Dictionary mapping category ID to its name</returns>
     Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds);
+
+    /// <summary>
+    /// Gets all descendant category IDs (children, grandchildren, etc.) for a given category
+    /// </summary>
+    /// <param name="categoryId">The parent category ID</param>
+    /// <returns>A flat list of all descendant category IDs</returns>
+    List<int> GetAllDescendantCategoryIds(int categoryId);
 }
