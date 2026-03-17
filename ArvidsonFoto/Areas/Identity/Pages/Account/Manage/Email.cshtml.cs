@@ -27,24 +27,24 @@ public partial class EmailModel : PageModel
         _emailSender = emailSender;
     }
 
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     public bool IsEmailConfirmed { get; set; }
 
     [TempData]
-    public string StatusMessage { get; set; }
+    public string? StatusMessage { get; set; }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
     public class InputModel
     {
         [Required]
         [EmailAddress]
         [Display(Name = "New email")]
-        public string NewEmail { get; set; }
+        public required string NewEmail { get; set; }
     }
 
     private async Task LoadAsync(ArvidsonFotoUser user)
@@ -54,7 +54,7 @@ public partial class EmailModel : PageModel
 
         Input = new InputModel
         {
-            NewEmail = email,
+            NewEmail = email ?? string.Empty,
         };
 
         IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);

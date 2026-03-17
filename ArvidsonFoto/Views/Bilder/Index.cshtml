@@ -72,8 +72,8 @@
     string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
 
     // Build the popover content - escape the values but not the HTML structure
-    string escapedCategoryName = WebUtility.HtmlEncode(category.Name);
-    string escapedImageUrl = WebUtility.HtmlEncode(imageUrl);
+    string escapedCategoryName = WebUtility.HtmlEncode(category.Name) ?? string.Empty;
+    string escapedImageUrl = WebUtility.HtmlEncode(imageUrl) ?? string.Empty;
     string popoverContent = $"<div class='category-tooltip'><img src='{escapedImageUrl}' alt='{escapedCategoryName}' class='img-fluid' /><div class='category-name'>{escapedCategoryName}</div></div>";
 
     return $"data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" data-content=\"{WebUtility.HtmlEncode(popoverContent)}\" data-placement=\"right\"";

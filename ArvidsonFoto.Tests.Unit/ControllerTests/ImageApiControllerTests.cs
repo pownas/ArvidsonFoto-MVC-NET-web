@@ -46,7 +46,7 @@ public class ImageApiControllerTests : IDisposable
         _mockCategoryService = new MockApiCategoryService();
 
         // Create controller
-        _controller = new ImageApiController(logger, _mockImageService, _dbContext, _mockCategoryService, configuration);
+        _controller = new ImageApiController(logger, _mockImageService, _dbContext, _mockCategoryService);
 
         // Setup HTTP context
         var httpContext = new DefaultHttpContext();

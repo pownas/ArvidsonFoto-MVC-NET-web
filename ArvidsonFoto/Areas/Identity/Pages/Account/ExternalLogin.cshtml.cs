@@ -32,20 +32,20 @@ public class ExternalLoginModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    public string ProviderDisplayName { get; set; }
+    public string? ProviderDisplayName { get; set; }
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
     [TempData]
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public class InputModel
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public required string Email { get; set; }
     }
 
     public IActionResult OnGetAsync()
@@ -53,7 +53,7 @@ public class ExternalLoginModel : PageModel
         return RedirectToPage("./Login");
     }
 
-    public IActionResult OnPost(string provider, string returnUrl = null)
+    public IActionResult OnPost(string provider, string? returnUrl = null)
     {
         // Request a redirect to the external login provider.
         var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
@@ -61,7 +61,7 @@ public class ExternalLoginModel : PageModel
         return new ChallengeResult(provider, properties);
     }
 
-    public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
+    public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl = null, string? remoteError = null)
     {
         returnUrl = returnUrl ?? Url.Content("~/");
         if (remoteError != null)
@@ -96,14 +96,14 @@ public class ExternalLoginModel : PageModel
             {
                 Input = new InputModel
                 {
-                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty
                 };
             }
             return Page();
         }
     }
 
-    public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostConfirmationAsync(string? returnUrl = null)
     {
         returnUrl = returnUrl ?? Url.Content("~/");
         // Get the information about the user from the external login provider

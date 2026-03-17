@@ -21,8 +21,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
     ArvidsonFotoCoreDbContext entityContext, //TODO: Bör bygga bort denna och enbart använda IApiImageService
-    IApiCategoryService categoryService,
-    IConfiguration _) : ControllerBase
+    IApiCategoryService categoryService) : ControllerBase
 {
     // TODO: Att använda senare om vi vill spara eller läsa bilder från filsystemet
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
@@ -350,7 +349,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
             // Start with the first segment and traverse the category hierarchy
             int? currentCategoryId = null;
-            var matchingChildCategory = (CategoryDto)null;
+            var matchingChildCategory = (CategoryDto?)null;
 
             foreach (var segment in segments)
             {

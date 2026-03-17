@@ -65,11 +65,11 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    private bool LogErrorUrlPost(string visitedUrl)
+    private bool LogErrorUrlPost(string? visitedUrl)
     {
         bool logThisPost = true;
 
-        if (visitedUrl.StartsWith("/images/gallery"))
+        if (visitedUrl?.StartsWith("/images/gallery") == true)
             logThisPost = false;
 
         return logThisPost;
