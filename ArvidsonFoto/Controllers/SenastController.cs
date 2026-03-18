@@ -79,6 +79,9 @@ public class SenastController(
                     var categoryName = category?.MenuDisplayName ?? string.Empty;
                     // Use display path with ÅÄÖ to match physical folder structure
                     var categoryPath = _categoryService.GetCategoryDisplayPathForImage(categoryId ?? 0);
+                    // Use the image's own category path for the actual file location,
+                    // which may be in a subcategory folder (e.g. "Dagrovfåglar/Röd glada")
+                    var imagePath = _categoryService.GetCategoryDisplayPathForImage(image.ImageCategoryId ?? 0);
                     
                     viewModel.AllImagesList.Add(new Core.DTOs.ImageDto
                     {
@@ -86,7 +89,7 @@ public class SenastController(
                         CategoryId = image.ImageCategoryId ?? 0,
                         Name = categoryName,
                         CategoryName = categoryName,
-                        UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
+                        UrlImage = $"bilder/{imagePath}/{image.ImageUrlName}",
                         UrlCategory = $"bilder/{categoryPath}",
                         DateImageTaken = image.ImageDate,
                         DateUploaded = image.ImageUpdate,
