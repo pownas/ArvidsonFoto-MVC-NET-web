@@ -9,6 +9,8 @@ using ArvidsonFoto.Areas.Identity.Data;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
 
 namespace ArvidsonFoto;
 
@@ -45,11 +47,20 @@ public class Program
         try
         {
             Log.Warning("Starting web application in {Environment} mode", environment);
-            
+
+            // Log configuration summary so key parameters are visible in the Aspire dashboard Structured Logs
+            LogConfigurationSummary(configuration, environment, isDevelopment);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add Aspire service defaults (observability, health checks, resilience, service discovery)
             builder.AddServiceDefaults();
+
+            // Expose important configuration values as OpenTelemetry resource attributes so they appear
+            // as metadata on every trace and structured-log entry in the Aspire dashboard
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddAttributes(
+                    GetConfigurationAttributes(builder.Configuration)));
 
             // Add services to the container
             ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
@@ -326,5 +337,90 @@ public class Program
             Log.Information("OpenAPI documentation available at: /scalar/v1");
             Log.Information("OpenAPI JSON schema available at: /openapi/v1.json");
         }
+    }
+
+    /// <summary>
+    /// Logs a structured configuration summary at startup so it is visible in the
+    /// Aspire dashboard's Structured Logs view for each service instance.
+    /// </summary>
+    private static void LogConfigurationSummary(IConfiguration configuration, string environment, bool isDevelopment)
+    {
+        var useInMemoryDb = IsUsingInMemoryDatabase(configuration);
+
+        var dbType = useInMemoryDb ? "InMemory" : "SqlServer";
+        var connectionInfo = useInMemoryDb
+            ? "InMemory"
+            : SanitizeConnectionString(configuration.GetConnectionString("DefaultConnection"));
+
+        var serilogMinLevel = configuration["Serilog:MinimumLevel:Default"] ?? "Information";
+        var logFilePath = configuration["Serilog:WriteTo:0:Args:path"] ?? "logs/appLog.txt";
+
+        var smtpServer = configuration["SmtpSettings:Server"];
+        var smtpPort = configuration["SmtpSettings:Port"] ?? "587";
+        var smtpConfigured = !string.IsNullOrWhiteSpace(smtpServer);
+
+        Log.Information(
+            "Configuration: Environment={Environment}, DatabaseType={DatabaseType}, " +
+            "DatabaseConnection={DatabaseConnection}, LogMinLevel={LogMinLevel}, " +
+            "LogFilePath={LogFilePath}, ConsoleLogging={ConsoleLogging}, " +
+            "SmtpConfigured={SmtpConfigured}, SmtpServer={SmtpServer}, SmtpPort={SmtpPort}",
+            environment,
+            dbType,
+            connectionInfo,
+            serilogMinLevel,
+            logFilePath,
+            isDevelopment,
+            smtpConfigured,
+            smtpConfigured ? smtpServer : "(not configured)",
+            smtpPort);
+    }
+
+    /// <summary>
+    /// Returns OpenTelemetry resource attributes that represent key configuration values.
+    /// These attributes are attached to every trace and structured-log entry exported via OTLP,
+    /// making them visible as metadata in the Aspire dashboard.
+    /// </summary>
+    private static IEnumerable<KeyValuePair<string, object>> GetConfigurationAttributes(IConfiguration configuration)
+    {
+        var useInMemoryDb = IsUsingInMemoryDatabase(configuration);
+
+        var dbType = useInMemoryDb ? "InMemory" : "SqlServer";
+        var serilogMinLevel = configuration["Serilog:MinimumLevel:Default"] ?? "Information";
+        var logFilePath = configuration["Serilog:WriteTo:0:Args:path"] ?? "logs/appLog.txt";
+        var smtpServer = configuration["SmtpSettings:Server"] ?? string.Empty;
+        var smtpPort = configuration["SmtpSettings:Port"] ?? "587";
+
+        return
+        [
+            new KeyValuePair<string, object>("app.config.database_type", dbType),
+            new KeyValuePair<string, object>("app.config.log_min_level", serilogMinLevel),
+            new KeyValuePair<string, object>("app.config.log_file", logFilePath),
+            new KeyValuePair<string, object>("app.config.smtp_server", string.IsNullOrEmpty(smtpServer) ? "(not configured)" : smtpServer),
+            new KeyValuePair<string, object>("app.config.smtp_port", smtpPort),
+        ];
+    }
+
+    /// <summary>
+    /// Returns <c>true</c> when the application is configured to use an in-memory database,
+    /// either via Codespaces environment variables or the <c>UseInMemoryDatabase</c> connection string.
+    /// </summary>
+    private static bool IsUsingInMemoryDatabase(IConfiguration configuration) =>
+        Environment.GetEnvironmentVariable("CODESPACES") != null ||
+        Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
+        configuration.GetConnectionString("UseInMemoryDatabase") == "true";
+
+    /// <summary>
+    /// Returns a sanitized connection string safe for logging by replacing any password value
+    /// with "***" so credentials are never written to logs or the Aspire dashboard.
+    /// </summary>
+    private static string SanitizeConnectionString(string? connectionString)
+    {
+        if (string.IsNullOrEmpty(connectionString))
+            return "(not configured)";
+
+        return System.Text.RegularExpressions.Regex.Replace(
+            connectionString,
+            @"(?i)(password|pwd)\s*=\s*[^;]+",
+            "$1=***");
     }
 }
