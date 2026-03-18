@@ -305,15 +305,15 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <remarks>
     /// This endpoint handles multi-level category paths like "Faglar/Vadare/Pipare/Kustpipare".
     /// It will find the most specific category in the path and return its images.
-    /// When <paramref name="sida"/> is greater than 0, paginated results are returned in the same
-    /// order as the gallery view (newest first by image ID). When <paramref name="sida"/> is 0
+    /// When <paramref name="page"/> is greater than 0, paginated results are returned in the same
+    /// order as the gallery view (newest first by image ID). When <paramref name="page"/> is 0
     /// (default), the legacy behaviour applies sorting via <paramref name="sortBy"/>/<paramref name="sortOrder"/>.
     /// </remarks>
     /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
     /// <param name="sortBy">uploaded (when image was uploaded), imagetaken (when the image was taken) or categoryname (name of the category)</param>
     /// <param name="sortOrder">asc (alphabetically ascending order) or desc (reverse alphabetically descending order)</param>
     /// <param name="limit">number of images per page (default 48)</param>
-    /// <param name="sida">page number for paginated results (1-based); 0 = legacy non-paginated behaviour</param>
+    /// <param name="page">page number for paginated results (1-based); 0 = legacy non-paginated behaviour</param>
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
@@ -327,7 +327,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         [FromQuery] string sortBy = "uploaded", 
         [FromQuery] string sortOrder = "desc", 
         [FromQuery] int limit = 48,
-        [FromQuery] int sida = 0,
+        [FromQuery] int page = 0,
         CancellationToken cancellationToken = default)
     {
         try
@@ -416,11 +416,11 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 int totalPages;
                 int pageSize;
 
-                if (sida > 0)
+                if (page > 0)
                 {
                     // Paginated mode: use the same ordering as the gallery page (ImageId DESC)
                     pageSize = limit > 0 ? limit : 48;
-                    currentPage = sida;
+                    currentPage = page;
                     resultImages = imageService.GetImagesByCategoryIDPaginated(currentCategoryId.Value, currentPage, pageSize);
                 }
                 else

@@ -50,7 +50,7 @@ async function loadNextGalleryPage() {
     var apiPath = galleryUrl.replace(/^\/Bilder\//i, '');
     // Koda URL korrekt (bevara "/" men koda ÅÄÖ etc.)
     var encodedPath = apiPath.split('/').map(encodeURIComponent).join('/');
-    var apiUrl = '/api/Bilder/' + encodedPath + '?sida=' + _nextPageToLoad;
+    var apiUrl = '/api/Bilder/' + encodedPath + '?page=' + _nextPageToLoad;
 
     try {
         var response = await fetch(apiUrl);
