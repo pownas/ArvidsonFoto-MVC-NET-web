@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ArvidsonFoto.Views.Shared;
 
@@ -24,11 +25,22 @@ public static class SharedStaticFunctions
 
         // Displays the total number of weeks in the current year.
         //DateTime LastDay = new System.DateTime(DateTime.Now.Year, 12, 31);
-        //Console.WriteLine("There are {0} weeks in the current year ({1}).", myCal.GetWeekOfYear(LastDay, myCWR, myFirstDOW), LastDay.Year);
+        //Console.WriteLine("There are {0} weeks in the current year ({1}).", myCal.GetWeekOfYear(LastDay, myCWR, myFirstDOW), DateTime.Now.Year);
 
         return myCal.GetWeekOfYear(date, myCWR, myFirstDOW);
     }
 
+    /// <summary>
+    /// Decodes garbled or URL-encoded Swedish characters back to their proper Unicode form.
+    /// </summary>
+    /// <remarks>
+    /// Handles multiple encoding variants that may appear when Swedish text is incorrectly
+    /// decoded, including Mojibake (e.g. "Ã¥"), HTML named references (e.g. "&amp;#xE5;"),
+    /// and double-URL-encoded sequences (e.g. "%C3%83%C2%B6").
+    /// Supported characters: å, ä, ö, Å, Ä, Ö.
+    /// </remarks>
+    /// <param name="replaceAAO">The string that may contain garbled Swedish characters.</param>
+    /// <returns>The string with all recognised garbled sequences replaced by correct Swedish characters.</returns>
     public static string ReplaceAAO(string replaceAAO)
     {
         replaceAAO = replaceAAO.Replace("Ã¥", "å");
@@ -51,6 +63,38 @@ public static class SharedStaticFunctions
         urlText = urlText.Replace(" ", "%20");
 
         return urlText;
+    }
+
+    /// <summary>
+    /// Converts a display name to a URL-safe segment (slug) by replacing Swedish characters
+    /// and spaces.
+    /// </summary>
+    /// <remarks>
+    /// Swedish vowels are transliterated to their ASCII equivalents (å/Å→a/A, ä/Ä→a/A, ö/Ö→o/O)
+    /// and spaces are replaced with hyphens, matching the convention used for <c>menu_URLtext</c>
+    /// in the database (e.g. "Turkos blåvinge" → "Turkos-blavinge").
+    /// Any remaining characters that are not alphanumeric or hyphens are removed, and consecutive
+    /// hyphens are collapsed into a single hyphen.
+    /// </remarks>
+    /// <param name="displayName">The display name to convert, e.g. a category name.</param>
+    /// <returns>A URL-safe segment string, or an empty string if <paramref name="displayName"/> is null or empty.</returns>
+    public static string ToUrlSegment(string? displayName)
+    {
+        if (string.IsNullOrEmpty(displayName)) return string.Empty;
+
+        var segment = displayName
+            .Replace("å", "a").Replace("Å", "A")
+            .Replace("ä", "a").Replace("Ä", "A")
+            .Replace("ö", "o").Replace("Ö", "O")
+            .Replace(" ", "-");
+
+        // Remove any remaining characters that are not alphanumeric or hyphens
+        segment = Regex.Replace(segment, @"[^a-zA-Z0-9\-]", string.Empty);
+
+        // Collapse consecutive hyphens and trim leading/trailing hyphens
+        segment = Regex.Replace(segment, @"-{2,}", "-").Trim('-');
+
+        return segment;
     }
 }
 
