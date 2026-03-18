@@ -113,6 +113,7 @@ public class SenastController(
             
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
+            viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
             
             // OPTIMIZED: Apply sorting and pagination at SQL level
@@ -177,6 +178,7 @@ public class SenastController(
             
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
+            viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
             
             // OPTIMIZED: Apply sorting and pagination at SQL level
