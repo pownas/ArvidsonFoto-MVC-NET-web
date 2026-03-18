@@ -37,4 +37,13 @@ public class ImageListResponse
 
     /// <summary> Querystring: Filter för att begränsa antal resultat via limit (0 = obegränsat resultat, 48 är standard) </summary>
     public int QueryLimit { get; set; }
+
+    /// <summary> Aktuell sida (vid paginering) </summary>
+    public int CurrentPage { get; set; } = 1;
+
+    /// <summary> Totalt antal sidor (vid paginering) </summary>
+    public int TotalPages { get; set; } = 1;
+
+    /// <summary> Antal bilder per sida (vid paginering) </summary>
+    public int PageSize { get; set; } = 48;
 }

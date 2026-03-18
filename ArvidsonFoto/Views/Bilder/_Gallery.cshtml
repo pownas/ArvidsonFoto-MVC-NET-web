@@ -11,6 +11,10 @@
   if (imageList is not null)
       imageCount = imageList.Count();
 
+  // Räkna ut global offset för sidnumrering (sida 2 = offset 48, sida 3 = offset 96 osv.)
+  int pageOffset = Math.Max(0, Model.CurrentPage - 1) * Math.Max(1, Model.PageSize);
+  int totalCount = Model.TotalImageCount > 0 ? Model.TotalImageCount : imageCount;
+
   //Kontroll om det är startsidan eller ej...
   bool startsidan = false;
   if (imageCount.Equals(12) && Model!.SelectedCategory is null || Model!.SelectedCategory is null)
@@ -54,7 +58,12 @@
 }
 else
 {
-  <div id="gallery" class="row">
+  <div id="gallery" class="row"
+       data-current-page="@Model.CurrentPage"
+       data-total-pages="@Model.TotalPages"
+       data-page-size="@Model.PageSize"
+       data-total-images="@Model.TotalImageCount"
+       data-gallery-url="@Model.CurrentUrl">
     @{ var index = 1; }
     @foreach (var img in imageList)
     {
@@ -103,7 +112,7 @@ Tryck för att förstora">
         </figure>
 
         <div class="glightbox-desc row @customDesc">
-          <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDateDisplay</p>
+          <p>@(pageOffset + index) av @totalCount - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDateDisplay</p>
           <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
         </div>
       }
