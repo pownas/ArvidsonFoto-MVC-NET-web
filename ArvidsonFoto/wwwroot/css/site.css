@@ -467,23 +467,38 @@ body {
   background-color: rgba(34, 34, 34, 0.75);
 }
 
-/* Liggande mobil-vy - kompaktare text i glightbox */
-@media (orientation: landscape) and (max-height: 500px) {
+/* Liggande vy - kompaktare text i glightbox (täcker mobiltelefoner, plattor och inzoomad desktop) */
+@media (orientation: landscape) and (max-height: 750px) {
+  .glightbox-mobile .glightbox-container .gslide-description {
+    max-height: 30vh;
+    padding: 8px 11px;
+    padding-bottom: 16px;
+    bottom: 0;
+  }
+  .glightbox-mobile .glightbox-container .gslide-title {
+    font-size: 0.85em;
+    margin-bottom: 2px;
+  }
+  .glightbox-mobile .glightbox-container .gslide-desc {
+    font-size: 0.8em;
+  }
+  .glightbox-mobile .glightbox-container .gslide-description p {
+    margin-bottom: 0;
+  }
+}
+
+/* Liten liggande mobil-vy - ännu mer kompakt (t.ex. telefoner i liggande läge) */
+@media (orientation: landscape) and (max-height: 450px) {
   .glightbox-mobile .glightbox-container .gslide-description {
     max-height: 28vh;
     padding: 5px 11px;
     padding-bottom: 12px;
-    bottom: 0;
   }
   .glightbox-mobile .glightbox-container .gslide-title {
     font-size: 0.8em;
-    margin-bottom: 2px;
   }
   .glightbox-mobile .glightbox-container .gslide-desc {
     font-size: 0.75em;
-  }
-  .glightbox-mobile .glightbox-container .gslide-description p {
-    margin-bottom: 0;
   }
 }
 
