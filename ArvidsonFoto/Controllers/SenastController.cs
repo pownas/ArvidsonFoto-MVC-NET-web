@@ -98,6 +98,7 @@ public class SenastController(
                 }
             }
             
+            viewModel.TotalImageCount = viewModel.AllImagesList.Count;
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
             viewModel.DisplayImagesList = viewModel.AllImagesList
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
