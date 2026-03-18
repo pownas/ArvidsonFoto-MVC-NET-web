@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ArvidsonFoto.Views.Shared;
@@ -66,13 +67,22 @@ public static class SharedStaticFunctions
     }
 
     /// <summary>
-    /// Converts a display name to a URL-safe segment (slug) by replacing Swedish characters
-    /// and spaces.
+    /// Converts a display name to a URL-safe segment (slug) by stripping diacritics and
+    /// replacing spaces with hyphens.
     /// </summary>
     /// <remarks>
-    /// Swedish vowels are transliterated to their ASCII equivalents (å/Å→a/A, ä/Ä→a/A, ö/Ö→o/O)
-    /// and spaces are replaced with hyphens, matching the convention used for <c>menu_URLtext</c>
-    /// in the database (e.g. "Turkos blåvinge" → "Turkos-blavinge").
+    /// Uses Unicode NFD normalization to decompose accented characters into their base letter
+    /// plus a combining diacritical mark, then discards all combining marks. This covers the
+    /// full range of Latin accented characters used in Swedish and common loanwords, including:
+    /// <list type="bullet">
+    ///   <item>Swedish: å/Å→a/A, ä/Ä→a/A, ö/Ö→o/O</item>
+    ///   <item>Acute/grave: é/è→e, á/à→a, í/ì→i, ó/ò→o, ú/ù→u</item>
+    ///   <item>Circumflex: ê→e, â→a, î→i, ô→o, û→u</item>
+    ///   <item>Diaeresis: ë→e, ï→i, ü→u, ÿ→y</item>
+    ///   <item>Other: ñ→n, ç→c</item>
+    /// </list>
+    /// Spaces are replaced with hyphens to match the convention used for <c>menu_URLtext</c>
+    /// in the database (e.g. "Turkos blåvinge" → "Turkos-blavinge", "café" → "cafe").
     /// Any remaining characters that are not alphanumeric or hyphens are removed, and consecutive
     /// hyphens are collapsed into a single hyphen.
     /// </remarks>
@@ -82,11 +92,14 @@ public static class SharedStaticFunctions
     {
         if (string.IsNullOrEmpty(displayName)) return string.Empty;
 
-        var segment = displayName
-            .Replace("å", "a").Replace("Å", "A")
-            .Replace("ä", "a").Replace("Ä", "A")
-            .Replace("ö", "o").Replace("Ö", "O")
-            .Replace(" ", "-");
+        // NFD decomposes each accented character into base letter + combining diacritical mark(s).
+        // Filtering out NonSpacingMark characters then removes all diacritics (å→a, é→e, ü→u, etc.).
+        var withoutDiacritics = new string(
+            displayName.Normalize(NormalizationForm.FormD)
+                       .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                       .ToArray());
+
+        var segment = withoutDiacritics.Replace(" ", "-");
 
         // Remove any remaining characters that are not alphanumeric or hyphens
         segment = Regex.Replace(segment, @"[^a-zA-Z0-9\-]", string.Empty);
