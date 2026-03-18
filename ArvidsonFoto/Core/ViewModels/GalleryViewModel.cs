@@ -20,11 +20,17 @@ public class GalleryViewModel
     /// <summary>Vald kategori för galleriet</summary>
     public CategoryDto SelectedCategory { get; set; } = new();
 
+    /// <summary>Totalt antal bilder i kategorin (används bl.a. i metadata)</summary>
+    public int TotalImageCount { get; set; } = 0;
+
     /// <summary>Totalt antal sidor i galleriet</summary>
     public int TotalPages { get; set; } = -1;
     
     /// <summary>Aktuell sida som visas</summary>
     public int CurrentPage { get; set; } = -1;
+
+    /// <summary>Antal bilder per sida</summary>
+    public int PageSize { get; set; } = 48;
     
     /// <summary>Aktuell URL för sidan</summary>
     public string CurrentUrl { get; set; } = string.Empty;

@@ -18,7 +18,7 @@ public class AppLogReaderService
         { //Försöker öppna filen och läsa den...
             using (StreamReader reader = File.OpenText(inputDataPath))//Läser filen, eller ger null om ingen fil finns
             {
-                string line = "";
+                string? line = "";
                 while ((line = reader.ReadLine()) != null) //Loopar igenom alla rader (line) i filen
                 {
                     dataList.Add(line);

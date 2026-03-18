@@ -62,7 +62,7 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the GbMessage (maps to GbText in the new model)
     /// </summary>
-    public static string GbMessage(this TblGb gb) => gb.GbText;
+    public static string? GbMessage(this TblGb gb) => gb.GbText;
 
     /// <summary>
     /// Gets the GbDate safely

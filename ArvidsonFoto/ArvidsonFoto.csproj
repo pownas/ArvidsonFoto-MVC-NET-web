@@ -15,7 +15,7 @@
     <RootNamespace>ArvidsonFoto</RootNamespace>
     <AssemblyName>ArvidsonFoto</AssemblyName>
     <IsPackable>false</IsPackable>
-    <Version>3.10.8</Version>
+    <Version>3.10.9</Version>
     <InformationalVersion>$(Version)</InformationalVersion>
   </PropertyGroup>
 

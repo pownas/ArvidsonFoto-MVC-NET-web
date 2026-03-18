@@ -27,18 +27,18 @@ public class EnableAuthenticatorModel : PageModel
         _urlEncoder = urlEncoder;
     }
 
-    public string SharedKey { get; set; }
+    public string? SharedKey { get; set; }
 
-    public string AuthenticatorUri { get; set; }
-
-    [TempData]
-    public string[] RecoveryCodes { get; set; }
+    public string? AuthenticatorUri { get; set; }
 
     [TempData]
-    public string StatusMessage { get; set; }
+    public string[]? RecoveryCodes { get; set; }
+
+    [TempData]
+    public string? StatusMessage { get; set; }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
     public class InputModel
     {
@@ -46,7 +46,7 @@ public class EnableAuthenticatorModel : PageModel
         [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Text)]
         [Display(Name = "Verification Code")]
-        public string Code { get; set; }
+        public string Code { get; set; } = null!;
     }
 
     public async Task<IActionResult> OnGetAsync()
@@ -119,10 +119,10 @@ public class EnableAuthenticatorModel : PageModel
             unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
 
-        SharedKey = FormatKey(unformattedKey);
+        SharedKey = FormatKey(unformattedKey ?? string.Empty);
 
         var email = await _userManager.GetEmailAsync(user);
-        AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey);
+        AuthenticatorUri = GenerateQrCodeUri(email ?? string.Empty, unformattedKey ?? string.Empty);
     }
 
     private string FormatKey(string unformattedKey)

@@ -96,7 +96,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
         var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-        var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+        var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
         return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
     }
 
@@ -121,7 +121,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-            var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+            var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
             return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
         }
         catch (Exception ex)
@@ -499,7 +499,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-            var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+            var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
             return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
         }
         catch (Exception ex)
@@ -549,7 +549,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+                var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
                 return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
@@ -561,7 +561,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                     Log.Debug("Found category by ID fallback: {Id}", categoryId);
                     var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                     var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                    var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+                    var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
                     return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
                 }
             }
@@ -572,7 +572,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 Log.Debug("Found category by display name fallback: {Name}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+                var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
                 return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
@@ -582,7 +582,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 Log.Debug("Found category by partial match: {Segment}", urlSegment);
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
-                var categoryImageCount = dbContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+                var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
                 return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
@@ -750,6 +750,49 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         var path = segments.Count > 0 ? string.Join("/", segments).ToLowerInvariant() : string.Empty;
         _categoryPathCache[categoryId] = path;
+    }
+
+    public List<int> GetAllDescendantCategoryIds(int categoryId)
+    {
+        if (categoryId <= 0)
+            return new List<int>();
+
+        try
+        {
+            // Load the full flat list of (id, parentId) pairs in a single query for efficiency
+            var allCategories = _entityContext.TblMenus
+                .Where(c => c.MenuCategoryId.HasValue)
+                .Select(c => new { Id = c.MenuCategoryId!.Value, ParentId = c.MenuParentCategoryId })
+                .ToList();
+
+            var parentLookup = allCategories
+                .GroupBy(c => c.ParentId ?? 0)
+                .ToDictionary(g => g.Key, g => g.Select(c => c.Id).ToList());
+
+            var result = new List<int>();
+            var queue = new Queue<int>();
+            queue.Enqueue(categoryId);
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                if (parentLookup.TryGetValue(current, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        result.Add(child);
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Error in GetAllDescendantCategoryIds: {Message}", ex.Message);
+            return new List<int>();
+        }
     }
 
     public Dictionary<int, string> GetCategoryNamesBulk(List<int> categoryIds)

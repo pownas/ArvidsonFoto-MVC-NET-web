@@ -21,8 +21,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
     ArvidsonFotoCoreDbContext entityContext, //TODO: Bör bygga bort denna och enbart använda IApiImageService
-    IApiCategoryService categoryService,
-    IConfiguration _) : ControllerBase
+    IApiCategoryService categoryService) : ControllerBase
 {
     // TODO: Att använda senare om vi vill spara eller läsa bilder från filsystemet
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
@@ -306,11 +305,15 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <remarks>
     /// This endpoint handles multi-level category paths like "Faglar/Vadare/Pipare/Kustpipare".
     /// It will find the most specific category in the path and return its images.
+    /// When <paramref name="page"/> is greater than 0, paginated results are returned in the same
+    /// order as the gallery view (newest first by image ID). When <paramref name="page"/> is 0
+    /// (default), the legacy behaviour applies sorting via <paramref name="sortBy"/>/<paramref name="sortOrder"/>.
     /// </remarks>
     /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
     /// <param name="sortBy">uploaded (when image was uploaded), imagetaken (when the image was taken) or categoryname (name of the category)</param>
     /// <param name="sortOrder">asc (alphabetically ascending order) or desc (reverse alphabetically descending order)</param>
-    /// <param name="limit">number of images to get</param>
+    /// <param name="limit">number of images per page (default 48)</param>
+    /// <param name="page">page number for paginated results (1-based); 0 = legacy non-paginated behaviour</param>
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
@@ -324,6 +327,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         [FromQuery] string sortBy = "uploaded", 
         [FromQuery] string sortOrder = "desc", 
         [FromQuery] int limit = 48,
+        [FromQuery] int page = 0,
         CancellationToken cancellationToken = default)
     {
         try
@@ -350,7 +354,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
             // Start with the first segment and traverse the category hierarchy
             int? currentCategoryId = null;
-            var matchingChildCategory = (CategoryDto)null;
+            var matchingChildCategory = (CategoryDto?)null;
 
             foreach (var segment in segments)
             {
@@ -389,25 +393,62 @@ public class ImageApiController(ILogger<ImageApiController> logger,
             // Get images for the final category ID
             if (currentCategoryId.HasValue && currentCategoryId.Value > 0)
             {
-                var images = imageService.GetImagesByCategoryID(currentCategoryId.Value);
-                
-                // Apply sorting and limiting
-                var sortedImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
-
                 var totalCategoryImageCount = imageService.GetCountedCategoryId(currentCategoryId.Value);
+
+                // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
+                // In that case look up the category by ID so we can populate name and URL correctly.
+                string categoryName;
+                string categoryUrl;
+                if (matchingChildCategory != null)
+                {
+                    categoryName = matchingChildCategory.Name ?? "Unknown";
+                    categoryUrl = matchingChildCategory.UrlCategoryPathFull ?? "Unknown";
+                }
+                else
+                {
+                    var resolvedCategory = categoryService.GetById(currentCategoryId.Value);
+                    categoryName = resolvedCategory.Name ?? "Unknown";
+                    categoryUrl = resolvedCategory.UrlCategoryPath ?? "Unknown";
+                }
+
+                List<ImageDto> resultImages;
+                int currentPage;
+                int totalPages;
+                int pageSize;
+
+                if (page > 0)
+                {
+                    // Paginated mode: use the same ordering as the gallery page (ImageId DESC)
+                    pageSize = limit > 0 ? limit : 48;
+                    currentPage = page;
+                    resultImages = imageService.GetImagesByCategoryIDPaginated(currentCategoryId.Value, currentPage, pageSize);
+                }
+                else
+                {
+                    // Legacy mode: load all images and apply custom sorting/limit
+                    var images = imageService.GetImagesByCategoryID(currentCategoryId.Value);
+                    resultImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
+                    pageSize = limit > 0 ? limit : 48;
+                    currentPage = 1;
+                }
+
+                totalPages = (int)Math.Ceiling(totalCategoryImageCount / (decimal)pageSize);
 
                 var response = new ImageListResponse
                 {
                     CategoryId = currentCategoryId.Value,
-                    CategoryName = $"{matchingChildCategory?.Name ?? "Unknown"}",
-                    CategoryUrl =  $"{matchingChildCategory?.UrlCategoryPathFull ?? "Unknown"}",
+                    CategoryName = categoryName,
+                    CategoryUrl = categoryUrl,
                     CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
                     ImageCategoryTotalCount = totalCategoryImageCount,
-                    ImageResultCount = sortedImages.Count,
-                    Images = sortedImages,
-                    QueryLimit = limit,
+                    ImageResultCount = resultImages.Count,
+                    Images = resultImages,
+                    QueryLimit = pageSize,
                     QuerySortBy = sortBy,
                     QuerySortOrder = sortOrder,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
+                    PageSize = pageSize,
                 };
                 return Ok(response);
             }

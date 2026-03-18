@@ -55,7 +55,8 @@ public static class CategoryMappingExtensions
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.Name,
             MenuUrlSegment = categoryDto.UrlCategoryPath,
-            MenuParentCategoryId = categoryDto.ParentCategoryId
+            MenuParentCategoryId = categoryDto.ParentCategoryId,
+            MenuDateUpdated = categoryDto.DateUpdated
         };
     }
 

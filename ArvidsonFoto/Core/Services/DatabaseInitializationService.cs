@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ArvidsonFoto.Core.Data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ArvidsonFoto.Core.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 
 namespace ArvidsonFoto.Core.Services;
 
@@ -156,7 +157,7 @@ public class DatabaseInitializationService
         try
         {
             // Try ArvidsonFotoIdentityContext first (used in API)
-            var identityContext = services.GetService<ArvidsonFotoIdentityContext>();
+            var identityContext = services.GetService<IdentityContext>();
             if (identityContext != null)
             {
                 if (identityContext.Database.IsRelational())

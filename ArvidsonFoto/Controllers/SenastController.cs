@@ -79,6 +79,9 @@ public class SenastController(
                     var categoryName = category?.MenuDisplayName ?? string.Empty;
                     // Use display path with ÅÄÖ to match physical folder structure
                     var categoryPath = _categoryService.GetCategoryDisplayPathForImage(categoryId ?? 0);
+                    // Use the image's own category path for the actual file location,
+                    // which may be in a subcategory folder (e.g. "Dagrovfåglar/Röd glada")
+                    var imagePath = _categoryService.GetCategoryDisplayPathForImage(image.ImageCategoryId ?? 0);
                     
                     viewModel.AllImagesList.Add(new Core.DTOs.ImageDto
                     {
@@ -86,7 +89,7 @@ public class SenastController(
                         CategoryId = image.ImageCategoryId ?? 0,
                         Name = categoryName,
                         CategoryName = categoryName,
-                        UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
+                        UrlImage = $"bilder/{imagePath}/{image.ImageUrlName}",
                         UrlCategory = $"bilder/{categoryPath}",
                         DateImageTaken = image.ImageDate,
                         DateUploaded = image.ImageUpdate,
@@ -95,6 +98,7 @@ public class SenastController(
                 }
             }
             
+            viewModel.TotalImageCount = viewModel.AllImagesList.Count;
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
             viewModel.DisplayImagesList = viewModel.AllImagesList
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
@@ -109,6 +113,7 @@ public class SenastController(
             
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
+            viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
             
             // OPTIMIZED: Apply sorting and pagination at SQL level
@@ -173,6 +178,7 @@ public class SenastController(
             
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
+            viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
             
             // OPTIMIZED: Apply sorting and pagination at SQL level
@@ -232,7 +238,7 @@ public class SenastController(
         else
         {
             var url = Url.ActionContext.HttpContext;
-            string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
             Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
 
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });

@@ -9,13 +9,13 @@ public class ImageListResponse
     public int CategoryId { get; set; } = -1;
 
     /// <summary> Kategori Namn </summary>
-    public string CategoryName { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
 
     /// <summary> Kategori URL med gamla formatet som innehåller åäö </summary>
-    public string CategoryUrlWithAAO { get; set; }
+    public string CategoryUrlWithAAO { get; set; } = string.Empty;
 
     /// <summary> Kategori Url </summary>
-    public string CategoryUrl { get; set; }
+    public string CategoryUrl { get; set; } = string.Empty;
 
     /// <summary> Antal bilder i denna kategori </summary>
     public int ImageCategoryTotalCount { get; set; } = -1;
@@ -24,17 +24,26 @@ public class ImageListResponse
     public int ImageResultCount { get; set; }
 
     /// <summary> Lista av bilder i denna kategori. </summary>
-    public List<ImageDto> Images { get; set; }
+    public List<ImageDto> Images { get; set; } = [];
 
 
     /// <summary> Querystring: Filter för sortering av resultatet </summary>
     /// <remarks> Exempel: "uploaded" (datum när bilden laddades upp), "imagetaken" (datum när bilden togs) or "categoryname" (namn för kategorin) </remarks>
-    public string QuerySortBy { get; set; }
+    public string QuerySortBy { get; set; } = string.Empty;
 
     /// <summary> Querystring: Filter för sorteringsordning av resultatet (asc, desc) </summary>
     /// <remarks> asc (alphabetically ascending order) or desc (reverse alphabetically descending order) </remarks>
-    public string QuerySortOrder { get; set; }
+    public string QuerySortOrder { get; set; } = string.Empty;
 
     /// <summary> Querystring: Filter för att begränsa antal resultat via limit (0 = obegränsat resultat, 48 är standard) </summary>
     public int QueryLimit { get; set; }
+
+    /// <summary> Aktuell sida (vid paginering) </summary>
+    public int CurrentPage { get; set; } = 1;
+
+    /// <summary> Totalt antal sidor (vid paginering) </summary>
+    public int TotalPages { get; set; } = 1;
+
+    /// <summary> Antal bilder per sida (vid paginering) </summary>
+    public int PageSize { get; set; } = 48;
 }
