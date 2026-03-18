@@ -42,6 +42,11 @@ public partial class TblImage()
     /// <remarks> Beskrivning av bilden, kan vara tom sträng. </remarks>
     /// <example>Hane, beskrivning av blåmes...</example>
     public string? ImageDescription { get; set; } = string.Empty;
+    
+    /// <summary> Bildens beskrivning (engelska) </summary>
+    /// <remarks> Engelsk beskrivning av bilden, kan vara tom sträng. </remarks>
+    /// <example>Male, description of blue tit...</example>
+    public string? ImageDescriptionEn { get; set; } = string.Empty;
 
     /// <summary> Datum och tid när bilden laddades upp/uppdaterades senast </summary>
     /// <example>2021-12-03T19:23:42</example>
