@@ -58,4 +58,11 @@
     <ProjectReference Include="..\ArvidsonFoto.ServiceDefaults\ArvidsonFoto.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <!-- Allow the E2E test project to access internal members (ConfigureServices / ConfigureMiddleware) -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>ArvidsonFoto.Tests.E2E</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
