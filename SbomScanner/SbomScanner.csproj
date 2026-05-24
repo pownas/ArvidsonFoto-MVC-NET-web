@@ -4,14 +4,19 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="packages.lock.json" />
-  </ItemGroup>
+  <Target Name="CopyLockFilesAndProps" AfterTargets="Build">
+    <ItemGroup>
+      <LockFiles Include="..\**\packages.lock.json" Exclude="..\SbomScanner\**\packages.lock.json" />
+      <PropsFile Include="..\Directory.Packages.props" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="packages.lock.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <Copy SourceFiles="@(LockFiles)"
+          DestinationFiles="@(LockFiles->'$(TargetDir)ProjectLockfiles\%(RecursiveDir)packages.lock.json')"
+          SkipUnchangedFiles="true" />
 
+    <Copy SourceFiles="@(PropsFile)"
+          DestinationFolder="$(TargetDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+  
 </Project>
