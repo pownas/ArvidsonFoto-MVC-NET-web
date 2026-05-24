@@ -15,7 +15,7 @@
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <AssemblyName>$(AssemblyName)</AssemblyName>
     <IsPackable>false</IsPackable>
-    <Version>3.10.9</Version>
+    <Version>3.10.10</Version>
     <InformationalVersion>$(Version)</InformationalVersion>
   </PropertyGroup>
 </Project>
