@@ -1,5 +1,7 @@
-﻿<Solution>
-  <Project Path=".SolutionItems.csproj" />
+<Solution>
+  <Project Path=".SolutionItems.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="ArvidsonFoto.AppHost/ArvidsonFoto.AppHost.csproj" />
   <Project Path="ArvidsonFoto.ServiceDefaults/ArvidsonFoto.ServiceDefaults.csproj" />
   <Project Path="ArvidsonFoto.Tests.E2E/ArvidsonFoto.Tests.E2E.csproj" />
