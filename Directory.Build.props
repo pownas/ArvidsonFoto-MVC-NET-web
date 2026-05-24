@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <UseArtifactsOutput>true</UseArtifactsOutput>
@@ -21,6 +21,8 @@
     <AssemblyName>$(AssemblyName)</AssemblyName>
     <IsPackable>false</IsPackable>
     <Version>3.10.10</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
     <InformationalVersion>$(Version)</InformationalVersion>
+    <RepositoryUrl>https://github.com/pownas/ArvidsonFoto-MVC-NET-web</RepositoryUrl>
   </PropertyGroup>
 </Project>

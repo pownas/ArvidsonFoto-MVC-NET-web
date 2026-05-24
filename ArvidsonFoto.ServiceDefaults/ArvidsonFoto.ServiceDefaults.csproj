@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsAspireSharedProject>true</IsAspireSharedProject>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>

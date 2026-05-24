@@ -1,49 +1,51 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Library</OutputType>
-		<CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+  </PropertyGroup>
 
-	<ItemGroup Label="Remove BLOBs">
-		<Compile Remove="**\*.cs" />
-		<None Remove="ArvidsonFoto*\**\*.*" />
-		<None Remove="SbomScanner\**\*.*" />
-	</ItemGroup>
+  <PropertyGroup>
+    <IsTrimmable>True</IsTrimmable>
+    <IsAotCompatible>True</IsAotCompatible>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
 
-	<ItemGroup Label="Include BLOBs">
-		<None Include=".config\**\*.*" />
-		<None Include=".github\**\*.*" />
-		<None Include="artifacts\**\*.*" />
-	</ItemGroup>
+  <ItemGroup Label="Remove BLOBs">
+    <Compile Remove="**\*.cs" />
+    <None Remove="ArvidsonFoto*\**\*.*" />
+    <None Remove="SbomScanner\**\*.*" />
+  </ItemGroup>
 
-	<ItemGroup Label="Include BLOBs in ZIP">
-		<MySolutionBlobs Include="$(SolutionDir)SharedConfigs\**\*.*" />
-		<MySolutionBlobs Include="$(SolutionDir)DeployScripts\**\*.ps1" />
-		<MySolutionBlobs Include="$(SolutionDir)global.json" />
-		<MySolutionBlobs Include="$(SolutionDir)LICENSE" />
-		<MySolutionBlobs Include="$(SolutionDir)README.md" />
-	</ItemGroup>
+  <ItemGroup Label="Include BLOBs">
+    <None Include=".config\**\*.*" />
+    <None Include=".github\**\*.*" />
+  </ItemGroup>
 
-	<Target Name="PackageSolutionBlobs" AfterTargets="Build">
-		<PropertyGroup>
-			<TargetBlobFolder>$(TargetDir)SolutionBlobs\</TargetBlobFolder>
-		</PropertyGroup>
+  <ItemGroup Label="Include BLOBs in ZIP">
+    <MySolutionBlobs Include="$(SolutionDir)SharedConfigs\**\*.*" />
+    <MySolutionBlobs Include="$(SolutionDir)DeployScripts\**\*.ps1" />
+    <MySolutionBlobs Include="$(SolutionDir)global.json" />
+    <MySolutionBlobs Include="$(SolutionDir)LICENSE" />
+    <MySolutionBlobs Include="$(SolutionDir)README.md" />
+  </ItemGroup>
 
-		<Message Importance="high" Text="--- Dynamic Blob Packaging Started ---" />
+  <Target Name="PackageSolutionBlobs" AfterTargets="Build">
+    <PropertyGroup>
+      <TargetBlobFolder>$(TargetDir)SolutionBlobs\</TargetBlobFolder>
+    </PropertyGroup>
 
-		<RemoveDir Directories="$(TargetBlobFolder)" Condition="Exists('$(TargetBlobFolder)')" />
+    <Message Importance="high" Text="--- Dynamic Blob Packaging Started ---" />
 
-		<Copy SourceFiles="@(MySolutionBlobs)"
-			  DestinationFiles="@(MySolutionBlobs->'$(TargetBlobFolder)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <RemoveDir Directories="$(TargetBlobFolder)" Condition="Exists('$(TargetBlobFolder)')" />
 
-		<ZipDirectory SourceDirectory="$(TargetBlobFolder)"
-					  DestinationFile="$(TargetDir)SolutionItems_Blob.zip"
-					  Overwrite="true" />
+    <Copy SourceFiles="@(MySolutionBlobs)" DestinationFiles="@(MySolutionBlobs->'$(TargetBlobFolder)%(RecursiveDir)%(Filename)%(Extension)')" />
 
-		<Message Importance="high" Text="--- Blob created successfully at: $(TargetDir)SolutionItems_Blob.zip ---" />
-	</Target>
+    <ZipDirectory SourceDirectory="$(TargetBlobFolder)" DestinationFile="$(TargetDir)SolutionItems_Blob.zip" Overwrite="true" />
+
+    <Message Importance="high" Text="--- Blob created successfully at: $(TargetDir)SolutionItems_Blob.zip ---" />
+  </Target>
 
 </Project>
