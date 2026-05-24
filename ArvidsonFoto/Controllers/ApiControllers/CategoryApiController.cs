@@ -248,7 +248,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetById called with ID: {CategoryId}", categoryId);
-            
+
             if (categoryId <= 0)
             {
                 return Problem(
@@ -260,7 +260,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             }
 
             var category = apiCategoryService.GetById(categoryId);
-            
+
             if (category == null || category.CategoryId == -1)
             {
                 return Problem(
@@ -303,7 +303,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetSubsList called with ID: {CategoryId}", categoryId);
-            
+
             if (categoryId <= 0)
             {
                 return Problem(
@@ -344,7 +344,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetChildren called with ID: {CategoryId}", categoryId);
-            
+
             var children = apiCategoryService.GetChildrenByParentId(categoryId ?? 0);
             return Ok(children ?? new List<CategoryDto>());
         }
@@ -379,7 +379,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetNameById called with ID: {CategoryId}", categoryId);
-            
+
             if (categoryId <= 0)
             {
                 return Problem(
@@ -435,7 +435,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetIdByName called with name: {CategoryName}", categoryName);
-            
+
             if (string.IsNullOrWhiteSpace(categoryName))
             {
                 return Problem(
@@ -538,7 +538,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetByUrlSegment called with: {UrlSegment}", urlSegment);
-            
+
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
                 return Problem(
@@ -582,7 +582,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetIdByUrlSegment called with: {UrlSegment}", urlSegment);
-            
+
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
                 return Problem(
@@ -625,7 +625,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogInformation("Category - GetByUrlSegmentWithFallback called with: {UrlSegment}", urlSegment);
-            
+
             if (string.IsNullOrWhiteSpace(urlSegment))
             {
                 return Problem(
@@ -672,9 +672,9 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         try
         {
             logger.LogDebug("Category - GetAllCategoriesLightweight called (optimized for client cache)");
-            
+
             var allCategories = apiCategoryService.GetAll();
-            
+
             // Return lightweight version without image counts, last image, etc.
             var lightweightCategories = allCategories.Select(c => new
             {
@@ -684,9 +684,9 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                 urlCategoryPathFull = c.UrlCategoryPathFull,
                 parentCategoryId = c.ParentCategoryId
             }).ToList();
-            
+
             logger.LogDebug("Returned {Count} lightweight categories for client caching", lightweightCategories.Count);
-            
+
             return Ok(lightweightCategories);
         }
         catch (Exception ex)
