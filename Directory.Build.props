@@ -9,6 +9,11 @@
     <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <UseArtifactsOutput>true</UseArtifactsOutput>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup Label="AssemblyInfo">
