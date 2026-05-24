@@ -2,11 +2,11 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "Aspire.Dashboard.Sdk.win-x64": {
+      "Aspire.Dashboard.Sdk.win-arm64": {
         "type": "Direct",
         "requested": "[13.3.5, )",
         "resolved": "13.3.5",
-        "contentHash": "+3GdNRk7la3OYkAQE0MTROv5gdSF4EhhUMfFkH0BSCBSQDyuCNeBOhsXw/Ja8zgL8o43YTn/e2Vn8/Ynr4c8ew=="
+        "contentHash": "B9IBH6oJq84kGvZgDp+ywXksa2mCGtR/9alCf2f6Sm5hHzp6Y0x6jrzSBfH2FzXwtwo1sunsI/kcLtWkryck6A=="
       },
       "Aspire.Hosting.AppHost": {
         "type": "Direct",
@@ -43,11 +43,11 @@
           "System.IO.Hashing": "10.0.3"
         }
       },
-      "Aspire.Hosting.Orchestration.win-x64": {
+      "Aspire.Hosting.Orchestration.win-arm64": {
         "type": "Direct",
         "requested": "[13.3.5, )",
         "resolved": "13.3.5",
-        "contentHash": "rFxTI0N9UQx57ekrT7mxvh+oy0Q+/1GbEnIPkEKbJkmzt0juFXy8gfr41XU0mRKgdLBEsVxTenNlwqRaUk6NJw=="
+        "contentHash": "9ZvhrDJ/dXfqn5hWyegN3h82y5VwxVypYdZUXpwrNFs1p125j3KaUrN1oiUh71ncBmeba711CY9E9KEmU7LW2w=="
       },
       "Aspire.Hosting.SqlServer": {
         "type": "Direct",
@@ -834,7 +834,7 @@
       },
       "Azure.Identity": {
         "type": "CentralTransitive",
-        "requested": "[1.19.0, )",
+        "requested": "[1.21.0, )",
         "resolved": "1.21.0",
         "contentHash": "GeFv8sGwRKvDKwI2WFy8r0mhmlxEVZg24Sit2NogTjiSO8RVjllWM65OT6e1sKjOvG8V74y7hAbaELUUPjZQSw==",
         "dependencies": {
