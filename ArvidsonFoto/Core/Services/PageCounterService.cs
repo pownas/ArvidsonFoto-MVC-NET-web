@@ -15,7 +15,7 @@ namespace ArvidsonFoto.Core.Services;
 public class PageCounterService : IPageCounterService
 {
     private readonly ArvidsonFotoCoreDbContext _context;
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PageCounterService"/> class.
     /// </summary>
@@ -32,15 +32,15 @@ public class PageCounterService : IPageCounterService
     public void AddPageCount(string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
-        
+
         try
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == false 
+                .FirstOrDefault(p => p.PicturePage == false
                                   && p.PageName == pageName
                                   && p.MonthViewed == monthViewed);
-            
+
             if (existingCounter != null)
             {
                 // Update existing record
@@ -78,15 +78,15 @@ public class PageCounterService : IPageCounterService
     public void AddCategoryCount(int categoryId, string pageName)
     {
         string monthViewed = DateTime.Now.ToString("yyyy-MM");
-        
+
         try
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == true 
-                                  && p.CategoryId == categoryId 
+                .FirstOrDefault(p => p.PicturePage == true
+                                  && p.CategoryId == categoryId
                                   && p.MonthViewed == monthViewed);
-            
+
             if (existingCounter != null)
             {
                 // Update existing record
@@ -206,11 +206,11 @@ public class PageCounterService : IPageCounterService
         {
             var targetDate = currentDate.AddMonths(-i);
             var yearMonth = targetDate.ToString("yyyy-MM");
-            
+
             var monthlyViews = _context.TblPageCounter
                 .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
                 .Sum(p => p.PageViews);
-            
+
             result[yearMonth] = monthlyViews;
         }
 

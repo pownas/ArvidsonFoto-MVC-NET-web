@@ -1,0 +1,54 @@
+﻿<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- ArvidsonFoto.csproj -->
+    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="MailKit" Version="4.16.0" />
+    <PackageVersion Include="MimeKit" Version="4.16.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8" />
+    <PackageVersion Include="Serilog" Version="4.3.1" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageVersion Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
+    <PackageVersion Include="LigerShark.WebOptimizer.Sass" Version="3.0.147" />
+    <PackageVersion Include="JavaScriptEngineSwitcher.V8" Version="3.34.1" />
+    <PackageVersion Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.31.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.14.14" />
+    <!-- ArvidsonFoto.AppHost.csproj -->
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.3.5" />
+    <!-- ArvidsonFoto.ServiceDefaults.csproj -->
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
+    <!-- ArvidsonFoto.Tests.Unit.csproj -->
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="13.3.5" />
+    <PackageVersion Include="KubernetesClient" Version="19.0.2" />
+    <!-- ArvidsonFoto.Tests.Integration.csproj -->
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.8" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.2.3" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
+    <PackageVersion Include="AngleSharp" Version="1.4.0" />
+    <!-- ArvidsonFoto.Tests.E2E.csproj -->
+    <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.60.0" />
+    <!-- ArvidsonFoto.Tests.Unit.csproj -AND- ArvidsonFoto.Tests.E2E.csproj -->
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <!-- ArvidsonFoto.Tests.Unit.csproj -AND- ArvidsonFoto.Tests.Integration.csproj -AND- ArvidsonFoto.Tests.E2E.csproj -->
+    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+  </ItemGroup>
+</Project>

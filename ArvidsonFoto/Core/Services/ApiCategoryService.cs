@@ -43,7 +43,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     /// <summary> Simple in-memory cache for category paths to improve performance </summary>
     private static readonly ConcurrentDictionary<int, string> _categoryPathCache = new();
-    
+
     /// <summary> Simple in-memory cache for category names to improve performance </summary>
     private static readonly ConcurrentDictionary<int, string> _categoryNameCache = new();
 
@@ -140,14 +140,14 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         }
 
         var categories = _entityContext.TblMenus.ToList();
-        
+
         // OPTIMIZED: Bulk load all category IDs to pre-cache paths
         var allCategoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
         if (allCategoryIds.Any())
         {
             GetCategoryPathsBulk(allCategoryIds);
         }
-        
+
         // OPTIMIZED: Build lightweight CategoryDtos without last image (expensive query)
         // Last image is only needed when displaying category details, not for listing
         var categoryDtos = categories.Select(category =>
@@ -208,19 +208,19 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             {
                 return cachedName;
             }
-            
+
             var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id.Value);
             if (category == null)
             {
                 Log.Information("Could not find category name for id: {Id}", id);
                 return "Not found";
             }
-            
+
             var name = category.MenuDisplayName ?? "Not found";
-            
+
             // Cache the result
             _categoryNameCache[id.Value] = name;
-            
+
             return name;
         }
         catch (Exception ex)
