@@ -34,7 +34,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
     <!-- ArvidsonFoto.Tests.Unit.csproj -->
-    <PackageVersion Include="Aspire.Hosting.Testing" Version="13.1.2" />
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="13.3.5" />
     <PackageVersion Include="KubernetesClient" Version="19.0.2" />
     <!-- ArvidsonFoto.Tests.Integration.csproj -->
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.5" />
