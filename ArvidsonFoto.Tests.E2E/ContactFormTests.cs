@@ -1,4 +1,4 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
 namespace ArvidsonFoto.Tests.E2E;
 
@@ -12,7 +12,7 @@ public class ContactFormTests : IAsyncLifetime
     private IBrowser? _browser;
     private const string BaseUrl = "https://localhost:5001"; // Default local URL
 
-    public async Task InitializeAsync()
+    async ValueTask IAsyncLifetime.InitializeAsync()
     {
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -21,11 +21,13 @@ public class ContactFormTests : IAsyncLifetime
         });
     }
 
-    public async Task DisposeAsync()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (_browser != null)
             await _browser.CloseAsync();
         
+        GC.SuppressFinalize(this);
+
         _playwright?.Dispose();
     }
 
