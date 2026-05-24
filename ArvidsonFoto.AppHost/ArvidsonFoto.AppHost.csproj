@@ -1,4 +1,4 @@
-﻿<Project Sdk="Aspire.AppHost.Sdk/13.1.2">
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.3.5">
 
   <ItemGroup>
     <ProjectReference Include="..\ArvidsonFoto\ArvidsonFoto.csproj" />
@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <UserSecretsId>327cb2dd-ebf6-45e3-af0f-e6311e932efe</UserSecretsId>
+    <UserSecretsId>ArvidsonFoto-AppHost-327cb2dd-ebf6-45e3-af0f-e6311e932efe</UserSecretsId>
   </PropertyGroup>
 
 </Project>
