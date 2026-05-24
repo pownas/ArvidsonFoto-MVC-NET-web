@@ -1,0 +1,21 @@
+﻿<Project>
+  <PropertyGroup Label="Common">
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
+
+  <PropertyGroup Label="AssemblyInfo">
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <AssemblyName>$(AssemblyName)</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <Version>3.10.9</Version>
+    <InformationalVersion>$(Version)</InformationalVersion>
+  </PropertyGroup>
+</Project>
