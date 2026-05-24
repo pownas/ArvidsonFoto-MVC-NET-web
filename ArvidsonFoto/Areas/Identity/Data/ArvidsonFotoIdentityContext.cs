@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArvidsonFoto.Areas.Identity.Data;
 
-public class ArvidsonFotoIdentityContext : IdentityDbContext<ArvidsonFotoUser>
+public class ArvidsonFotoIdentityContext(DbContextOptions<ArvidsonFotoIdentityContext> options) : IdentityDbContext<ArvidsonFotoUser>(options)
 {
-    public ArvidsonFotoIdentityContext(DbContextOptions<ArvidsonFotoIdentityContext> options)
-        : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
