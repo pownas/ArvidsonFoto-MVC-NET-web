@@ -12,6 +12,10 @@
     <PathMap>$(MSBuildProjectDirectory)=/__/</PathMap>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="packages.lock.json" />
+  </ItemGroup>
+
   <ItemGroup Label="PackageReferences">
     <PackageReference Include="Azure.Identity" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="MailKit" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
