@@ -34,19 +34,19 @@ public class InfoController : Controller
         _coreContext = coreContext;
         _configuration = configuration;
         _smtpSettings = smtpSettings.Value;
-        
+
         // Support both DI and manual instantiation (for tests)
         _categoryService = new ApiCategoryService(
             categoryLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiCategoryService>(),
             _coreContext,
             memoryCache ?? new MemoryCache(new MemoryCacheOptions()));
-            
+
         _imageService = new ApiImageService(
             imageLogger ?? LoggerFactory.Create(b => b.AddConsole()).CreateLogger<ApiImageService>(),
             _coreContext,
             configuration ?? new ConfigurationBuilder().Build(),
             _categoryService);
-            
+
         _guestbookService = new GuestBookService(_coreContext);
         _pageCounterService = new PageCounterService(_coreContext);
         _contactService = new ContactService(_coreContext);
@@ -158,7 +158,7 @@ public class InfoController : Controller
             try
             {
                 Log.Information("Saving contact form submission to database...");
-                
+
                 var kontaktRecord = new TblKontakt
                 {
                     SubmitDate = DateTime.Now,
@@ -180,7 +180,7 @@ public class InfoController : Controller
                 errorMessage = "Database error: " + dbEx.Message;
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
-                
+
                 // Early return if we can't even save to database
                 TempData["DisplayEmailSent"] = false;
                 TempData["DisplayErrorSending"] = true;
@@ -197,7 +197,7 @@ public class InfoController : Controller
                 }
 
                 Log.Information("User trying to send e-mail from {SourcePage}...", page);
-                
+
                 var fromName = page + "-ArvidsonFoto.se";
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(fromName, _smtpSettings.SenderEmail));
@@ -219,7 +219,7 @@ public class InfoController : Controller
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(_smtpSettings.Server, _smtpSettings.Port, 
+                    client.Connect(_smtpSettings.Server, _smtpSettings.Port,
                         _smtpSettings.EnableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
                     client.Authenticate(_smtpSettings.SenderEmail, _smtpSettings.SenderPassword);
                     client.Send(message);
@@ -278,7 +278,7 @@ public class InfoController : Controller
     /// <summary>
     /// Redirects to the appropriate action based on the source page
     /// </summary>
-    private IActionResult RedirectToActionBasedOnPage(string page)
+    private RedirectToActionResult RedirectToActionBasedOnPage(string page)
     {
         return page switch
         {
@@ -335,7 +335,7 @@ public class InfoController : Controller
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Köp av bilder");
-        
+
         // Retrieve display flags from TempData
         if (TempData["DisplayEmailSent"] is bool displayEmailSent)
         {
@@ -347,7 +347,7 @@ public class InfoController : Controller
             contactFormModel.DisplayErrorSending = displayErrorSending;
             contactFormModel.FormSubmitDate = DateTime.Now;
         }
-        
+
         if (string.IsNullOrWhiteSpace(contactFormModel.Message))
         {
             contactFormModel = new ContactFormInputDto()
@@ -369,19 +369,19 @@ public class InfoController : Controller
                 try
                 {
                     var image = _imageService.GetById(Convert.ToInt32(imgId));
-                    
+
                     // Get the category name from the category service
                     var categoryName = string.Empty;
                     if (image.CategoryId > 0)
                     {
                         categoryName = _categoryService.GetNameById(image.CategoryId);
                     }
-                    
+
                     var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
-                    
+
                     // Build the message with both image name and category
                     var messageParts = new List<string> { "Hej! Jag är intresserad av att köpa bilden: " };
-                    
+
                     if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
                     {
                         messageParts.Add($"  - Bildnamn: {imageFileName}");
@@ -393,7 +393,7 @@ public class InfoController : Controller
                         messageParts.Add($"  - Bildnamn: {imageFileName}");
                     }
                     messageParts.Add($" ");
-                    
+
                     contactFormModel.Message = string.Join("\n", messageParts);
                 }
                 catch (Exception)

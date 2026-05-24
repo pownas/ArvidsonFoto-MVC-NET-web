@@ -49,8 +49,8 @@ var vulnResourceUrl = serviceIndex?.Resources
 
 if (vulnResourceUrl is null)
 {
-  Console.WriteLine("Kunde inte hitta sårbarhets-API:et.");
-  return;
+    Console.WriteLine("Kunde inte hitta sårbarhets-API:et.");
+    return;
 }
 
 // 3. Hämta fillistan (innehåller referenser till base.json)
@@ -74,9 +74,9 @@ var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vuln
 Console.WriteLine("\nPåbörjar skanning...");
 foreach (var pkg in extractedPackages)
 {
-  string searchKey = pkg.Name.ToLowerInvariant(); // Viktigt med små bokstäver
+    string searchKey = pkg.Name.ToLowerInvariant(); // Viktigt med små bokstäver
 
-  if (vulnerabilities!.TryGetValue(searchKey, out var vulns))
+    if (vulnerabilities!.TryGetValue(searchKey, out var vulns))
     {
         Console.WriteLine($"VARNING: Hittade {vulns.Count} kända sårbarheter i {pkg.Name}!");
         // Kolla om din version (pkg.Version) faller inom vulns[i].Versions

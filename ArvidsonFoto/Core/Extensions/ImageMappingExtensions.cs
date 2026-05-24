@@ -20,13 +20,13 @@ public static class ImageMappingExtensions
         if (image == null)
             return new ImageDto();
 
-        var imgUrl = string.IsNullOrEmpty(categoryPath) 
-            ? $"bilder/{image.ImageUrlName}" 
+        var imgUrl = string.IsNullOrEmpty(categoryPath)
+            ? $"bilder/{image.ImageUrlName}"
             : $"bilder/{categoryPath}/{image.ImageUrlName}";
 
         // Use categoryName if provided, otherwise fall back to ImageUrlName
-        var name = !string.IsNullOrEmpty(categoryName) 
-            ? categoryName 
+        var name = !string.IsNullOrEmpty(categoryName)
+            ? categoryName
             : (image.Name ?? image.ImageUrlName ?? string.Empty);
 
         return new ImageDto

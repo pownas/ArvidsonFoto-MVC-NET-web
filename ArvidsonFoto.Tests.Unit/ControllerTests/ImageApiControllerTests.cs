@@ -320,7 +320,7 @@ public class ImageApiControllerTests : IDisposable
 
         // Assert
         Assert.True(result);
-        
+
         // Verify the image was updated in the database
         var actualImage = _dbContext.TblImages.FirstOrDefault(i => i.ImageId == uploadImage.ImageId);
         Assert.NotNull(actualImage);

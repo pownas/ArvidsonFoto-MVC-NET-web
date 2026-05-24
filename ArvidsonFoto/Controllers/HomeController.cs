@@ -29,12 +29,12 @@ public class HomeController : Controller
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
-        
+
         var viewModel = new GalleryViewModel
         {
             DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
         };
-        
+
         return View(viewModel);
     }
 
@@ -57,7 +57,7 @@ public class HomeController : Controller
 
         if (viewModel.VisitedUrl is null)
             ViewData["Title"] = "Error";
-        else if (viewModel.VisitedUrl.ToLower().StartsWith("/images/gallery"))
+        else if (viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase))
             ViewData["Title"] = "Error 301 - Old image Url";
         else
             ViewData["Title"] = "Error 404 - Page not found";
@@ -65,12 +65,14 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    private bool LogErrorUrlPost(string? visitedUrl)
+    private static bool LogErrorUrlPost(string? visitedUrl)
     {
         bool logThisPost = true;
 
-        if (visitedUrl?.StartsWith("/images/gallery") == true)
+        if (visitedUrl?.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase) == true)
+        {
             logThisPost = false;
+        }
 
         return logThisPost;
     }

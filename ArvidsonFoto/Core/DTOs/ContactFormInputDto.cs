@@ -45,10 +45,10 @@ public class ContactFormInputDto
 
     /// <summary>Indikerar om e-post har skickats framgångsrikt</summary>
     public bool DisplayEmailSent { get; set; }
-    
+
     /// <summary>Indikerar om det uppstod ett fel vid skickning</summary>
     public bool DisplayErrorSending { get; set; }
-    
+
     /// <summary>URL för sidan att återvända till efter formulärinlämning</summary>
     public string ReturnPageUrl { get; set; } = "";
 

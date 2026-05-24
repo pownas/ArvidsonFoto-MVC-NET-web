@@ -52,10 +52,10 @@ public class UploadAdminController : Controller
     public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4)
     {
         ViewData["Title"] = "Länka till ny bild";
-        
+
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
-        
+
         UploadImageViewModel viewModel = new UploadImageViewModel();
         viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
 
@@ -129,12 +129,12 @@ public class UploadAdminController : Controller
                 var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
                 coreContext.TblImages.Add(newImage);
                 coreContext.SaveChanges();
-                
+
                 // Använd TempData för att visa framgångsmeddelande
                 TempData["ImageCreated"] = true;
                 TempData["ImageCategoryId"] = model.ImageArt;
                 TempData["ImageUrl"] = model.ImageUrl;
-                
+
                 return RedirectToAction("NyBild");
             }
             catch (Exception ex)
@@ -144,7 +144,7 @@ public class UploadAdminController : Controller
                 TempData["ErrorMessage"] = "Ett fel uppstod vid skapande av bilden.";
             }
         }
-        
+
         // Om validering misslyckades, skicka tillbaka till formuläret med felmeddelanden
         TempData["ImageCreated"] = false;
         return RedirectToAction("NyBild");
@@ -161,7 +161,7 @@ public class UploadAdminController : Controller
                 var existingImage = coreContext.TblImages
                     .Where(i => i.ImageId == model.ImageId)
                     .FirstOrDefault();
-                    
+
                 if (existingImage != null)
                 {
                     existingImage.ImageUrlName = model.ImageUrl;
@@ -171,7 +171,7 @@ public class UploadAdminController : Controller
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
                     existingImage.ImageUpdate = DateTime.Now;
-                    
+
                     await coreContext.SaveChangesAsync();
                     return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
                 }
@@ -233,8 +233,8 @@ public class UploadAdminController : Controller
             CurrentPage = (int)sida,
             CurrentUrl = "./UploadAdmin/RedigeraBilder"
         };
-        
-        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count() / (decimal)imagesPerPage);
+
+        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage);
         var displayTblImages = allImages
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
@@ -270,7 +270,7 @@ public class UploadAdminController : Controller
 
             // Get category path using the service method
             var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
-            
+
             // Build the full source URL with the correct path
             inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/bilder/{categoryPath}/{inputModel.ImageUrl}";
 
@@ -342,15 +342,17 @@ public class UploadAdminController : Controller
     /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
     public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
     {
-        ViewData["Title"] = "Läser loggboken för: " + datum.ToString("yyyy-MM-dd dddd");
+        ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
 
         AppLogReaderService logReader = new AppLogReaderService();
-        string appLogFile = "appLog" + datum.ToString("yyyyMMdd") + ".txt";
+        string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
 
-        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel();
-        viewModel.ExistingLogFiles = logReader.ExistingLogFiles();
-        viewModel.LogBook = logReader.ReadData(appLogFile);
-        viewModel.DateShown = datum;
+        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel
+        {
+            ExistingLogFiles = logReader.ExistingLogFiles(),
+            LogBook = logReader.ReadData(appLogFile),
+            DateShown = datum
+        };
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         viewModel.ShowAllLogs = user.ShowAllLogs;
@@ -460,22 +462,22 @@ public class UploadAdminController : Controller
             foreach (var image in selectedImages)
             {
                 string imageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
-                
+
                 if (image.ImageMainFamilyId is not null)
                 {
                     var huvudfamiljNamn = _categoryService.GetNameById(image.ImageMainFamilyId);
                     imageUrlFullSrc += "/" + huvudfamiljNamn;
                 }
-                
+
                 if (image.ImageFamilyId is not null)
                 {
                     var familjNamn = _categoryService.GetNameById(image.ImageFamilyId);
                     imageUrlFullSrc += "/" + familjNamn;
                 }
-                
+
                 var artNamn = _categoryService.GetNameById(image.ImageCategoryId);
                 imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrlName;
-                
+
                 imageUrls.Add(imageUrlFullSrc);
             }
 

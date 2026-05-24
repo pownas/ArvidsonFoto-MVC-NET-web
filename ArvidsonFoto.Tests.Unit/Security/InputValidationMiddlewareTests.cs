@@ -86,7 +86,7 @@ public class InputValidationMiddlewareTests
         // Arrange
         var middleware = new InputValidationMiddleware(_mockNext.GetDelegate(), _mockLogger);
         var context = CreateHttpContext();
-        
+
         // Extract query string from the attack URL
         var queryIndex = attackQuery.IndexOf('?');
         if (queryIndex >= 0)
