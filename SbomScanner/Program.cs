@@ -3,7 +3,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
-string jsonContent = await File.ReadAllTextAsync("packages.lock.json");
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+#pragma warning disable CA1308 // Normalize strings to uppercase
+
+string jsonContent = await File.ReadAllTextAsync("packages.lock.json").ConfigureAwait(true);
 var lockFile = JsonSerializer.Deserialize<LockFile>(jsonContent);
 
 var extractedPackages = new List<NuGetPackage>();
@@ -38,20 +41,20 @@ Console.WriteLine("Hämtar Service Index från NuGet...");
 
 // 1. Hämta NuGet V3 Service Index
 var serviceIndexUrl = "https://api.nuget.org/v3/index.json";
-var serviceIndex = await client.GetFromJsonAsync<ServiceIndex>(serviceIndexUrl);
+var serviceIndex = await client.GetFromJsonAsync<ServiceIndex>(serviceIndexUrl).ConfigureAwait(true);
 
 // 2. Hitta slutpunkten för VulnerabilityInfo i indexet
 var vulnResourceUrl = serviceIndex?.Resources
-    .FirstOrDefault(r => r.Type.StartsWith("VulnerabilityInfo"))?.Id;
+    .FirstOrDefault(r => r.Type.StartsWith("VulnerabilityInfo", StringComparison.OrdinalIgnoreCase))?.Id;
 
 if (vulnResourceUrl is null)
 {
-    Console.WriteLine("Kunde inte hitta sårbarhets-API:et.");
-    return;
+  Console.WriteLine("Kunde inte hitta sårbarhets-API:et.");
+  return;
 }
 
 // 3. Hämta fillistan (innehåller referenser till base.json)
-var vulnFiles = await client.GetFromJsonAsync<List<VulnerabilityFile>>(vulnResourceUrl);
+var vulnFiles = await client.GetFromJsonAsync<List<VulnerabilityFile>>(vulnResourceUrl).ConfigureAwait(true);
 
 // HÄR definieras den saknade variabeln:
 string? baseJsonUrl = vulnFiles?.FirstOrDefault(f => f.Name == "base.json")?.Id;
@@ -65,15 +68,15 @@ if (baseJsonUrl is null)
 Console.WriteLine($"Laddar ner sårbarhetsdatabasen från: {baseJsonUrl}");
 
 // 4. Ladda ner sårbarhetsdatabasen (base.json)
-var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vulnerability>>>(baseJsonUrl);
+var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vulnerability>>>(baseJsonUrl).ConfigureAwait(true);
 
 // 5. Scanna dina extraherade paket i minnet
 Console.WriteLine("\nPåbörjar skanning...");
 foreach (var pkg in extractedPackages)
 {
-    string searchKey = pkg.Name.ToLowerInvariant(); // Viktigt med små bokstäver
+  string searchKey = pkg.Name.ToLowerInvariant(); // Viktigt med små bokstäver
 
-    if (vulnerabilities!.TryGetValue(searchKey, out var vulns))
+  if (vulnerabilities!.TryGetValue(searchKey, out var vulns))
     {
         Console.WriteLine($"VARNING: Hittade {vulns.Count} kända sårbarheter i {pkg.Name}!");
         // Kolla om din version (pkg.Version) faller inom vulns[i].Versions

@@ -6,7 +6,7 @@ namespace ArvidsonFoto.Tests.E2E;
 /// End-to-end tests for contact form functionality
 /// Tests both contact page and image purchase page forms
 /// </summary>
-public class ContactFormTests : IAsyncLifetime
+public sealed class ContactFormTests : IAsyncLifetime
 {
     private IPlaywright? _playwright;
     private IBrowser? _browser;
@@ -14,17 +14,17 @@ public class ContactFormTests : IAsyncLifetime
 
     async ValueTask IAsyncLifetime.InitializeAsync()
     {
-        _playwright = await Playwright.CreateAsync();
+        _playwright = await Playwright.CreateAsync().ConfigureAwait(true);
         _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true // Set to false to see browser actions
-        });
+        }).ConfigureAwait(true);
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (_browser != null)
-            await _browser.CloseAsync();
+            await _browser.CloseAsync().ConfigureAwait(true);
         
         GC.SuppressFinalize(this);
 
