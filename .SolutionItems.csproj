@@ -22,6 +22,9 @@
   <ItemGroup Label="Include BLOBs">
     <None Include=".config\**\*.*" />
     <None Include=".github\**\*.*" />
+    <None Include="artifacts\**\*.*" />
+    <None Include="TestResults\**\*.*" />
+    <None Include="wiki\**\*.*" />
   </ItemGroup>
 
   <ItemGroup Label="Include BLOBs in ZIP">
