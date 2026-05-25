@@ -9,7 +9,6 @@ using System.Xml.Linq;
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
 string propsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Directory.Packages.props");
-
 var extractedPackages = new List<NuGetPackage>();
 
 // 2. Kontrollera om mappen med lock-filer existerar
@@ -37,7 +36,7 @@ if (Directory.Exists(lockFilesFolder))
                     continue; // Skippa interna projekt
 
                 // Lägg till i listan (om du vill undvika dubbletter mellan projekt kan du lägga till en Distinct-kontroll här)
-                if (!extractedPackages.Any(p => p.Name == package.Key && p.Version == (package.Value.Resolved ?? "Okänd")))
+                if (!extractedPackages.Any(p => p.Name.Equals(package.Key, StringComparison.OrdinalIgnoreCase) && p.Version == (package.Value.Resolved ?? "Okänd")))
                 {
                     extractedPackages.Add(new NuGetPackage(
                         package.Key,
@@ -54,7 +53,7 @@ else
     return;
 }
 
-// 3. Läs in Directory.Packages.props (Använder nu den säkra sökvägen)
+// 3. Läs in Directory.Packages.props
 if (!File.Exists(propsFilePath))
 {
     Console.WriteLine("Kunde inte hitta Directory.Packages.props i utdatamappen.");
@@ -84,22 +83,25 @@ Console.WriteLine("Hämtar Service Index från NuGet...");
 var serviceIndexUrl = "https://api.nuget.org/v3/index.json";
 var serviceIndex = await client.GetFromJsonAsync<ServiceIndex>(serviceIndexUrl).ConfigureAwait(true);
 
+// Hämta RegistrationsBaseUrl för att kunna kolla senaste versioner live
+var regResourceUrl = serviceIndex?.Resources
+    .FirstOrDefault(r => r.Type.StartsWith("RegistrationsBaseUrl/3.6.0", StringComparison.OrdinalIgnoreCase))?.Id;
+
 // 5. Hitta slutpunkten för VulnerabilityInfo i indexet
 var vulnResourceUrl = serviceIndex?.Resources
     .FirstOrDefault(r => r.Type.StartsWith("VulnerabilityInfo", StringComparison.OrdinalIgnoreCase))?.Id;
 
-if (vulnResourceUrl is null)
+if (vulnResourceUrl is null || regResourceUrl is null)
 {
-    Console.WriteLine("Kunde inte hitta sårbarhets-API:et.");
+    Console.WriteLine("Kunde inte hitta nödvändiga NuGet-API-slutpunkter.");
     return;
 }
 
-// 6. Hämta fillistan (innehåller referenser till base.json)
+// 6. Hämta fillistan
 var vulnFiles = await client.GetFromJsonAsync<List<VulnerabilityFile>>(vulnResourceUrl).ConfigureAwait(true);
 
-// 7. Definiera den saknade variabeln:
+// 7. Definiera den saknade variabeln
 string? baseJsonUrl = vulnFiles?.FirstOrDefault(f => f.Name == "base")?.Id;
-
 if (baseJsonUrl is null)
 {
     Console.WriteLine("Kunde inte hitta base.json.");
@@ -108,35 +110,66 @@ if (baseJsonUrl is null)
 
 Console.WriteLine($"Laddar ner sårbarhetsdatabasen från: {baseJsonUrl}");
 
-// 8. Ladda ner sårbarhetsdatabasen (base.json)
+// 8. Ladda ner sårbarhetsdatabasen
 var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vulnerability>>>(baseJsonUrl).ConfigureAwait(true);
 
 // 9. Scanna dina extraherade paket i minnet
 Console.WriteLine("\nPåbörjar skanning...");
 foreach (var pkg in extractedPackages)
 {
-    // NuGet-API:et kräver att alla paket-ID:n är i gemener (små bokstäver) vid sökning
     string searchKey = pkg.Name.ToLowerInvariant();
 
-    if (vulnerabilities.TryGetValue(searchKey, out var vulnList))
-    {
-        ////TODO: Fixa: Här kan vi förbättra logiken för att kontrollera både paketnamn och version
-        //if (centralPackages.Any(cpm => cpm.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase) && cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)))
-        //{
-        //    Console.WriteLine($"✅ Central Package Management har hanterat uppdateringen av {pkg.Name} till version {centralPackages.First(cpm => cpm.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase) && cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)).Version} i Directory.Packages.props.");
-        //    Console.WriteLine($"OK: Kända sårbarheter finns för {pkg.Name}, hanteras av CPM i Directory.Packages.props, senaste v. {pkg.Version}");
-        //}
-        //else if (centralPackages.Any(cpm => cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)))
-        //{
-        //    Console.WriteLine($"⚠️ OBS: Transitativa paketet {pkg.Name} hanteras av Central Package Management. Men det har inte senaste versionen: {pkg.Version}.");
-        //}
-        //else
-        //{
-        //    Console.WriteLine($"⚠️ OBS: Transitativa paketet {pkg.Name} hanteras inte av Central Package Management. Lägg till paketet i CPM och den senaste versionen: {pkg.Version}.");
-        //}
+    // --- Kolla status i Central Package Management (CPM) ---
+    var cpmMatch = centralPackages.FirstOrDefault(c => c.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase));
+    string cpmStatus = cpmMatch != null
+        ? $"Ja (Definierad till: {cpmMatch.Version})"
+        : "Nej (Transitivt beroende)";
 
-        Console.WriteLine($"{Environment.NewLine}[AVVISNING/VARNING] Paket: {pkg.Name} (Använd version: {pkg.Version})");
-        Console.WriteLine($" -> Hittade {vulnList.Count} kända sårbarhetsintervall i databasen:");
+    // --- Hämta absolut senaste versionen live från NuGet ---
+    string latestNuGetVersion = "Okänd";
+    try
+    {
+        // Slå upp paketet i NuGets registreringsindex (alltid i gemener)
+        var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{searchKey}/index.json";
+        var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(true);
+
+        if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
+        {
+            // Ta sista sidan, och sista paketet på den sidan (vilket är det nyaste)
+            var lastPage = regIndex.Pages[^1];
+            if (lastPage.Items != null && lastPage.Items.Count > 0)
+            {
+                latestNuGetVersion = lastPage.Items[^1].CatalogEntry.Version;
+            }
+        }
+    }
+    catch
+    {
+        // Om paketet inte hittas eller timeout sker, låt den förbli "Okänd"
+    }
+
+    // --- SKRIV UT RESULTATET ---
+    if (vulnerabilities!.TryGetValue(searchKey, out var vulnList))
+    {
+        Console.WriteLine(new string('-', 60));
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"[VARNING] Sårbarhet funnen i: {pkg.Name}");
+        Console.ResetColor();
+
+        Console.WriteLine($"  -> Nuvarande installerad version:  {pkg.Version}");
+        Console.WriteLine($"  -> Hanteras centralt i CPM?         {cpmStatus}");
+        if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
+        }
+        Console.ResetColor();
+        Console.WriteLine($"  -> Hittade {vulnList.Count} sårbarhetsintervall:");
 
         foreach (var vuln in vulnList)
         {
@@ -149,63 +182,75 @@ foreach (var pkg in extractedPackages)
                 _ => "Okänd"
             };
 
-            Console.WriteLine($"    - Allvarlighetsgrad: {severityStr}");
-            Console.WriteLine($"      Berörda versioner:  {vuln.Versions}");
-            Console.WriteLine($"      Mer information:    {vuln.Url}");
+            Console.WriteLine($"      - Allvarlighet: [{severityStr}] | Berör: {vuln.Versions}");
+            Console.WriteLine($"        Länk: {vuln.Url}");
         }
-        Console.WriteLine($" -> Rekommendation: Uppgradera {pkg.Name} till en version som inte omfattas av de listade sårbarhetsintervallen.{Environment.NewLine}");
+        Console.WriteLine(new string('-', 60));
     }
     else
     {
-        Console.WriteLine($"OK: Inga kända sårbarheter för {pkg.Name}.");
+        // Även om paketet är friskt kan det vara bra att se om det är utdaterat
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("[OK] ");
+        Console.ResetColor();
+        Console.Write($"{pkg.Name} (Version: {pkg.Version}) | CPM: {cpmStatus} ");
+
+        if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write($"[Nyare version finns: {latestNuGetVersion}]");
+            Console.ResetColor();
+        }
+        Console.WriteLine();
     }
 }
 
 #region DataModeller
 
-// --- Datamodeller som krävs för att API-anropen ska fungera ---
 record ServiceIndex(
-    [property: JsonPropertyName("resources")]
-    List<Resource> Resources
+    [property: JsonPropertyName("resources")] List<Resource> Resources
 );
 
 record Resource(
-    [property: JsonPropertyName("@id")]
-    string Id,
-    [property: JsonPropertyName("@type")]
-    string Type
+    [property: JsonPropertyName("@id")] string Id,
+    [property: JsonPropertyName("@type")] string Type
 );
 
 record VulnerabilityFile(
-    [property: JsonPropertyName("@name")]
-    string Name,
-    [property: JsonPropertyName("@id")]
-    string Id
+    [property: JsonPropertyName("@name")] string Name,
+    [property: JsonPropertyName("@id")] string Id
 );
 
 record Vulnerability(
-    [property: JsonPropertyName("severity")]
-    int Severity,
-    [property: JsonPropertyName("versions")]
-    string Versions,
-    [property: JsonPropertyName("url")]
-    string Url
+    [property: JsonPropertyName("severity")] int Severity,
+    [property: JsonPropertyName("versions")] string Versions,
+    [property: JsonPropertyName("url")] string Url
 );
 
 record LockFile(
-    [property: JsonPropertyName("dependencies")]
-    Dictionary<string, Dictionary<string, LockDependency>> Dependencies
+    [property: JsonPropertyName("dependencies")] Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
 
 record LockDependency(
-    [property: JsonPropertyName("type")]
-    string Type,
-    [property: JsonPropertyName("resolved")]
-    string Resolved,
-    [property: JsonPropertyName("contentHash")]
-    string ContentHash
+    [property: JsonPropertyName("type")] string Type,
+    [property: JsonPropertyName("resolved")] string Resolved,
+    [property: JsonPropertyName("contentHash")] string ContentHash
 );
 
 record NuGetPackage(string Name, string Version, string ContentHash);
+
+record NugetRegistrationIndex(
+    [property: JsonPropertyName("items")] List<RegistrationPage> Pages
+);
+
+record RegistrationPage(
+    [property: JsonPropertyName("items")] List<RegistrationItem> Items
+);
+record RegistrationItem(
+    [property: JsonPropertyName("catalogEntry")] CatalogEntry CatalogEntry
+);
+record CatalogEntry(
+    [property: JsonPropertyName("version")] string Version
+);
 
 #endregion
