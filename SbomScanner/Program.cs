@@ -115,98 +115,128 @@ var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vuln
 
 // 9. Scanna dina extraherade paket i minnet
 Console.WriteLine("\nPåbörjar skanning...");
-foreach (var pkg in extractedPackages)
+
+// Gruppera paketen efter namn och sortera grupperna i bokstavsordning (A-Ö)
+var groupedPackages = extractedPackages.GroupBy(p => p.Name, StringComparer.OrdinalIgnoreCase).OrderBy(g => g.Key);
+
+foreach (var packageGroup in groupedPackages)
 {
+    string packageName = packageGroup.Key;
     // NuGet-API:et kräver att alla paket-ID:n är i gemener (små bokstäver) vid sökning
-    string searchKey = pkg.Name.ToLowerInvariant();
+    string searchKey = packageName.ToLowerInvariant();
 
-    var cpmMatch = centralPackages.FirstOrDefault(c => c.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase));
-    string cpmStatus = cpmMatch != null
-        ? $"Ja (Definierad till: {cpmMatch.Version})"
-        : "Nej (Transitivt beroende)";
+    // Kontrollera om paketet har mer än en unik version installerad
+    bool hasVersionMismatch = packageGroup.Select(p => p.Version).Distinct().Count() > 1;
 
-    // Hämta live-version från NuGet
-    string latestNuGetVersion = "Okänd";
-    try
+    // Om det finns en versionskonflikt, varna användaren högst upp för detta paket
+    if (hasVersionMismatch)
     {
-        var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{searchKey}/index.json";
-        var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(true);
-        if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
-        {
-            var lastPage = regIndex.Pages[^1];
-            if (lastPage.Items != null && lastPage.Items.Count > 0)
-            {
-                latestNuGetVersion = lastPage.Items[^1].CatalogEntry.Version;
-            }
-        }
-    }
-    catch { /* Ignorera API-missar */ }
-
-    // --- Filtrera fram om sårbarheterna faktiskt drabbar VÅR version ---
-    var activeVulnerabilities = new List<Vulnerability>();
-    if (vulnerabilities!.TryGetValue(searchKey, out var vulnList))
-    {
-        foreach (var v in vulnList)
-        {
-            if (IsVersionAffected(pkg.Version, v.Versions))
-            {
-                activeVulnerabilities.Add(v);
-            }
-        }
-    }
-
-    // --- UTMATNING BASERAT PÅ OM SÅRBARHETEN ÄR AKTIV ELLER PATCHAD ---
-    if (activeVulnerabilities.Count > 0)
-    {
-        // Din version ÄR drabbad av en eller flera sårbarheter!
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"[VARNING] Aktiv sårbarhet funnen i: {pkg.Name}");
-        Console.ResetColor();
-
-        Console.WriteLine($"  -> Nuvarande installerad version:  {pkg.Version}");
-        Console.WriteLine($"  -> Hanteras centralt i CPM?         {cpmStatus}");
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
+        Console.WriteLine($"⚠️ VARNING: Versionskonflikt upptäckt för {packageName}!");
+        Console.Write("    Installerad i följande versioner: ");
+        // Sorterar även versionsnumren i varningstexten
+        Console.WriteLine(string.Join(", ", packageGroup.Select(p => p.Version).Distinct().OrderBy(v => v)));
+        Console.WriteLine("    -> Tips: Lås paketet till en gemensam version i Directory.Packages.props för att fixa detta.");
         Console.ResetColor();
-        Console.WriteLine($"  -> Hittade {activeVulnerabilities.Count} aktiva sårbarhetsintervall för denna version:");
-
-        foreach (var vuln in activeVulnerabilities)
-        {
-            var severityStr = vuln.Severity switch
-            {
-                0 => "Låg",
-                1 => "Medel",
-                2 => "Hög",
-                3 => "Kritisk",
-                _ => "Okänd"
-            };
-            Console.WriteLine($"      - Allvarlighet: [{severityStr}] | Berör: {vuln.Versions}");
-            Console.WriteLine($"        Länk: {vuln.Url}");
-        }
-        Console.WriteLine(new string('-', 60));
     }
-    else
+
+    // Sorterar de enskilda paketen i gruppen efter version så att de också skrivs ut i ordning
+    var sortedPackageItems = packageGroup.OrderBy(p => p.Version);
+
+    foreach (var pkg in sortedPackageItems)
     {
-        // HÄR HAMNAR NEWTONSOFT NU! Paketet har historiska sårbarheter, men din version är säker.
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("[OK] ");
-        Console.ResetColor();
-        Console.Write($"{pkg.Name} (Version: {pkg.Version}) | CPM: {cpmStatus} ");
+        var cpmMatch = centralPackages.FirstOrDefault(c => c.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase));
+        string cpmStatus = cpmMatch != null
+            ? $"Ja (Definierad till: {cpmMatch.Version})"
+            : "Nej (Transitivt beroende)";
 
-        // Tipsa om historisk patch om det fanns sårbarheter i databasen men vi är säkra nu
-        if (vulnList != null && vulnList.Count > 0)
+        // Hämta live-version från NuGet
+        string latestNuGetVersion = "Okänd";
+        try
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("[Säkrad/Patchad] ");
-            Console.ResetColor();
+            var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{searchKey}/index.json";
+            var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(true);
+            if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
+            {
+                var lastPage = regIndex.Pages[^1];
+                if (lastPage.Items != null && lastPage.Items.Count > 0)
+                {
+                    latestNuGetVersion = lastPage.Items[^1].CatalogEntry.Version;
+                }
+            }
+        }
+        catch { /* Ignorera API-missar */ }
+
+        // Filtrera fram om sårbarheterna faktiskt drabbar DENNA specifika version
+        var activeVulnerabilities = new List<Vulnerability>();
+        if (vulnerabilities!.TryGetValue(searchKey, out var vulnList))
+        {
+            foreach (var v in vulnList)
+            {
+                if (IsVersionAffected(pkg.Version, v.Versions))
+                {
+                    activeVulnerabilities.Add(v);
+                }
+            }
         }
 
-        if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
+        // --- Kontroll BASERAT PÅ OM SÅRBARHETEN ÄR AKTIV ELLER PATCHAD ---
+        if (activeVulnerabilities.Count > 0)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write($"[Nyare version finns: {latestNuGetVersion}]");
+            // Din version ÄR drabbad av en eller flera sårbarheter!
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"[VARNING] Aktiv sårbarhet funnen i: {pkg.Name} (v. {pkg.Version})");
             Console.ResetColor();
+
+            Console.WriteLine($"  -> Nuvarande installerad version:  {pkg.Version}");
+            Console.WriteLine($"  -> Hanteras centralt i CPM?         {cpmStatus}");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
+            Console.ResetColor();
+            Console.WriteLine($"  -> Hittade {activeVulnerabilities.Count} aktiva sårbarhetsintervall för denna version:");
+
+            foreach (var vuln in activeVulnerabilities)
+            {
+                var severityStr = vuln.Severity switch
+                {
+                    0 => "Låg",
+                    1 => "Medel",
+                    2 => "Hög",
+                    3 => "Kritisk",
+                    _ => "Okänd"
+                };
+                Console.WriteLine($"      - Allvarlighet: [{severityStr}] | Berör: {vuln.Versions}");
+                Console.WriteLine($"        Länk: {vuln.Url}");
+            }
+            Console.WriteLine(new string('-', 60));
         }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("[OK] ");
+            Console.ResetColor();
+            Console.Write($"{pkg.Name} (Version: {pkg.Version}) | CPM: {cpmStatus} ");
+
+            if (vulnList != null && vulnList.Count > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("[Säkrad/Patchad] ");
+                Console.ResetColor();
+            }
+
+            if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write($"[Nyare version finns: {latestNuGetVersion}]");
+                Console.ResetColor();
+            }
+            Console.WriteLine();
+        }
+    }
+
+    // Lägg till en extra tomrad efter varje paketgrupp för att göra rapporten mer lättläst
+    if (hasVersionMismatch)
+    {
         Console.WriteLine();
     }
 }
