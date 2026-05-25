@@ -117,25 +117,22 @@ var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vuln
 Console.WriteLine("\nPåbörjar skanning...");
 foreach (var pkg in extractedPackages)
 {
+    // NuGet-API:et kräver att alla paket-ID:n är i gemener (små bokstäver) vid sökning
     string searchKey = pkg.Name.ToLowerInvariant();
 
-    // --- Kolla status i Central Package Management (CPM) ---
     var cpmMatch = centralPackages.FirstOrDefault(c => c.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase));
     string cpmStatus = cpmMatch != null
         ? $"Ja (Definierad till: {cpmMatch.Version})"
         : "Nej (Transitivt beroende)";
 
-    // --- Hämta absolut senaste versionen live från NuGet ---
+    // Hämta live-version från NuGet
     string latestNuGetVersion = "Okänd";
     try
     {
-        // Slå upp paketet i NuGets registreringsindex (alltid i gemener)
         var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{searchKey}/index.json";
         var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(true);
-
         if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
         {
-            // Ta sista sidan, och sista paketet på den sidan (vilket är det nyaste)
             var lastPage = regIndex.Pages[^1];
             if (lastPage.Items != null && lastPage.Items.Count > 0)
             {
@@ -143,35 +140,37 @@ foreach (var pkg in extractedPackages)
             }
         }
     }
-    catch
-    {
-        // Om paketet inte hittas eller timeout sker, låt den förbli "Okänd"
-    }
+    catch { /* Ignorera API-missar */ }
 
-    // --- SKRIV UT RESULTATET ---
+    // --- Filtrera fram om sårbarheterna faktiskt drabbar VÅR version ---
+    var activeVulnerabilities = new List<Vulnerability>();
     if (vulnerabilities!.TryGetValue(searchKey, out var vulnList))
     {
-        Console.WriteLine(new string('-', 60));
+        foreach (var v in vulnList)
+        {
+            if (IsVersionAffected(pkg.Version, v.Versions))
+            {
+                activeVulnerabilities.Add(v);
+            }
+        }
+    }
+
+    // --- UTMATNING BASERAT PÅ OM SÅRBARHETEN ÄR AKTIV ELLER PATCHAD ---
+    if (activeVulnerabilities.Count > 0)
+    {
+        // Din version ÄR drabbad av en eller flera sårbarheter!
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"[VARNING] Sårbarhet funnen i: {pkg.Name}");
+        Console.WriteLine($"[VARNING] Aktiv sårbarhet funnen i: {pkg.Name}");
         Console.ResetColor();
 
         Console.WriteLine($"  -> Nuvarande installerad version:  {pkg.Version}");
         Console.WriteLine($"  -> Hanteras centralt i CPM?         {cpmStatus}");
-        if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
-        }
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
         Console.ResetColor();
-        Console.WriteLine($"  -> Hittade {vulnList.Count} sårbarhetsintervall:");
+        Console.WriteLine($"  -> Hittade {activeVulnerabilities.Count} aktiva sårbarhetsintervall för denna version:");
 
-        foreach (var vuln in vulnList)
+        foreach (var vuln in activeVulnerabilities)
         {
             var severityStr = vuln.Severity switch
             {
@@ -181,7 +180,6 @@ foreach (var pkg in extractedPackages)
                 3 => "Kritisk",
                 _ => "Okänd"
             };
-
             Console.WriteLine($"      - Allvarlighet: [{severityStr}] | Berör: {vuln.Versions}");
             Console.WriteLine($"        Länk: {vuln.Url}");
         }
@@ -189,11 +187,19 @@ foreach (var pkg in extractedPackages)
     }
     else
     {
-        // Även om paketet är friskt kan det vara bra att se om det är utdaterat
+        // HÄR HAMNAR NEWTONSOFT NU! Paketet har historiska sårbarheter, men din version är säker.
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("[OK] ");
         Console.ResetColor();
         Console.Write($"{pkg.Name} (Version: {pkg.Version}) | CPM: {cpmStatus} ");
+
+        // Tipsa om historisk patch om det fanns sårbarheter i databasen men vi är säkra nu
+        if (vulnList != null && vulnList.Count > 0)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("[Säkrad/Patchad] ");
+            Console.ResetColor();
+        }
 
         if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
         {
@@ -204,6 +210,60 @@ foreach (var pkg in extractedPackages)
         Console.WriteLine();
     }
 }
+
+#region Hjälpmetoder
+
+// --- LÄGG TILL DENNA HJÄLPMETOD LÄNGST NER I PROGRAM.CS (Utanför loopen eller i en helper-klass) ---
+static bool IsVersionAffected(string currentVersionStr, string rangeStr)
+{
+    if (string.IsNullOrWhiteSpace(rangeStr)) return false;
+    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion)) return false; // Skippa eventuell -beta/-rc vid ren sifferjämförelse
+
+    rangeStr = rangeStr.Trim();
+
+    // 1. Hantera standard NuGet-intervall notation t.ex. (, 13.0.1) eller [1.0.0, 2.0.0)
+    if (rangeStr.StartsWith('(') || rangeStr.StartsWith('['))
+    {
+        var parts = rangeStr.Substring(1, rangeStr.Length - 2).Split(',');
+        if (parts.Length != 2) return false;
+
+        bool isMinInclusive = rangeStr.StartsWith('[');
+        bool isMaxInclusive = rangeStr.EndsWith(']');
+
+        string minStr = parts[0].Trim();
+        string maxStr = parts[1].Trim();
+
+        // Kolla minimum-gränsen
+        if (!string.IsNullOrEmpty(minStr) && Version.TryParse(minStr.Split('-')[0], out var minVersion))
+        {
+            if (isMinInclusive && currentVersion < minVersion) return false;
+            if (!isMinInclusive && currentVersion <= minVersion) return false;
+        }
+
+        // Kolla maximum-gränsen
+        if (!string.IsNullOrEmpty(maxStr) && Version.TryParse(maxStr.Split('-')[0], out var maxVersion))
+        {
+            if (isMaxInclusive && currentVersion > maxVersion) return false;
+            if (!isMaxInclusive && currentVersion >= maxVersion) return false;
+        }
+
+        return true;
+    }
+
+    // 2. Hantera enkla jämförelser om de skulle dyka upp (t.ex. "<= 13.0.1" eller "< 13.0.1")
+    if (rangeStr.StartsWith("<="))
+    {
+        if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v)) return currentVersion <= v;
+    }
+    if (rangeStr.StartsWith('<'))
+    {
+        if (Version.TryParse(rangeStr.Replace("<", "").Trim().Split('-')[0], out var v)) return currentVersion < v;
+    }
+
+    return false;
+}
+
+#endregion
 
 #region DataModeller
 
