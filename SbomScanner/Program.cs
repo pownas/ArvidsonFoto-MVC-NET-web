@@ -120,6 +120,21 @@ foreach (var pkg in extractedPackages)
 
     if (vulnerabilities.TryGetValue(searchKey, out var vulnList))
     {
+        ////TODO: Fixa: Här kan vi förbättra logiken för att kontrollera både paketnamn och version
+        //if (centralPackages.Any(cpm => cpm.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase) && cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)))
+        //{
+        //    Console.WriteLine($"✅ Central Package Management har hanterat uppdateringen av {pkg.Name} till version {centralPackages.First(cpm => cpm.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase) && cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)).Version} i Directory.Packages.props.");
+        //    Console.WriteLine($"OK: Kända sårbarheter finns för {pkg.Name}, hanteras av CPM i Directory.Packages.props, senaste v. {pkg.Version}");
+        //}
+        //else if (centralPackages.Any(cpm => cpm.Version.Equals(pkg.Version, StringComparison.OrdinalIgnoreCase)))
+        //{
+        //    Console.WriteLine($"⚠️ OBS: Transitativa paketet {pkg.Name} hanteras av Central Package Management. Men det har inte senaste versionen: {pkg.Version}.");
+        //}
+        //else
+        //{
+        //    Console.WriteLine($"⚠️ OBS: Transitativa paketet {pkg.Name} hanteras inte av Central Package Management. Lägg till paketet i CPM och den senaste versionen: {pkg.Version}.");
+        //}
+
         Console.WriteLine($"{Environment.NewLine}[AVVISNING/VARNING] Paket: {pkg.Name} (Använd version: {pkg.Version})");
         Console.WriteLine($" -> Hittade {vulnList.Count} kända sårbarhetsintervall i databasen:");
 
