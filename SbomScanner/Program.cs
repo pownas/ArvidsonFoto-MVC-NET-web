@@ -59,6 +59,10 @@ if (!File.Exists(propsFilePath))
     Console.WriteLine("Kunde inte hitta Directory.Packages.props i utdatamappen.");
     return;
 }
+else
+{
+    Console.WriteLine($"Läser in Directory.Packages.props (CPM).");
+}
 
 var doc = XDocument.Load(propsFilePath);
 var centralPackages = doc.Descendants("PackageVersion")
@@ -131,6 +135,7 @@ foreach (var packageGroup in groupedPackages)
     // Om det finns en versionskonflikt, varna användaren högst upp för detta paket
     if (hasVersionMismatch)
     {
+        Console.WriteLine(new string('-', 60));
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"⚠️ VARNING: Versionskonflikt upptäckt för {packageName}!");
         Console.Write("    Installerad i följande versioner: ");
@@ -184,6 +189,7 @@ foreach (var packageGroup in groupedPackages)
         if (activeVulnerabilities.Count > 0)
         {
             // Din version ÄR drabbad av en eller flera sårbarheter!
+            Console.WriteLine(new string('-', 60));
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[VARNING] Aktiv sårbarhet funnen i: {pkg.Name} (v. {pkg.Version})");
             Console.ResetColor();
@@ -234,10 +240,10 @@ foreach (var packageGroup in groupedPackages)
         }
     }
 
-    // Lägg till en extra tomrad efter varje paketgrupp för att göra rapporten mer lättläst
+    // Lägg till en extra rad --- efter varje paketgrupp för att göra rapporten mer lättläst
     if (hasVersionMismatch)
     {
-        Console.WriteLine();
+        Console.WriteLine(new string('-', 60));
     }
 }
 
