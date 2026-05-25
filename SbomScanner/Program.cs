@@ -117,8 +117,44 @@ Console.WriteLine($"Laddar ner sårbarhetsdatabasen från: {baseJsonUrl}");
 // 8. Ladda ner sårbarhetsdatabasen
 var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vulnerability>>>(baseJsonUrl).ConfigureAwait(true);
 
-// 9. Scanna dina extraherade paket i minnet
-Console.WriteLine("\nPåbörjar skanning...");
+// 9. Hämta senaste versioner för alla unika paket parallellt (för att undvika att göra 150+ API-anrop sekventiellt)
+Console.WriteLine($"{Environment.NewLine}Hämtar senaste versioner från NuGet live-API...");
+
+// Skapa en lista med unika paket/versioner-kombinationer som faktiskt behöver slås upp
+var uniqueLookups = extractedPackages
+    .Select(p => new { Name = p.Name, Lower = p.Name.ToLowerInvariant() })
+    .DistinctBy(p => p.Lower)
+    .ToList();
+
+// Starta alla NuGet.org anrop parallellt i bakgrunden
+var lookupTasks = uniqueLookups.Select(async item =>
+{
+    string latestVersion = "Okänd";
+    try
+    {
+        var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{item.Lower}/index.json";
+        var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(false);
+
+        if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
+        {
+            var lastPage = regIndex.Pages[^1];
+            if (lastPage.Items != null && lastPage.Items.Count > 0)
+            {
+                latestVersion = lastPage.Items[^1].CatalogEntry.Version;
+            }
+        }
+    }
+    catch { /* Ignorera API-missar, t.ex. interna paket */ }
+
+    return new { item.Name, LatestVersion = latestVersion };
+});
+
+// Vänta in att ALLA anrop blir klara samtidigt
+var lookupResults = await Task.WhenAll(lookupTasks).ConfigureAwait(true);
+var latestVersionsDict = lookupResults.ToDictionary(x => x.Name, x => x.LatestVersion, StringComparer.OrdinalIgnoreCase);
+
+// 10. Scanna dina extraherade paket i minnet
+Console.WriteLine($"{Environment.NewLine}Alla versioner hämtade. Påbörjar skanning...");
 
 // Gruppera paketen efter namn och sortera grupperna i bokstavsordning (A-Ö)
 var groupedPackages = extractedPackages.GroupBy(p => p.Name, StringComparer.OrdinalIgnoreCase).OrderBy(g => g.Key);
@@ -155,22 +191,9 @@ foreach (var packageGroup in groupedPackages)
             ? $"Ja (Definierad till: {cpmMatch.Version})"
             : "Nej (Transitivt beroende)";
 
-        // Hämta live-version från NuGet
-        string latestNuGetVersion = "Okänd";
-        try
-        {
-            var packageRegUrl = $"{regResourceUrl.TrimEnd('/')}/{searchKey}/index.json";
-            var regIndex = await client.GetFromJsonAsync<NugetRegistrationIndex>(packageRegUrl).ConfigureAwait(true);
-            if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
-            {
-                var lastPage = regIndex.Pages[^1];
-                if (lastPage.Items != null && lastPage.Items.Count > 0)
-                {
-                    latestNuGetVersion = lastPage.Items[^1].CatalogEntry.Version;
-                }
-            }
-        }
-        catch { /* Ignorera API-missar */ }
+        // Hämtar senaste NuGet-versionen blixtsnabbt från vårt färdiga minnes-dictionary istället för att loopa URL-anrop!
+        latestVersionsDict.TryGetValue(pkg.Name, out string? latestNuGetVersion);
+        latestNuGetVersion ??= "Okänd";
 
         // Filtrera fram om sårbarheterna faktiskt drabbar DENNA specifika version
         var activeVulnerabilities = new List<Vulnerability>();
@@ -348,5 +371,7 @@ record RegistrationItem(
 record CatalogEntry(
     [property: JsonPropertyName("version")] string Version
 );
+
+record PackageVersionLookup(string PackageName, string InstalledVersion, string LatestVersion);
 
 #endregion
