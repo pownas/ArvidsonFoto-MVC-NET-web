@@ -10,7 +10,7 @@ using System.Xml.Linq;
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
 string propsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Directory.Packages.props");
-string markdownReportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sbom-report.md");
+string markdownReportPath = GetWikiOutputPath("sbom-report.md");
 var extractedPackages = new List<NuGetPackage>();
 
 // 2. Kontrollera om mappen med lock-filer existerar
@@ -444,6 +444,38 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
     }
 
     return false;
+}
+
+/// <summary>
+/// Navigerar till solution katalogen genom att leta efter .sln-filer uppåt i katalogstrukturen, eller .git-katalogen som en fallback.
+/// </summary>
+static string GetWikiOutputPath(string fileName = "sbom-report.md")
+{
+    // Starta i katalogen där appen körs (t.ex. /artifacts/bin/SbomScanner/debug/)
+    var currentDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+    // Klättra uppåt tills vi hittar katalogen som innehåller .sln-filen eller .git
+    while (currentDir != null)
+    {
+        if (currentDir.GetFiles("*.sln*").Length != 0 || currentDir.GetDirectories(".git").Length != 0)
+        {
+            // Vi har hittat Solution Root!
+            string wikiDir = Path.Combine(currentDir.FullName, "wiki");
+
+            // Skapa wiki-mappen om den inte redan finns
+            if (!Directory.Exists(wikiDir))
+            {
+                Directory.CreateDirectory(wikiDir);
+            }
+
+            return Path.Combine(wikiDir, fileName);
+        }
+
+        currentDir = currentDir.Parent;
+    }
+
+    // Fallback om vi mot förmodan inte hittar rooten (t.ex. i en container/CI-pipeline)
+    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
 }
 
 #endregion
