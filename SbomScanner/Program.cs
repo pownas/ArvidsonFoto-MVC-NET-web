@@ -288,7 +288,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     sb.AppendLine($"*Genererad den: {DateTime.Now:yyyy-MM-dd HH:mm:ss}*");
     sb.AppendLine();
 
-    // 1. Sammanfattning (KPI-Kort med hårdkodad text + bakgrunds-kontrast som fungerar överallt)
+    // 1. Sammanfattning (KPI-Kort)
     int totalPackages = items.Count;
     int vulnerablePackages = items.Count(i => i.ActiveVulnerabilities.Count != 0);
     int versionMismatches = items.Where(i => i.HasVersionMismatch).Select(i => i.PackageName).Distinct().Count();
@@ -297,7 +297,6 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     sb.AppendLine("## 📊 Översikt");
     sb.AppendLine("<table width=\"100%\">");
     sb.AppendLine("  <tr>");
-    // Genom att sätta både ljus bakgrund OCH mörk textfärg (color) förblir korten läsbara i både light och dark mode
     sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;\"><b>Totalt skannade</b><br><font size=\"5\" color=\"#1f2328\">{totalPackages}</font></td>");
     sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#ffebe9; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #ffc1c0;\"><b>⚠️ Aktiva sårbarheter</b><br><font size=\"5\" color=\"#cf222e\"><b>{vulnerablePackages}</b></font></td>");
     sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;\"><b>🔄 Versionskonflikter</b><br><font size=\"5\" color=\"#9a6700\"><b>{versionMismatches}</b></font></td>");
@@ -306,12 +305,11 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     sb.AppendLine("</table>");
     sb.AppendLine();
 
-    // 2. Tabell för Aktiva Sårbarheter (Om det finns några)
+    // 2. AKUTA ÅTGÄRDER: Tabell för Aktiva Sårbarheter (Om det finns några)
     if (vulnerablePackages > 0)
     {
         sb.AppendLine("## 🚨 Aktiva sårbarheter funna");
         sb.AppendLine("<table width=\"100%\">");
-        // Vi skippar fasta färger på thead/tr så anpassar sig tabellen sömlöst till GitHubs mörka/ljusa tema
         sb.AppendLine("  <thead>");
         sb.AppendLine("    <tr>");
         sb.AppendLine("      <th align=\"left\">Paketnamn</th>");
@@ -349,7 +347,42 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
         sb.AppendLine();
     }
 
-    // 3. Tabell för Alla Godkända och Rena Paket (SBOM)
+    // 3. AKUTA ÅTGÄRDER: Tabell för Versionskonflikter (Om det finns några)
+    var conflictGroups = items
+        .Where(i => i.HasVersionMismatch)
+        .GroupBy(i => i.PackageName, StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+    if (conflictGroups.Count != 0)
+    {
+        sb.AppendLine("## 🔄 Versionskonflikter upptäckta");
+        sb.AppendLine("<blockquote>💡 <b>Tips:</b> Standardisera dessa paket till en gemensam version i din <code>Directory.Packages.props</code> för att undvika oväntat runtime-beteende.</blockquote>");
+        sb.AppendLine("<table width=\"100%\">");
+        sb.AppendLine("  <thead>");
+        sb.AppendLine("    <tr>");
+        sb.AppendLine("      <th align=\"left\" width=\"40%\">Paketnamn</th>");
+        sb.AppendLine("      <th align=\"left\" width=\"60%\">Installerade versioner</th>");
+        sb.AppendLine("    </tr>");
+        sb.AppendLine("  </thead>");
+        sb.AppendLine("  <tbody>");
+
+        foreach (var group in conflictGroups)
+        {
+            // Hämta ut alla unika versioner som registrerats för detta paketnamn
+            var uniqueVersions = group.Select(g => g.InstalledVersion).Distinct().OrderBy(v => v);
+            var versionBadges = string.Join(" &nbsp;|&nbsp; ", uniqueVersions.Select(v => $"<code>{v}</code>"));
+
+            sb.AppendLine("    <tr>");
+            sb.AppendLine($"      <td><b>{group.Key}</b></td>");
+            sb.AppendLine($"      <td>{versionBadges}</td>");
+            sb.AppendLine("    </tr>");
+        }
+        sb.AppendLine("  </tbody>");
+        sb.AppendLine("</table>");
+        sb.AppendLine();
+    }
+
+    // 4. Komplett Paketförteckning (SBOM)
     sb.AppendLine("## 📦 Komplett Paketförteckning (SBOM)");
     sb.AppendLine("<table width=\"100%\">");
     sb.AppendLine("  <thead>");
@@ -365,6 +398,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
     foreach (var item in items)
     {
+        // Vi exkluderar sårbarheter härifrån så de slipper ta plats i två tabeller
         if (item.ActiveVulnerabilities.Count != 0) continue;
 
         string statusBadge;
