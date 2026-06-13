@@ -206,7 +206,7 @@ await GenerateMarkdownReportAsync(reportData, markdownReportPath).ConfigureAwait
 Console.WriteLine($"{Environment.NewLine}🚀 Skanning klar! Markdown-rapport genererad på: {markdownReportPath}");
 
 
-#region Utmatningsmetoder
+#region Utmatningsmetod - Print to Console
 
 static void PrintToConsole(List<ReportItem> items)
 {
@@ -274,6 +274,10 @@ static void PrintToConsole(List<ReportItem> items)
     }
 }
 
+#endregion
+
+#region Utmatningsmetod - Generera Markdown-rapport
+
 static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string outputPath)
 {
     var sb = new StringBuilder();
@@ -282,7 +286,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     sb.AppendLine($"*Genererad den: {DateTime.Now:yyyy-MM-dd HH:mm:ss}*");
     sb.AppendLine();
 
-    // 1. Sammanfattning (KPI-Kort med HTML)
+    // 1. Sammanfattning (KPI-Kort med hårdkodad text + bakgrunds-kontrast som fungerar överallt)
     int totalPackages = items.Count;
     int vulnerablePackages = items.Count(i => i.ActiveVulnerabilities.Any());
     int versionMismatches = items.Where(i => i.HasVersionMismatch).Select(i => i.PackageName).Distinct().Count();
@@ -291,10 +295,11 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     sb.AppendLine("## 📊 Översikt");
     sb.AppendLine("<table width=\"100%\">");
     sb.AppendLine("  <tr>");
-    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#f6f8fa; padding:15px; border-radius:6px;\"><b>Totalt skannade</b><br><font size=\"5\">{totalPackages}</font></td>");
-    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:{(vulnerablePackages > 0 ? "#ffebe9" : "#dafbe1")}; padding:15px; border-radius:6px;\"><b>⚠️ Aktiva sårbarheter</b><br><font size=\"5\" color=\"{(vulnerablePackages > 0 ? "#cf222e" : "#1f883d")}\">{vulnerablePackages}</font></td>");
-    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:{(versionMismatches > 0 ? "#fff8c5" : "#f6f8fa")}; padding:15px; border-radius:6px;\"><b>🔄 Versionskonflikter</b><br><font size=\"5\" color=\"{(versionMismatches > 0 ? "#9a6700" : "#24292f")}\">{versionMismatches}</font></td>");
-    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#ddf4ff; padding:15px; border-radius:6px;\"><b>📦 Outdaterade paket</b><br><font size=\"5\" color=\"#0969da\">{outdatedPackages}</font></td>");
+    // Genom att sätta både ljus bakgrund OCH mörk textfärg (color) förblir korten läsbara i både light och dark mode
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;\"><b>Totalt skannade</b><br><font size=\"5\" color=\"#1f2328\">{totalPackages}</font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#ffebe9; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #ffc1c0;\"><b>⚠️ Aktiva sårbarheter</b><br><font size=\"5\" color=\"#cf222e\"><b>{vulnerablePackages}</b></font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;\"><b>🔄 Versionskonflikter</b><br><font size=\"5\" color=\"#9a6700\"><b>{versionMismatches}</b></font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;\"><b>📦 Outdaterade paket</b><br><font size=\"5\" color=\"#0969da\"><b>{outdatedPackages}</b></font></td>");
     sb.AppendLine("  </tr>");
     sb.AppendLine("</table>");
     sb.AppendLine();
@@ -304,23 +309,24 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
     {
         sb.AppendLine("## 🚨 Aktiva sårbarheter funna");
         sb.AppendLine("<table width=\"100%\">");
-        sb.AppendLine("  <thead style=\"background-color:#cf222e; color:white; font-weight:bold;\">");
+        // Vi skippar fasta färger på thead/tr så anpassar sig tabellen sömlöst till GitHubs mörka/ljusa tema
+        sb.AppendLine("  <thead>");
         sb.AppendLine("    <tr>");
-        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Paketnamn</th>");
-        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Installerad</th>");
-        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Senaste</th>");
-        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Allvarlighetsgrad & Detaljer</th>");
+        sb.AppendLine("      <th align=\"left\">Paketnamn</th>");
+        sb.AppendLine("      <th align=\"left\">Installerad</th>");
+        sb.AppendLine("      <th align=\"left\">Senaste</th>");
+        sb.AppendLine("      <th align=\"left\">Allvarlighetsgrad & Detaljer</th>");
         sb.AppendLine("    </tr>");
         sb.AppendLine("  </thead>");
         sb.AppendLine("  <tbody>");
 
         foreach (var item in items.Where(i => i.ActiveVulnerabilities.Any()))
         {
-            sb.AppendLine("    <tr style=\"background-color:#fff8f7; border-bottom: 1px solid #d0d7de;\">");
-            sb.AppendLine($"      <td style=\"padding:8px;\"><b>{item.PackageName}</b></td>");
-            sb.AppendLine($"      <td style=\"padding:8px;\"><code style=\"color:#cf222e; background-color:#ffebe9; padding:2px 4px; border-radius:4px;\">{item.InstalledVersion}</code></td>");
-            sb.AppendLine($"      <td style=\"padding:8px;\"><code style=\"color:#1f883d; background-color:#dafbe1; padding:2px 4px; border-radius:4px;\">{item.LatestVersion}</code></td>");
-            sb.AppendLine("      <td style=\"padding:8px;\">");
+            sb.AppendLine("    <tr>");
+            sb.AppendLine($"      <td><b>{item.PackageName}</b></td>");
+            sb.AppendLine($"      <td><code style=\"color:#cf222e; background-color:#ffebe9; padding:2px 4px; border-radius:4px; border:none;\">{item.InstalledVersion}</code></td>");
+            sb.AppendLine($"      <td><code style=\"color:#1f883d; background-color:#dafbe1; padding:2px 4px; border-radius:4px; border:none;\">{item.LatestVersion}</code></td>");
+            sb.AppendLine("      <td>");
 
             foreach (var v in item.ActiveVulnerabilities)
             {
@@ -329,7 +335,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
                 sb.AppendLine($"        <div style=\"margin-bottom:6px;\">");
                 sb.AppendLine($"          <span style=\"background-color:{badgeColor}; color:white; padding:2px 6px; border-radius:10px; font-size:11px; font-weight:bold;\">{severityText}</span>");
-                sb.AppendLine($"          <span style=\"font-size:12px; color:#57606a;\"> Berör intervall: <code>{v.Versions}</code></span> - <a href=\"{v.Url}\" target=\"_blank\">Visa Advisory</a>");
+                sb.AppendLine($"          <span style=\"font-size:12px;\"> Berör intervall: <code>{v.Versions}</code></span> - <a href=\"{v.Url}\" target=\"_blank\">Visa Advisory</a>");
                 sb.AppendLine($"        </div>");
             }
 
@@ -341,48 +347,46 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
         sb.AppendLine();
     }
 
-    // 3. Tabell för Alla Godkända och Rena Paket
+    // 3. Tabell för Alla Godkända och Rena Paket (SBOM)
     sb.AppendLine("## 📦 Komplett Paketförteckning (SBOM)");
     sb.AppendLine("<table width=\"100%\">");
-    sb.AppendLine("  <thead style=\"background-color:#24292f; color:white;\">");
+    sb.AppendLine("  <thead>");
     sb.AppendLine("    <tr>");
-    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Status</th>");
-    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Paketnamn</th>");
-    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Version</th>");
-    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Senaste version</th>");
-    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Hanteras i CPM?</th>");
+    sb.AppendLine("      <th align=\"left\">Status</th>");
+    sb.AppendLine("      <th align=\"left\">Paketnamn</th>");
+    sb.AppendLine("      <th align=\"left\">Version</th>");
+    sb.AppendLine("      <th align=\"left\">Senaste version</th>");
+    sb.AppendLine("      <th align=\"left\">Hanteras i CPM?</th>");
     sb.AppendLine("    </tr>");
     sb.AppendLine("  </thead>");
     sb.AppendLine("  <tbody>");
 
     foreach (var item in items)
     {
-        // Hoppa över de sårbarhetsdrabbade här eftersom de har en egen dedikerad tabell högst upp
         if (item.ActiveVulnerabilities.Any()) continue;
 
         string statusBadge;
-        string rowBg = "#ffffff";
 
+        // Våra små status-badges har BÅDE bakgrund och textfärg låsta, så de poppar snyggt i båda teman
         if (item.HasVersionMismatch)
         {
-            statusBadge = "<span style=\"background-color:#fff8c5; color:#9a6700; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">⚠️ Konflikt</span>";
-            rowBg = "#fffdf5";
+            statusBadge = "<span style=\"background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">⚠️ Konflikt</span>";
         }
         else if (item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion)
         {
-            statusBadge = "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">🔄 Uppdatering</span>";
+            statusBadge = "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">🔄 Uppdatering</span>";
         }
         else
         {
-            statusBadge = "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">✓ OK</span>";
+            statusBadge = "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">✓ OK</span>";
         }
 
-        sb.AppendLine($"    <tr style=\"background-color:{rowBg}; border-bottom: 1px solid #d0d7de;\">");
-        sb.AppendLine($"      <td style=\"padding:8px;\">{statusBadge}</td>");
-        sb.AppendLine($"      <td style=\"padding:8px;\"><b>{item.PackageName}</b></td>");
-        sb.AppendLine($"      <td style=\"padding:8px;\"><code>{item.InstalledVersion}</code></td>");
-        sb.AppendLine($"      <td style=\"padding:8px;\"><code>{item.LatestVersion}</code></td>");
-        sb.AppendLine($"      <td style=\"padding:8px;\"><font size=\"2\" color=\"#57606a\">{item.CpmStatus}</font></td>");
+        sb.AppendLine("    <tr>");
+        sb.AppendLine($"      <td>{statusBadge}</td>");
+        sb.AppendLine($"      <td><b>{item.PackageName}</b></td>");
+        sb.AppendLine($"      <td><code>{item.InstalledVersion}</code></td>");
+        sb.AppendLine($"      <td><code>{item.LatestVersion}</code></td>");
+        sb.AppendLine($"      <td><font size=\"2\">{item.CpmStatus}</font></td>");
         sb.AppendLine("    </tr>");
     }
 
