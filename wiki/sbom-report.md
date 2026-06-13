@@ -1,63 +1,14 @@
 ﻿# 🛡️ Security & SBOM Scan Report
-*Genererad den: 2026-06-14 00:00:32*
+*Genererad den: 2026-06-14 00:06:05*
 
 ## 📊 Översikt
 <table width="100%">
   <tr>
-    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">218</font></td>
+    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">209</font></td>
     <td align="center" width="25%" style="background-color:#ffebe9; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #ffc1c0;"><b>⚠️ Aktiva sårbarheter</b><br><font size="5" color="#cf222e"><b>0</b></font></td>
-    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>9</b></font></td>
-    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>68</b></font></td>
+    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>0</b></font></td>
+    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>62</b></font></td>
   </tr>
-</table>
-
-## 🔄 Versionskonflikter upptäckta
-<blockquote>💡 <b>Tips:</b> Standardisera dessa paket till en gemensam version i din <code>Directory.Packages.props</code> för att undvika oväntat runtime-beteende.</blockquote>
-<table width="100%">
-  <thead>
-    <tr>
-      <th align="left" width="40%">Paketnamn</th>
-      <th align="left" width="60%">Installerade versioner</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>Microsoft.Extensions.Http</b></td>
-      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging</b></td>
-      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging.Configuration</b></td>
-      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Testing.Extensions.Telemetry</b></td>
-      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Testing.Extensions.TrxReport.Abstractions</b></td>
-      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Testing.Platform</b></td>
-      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Testing.Platform.MSBuild</b></td>
-      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
-    </tr>
-    <tr>
-      <td><b>Polly.Core</b></td>
-      <td><code>8.4.2</code> &nbsp;|&nbsp; <code>8.6.6</code></td>
-    </tr>
-    <tr>
-      <td><b>Polly.Extensions</b></td>
-      <td><code>8.4.2</code> &nbsp;|&nbsp; <code>8.6.6</code></td>
-    </tr>
-  </tbody>
 </table>
 
 ## 📦 Komplett Paketförteckning (SBOM)
@@ -787,18 +738,11 @@
       <td><font size="2">Ja (10.0.9)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Http</b></td>
-      <td><code>10.0.8</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Http</b></td>
       <td><code>10.0.9</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (10.0.9)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -829,18 +773,11 @@
       <td><font size="2">Nej (Transitivt)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging</b></td>
-      <td><code>10.0.8</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging</b></td>
       <td><code>10.0.9</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (10.0.9)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -850,18 +787,11 @@
       <td><font size="2">Nej (Transitivt)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging.Configuration</b></td>
-      <td><code>10.0.8</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.Configuration</b></td>
       <td><code>10.0.9</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (10.0.9)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -1067,32 +997,18 @@
       <td><font size="2">Nej (Transitivt)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Testing.Extensions.Telemetry</b></td>
-      <td><code>1.9.1</code></td>
-      <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Testing.Extensions.Telemetry</b></td>
       <td><code>2.2.3</code></td>
       <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (2.2.3)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Testing.Extensions.TrxReport.Abstractions</b></td>
-      <td><code>1.9.1</code></td>
-      <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Testing.Extensions.TrxReport.Abstractions</b></td>
       <td><code>2.2.3</code></td>
       <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (2.2.3)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -1102,32 +1018,18 @@
       <td><font size="2">Nej (Transitivt)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Testing.Platform</b></td>
-      <td><code>1.9.1</code></td>
-      <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Testing.Platform</b></td>
       <td><code>2.2.3</code></td>
       <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (2.2.3)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Testing.Platform.MSBuild</b></td>
-      <td><code>1.9.1</code></td>
-      <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Testing.Platform.MSBuild</b></td>
       <td><code>2.2.3</code></td>
       <td><code>2.2.3</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (2.2.3)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -1319,32 +1221,18 @@
       <td><font size="2">Ja (1.15.1)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Polly.Core</b></td>
-      <td><code>8.4.2</code></td>
-      <td><code>8.7.0</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Polly.Core</b></td>
       <td><code>8.6.6</code></td>
       <td><code>8.7.0</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (8.6.6)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Polly.Extensions</b></td>
-      <td><code>8.4.2</code></td>
-      <td><code>8.7.0</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Polly.Extensions</b></td>
       <td><code>8.6.6</code></td>
       <td><code>8.7.0</code></td>
-      <td><font size="2">Nej (Transitivt)</font></td>
+      <td><font size="2">Ja (8.6.6)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
