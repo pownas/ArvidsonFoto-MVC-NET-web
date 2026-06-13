@@ -20,9 +20,11 @@
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <AssemblyName>$(AssemblyName)</AssemblyName>
     <IsPackable>false</IsPackable>
+    <Year>$([System.DateTime]::UtcNow.ToString('yyyy'))</Year>
+    <Copyright>Copyright © 2003-$(Year) Arvidson Foto. All rights reserved.</Copyright>
     <Version>3.10.11</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
-    <InformationalVersion>$(Version)</InformationalVersion>
+    <InformationalVersion>$(Version)+commit</InformationalVersion>
     <RepositoryUrl>https://github.com/pownas/ArvidsonFoto-MVC-NET-web</RepositoryUrl>
   </PropertyGroup>
 </Project>
