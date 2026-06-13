@@ -5,7 +5,9 @@ using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
+#pragma warning disable CA1305 // Specify IFormatProvider
 #pragma warning disable CA1308 // Normalize strings to uppercase
+#pragma warning disable IDE0058 // Expression value is never used
 
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
@@ -288,9 +290,9 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
     // 1. Sammanfattning (KPI-Kort med hårdkodad text + bakgrunds-kontrast som fungerar överallt)
     int totalPackages = items.Count;
-    int vulnerablePackages = items.Count(i => i.ActiveVulnerabilities.Any());
+    int vulnerablePackages = items.Count(i => i.ActiveVulnerabilities.Count != 0);
     int versionMismatches = items.Where(i => i.HasVersionMismatch).Select(i => i.PackageName).Distinct().Count();
-    int outdatedPackages = items.Count(i => i.LatestVersion != "Okänd" && i.LatestVersion != i.InstalledVersion && !i.ActiveVulnerabilities.Any());
+    int outdatedPackages = items.Count(i => i.LatestVersion != "Okänd" && i.LatestVersion != i.InstalledVersion && i.ActiveVulnerabilities.Count == 0);
 
     sb.AppendLine("## 📊 Översikt");
     sb.AppendLine("<table width=\"100%\">");
@@ -320,7 +322,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
         sb.AppendLine("  </thead>");
         sb.AppendLine("  <tbody>");
 
-        foreach (var item in items.Where(i => i.ActiveVulnerabilities.Any()))
+        foreach (var item in items.Where(i => i.ActiveVulnerabilities.Count != 0))
         {
             sb.AppendLine("    <tr>");
             sb.AppendLine($"      <td><b>{item.PackageName}</b></td>");
@@ -363,7 +365,7 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
     foreach (var item in items)
     {
-        if (item.ActiveVulnerabilities.Any()) continue;
+        if (item.ActiveVulnerabilities.Count != 0) continue;
 
         string statusBadge;
 
@@ -434,7 +436,7 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
         return true;
     }
 
-    if (rangeStr.StartsWith("<="))
+    if (rangeStr.StartsWith("<=", StringComparison.OrdinalIgnoreCase))
     {
         if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v)) return currentVersion <= v;
     }
@@ -484,7 +486,7 @@ static string GetWikiOutputPath(string fileName = "sbom-report.md")
 #region DataModeller
 
 // Ny modell för att skicka strukturerad data till rapportörerna
-record ReportItem(
+sealed record ReportItem(
     string PackageName,
     string InstalledVersion,
     string LatestVersion,
@@ -495,12 +497,12 @@ record ReportItem(
     bool IsSecuredOrPatched
 );
 
-record ServiceIndex(
+sealed record ServiceIndex(
     [property: JsonPropertyName("resources")]
     List<Resource> Resources
 );
 
-record Resource(
+sealed record Resource(
     [property: JsonPropertyName("@id")]
     string Id,
 
@@ -508,7 +510,7 @@ record Resource(
     string Type
 );
 
-record VulnerabilityFile(
+sealed record VulnerabilityFile(
     [property: JsonPropertyName("@name")]
     string Name,
 
@@ -516,7 +518,7 @@ record VulnerabilityFile(
     string Id
 );
 
-record Vulnerability(
+sealed record Vulnerability(
     [property: JsonPropertyName("severity")]
     int Severity,
 
@@ -527,12 +529,12 @@ record Vulnerability(
     string Url
 );
 
-record LockFile(
+sealed record LockFile(
     [property: JsonPropertyName("dependencies")]
     Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
 
-record LockDependency(
+sealed record LockDependency(
     [property: JsonPropertyName("type")]
     string Type,
 
@@ -543,28 +545,28 @@ record LockDependency(
     string ContentHash
 );
 
-record NuGetPackage(
+sealed record NuGetPackage(
     string Name,
     string Version,
     string ContentHash
 );
 
-record NugetRegistrationIndex(
+sealed record NugetRegistrationIndex(
     [property: JsonPropertyName("items")]
     List<RegistrationPage> Pages
 );
 
-record RegistrationPage(
+sealed record RegistrationPage(
     [property: JsonPropertyName("items")]
     List<RegistrationItem> Items
 );
 
-record RegistrationItem(
+sealed record RegistrationItem(
     [property: JsonPropertyName("catalogEntry")]
     CatalogEntry CatalogEntry
 );
 
-record CatalogEntry(
+sealed record CatalogEntry(
     [property: JsonPropertyName("version")]
     string Version
 );
