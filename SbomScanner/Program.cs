@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
@@ -9,6 +10,7 @@ using System.Xml.Linq;
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
 string propsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Directory.Packages.props");
+string markdownReportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sbom-report.md");
 var extractedPackages = new List<NuGetPackage>();
 
 // 2. Kontrollera om mappen med lock-filer existerar
@@ -117,16 +119,14 @@ Console.WriteLine($"Laddar ner sårbarhetsdatabasen från: {baseJsonUrl}");
 // 8. Ladda ner sårbarhetsdatabasen
 var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vulnerability>>>(baseJsonUrl).ConfigureAwait(true);
 
-// 9. Hämta senaste versioner för alla unika paket parallellt (för att undvika att göra 150+ API-anrop sekventiellt)
+// 9. Hämta senaste versioner för alla unika paket parallellt
 Console.WriteLine($"{Environment.NewLine}Hämtar senaste versioner från NuGet live-API...");
 
-// Skapa en lista med unika paket/versioner-kombinationer som faktiskt behöver slås upp
 var uniqueLookups = extractedPackages
     .Select(p => new { Name = p.Name, Lower = p.Name.ToLowerInvariant() })
     .DistinctBy(p => p.Lower)
     .ToList();
 
-// Starta alla NuGet.org anrop parallellt i bakgrunden
 var lookupTasks = uniqueLookups.Select(async item =>
 {
     string latestVersion = "Okänd";
@@ -149,53 +149,31 @@ var lookupTasks = uniqueLookups.Select(async item =>
     return new { item.Name, LatestVersion = latestVersion };
 });
 
-// Vänta in att ALLA anrop blir klara samtidigt
 var lookupResults = await Task.WhenAll(lookupTasks).ConfigureAwait(true);
 var latestVersionsDict = lookupResults.ToDictionary(x => x.Name, x => x.LatestVersion, StringComparer.OrdinalIgnoreCase);
 
-// 10. Scanna dina extraherade paket i minnet
-Console.WriteLine($"{Environment.NewLine}Alla versioner hämtade. Påbörjar skanning...");
+// 10. Processa och bygg data för rapporten
+Console.WriteLine($"{Environment.NewLine}Alla versioner hämtade. Analyserar resultat...");
 
-// Gruppera paketen efter namn och sortera grupperna i bokstavsordning (A-Ö)
+var reportData = new List<ReportItem>();
 var groupedPackages = extractedPackages.GroupBy(p => p.Name, StringComparer.OrdinalIgnoreCase).OrderBy(g => g.Key);
 
 foreach (var packageGroup in groupedPackages)
 {
     string packageName = packageGroup.Key;
-    // NuGet-API:et kräver att alla paket-ID:n är i gemener (små bokstäver) vid sökning
     string searchKey = packageName.ToLowerInvariant();
-
-    // Kontrollera om paketet har mer än en unik version installerad
     bool hasVersionMismatch = packageGroup.Select(p => p.Version).Distinct().Count() > 1;
 
-    // Om det finns en versionskonflikt, varna användaren högst upp för detta paket
-    if (hasVersionMismatch)
-    {
-        Console.WriteLine(new string('-', 60));
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"⚠️ VARNING: Versionskonflikt upptäckt för {packageName}!");
-        Console.Write("    Installerad i följande versioner: ");
-        // Sorterar även versionsnumren i varningstexten
-        Console.WriteLine(string.Join(", ", packageGroup.Select(p => p.Version).Distinct().OrderBy(v => v)));
-        Console.WriteLine("    -> Tips: Lås paketet till en gemensam version i Directory.Packages.props för att fixa detta.");
-        Console.ResetColor();
-    }
-
-    // Sorterar de enskilda paketen i gruppen efter version så att de också skrivs ut i ordning
     var sortedPackageItems = packageGroup.OrderBy(p => p.Version);
 
     foreach (var pkg in sortedPackageItems)
     {
         var cpmMatch = centralPackages.FirstOrDefault(c => c.Id.Equals(pkg.Name, StringComparison.OrdinalIgnoreCase));
-        string cpmStatus = cpmMatch != null
-            ? $"Ja (Definierad till: {cpmMatch.Version})"
-            : "Nej (Transitivt beroende)";
+        string cpmStatus = cpmMatch != null ? $"Ja ({cpmMatch.Version})" : "Nej (Transitivt)";
 
-        // Hämtar senaste NuGet-versionen blixtsnabbt från vårt färdiga minnes-dictionary istället för att loopa URL-anrop!
         latestVersionsDict.TryGetValue(pkg.Name, out string? latestNuGetVersion);
         latestNuGetVersion ??= "Okänd";
 
-        // Filtrera fram om sårbarheterna faktiskt drabbar DENNA specifika version
         var activeVulnerabilities = new List<Vulnerability>();
         if (vulnerabilities!.TryGetValue(searchKey, out var vulnList))
         {
@@ -208,79 +186,224 @@ foreach (var packageGroup in groupedPackages)
             }
         }
 
-        // --- Kontroll BASERAT PÅ OM SÅRBARHETEN ÄR AKTIV ELLER PATCHAD ---
-        if (activeVulnerabilities.Count > 0)
+        reportData.Add(new ReportItem(
+            packageName,
+            pkg.Version,
+            latestNuGetVersion,
+            cpmStatus,
+            hasVersionMismatch,
+            packageGroup.Select(p => p.Version).Distinct().ToList(),
+            activeVulnerabilities,
+            vulnList != null && vulnList.Count > 0
+        ));
+    }
+}
+
+// 11. Skicka utdata till de två olika kanalerna
+PrintToConsole(reportData);
+await GenerateMarkdownReportAsync(reportData, markdownReportPath).ConfigureAwait(true);
+
+Console.WriteLine($"{Environment.NewLine}🚀 Skanning klar! Markdown-rapport genererad på: {markdownReportPath}");
+
+
+#region Utmatningsmetoder
+
+static void PrintToConsole(List<ReportItem> items)
+{
+    Console.WriteLine(new string('=', 70));
+    Console.WriteLine("📊 SBOM & SÅRBARHETSRAPPORT (KONSOL)");
+    Console.WriteLine(new string('=', 70));
+
+    // Visa konflikter först som en sammanställning
+    var conflicts = items.Where(i => i.HasVersionMismatch).Select(i => i.PackageName).Distinct();
+    if (conflicts.Any())
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("⚠️  FÖLJANDE PAKET HAR VERSIONSKONFLIKTER INOM LÖSNINGEN:");
+        foreach (var conflictName in conflicts)
         {
-            // Din version ÄR drabbad av en eller flera sårbarheter!
-            Console.WriteLine(new string('-', 60));
+            var versions = items.First(i => i.PackageName == conflictName).AllInstalledVersions;
+            Console.WriteLine($"   - {conflictName}: Installerade versioner -> {string.Join(", ", versions)}");
+        }
+        Console.ResetColor();
+        Console.WriteLine(new string('-', 70));
+    }
+
+    foreach (var item in items)
+    {
+        if (item.ActiveVulnerabilities.Count > 0)
+        {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"[VARNING] Aktiv sårbarhet funnen i: {pkg.Name} (v. {pkg.Version})");
+            Console.WriteLine($"[CRITICAL] {item.PackageName} (v. {item.InstalledVersion})");
             Console.ResetColor();
-
-            Console.WriteLine($"  -> Nuvarande installerad version:  {pkg.Version}");
-            Console.WriteLine($"  -> Hanteras centralt i CPM?         {cpmStatus}");
+            Console.WriteLine($"  -> Hanteras i CPM: {item.CpmStatus}");
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"  -> Senaste live-version på NuGet:  {latestNuGetVersion}");
+            Console.WriteLine($"  -> Senaste live-version: {item.LatestVersion}");
             Console.ResetColor();
-            Console.WriteLine($"  -> Hittade {activeVulnerabilities.Count} aktiva sårbarhetsintervall för denna version:");
+            Console.WriteLine($"  -> Aktiva sårbarheter ({item.ActiveVulnerabilities.Count} st):");
 
-            foreach (var vuln in activeVulnerabilities)
+            foreach (var vuln in item.ActiveVulnerabilities)
             {
-                var severityStr = vuln.Severity switch
-                {
-                    0 => "Låg",
-                    1 => "Medel",
-                    2 => "Hög",
-                    3 => "Kritisk",
-                    _ => "Okänd"
-                };
-                Console.WriteLine($"      - Allvarlighet: [{severityStr}] | Berör: {vuln.Versions}");
-                Console.WriteLine($"        Länk: {vuln.Url}");
+                var severityStr = vuln.Severity switch { 0 => "Låg", 1 => "Medel", 2 => "Hög", 3 => "Kritisk", _ => "Okänd" };
+                Console.WriteLine($"     - [{severityStr}] | Intervall: {vuln.Versions} | Länk: {vuln.Url}");
             }
-            Console.WriteLine(new string('-', 60));
+            Console.WriteLine(new string('-', 70));
         }
         else
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("[OK] ");
             Console.ResetColor();
-            Console.Write($"{pkg.Name} (Version: {pkg.Version}) | CPM: {cpmStatus} ");
+            Console.Write($"{item.PackageName,-35} | Version: {item.InstalledVersion,-10} | CPM: {item.CpmStatus,-15}");
 
-            if (vulnList != null && vulnList.Count > 0)
+            if (item.IsSecuredOrPatched)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("[Säkrad/Patchad] ");
+                Console.Write(" [Patchad historik]");
                 Console.ResetColor();
             }
 
-            if (latestNuGetVersion != "Okänd" && latestNuGetVersion != pkg.Version)
+            if (item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion)
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write($"[Nyare version finns: {latestNuGetVersion}]");
+                Console.Write($" [Uppdatering finns: {item.LatestVersion}]");
                 Console.ResetColor();
             }
             Console.WriteLine();
         }
     }
-
-    // Lägg till en extra rad --- efter varje paketgrupp för att göra rapporten mer lättläst
-    if (hasVersionMismatch)
-    {
-        Console.WriteLine(new string('-', 60));
-    }
 }
+
+static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string outputPath)
+{
+    var sb = new StringBuilder();
+
+    sb.AppendLine("# 🛡️ Security & SBOM Scan Report");
+    sb.AppendLine($"*Genererad den: {DateTime.Now:yyyy-MM-dd HH:mm:ss}*");
+    sb.AppendLine();
+
+    // 1. Sammanfattning (KPI-Kort med HTML)
+    int totalPackages = items.Count;
+    int vulnerablePackages = items.Count(i => i.ActiveVulnerabilities.Any());
+    int versionMismatches = items.Where(i => i.HasVersionMismatch).Select(i => i.PackageName).Distinct().Count();
+    int outdatedPackages = items.Count(i => i.LatestVersion != "Okänd" && i.LatestVersion != i.InstalledVersion && !i.ActiveVulnerabilities.Any());
+
+    sb.AppendLine("## 📊 Översikt");
+    sb.AppendLine("<table width=\"100%\">");
+    sb.AppendLine("  <tr>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#f6f8fa; padding:15px; border-radius:6px;\"><b>Totalt skannade</b><br><font size=\"5\">{totalPackages}</font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:{(vulnerablePackages > 0 ? "#ffebe9" : "#dafbe1")}; padding:15px; border-radius:6px;\"><b>⚠️ Aktiva sårbarheter</b><br><font size=\"5\" color=\"{(vulnerablePackages > 0 ? "#cf222e" : "#1f883d")}\">{vulnerablePackages}</font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:{(versionMismatches > 0 ? "#fff8c5" : "#f6f8fa")}; padding:15px; border-radius:6px;\"><b>🔄 Versionskonflikter</b><br><font size=\"5\" color=\"{(versionMismatches > 0 ? "#9a6700" : "#24292f")}\">{versionMismatches}</font></td>");
+    sb.AppendLine($"    <td align=\"center\" width=\"25%\" style=\"background-color:#ddf4ff; padding:15px; border-radius:6px;\"><b>📦 Outdaterade paket</b><br><font size=\"5\" color=\"#0969da\">{outdatedPackages}</font></td>");
+    sb.AppendLine("  </tr>");
+    sb.AppendLine("</table>");
+    sb.AppendLine();
+
+    // 2. Tabell för Aktiva Sårbarheter (Om det finns några)
+    if (vulnerablePackages > 0)
+    {
+        sb.AppendLine("## 🚨 Aktiva sårbarheter funna");
+        sb.AppendLine("<table width=\"100%\">");
+        sb.AppendLine("  <thead style=\"background-color:#cf222e; color:white; font-weight:bold;\">");
+        sb.AppendLine("    <tr>");
+        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Paketnamn</th>");
+        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Installerad</th>");
+        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Senaste</th>");
+        sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Allvarlighetsgrad & Detaljer</th>");
+        sb.AppendLine("    </tr>");
+        sb.AppendLine("  </thead>");
+        sb.AppendLine("  <tbody>");
+
+        foreach (var item in items.Where(i => i.ActiveVulnerabilities.Any()))
+        {
+            sb.AppendLine("    <tr style=\"background-color:#fff8f7; border-bottom: 1px solid #d0d7de;\">");
+            sb.AppendLine($"      <td style=\"padding:8px;\"><b>{item.PackageName}</b></td>");
+            sb.AppendLine($"      <td style=\"padding:8px;\"><code style=\"color:#cf222e; background-color:#ffebe9; padding:2px 4px; border-radius:4px;\">{item.InstalledVersion}</code></td>");
+            sb.AppendLine($"      <td style=\"padding:8px;\"><code style=\"color:#1f883d; background-color:#dafbe1; padding:2px 4px; border-radius:4px;\">{item.LatestVersion}</code></td>");
+            sb.AppendLine("      <td style=\"padding:8px;\">");
+
+            foreach (var v in item.ActiveVulnerabilities)
+            {
+                string badgeColor = v.Severity switch { 3 => "#cf222e", 2 => "#bc4c00", 1 => "#9a6700", _ => "#57606a" };
+                string severityText = v.Severity switch { 3 => "Kritisk", 2 => "Hög", 1 => "Medel", _ => "Låg" };
+
+                sb.AppendLine($"        <div style=\"margin-bottom:6px;\">");
+                sb.AppendLine($"          <span style=\"background-color:{badgeColor}; color:white; padding:2px 6px; border-radius:10px; font-size:11px; font-weight:bold;\">{severityText}</span>");
+                sb.AppendLine($"          <span style=\"font-size:12px; color:#57606a;\"> Berör intervall: <code>{v.Versions}</code></span> - <a href=\"{v.Url}\" target=\"_blank\">Visa Advisory</a>");
+                sb.AppendLine($"        </div>");
+            }
+
+            sb.AppendLine("      </td>");
+            sb.AppendLine("    </tr>");
+        }
+        sb.AppendLine("  </tbody>");
+        sb.AppendLine("</table>");
+        sb.AppendLine();
+    }
+
+    // 3. Tabell för Alla Godkända och Rena Paket
+    sb.AppendLine("## 📦 Komplett Paketförteckning (SBOM)");
+    sb.AppendLine("<table width=\"100%\">");
+    sb.AppendLine("  <thead style=\"background-color:#24292f; color:white;\">");
+    sb.AppendLine("    <tr>");
+    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Status</th>");
+    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Paketnamn</th>");
+    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Version</th>");
+    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Senaste version</th>");
+    sb.AppendLine("      <th align=\"left\" style=\"padding:8px;\">Hanteras i CPM?</th>");
+    sb.AppendLine("    </tr>");
+    sb.AppendLine("  </thead>");
+    sb.AppendLine("  <tbody>");
+
+    foreach (var item in items)
+    {
+        // Hoppa över de sårbarhetsdrabbade här eftersom de har en egen dedikerad tabell högst upp
+        if (item.ActiveVulnerabilities.Any()) continue;
+
+        string statusBadge;
+        string rowBg = "#ffffff";
+
+        if (item.HasVersionMismatch)
+        {
+            statusBadge = "<span style=\"background-color:#fff8c5; color:#9a6700; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">⚠️ Konflikt</span>";
+            rowBg = "#fffdf5";
+        }
+        else if (item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion)
+        {
+            statusBadge = "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">🔄 Uppdatering</span>";
+        }
+        else
+        {
+            statusBadge = "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;\">✓ OK</span>";
+        }
+
+        sb.AppendLine($"    <tr style=\"background-color:{rowBg}; border-bottom: 1px solid #d0d7de;\">");
+        sb.AppendLine($"      <td style=\"padding:8px;\">{statusBadge}</td>");
+        sb.AppendLine($"      <td style=\"padding:8px;\"><b>{item.PackageName}</b></td>");
+        sb.AppendLine($"      <td style=\"padding:8px;\"><code>{item.InstalledVersion}</code></td>");
+        sb.AppendLine($"      <td style=\"padding:8px;\"><code>{item.LatestVersion}</code></td>");
+        sb.AppendLine($"      <td style=\"padding:8px;\"><font size=\"2\" color=\"#57606a\">{item.CpmStatus}</font></td>");
+        sb.AppendLine("    </tr>");
+    }
+
+    sb.AppendLine("  </tbody>");
+    sb.AppendLine("</table>");
+
+    await File.WriteAllTextAsync(outputPath, sb.ToString(), Encoding.UTF8).ConfigureAwait(false);
+}
+
+#endregion
+
 
 #region Hjälpmetoder
 
-// --- LÄGG TILL DENNA HJÄLPMETOD LÄNGST NER I PROGRAM.CS (Utanför loopen eller i en helper-klass) ---
 static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 {
     if (string.IsNullOrWhiteSpace(rangeStr)) return false;
-    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion)) return false; // Skippa eventuell -beta/-rc vid ren sifferjämförelse
+    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion)) return false;
 
     rangeStr = rangeStr.Trim();
 
-    // 1. Hantera standard NuGet-intervall notation t.ex. (, 13.0.1) eller [1.0.0, 2.0.0)
     if (rangeStr.StartsWith('(') || rangeStr.StartsWith('['))
     {
         var parts = rangeStr.Substring(1, rangeStr.Length - 2).Split(',');
@@ -292,14 +415,12 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
         string minStr = parts[0].Trim();
         string maxStr = parts[1].Trim();
 
-        // Kolla minimum-gränsen
         if (!string.IsNullOrEmpty(minStr) && Version.TryParse(minStr.Split('-')[0], out var minVersion))
         {
             if (isMinInclusive && currentVersion < minVersion) return false;
             if (!isMinInclusive && currentVersion <= minVersion) return false;
         }
 
-        // Kolla maximum-gränsen
         if (!string.IsNullOrEmpty(maxStr) && Version.TryParse(maxStr.Split('-')[0], out var maxVersion))
         {
             if (isMaxInclusive && currentVersion > maxVersion) return false;
@@ -309,7 +430,6 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
         return true;
     }
 
-    // 2. Hantera enkla jämförelser om de skulle dyka upp (t.ex. "<= 13.0.1" eller "< 13.0.1")
     if (rangeStr.StartsWith("<="))
     {
         if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v)) return currentVersion <= v;
@@ -324,54 +444,93 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 
 #endregion
 
+
 #region DataModeller
 
+// Ny modell för att skicka strukturerad data till rapportörerna
+record ReportItem(
+    string PackageName,
+    string InstalledVersion,
+    string LatestVersion,
+    string CpmStatus,
+    bool HasVersionMismatch,
+    List<string> AllInstalledVersions,
+    List<Vulnerability> ActiveVulnerabilities,
+    bool IsSecuredOrPatched
+);
+
 record ServiceIndex(
-    [property: JsonPropertyName("resources")] List<Resource> Resources
+    [property: JsonPropertyName("resources")]
+    List<Resource> Resources
 );
 
 record Resource(
-    [property: JsonPropertyName("@id")] string Id,
-    [property: JsonPropertyName("@type")] string Type
+    [property: JsonPropertyName("@id")]
+    string Id,
+
+    [property: JsonPropertyName("@type")]
+    string Type
 );
 
 record VulnerabilityFile(
-    [property: JsonPropertyName("@name")] string Name,
-    [property: JsonPropertyName("@id")] string Id
+    [property: JsonPropertyName("@name")]
+    string Name,
+
+    [property: JsonPropertyName("@id")]
+    string Id
 );
 
 record Vulnerability(
-    [property: JsonPropertyName("severity")] int Severity,
-    [property: JsonPropertyName("versions")] string Versions,
-    [property: JsonPropertyName("url")] string Url
+    [property: JsonPropertyName("severity")]
+    int Severity,
+
+    [property: JsonPropertyName("versions")]
+    string Versions,
+
+    [property: JsonPropertyName("url")]
+    string Url
 );
 
 record LockFile(
-    [property: JsonPropertyName("dependencies")] Dictionary<string, Dictionary<string, LockDependency>> Dependencies
+    [property: JsonPropertyName("dependencies")]
+    Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
 
 record LockDependency(
-    [property: JsonPropertyName("type")] string Type,
-    [property: JsonPropertyName("resolved")] string Resolved,
-    [property: JsonPropertyName("contentHash")] string ContentHash
+    [property: JsonPropertyName("type")]
+    string Type,
+
+    [property: JsonPropertyName("resolved")]
+    string Resolved,
+
+    [property: JsonPropertyName("contentHash")]
+    string ContentHash
 );
 
-record NuGetPackage(string Name, string Version, string ContentHash);
+record NuGetPackage(
+    string Name,
+    string Version,
+    string ContentHash
+);
 
 record NugetRegistrationIndex(
-    [property: JsonPropertyName("items")] List<RegistrationPage> Pages
+    [property: JsonPropertyName("items")]
+    List<RegistrationPage> Pages
 );
 
 record RegistrationPage(
-    [property: JsonPropertyName("items")] List<RegistrationItem> Items
-);
-record RegistrationItem(
-    [property: JsonPropertyName("catalogEntry")] CatalogEntry CatalogEntry
-);
-record CatalogEntry(
-    [property: JsonPropertyName("version")] string Version
+    [property: JsonPropertyName("items")]
+    List<RegistrationItem> Items
 );
 
-record PackageVersionLookup(string PackageName, string InstalledVersion, string LatestVersion);
+record RegistrationItem(
+    [property: JsonPropertyName("catalogEntry")]
+    CatalogEntry CatalogEntry
+);
+
+record CatalogEntry(
+    [property: JsonPropertyName("version")]
+    string Version
+);
 
 #endregion
