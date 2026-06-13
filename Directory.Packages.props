@@ -76,16 +76,14 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Abstractions" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.9" />
-
-      <!--- Microsoft.Extensions.Http: Installerade versioner -> 10.0.8, 10.0.9
-      - Microsoft.Extensions.Logging: Installerade versioner -> 10.0.8, 10.0.9
-      - Microsoft.Extensions.Logging.Configuration: Installerade versioner -> 10.0.8, 10.0.9
-      - Microsoft.Extensions.Options.ConfigurationExtensions: Installerade versioner -> 10.0.8, 10.0.9
-      - Microsoft.Testing.Extensions.Telemetry: Installerade versioner -> 1.9.1, 2.2.3
-      - Microsoft.Testing.Extensions.TrxReport.Abstractions: Installerade versioner -> 1.9.1, 2.2.3
-      - Microsoft.Testing.Platform: Installerade versioner -> 1.9.1, 2.2.3
-      - Microsoft.Testing.Platform.MSBuild: Installerade versioner -> 1.9.1, 2.2.3
-      - Polly.Core: Installerade versioner -> 8.4.2, 8.6.6
-      - Polly.Extensions: Installerade versioner -> 8.4.2, 8.6.6-->
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.Telemetry" Version="2.2.3" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="2.2.3" />
+    <PackageVersion Include="Microsoft.Testing.Platform" Version="2.2.3" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.2.3" />
+    <PackageVersion Include="Polly.Core" Version="8.6.6" />
+    <PackageVersion Include="Polly.Extensions" Version="8.6.6" />
   </ItemGroup>
 </Project>
