@@ -1,5 +1,5 @@
 ﻿# 🛡️ Security & SBOM Scan Report
-*Genererad den: 2026-06-13 23:37:42*
+*Genererad den: 2026-06-14 00:00:32*
 
 ## 📊 Översikt
 <table width="100%">
@@ -9,6 +9,55 @@
     <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>9</b></font></td>
     <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>68</b></font></td>
   </tr>
+</table>
+
+## 🔄 Versionskonflikter upptäckta
+<blockquote>💡 <b>Tips:</b> Standardisera dessa paket till en gemensam version i din <code>Directory.Packages.props</code> för att undvika oväntat runtime-beteende.</blockquote>
+<table width="100%">
+  <thead>
+    <tr>
+      <th align="left" width="40%">Paketnamn</th>
+      <th align="left" width="60%">Installerade versioner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Microsoft.Extensions.Http</b></td>
+      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Extensions.Logging</b></td>
+      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Extensions.Logging.Configuration</b></td>
+      <td><code>10.0.8</code> &nbsp;|&nbsp; <code>10.0.9</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Testing.Extensions.Telemetry</b></td>
+      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Testing.Extensions.TrxReport.Abstractions</b></td>
+      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Testing.Platform</b></td>
+      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
+    </tr>
+    <tr>
+      <td><b>Microsoft.Testing.Platform.MSBuild</b></td>
+      <td><code>1.9.1</code> &nbsp;|&nbsp; <code>2.2.3</code></td>
+    </tr>
+    <tr>
+      <td><b>Polly.Core</b></td>
+      <td><code>8.4.2</code> &nbsp;|&nbsp; <code>8.6.6</code></td>
+    </tr>
+    <tr>
+      <td><b>Polly.Extensions</b></td>
+      <td><code>8.4.2</code> &nbsp;|&nbsp; <code>8.6.6</code></td>
+    </tr>
+  </tbody>
 </table>
 
 ## 📦 Komplett Paketförteckning (SBOM)
