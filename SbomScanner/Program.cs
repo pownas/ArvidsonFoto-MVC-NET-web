@@ -15,6 +15,10 @@ string propsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Dire
 string markdownReportPath = GetWikiOutputPath("sbom-report.md");
 var extractedPackages = new List<NuGetPackage>();
 
+// Kontroll om man vill se förhandsversioner av NuGet-paket eller ej
+bool includeNugetPrerelease = false;
+Console.WriteLine($"Inkludera förhandsversioner (Preview): {includeNugetPrerelease}");
+
 // 2. Kontrollera om mappen med lock-filer existerar
 if (Directory.Exists(lockFilesFolder))
 {
@@ -175,7 +179,6 @@ var vulnerabilities = await client.GetFromJsonAsync<Dictionary<string, List<Vuln
 
 // 9. Hämta senaste versioner för alla unika paket parallellt
 Console.WriteLine($"{Environment.NewLine}Hämtar senaste versioner från NuGet live-API...");
-
 var uniqueLookups = extractedPackages
     .Select(p => new { Name = p.Name, Lower = p.Name.ToLowerInvariant() })
     .DistinctBy(p => p.Lower)
@@ -191,14 +194,34 @@ var lookupTasks = uniqueLookups.Select(async item =>
 
         if (regIndex?.Pages != null && regIndex.Pages.Count > 0)
         {
-            var lastPage = regIndex.Pages[^1];
-            if (lastPage.Items != null && lastPage.Items.Count > 0)
+            // Vi börjar leta i den senaste sidan (oftast den sista, men vi kan loopa bakifrån för säkerhetsskull)
+            for (int p = regIndex.Pages.Count - 1; p >= 0; p--)
             {
-                latestVersion = lastPage.Items[^1].CatalogEntry.Version;
+                var page = regIndex.Pages[p];
+                if (page.Items == null || page.Items.Count == 0) continue;
+
+                // Leta bakifrån bland paketen på den sidan (senaste först)
+                for (int i = page.Items.Count - 1; i >= 0; i--)
+                {
+                    string currentVersion = page.Items[i].CatalogEntry.Version;
+
+                    // Om 'includePrerelease' är true tar vi första bästa (vilket är den absolut senaste).
+                    // Om den är false, godkänner vi bara versioner som INTE innehåller ett bindestreck.
+                    if (includeNugetPrerelease || (!currentVersion.Contains('-') && !currentVersion.Contains('+')))
+                    {
+                        latestVersion = currentVersion;
+                        break;
+                    }
+                }
+
+                // Om vi hittade en version, avbryt sökningen efter äldre sidor
+                if (latestVersion != "Okänd") break;
             }
         }
     }
-    catch { /* Ignorera API-missar, t.ex. interna paket */ }
+    catch {
+        /* Ignorera API-missar, t.ex. interna paket */
+    }
 
     return new { item.Name, LatestVersion = latestVersion };
 });
