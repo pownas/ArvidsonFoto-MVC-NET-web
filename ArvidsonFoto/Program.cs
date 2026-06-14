@@ -83,7 +83,7 @@ public class Program
         }
     }
 
-    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    private static void ConfigureServices(IServiceCollection services, ConfigurationManager configuration, IWebHostEnvironment environment)
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
