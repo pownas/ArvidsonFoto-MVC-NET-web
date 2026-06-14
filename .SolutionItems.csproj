@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Target Name="Build" />
+  <Target Name="Restore" />
+  <Target Name="Publish" />
+
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
@@ -11,9 +15,9 @@
     <NoBuild>true</NoBuild>
     <IsPackable>false</IsPackable>
     <NuGetAudit>false</NuGetAudit>
-    <IsTrimmable>True</IsTrimmable>
-    <IsAotCompatible>True</IsAotCompatible>
-    <IsPublishable>False</IsPublishable>
+    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup Label="Remove BLOBs">
@@ -38,12 +42,13 @@
     <MySolutionBlobs Include="$(SolutionDir)README.md" />
   </ItemGroup>
 
+  <!--
   <Target Name="PackageSolutionBlobs" AfterTargets="Build">
     <PropertyGroup>
       <TargetBlobFolder>$(TargetDir)SolutionBlobs\</TargetBlobFolder>
     </PropertyGroup>
 
-    <Message Importance="high" Text="--- Dynamic Blob Packaging Started ---" />
+    <Message Importance="high" Text="Dynamic Blob Packaging Started" />
 
     <RemoveDir Directories="$(TargetBlobFolder)" Condition="Exists('$(TargetBlobFolder)')" />
 
@@ -51,7 +56,8 @@
 
     <ZipDirectory SourceDirectory="$(TargetBlobFolder)" DestinationFile="$(TargetDir)SolutionItems_Blob.zip" Overwrite="true" />
 
-    <Message Importance="high" Text="--- Blob created successfully at: $(TargetDir)SolutionItems_Blob.zip ---" />
+    <Message Importance="high" Text="Blob created successfully at: $(TargetDir)SolutionItems_Blob.zip" />
   </Target>
+  -->
 
 </Project>
