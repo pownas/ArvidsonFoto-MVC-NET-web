@@ -1,6 +1,8 @@
 ﻿using ArvidsonFoto.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CA1305 // Specify IFormatProvider
+
 namespace ArvidsonFoto.Core.Data;
 
 /// <summary>
