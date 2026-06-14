@@ -27,7 +27,7 @@ jobs:
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
           **/packages.lock.json
-          **/*.sln
+          **/*.sln*
           **/*.csproj
 
     - name: Display .NET info
@@ -58,7 +58,7 @@ jobs:
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
-          **/*.sln
+          **/*.sln*
           **/*.csproj
 
     - name: Restore dependencies (web project)
