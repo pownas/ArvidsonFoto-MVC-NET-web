@@ -77,20 +77,32 @@ if (Directory.Exists(lockFilesFolder))
                 string introducedByString = roots.Count > 0 ? string.Join(", ", roots) : "Okänd källa";
                 // -------------------------------------------------------------
 
-                // Här antar jag att din NuGetPackage-klass kan ta emot 'introducedByString' eller spara det.
-                // Om du vill undvika dubbletter men ackumulera källor:
+                // Kontrollera om paketet redan har lagts till i listan (t.ex. från ett annat projekt)
                 var existing = extractedPackages.FirstOrDefault(p => p.Name.Equals(packageName, StringComparison.OrdinalIgnoreCase) && p.Version == packageVersion);
+
                 if (existing == null)
                 {
-                    var nuGetPkg = new NuGetPackage(packageName, packageVersion, package.Value.ContentHash);
-                    // TIPS: Lägg till en property på NuGetPackage t.ex. 'IntroducedBy'
-                    nuGetPkg.IntroducedBy = introducedByString;
+                    // FIXAT: Ändrat till package.Value.ContentHash
+                    var nuGetPkg = new NuGetPackage(packageName, packageVersion, package.Value.ContentHash)
+                    {
+                        IntroducedBy = introducedByString
+                    };
                     extractedPackages.Add(nuGetPkg);
                 }
                 else
                 {
-                    // Om paketet redan finns från ett annat projekt/ramverk, lägg till källan om den är unik
-                    // (Beroende på hur din NuGetPackage-klass ser ut)
+                    // Om paketet redan finns men dras in av andra källor i detta projekt/ramverk,
+                    // så slår vi ihop dem till en unik lista.
+                    if (existing.IntroducedBy != "[Direkt Beroende]" && introducedByString != "[Direkt Beroende]")
+                    {
+                        var nuSources = existing.IntroducedBy.Split(", ").Concat(roots).Distinct();
+                        existing.IntroducedBy = string.Join(", ", nuSources);
+                    }
+                    else if (introducedByString == "[Direkt Beroende]")
+                    {
+                        // Om det var transitivt i ett projekt men direkt i ett annat, markera det som direkt
+                        existing.IntroducedBy = "[Direkt Beroende]";
+                    }
                 }
             }
         }
