@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <NoBuild>true</NoBuild>
+    <IsPackable>false</IsPackable>
+    <NuGetAudit>false</NuGetAudit>
     <IsTrimmable>True</IsTrimmable>
     <IsAotCompatible>True</IsAotCompatible>
     <IsPublishable>False</IsPublishable>
