@@ -18,12 +18,10 @@ var extractedPackages = new List<NuGetPackage>();
 // 2. Kontrollera om mappen med lock-filer existerar
 if (Directory.Exists(lockFilesFolder))
 {
-    // Hitta alla packages.lock.json i undermapparna
     var lockFiles = Directory.GetFiles(lockFilesFolder, "packages.lock.json", SearchOption.AllDirectories);
 
     foreach (var file in lockFiles)
     {
-        // Hämta namnet på projektet baserat på mappnamnet
         string projectName = Path.GetFileName(Path.GetDirectoryName(file) ?? "Okänt Projekt");
         Console.WriteLine($"Läser in lock-fil för: {projectName}");
 
@@ -34,27 +32,69 @@ if (Directory.Exists(lockFilesFolder))
 
         foreach (var framework in lockFile.Dependencies)
         {
+            // --- NYTT: Bygg en invers tabell över vem som beror på vem ---
+            // Key: Det beroende paketet (transitiva), Value: Lista på paket som drog in det
+            var dependentOnTracker = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var package in framework.Value)
+            {
+                if (package.Value.Dependencies != null)
+                {
+                    foreach (var childDep in package.Value.Dependencies)
+                    {
+                        if (!dependentOnTracker.ContainsKey(childDep.Key))
+                        {
+                            dependentOnTracker[childDep.Key] = new List<string>();
+                        }
+                        // 'package.Key' är föräldern som kräver 'childDep.Key'
+                        dependentOnTracker[childDep.Key].Add(package.Key);
+                    }
+                }
+            }
+            // -------------------------------------------------------------
+
             foreach (var package in framework.Value)
             {
                 if (package.Value.Type == "Project" || string.IsNullOrEmpty(package.Value.ContentHash))
-                    continue; // Skippa interna projekt
+                    continue;
 
-                // Lägg till i listan (om du vill undvika dubbletter mellan projekt kan du lägga till en Distinct-kontroll här)
-                if (!extractedPackages.Any(p => p.Name.Equals(package.Key, StringComparison.OrdinalIgnoreCase) && p.Version == (package.Value.Resolved ?? "Okänd")))
+                string packageName = package.Key;
+                string packageVersion = package.Value.Resolved ?? "Okänd";
+
+                // --- NYTT: Hitta rötterna (Direct dependencies) som ledde hit ---
+                var roots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                if (package.Value.Type == "Direct")
                 {
-                    extractedPackages.Add(new NuGetPackage(
-                        package.Key,
-                        package.Value.Resolved ?? "Okänd",
-                        package.Value.ContentHash));
+                    roots.Add("[Direkt Beroende]");
+                }
+                else
+                {
+                    // Hitta alla Direct-paket som i slutändan leder till detta transitiva paket
+                    FindDirectRoots(packageName, framework.Value, dependentOnTracker, roots, new HashSet<string>());
+                }
+
+                string introducedByString = roots.Count > 0 ? string.Join(", ", roots) : "Okänd källa";
+                // -------------------------------------------------------------
+
+                // Här antar jag att din NuGetPackage-klass kan ta emot 'introducedByString' eller spara det.
+                // Om du vill undvika dubbletter men ackumulera källor:
+                var existing = extractedPackages.FirstOrDefault(p => p.Name.Equals(packageName, StringComparison.OrdinalIgnoreCase) && p.Version == packageVersion);
+                if (existing == null)
+                {
+                    var nuGetPkg = new NuGetPackage(packageName, packageVersion, package.Value.ContentHash);
+                    // TIPS: Lägg till en property på NuGetPackage t.ex. 'IntroducedBy'
+                    nuGetPkg.IntroducedBy = introducedByString;
+                    extractedPackages.Add(nuGetPkg);
+                }
+                else
+                {
+                    // Om paketet redan finns från ett annat projekt/ramverk, lägg till källan om den är unik
+                    // (Beroende på hur din NuGetPackage-klass ser ut)
                 }
             }
         }
     }
-}
-else
-{
-    Console.WriteLine("Hittade inga projektfiler i ProjectLockfiles. Kör en Build på lösningen först.");
-    return;
 }
 
 // 3. Läs in Directory.Packages.props
@@ -482,6 +522,37 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
     return false;
 }
 
+static void FindDirectRoots(
+    string currentPackage,
+    Dictionary<string, LockDependency> allPackages,
+    Dictionary<string, List<string>> dependentOnTracker,
+    HashSet<string> roots,
+    HashSet<string> visited)
+{
+    // Förhindra oändliga loopar om det finns cirkulära referenser i graferna
+    if (!visited.Add(currentPackage)) return;
+
+    if (dependentOnTracker.TryGetValue(currentPackage, out var parents))
+    {
+        foreach (var parent in parents)
+        {
+            if (allPackages.TryGetValue(parent, out var parentDetails))
+            {
+                if (parentDetails.Type == "Direct")
+                {
+                    // Vi hittade det översta direkt-paketet (roten)
+                    roots.Add(parent);
+                }
+                else
+                {
+                    // Fortsätt gräva uppåt i trädet efter roten
+                    FindDirectRoots(parent, allPackages, dependentOnTracker, roots, visited);
+                }
+            }
+        }
+    }
+}
+
 /// <summary>
 /// Navigerar till solution katalogen genom att leta efter .sln-filer uppåt i katalogstrukturen, eller .git-katalogen som en fallback.
 /// </summary>
@@ -519,7 +590,6 @@ static string GetWikiOutputPath(string fileName = "sbom-report.md")
 
 #region DataModeller
 
-// Ny modell för att skicka strukturerad data till rapportörerna
 sealed record ReportItem(
     string PackageName,
     string InstalledVersion,
@@ -528,7 +598,8 @@ sealed record ReportItem(
     bool HasVersionMismatch,
     List<string> AllInstalledVersions,
     List<Vulnerability> ActiveVulnerabilities,
-    bool IsSecuredOrPatched
+    bool IsSecuredOrPatched,
+    string IntroducedBy
 );
 
 sealed record ServiceIndex(
@@ -576,14 +647,26 @@ sealed record LockDependency(
     string Resolved,
 
     [property: JsonPropertyName("contentHash")]
-    string ContentHash
+    string ContentHash,
+
+    [property: JsonPropertyName("dependencies")]
+    Dictionary<string, string>? Dependencies
 );
 
-sealed record NuGetPackage(
-    string Name,
-    string Version,
-    string ContentHash
-);
+sealed record NuGetPackage
+{
+    public string Name { get; init; }
+    public string Version { get; init; }
+    public string ContentHash { get; init; }
+    public string IntroducedBy { get; set; } = "Okänd";
+
+    public NuGetPackage(string name, string version, string contentHash)
+    {
+        Name = name;
+        Version = version;
+        ContentHash = contentHash;
+    }
+}
 
 sealed record NugetRegistrationIndex(
     [property: JsonPropertyName("items")]
