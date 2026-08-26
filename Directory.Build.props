@@ -12,8 +12,10 @@
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>None</AnalysisMode>
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- TODO(#229): Temporarily suppress currently triggered warning rules while preserving analyzer/style enforcement for new rules. -->
+    <NoWarn>$(NoWarn);EnableGenerateDocumentationFile;IDE0008;IDE0160;IDE0011;CA1848;IDE0022;IDE0028;IDE0305;CA1873;IDE0290;IDE0090;IDE0078;CA1860;CA1311;CA1304;CA1805;IDE0040;IDE0046;CA1305;IDE0017;IDE0059;CA1862;IDE0052;IDE0270;IDE0100;IDE0060;CA1822;IDE0306;CA2201;CA1854;CA1309;IDE0301;IDE0074;IDE0063;IDE0057;IDE0045;IDE0044;CA1852;CA1001;IDE0055;IDE0051;IDE0047;CA2254;CA1846;CA1725;IDE0130;IDE0054;IDE0032;IDE0030;IDE0025;CA1863;CA1859;CA1834;CA1716;CA1711;CA1510;CA1018</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="AssemblyInfo">
