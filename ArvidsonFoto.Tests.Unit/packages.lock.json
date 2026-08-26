@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "Aspire.Hosting.Testing": {
         "type": "Direct",
         "requested": "[13.4.3, )",
@@ -1010,7 +1010,7 @@
       "arvidsonfoto": {
         "type": "Project",
         "dependencies": {
-          "ArvidsonFoto.ServiceDefaults": "[3.10.11, )",
+          "ArvidsonFoto.ServiceDefaults": "[3.11.0, )",
           "Azure.Identity": "[1.21.0, )",
           "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection": "[3.31.0, )",
           "JavaScriptEngineSwitcher.V8": "[3.34.1, )",
