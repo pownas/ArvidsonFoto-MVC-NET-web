@@ -37,26 +37,26 @@ public interface IGuestBookService
     /// <summary>Hämtar alla gästboksinlägg</summary>
     /// <returns>Lista med alla gästboksinlägg</returns>
     List<TblGb> GetAll();
-    
+
     /// <summary>Hämtar alla gästboksinlägg asynkront</summary>
     /// <returns>Lista med alla gästboksinlägg</returns>
     Task<IEnumerable<TblGb>> GetAllGuestbookEntriesAsync();
-    
+
     /// <summary>Hämtar ett specifikt gästboksinlägg asynkront</summary>
     /// <param name="id">ID för gästboksinlägget</param>
     /// <returns>Det begärda gästboksinlägget</returns>
     Task<TblGb> GetOneGbEntryAsync(int id);
-    
+
     /// <summary>Skapar ett nytt gästboksinlägg asynkront</summary>
     /// <param name="gb">Gästboksinlägget som ska skapas</param>
     /// <returns>True om inlägget skapades framgångsrikt</returns>
     Task<bool> CreateGbEntryAsync(TblGb gb);
-    
+
     /// <summary>Tar bort ett gästboksinlägg asynkront</summary>
     /// <param name="id">ID för gästboksinlägget som ska tas bort</param>
     /// <returns>True om inlägget togs bort framgångsrikt</returns>
     Task<bool> DeleteGbEntryAsync(int id);
-    
+
     /// <summary>Räknar alla gästboksinlägg</summary>
     /// <returns>Totalt antal gästboksinlägg</returns>
     int GetAllGuestbookEntriesCounted();

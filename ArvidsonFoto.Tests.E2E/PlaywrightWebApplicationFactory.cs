@@ -24,7 +24,7 @@ namespace ArvidsonFoto.Tests.E2E;
 /// <c>CreateHost</c> returns — an invariant that cannot be avoided while
 /// inheriting from that class.
 /// </summary>
-public class PlaywrightWebApplicationFactory : IAsyncLifetime
+public sealed class PlaywrightWebApplicationFactory : IAsyncLifetime
 {
     private WebApplication? _app;
     private readonly string _serverAddress;
@@ -41,7 +41,7 @@ public class PlaywrightWebApplicationFactory : IAsyncLifetime
     // IAsyncLifetime
     // -------------------------------------------------------------------------
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         // Locate the content root so that WebOptimizer can find wwwroot assets.
         // typeof(Program).Assembly.Location resolves to the ArvidsonFoto.dll
@@ -90,13 +90,15 @@ public class PlaywrightWebApplicationFactory : IAsyncLifetime
         await _app.StartAsync();
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (_app != null)
         {
             await _app.StopAsync();
             await _app.DisposeAsync();
         }
+
+        GC.SuppressFinalize(this);
     }
 
     // -------------------------------------------------------------------------

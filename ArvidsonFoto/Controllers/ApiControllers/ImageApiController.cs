@@ -4,6 +4,7 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace ArvidsonFoto.Controllers.ApiControllers;
 
@@ -21,8 +22,7 @@ namespace ArvidsonFoto.Controllers.ApiControllers;
 public class ImageApiController(ILogger<ImageApiController> logger,
     IApiImageService imageService,
     ArvidsonFotoCoreDbContext entityContext, //TODO: Bör bygga bort denna och enbart använda IApiImageService
-    IApiCategoryService categoryService,
-    IConfiguration _) : ControllerBase
+    IApiCategoryService categoryService) : ControllerBase
 {
     // TODO: Att använda senare om vi vill spara eller läsa bilder från filsystemet
     private readonly string _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Bilder");
@@ -98,7 +98,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     [AllowAnonymous]
     //[SwaggerOperation(Summary = "Public endpoint", Description = "No authentication required")]
     [HttpGet("ByCategoryId/{categoryId}")]
-    public List<ImageDto> GetImagesByCategoryID(int categoryId = 13, [FromQuery] string sortBy = "uploaded", [FromQuery]string sortOrder = "asc", [FromQuery]int limit = 48)
+    public List<ImageDto> GetImagesByCategoryID(int categoryId = 13, [FromQuery] string sortBy = "uploaded", [FromQuery] string sortOrder = "asc", [FromQuery] int limit = 48)
     {
         logger.LogInformation("Image - GetAllImagesByCategoryID called.");
         return imageService.GetImagesByCategoryID(categoryId);
@@ -113,34 +113,34 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 logger.LogInformation("Invalid category ID provided to GetCategoryPath: {CategoryId}", categoryId);
                 return string.Empty;
             }
-            
+
             var category = categoryService.GetById(categoryId);
-            
+
             if (category == null || category.CategoryId <= 0)
                 return string.Empty;
-                
-            var path = category.UrlCategoryPath?.ToLower() ?? string.Empty;
-            
+
+            var path = category.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
+
             // Get parent categories if any
             if (category.ParentCategoryId.HasValue && category.ParentCategoryId.Value > 0)
             {
                 var parent = categoryService.GetById(category.ParentCategoryId.Value);
                 if (parent != null && parent.CategoryId > 0)
                 {
-                    path = (parent.UrlCategoryPath?.ToLower() ?? "") + "/" + path;
-                    
+                    path = (parent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
+
                     // Get grandparent if any
                     if (parent.ParentCategoryId.HasValue && parent.ParentCategoryId.Value > 0)
                     {
                         var grandparent = categoryService.GetById(parent.ParentCategoryId.Value);
                         if (grandparent != null && grandparent.CategoryId > 0)
                         {
-                            path = (grandparent.UrlCategoryPath?.ToLower() ?? "") + "/" + path;
+                            path = (grandparent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
                         }
                     }
                 }
             }
-            
+
             return path + "/";
         }
         catch (Exception ex)
@@ -191,7 +191,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     [AllowAnonymous]
     //[SwaggerOperation(Summary = "Public endpoint", Description = "No authentication required")]
     [HttpGet("GetOneImageFromCategory/{categoryId}")]
-    public ImageDto GetOneImageFromCategory(int categoryId= 13)
+    public ImageDto GetOneImageFromCategory(int categoryId = 13)
     {
         logger.LogInformation("Image - GetOneImageFromCategory called.");
         return imageService.GetOneImageFromCategory(categoryId);
@@ -306,11 +306,15 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <remarks>
     /// This endpoint handles multi-level category paths like "Faglar/Vadare/Pipare/Kustpipare".
     /// It will find the most specific category in the path and return its images.
+    /// When <paramref name="page"/> is greater than 0, paginated results are returned in the same
+    /// order as the gallery view (newest first by image ID). When <paramref name="page"/> is 0
+    /// (default), the legacy behaviour applies sorting via <paramref name="sortBy"/>/<paramref name="sortOrder"/>.
     /// </remarks>
     /// <param name="categoryPath">The path with multiple category segments (e.g., "Faglar/Vadare/Pipare/Kustpipare")</param>
     /// <param name="sortBy">uploaded (when image was uploaded), imagetaken (when the image was taken) or categoryname (name of the category)</param>
     /// <param name="sortOrder">asc (alphabetically ascending order) or desc (reverse alphabetically descending order)</param>
-    /// <param name="limit">number of images to get</param>
+    /// <param name="limit">number of images per page (default 48)</param>
+    /// <param name="page">page number for paginated results (1-based); 0 = legacy non-paginated behaviour</param>
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
@@ -320,29 +324,30 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     [HttpGet("ByPath/Bilder/{*categoryPath}")]
     [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
     public IActionResult GetImagesByCategoryPath(
-        string categoryPath, 
-        [FromQuery] string sortBy = "uploaded", 
-        [FromQuery] string sortOrder = "desc", 
+        string categoryPath,
+        [FromQuery] string sortBy = "uploaded",
+        [FromQuery] string sortOrder = "desc",
         [FromQuery] int limit = 48,
+        [FromQuery] int page = 0,
         CancellationToken cancellationToken = default)
     {
         try
         {
             // Check for cancellation early
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             if (string.IsNullOrEmpty(categoryPath))
             {
                 return BadRequest("Category path cannot be empty");
             }
             // Decode the URL-encoded path
             categoryPath = Uri.UnescapeDataString(categoryPath);
-            
+
             logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", categoryPath);
-            
+
             // Split the path into segments
             string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            
+
             if (segments.Length == 0)
             {
                 return BadRequest("Invalid category path format");
@@ -350,13 +355,13 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
             // Start with the first segment and traverse the category hierarchy
             int? currentCategoryId = null;
-            var matchingChildCategory = (CategoryDto)null;
+            var matchingChildCategory = (CategoryDto?)null;
 
             foreach (var segment in segments)
             {
                 // Check for cancellation during path resolution
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 // If this is the first segment, find the main category
                 if (currentCategoryId == null)
                 {
@@ -370,48 +375,85 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 {
                     // Find the child category under the current parent
                     var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
-                    matchingChildCategory = children.FirstOrDefault(c => 
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) || 
+                    matchingChildCategory = children.FirstOrDefault(c =>
+                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
                         c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
-                    
+
                     if (matchingChildCategory == null)
                     {
                         return NotFound($"Category '{segment}' not found under parent category");
                     }
-                    
+
                     currentCategoryId = matchingChildCategory.CategoryId;
                 }
             }
-            
+
             // Check for cancellation before expensive image loading
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             // Get images for the final category ID
             if (currentCategoryId.HasValue && currentCategoryId.Value > 0)
             {
-                var images = imageService.GetImagesByCategoryID(currentCategoryId.Value);
-                
-                // Apply sorting and limiting
-                var sortedImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
-
                 var totalCategoryImageCount = imageService.GetCountedCategoryId(currentCategoryId.Value);
+
+                // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
+                // In that case look up the category by ID so we can populate name and URL correctly.
+                string categoryName;
+                string categoryUrl;
+                if (matchingChildCategory != null)
+                {
+                    categoryName = matchingChildCategory.Name ?? "Unknown";
+                    categoryUrl = matchingChildCategory.UrlCategoryPathFull ?? "Unknown";
+                }
+                else
+                {
+                    var resolvedCategory = categoryService.GetById(currentCategoryId.Value);
+                    categoryName = resolvedCategory.Name ?? "Unknown";
+                    categoryUrl = resolvedCategory.UrlCategoryPath ?? "Unknown";
+                }
+
+                List<ImageDto> resultImages;
+                int currentPage;
+                int totalPages;
+                int pageSize;
+
+                if (page > 0)
+                {
+                    // Paginated mode: use the same ordering as the gallery page (ImageId DESC)
+                    pageSize = limit > 0 ? limit : 48;
+                    currentPage = page;
+                    resultImages = imageService.GetImagesByCategoryIDPaginated(currentCategoryId.Value, currentPage, pageSize);
+                }
+                else
+                {
+                    // Legacy mode: load all images and apply custom sorting/limit
+                    var images = imageService.GetImagesByCategoryID(currentCategoryId.Value);
+                    resultImages = ApplySortingAndLimit(images, sortBy, sortOrder, limit);
+                    pageSize = limit > 0 ? limit : 48;
+                    currentPage = 1;
+                }
+
+                totalPages = (int)Math.Ceiling(totalCategoryImageCount / (decimal)pageSize);
 
                 var response = new ImageListResponse
                 {
                     CategoryId = currentCategoryId.Value,
-                    CategoryName = $"{matchingChildCategory?.Name ?? "Unknown"}",
-                    CategoryUrl =  $"{matchingChildCategory?.UrlCategoryPathFull ?? "Unknown"}",
+                    CategoryName = categoryName,
+                    CategoryUrl = categoryUrl,
                     CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
                     ImageCategoryTotalCount = totalCategoryImageCount,
-                    ImageResultCount = sortedImages.Count,
-                    Images = sortedImages,
-                    QueryLimit = limit,
+                    ImageResultCount = resultImages.Count,
+                    Images = resultImages,
+                    QueryLimit = pageSize,
                     QuerySortBy = sortBy,
                     QuerySortOrder = sortOrder,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
+                    PageSize = pageSize,
                 };
                 return Ok(response);
             }
-            
+
             return NotFound("Category path could not be resolved to a valid category");
         }
         catch (Exception ex)
@@ -424,33 +466,33 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <summary>
     /// Applies sorting and limit to the list of images
     /// </summary>
-    private List<ImageDto> ApplySortingAndLimit(List<ImageDto> images, string sortBy, string sortOrder, int limit)
+    private static List<ImageDto> ApplySortingAndLimit(List<ImageDto> images, string sortBy, string sortOrder, int limit)
     {
         // Apply sorting
         IOrderedEnumerable<ImageDto> sortedImages;
-        
-        switch (sortBy.ToLower())
+
+        switch (sortBy)
         {
             case "imagetaken":
-                sortedImages = sortOrder.ToLower() == "asc" 
-                    ? images.OrderBy(i => i.DateImageTaken) 
+                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? images.OrderBy(i => i.DateImageTaken)
                     : images.OrderByDescending(i => i.DateImageTaken);
                 break;
-                
+
             case "categoryname":
-                sortedImages = sortOrder.ToLower() == "asc" 
-                    ? images.OrderBy(i => i.UrlCategory) 
+                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? images.OrderBy(i => i.UrlCategory)
                     : images.OrderByDescending(i => i.UrlCategory);
                 break;
-                
+
             case "uploaded":
             default:
-                sortedImages = sortOrder.ToLower() == "asc" 
-                    ? images.OrderBy(i => i.DateUploaded) 
+                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? images.OrderBy(i => i.DateUploaded)
                     : images.OrderByDescending(i => i.DateUploaded);
                 break;
         }
-        
+
         // if limit = 0, then no limit
         if (limit == 0)
             return sortedImages.ToList();

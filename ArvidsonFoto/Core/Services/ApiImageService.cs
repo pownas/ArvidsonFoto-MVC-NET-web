@@ -24,7 +24,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <summary>
     /// If the new gallery category feature is enabled, use the new category path
     /// </summary>
-    private bool NewGalleryCategoryEnabled => 
+    private bool NewGalleryCategoryEnabled =>
         _configuration.GetSection("FeatureFlags:NewGalleryCategory")
             .Get<FeatureFlag>()?.Enabled == true;
 
@@ -146,13 +146,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 var blames = _entityContext.TblMenus
                                            .Where(m => m.MenuDisplayName!.Equals("Blåmes"))
                                            .FirstOrDefault();
-                                           
+
                 if (blames == null)
                 {
                     Log.Warning("Blåmes category not found when getting image for category ID 1");
                     return DefaultImageDtoNotFound;
                 }
-                                           
+
                 int blamesId = blames.MenuCategoryId ?? 0;
 
                 image = _entityContext.TblImages
@@ -243,16 +243,16 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             .Select(id => id!.Value)
             .Distinct()
             .ToList();
-        
+
         var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-        
+
         // Get category paths for all images
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
             var categoryPath = "";
             var categoryName = "";
-            
+
             if (NewGalleryCategoryEnabled)
             {
                 categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
@@ -262,7 +262,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 // Otherwise, use the old category path
                 categoryPath = GetOldCategoryPathForImage(image);
             }
-            
+
             // Get category name from bulk loaded data
             if (image.ImageCategoryId.HasValue && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name))
             {
@@ -289,12 +289,26 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 Log.Information("Invalid category ID for GetImagesByCategoryID: {CategoryID}", categoryID);
                 return new List<ImageDto>();
             }
-            
+
             var images = _entityContext.TblImages
                         .Where(i => i.ImageCategoryId == categoryID
                                  || i.ImageFamilyId == categoryID
                                  || i.ImageMainFamilyId == categoryID)
                         .ToList();
+
+            // If no direct images found, check descendant categories (e.g. parent category like "Fåglar")
+            if (!images.Any())
+            {
+                var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
+                if (descendantIds.Any())
+                {
+                    images = _entityContext.TblImages
+                        .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
+                                 || (i.ImageFamilyId.HasValue && descendantIds.Contains(i.ImageFamilyId.Value))
+                                 || (i.ImageMainFamilyId.HasValue && descendantIds.Contains(i.ImageMainFamilyId.Value)))
+                        .ToList();
+                }
+            }
 
             // Early return if no images found
             if (!images.Any())
@@ -304,7 +318,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             // Check feature flag once
             var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
-            
+
             if (featureNewGalleryCategory?.Enabled == true)
             {
                 // OPTIMIZED: Bulk load all category paths AND names at once
@@ -320,9 +334,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     .Select(id => id!.Value)
                     .Distinct()
                     .ToList();
-                
+
                 var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-                
+
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
@@ -360,11 +374,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 Log.Information("Invalid category ID for GetImagesByCategoryIDPaginated: {CategoryID}", categoryID);
                 return new List<ImageDto>();
             }
-            
+
             if (page < 1) page = 1;
             if (pageSize < 1) pageSize = 48;
-            
-            // OPTIMIZED: Get only the images we need with sorting applied in SQL
+
+            // Try direct category images first (materialised to avoid a second .Any() round-trip)
             var images = _entityContext.TblImages
                         .Where(i => i.ImageCategoryId == categoryID
                                  || i.ImageFamilyId == categoryID
@@ -375,6 +389,25 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                         .Take(pageSize)
                         .ToList();
 
+            // If no direct images found on this page, check whether there are descendant categories
+            // (e.g. a parent category like "Fåglar" that has no images assigned directly)
+            if (!images.Any())
+            {
+                var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
+                if (descendantIds.Any())
+                {
+                    images = _entityContext.TblImages
+                        .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
+                                 || (i.ImageFamilyId.HasValue && descendantIds.Contains(i.ImageFamilyId.Value))
+                                 || (i.ImageMainFamilyId.HasValue && descendantIds.Contains(i.ImageMainFamilyId.Value)))
+                        .OrderByDescending(i => i.ImageId)
+                        .ThenByDescending(i => i.ImageDate)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                }
+            }
+
             // Early return if no images found
             if (!images.Any())
             {
@@ -383,7 +416,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             // Check feature flag once
             var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
-            
+
             if (featureNewGalleryCategory?.Enabled == true)
             {
                 // OPTIMIZED: Bulk load all category paths AND names at once
@@ -399,9 +432,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     .Select(id => id!.Value)
                     .Distinct()
                     .ToList();
-                
+
                 var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-                
+
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
@@ -462,7 +495,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             return DefaultImageDtoNotFound;
         }
     }
-    
+
     // Extension-compatible methods
     /// <summary>
     /// Gets all images from the database asynchronously.
@@ -472,7 +505,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         return Task.FromResult<IEnumerable<ImageDto>>(GetAll());
     }
-    
+
     /// <summary>
     /// Gets a single image by its ID asynchronously.
     /// </summary>
@@ -482,7 +515,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         return Task.FromResult(GetById(id));
     }
-    
+
     /// <summary>
     /// Creates a new image asynchronously.
     /// </summary>
@@ -492,7 +525,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         return Task.FromResult(AddImage(image));
     }
-    
+
     /// <summary>
     /// Updates an existing image asynchronously.
     /// </summary>
@@ -515,7 +548,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 existingImage.ImageDate = tblImage.ImageDate;
                 existingImage.ImageDescription = tblImage.ImageDescription;
                 existingImage.ImageUpdate = DateTime.UtcNow;
-                
+
                 await _entityContext.SaveChangesAsync();
                 return true;
             }
@@ -537,7 +570,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         return Task.FromResult(DeleteImgId(id));
     }
-    
+
     /// <summary>
     /// Gets the total count of all images.
     /// </summary>
@@ -557,6 +590,20 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         var imagesFamilyCount = _entityContext.TblImages.Count(x => x.ImageFamilyId == categoryId);
         var imagesMainFamilyCount = _entityContext.TblImages.Count(x => x.ImageMainFamilyId == categoryId);
         var totalImagesForCategoryId = imagesCategoryCount + imagesFamilyCount + imagesMainFamilyCount;
+
+        // If no direct images, count from all descendant categories
+        if (totalImagesForCategoryId == 0)
+        {
+            var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId);
+            if (descendantIds.Any())
+            {
+                totalImagesForCategoryId = _entityContext.TblImages
+                    .Count(x => (x.ImageCategoryId.HasValue && descendantIds.Contains(x.ImageCategoryId.Value))
+                             || (x.ImageFamilyId.HasValue && descendantIds.Contains(x.ImageFamilyId.Value))
+                             || (x.ImageMainFamilyId.HasValue && descendantIds.Contains(x.ImageMainFamilyId.Value)));
+            }
+        }
+
         return totalImagesForCategoryId;
     }
 
@@ -571,7 +618,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             .OrderByDescending(i => i.ImageUpdate)
             .Take(limit)
             .ToList();
-        
+
         // Get category paths for all images
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
@@ -589,7 +636,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             imageDtos.Add(image.ToImageDto(categoryPath));
         }
-        
+
         return imageDtos;
     }
 
@@ -673,7 +720,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
         return imageDtos;
     }
-    
+
     /// <summary>
     /// Gets an image by its ID.
     /// </summary>
@@ -683,7 +730,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         return GetById(id);
     }
-    
+
     /// <summary>
     /// Deletes an image by its ID.
     /// </summary>

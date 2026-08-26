@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <Target Name="CopyLockFilesAndProps" AfterTargets="Build">
+    <ItemGroup>
+      <LockFiles Include="..\**\packages.lock.json" 
+                 Exclude="..\SbomScanner\**\packages.lock.json;
+                          ..\artifacts\**\*;
+                          ..\**\bin\**\*;
+                          ..\**\obj\**\*" />
+
+      <PropsFile Include="..\Directory.Packages.props" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(LockFiles)"
+          DestinationFiles="@(LockFiles->'$(TargetDir)ProjectLockfiles\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+
+    <Copy SourceFiles="@(PropsFile)"
+          DestinationFolder="$(TargetDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

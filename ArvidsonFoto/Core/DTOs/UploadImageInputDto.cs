@@ -13,22 +13,22 @@ public class UploadImageInputDto
 {
     /// <summary>Bildens unika identifierare</summary>
     public int ImageId { get; set; }
-    
+
     /// <summary>Huvudfamilj ID för taxonomisk klassificering</summary>
     public int? ImageHuvudfamilj { get; set; }
-    
+
     /// <summary>Huvudfamilj namn för taxonomisk klassificering</summary>
     public string? ImageHuvudfamiljNamn { get; set; } = "";
-    
+
     /// <summary>Familj ID för taxonomisk klassificering</summary>
     public int? ImageFamilj { get; set; }
-    
+
     /// <summary>Familj namn för taxonomisk klassificering</summary>
     public string? ImageFamiljNamn { get; set; } = "";
-    
+
     /// <summary>Art ID för taxonomisk klassificering</summary>
     public int ImageArt { get; set; }
-    
+
     /// <summary>Art namn för taxonomisk klassificering</summary>
     public string? ImageArtNamn { get; set; } = "";
 

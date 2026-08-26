@@ -5,6 +5,18 @@
     <meta name="robots" content="noimageindex, nofollow" />
     <meta name="description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur. Antal bilder: @if (Model.AllImagesList is not null) {@Model.AllImagesList.Count} else {@("0")}st" />
     <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur.">
+    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
+
+    <!-- Open Graph for social media sharing -->
+    <meta property="og:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur." />
+    <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
+    <meta property="og:url" content="https://ArvidsonFoto.se/@Model.CurrentUrl" />
 }
 
 @{
@@ -40,8 +52,8 @@
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
-    <partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+    <partial name="../Bilder/_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-top" } })" /> @*<!-- Sidräknare via PartialView -->*@
 }
 <partial name="../Bilder/_Gallery" model="Model" /> @*<!-- Galleriet via PartialView -->*@
 
-<partial name="../Bilder/_PageCounter" model="Model" /> @*<!-- Sidräknare via PartialView -->*@
+<partial name="../Bilder/_PageCounter" model="Model" view-data="@(new ViewDataDictionary(ViewData) { { "suffix", "-bottom" } })" /> @*<!-- Sidräknare via PartialView -->*@

@@ -19,7 +19,7 @@ public class LogoutModel : PageModel
     {
     }
 
-    public async Task<IActionResult> OnPost(string returnUrl = null)
+    public async Task<IActionResult> OnPost(string? returnUrl = null)
     {
         Log.Information("User: " + User?.Identity?.Name + ", logging out.");
         await _signInManager.SignOutAsync();

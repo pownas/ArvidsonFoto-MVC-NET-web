@@ -23,13 +23,13 @@ public class InfoControllerTests
     private readonly MockGuestBookService _mockGuestBookService;
 
     public InfoControllerTests()
-    {   
+    {
         // Create an in-memory database for Core context
         var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
-        
+
         _mockGuestBookService = new MockGuestBookService();
 
         // Create mock configuration
@@ -56,7 +56,7 @@ public class InfoControllerTests
         });
 
         _controller = new InfoController(mockCoreDbContext, configuration, smtpSettings);
-        
+
         // Override the services with mocks (they are internal fields)
         _controller._guestbookService = _mockGuestBookService;
         _controller._imageService = new MockImageService();
@@ -282,7 +282,7 @@ public class InfoControllerTests
         var createdEntry = _mockGuestBookService.GetAll()
             .FirstOrDefault(g => g.GbName == "Test User");
         Assert.NotNull(createdEntry);
-        var parts = createdEntry!.GbHomepage.Split('/');
+        var parts = (createdEntry!.GbHomepage ?? "").Split('/');
         Assert.True(parts.Length <= 3);
     }
 
@@ -593,7 +593,7 @@ public class InfoControllerTests
         Assert.NotNull(createdEntry);
         Assert.Equal("integration@test.com", createdEntry!.GbEmail);
         Assert.Equal("This is an integration test message", createdEntry.GbText);
-        
+
         // Assert - Verify homepage processing (stripped protocol and limited depth)
         Assert.DoesNotContain("https://", createdEntry.GbHomepage);
     }
@@ -632,12 +632,12 @@ public class InfoControllerTests
     {
         // Arrange
         var mockContactService = new MockContactService();
-        
+
         var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
-        
+
         var controller = CreateTestController(mockCoreDbContext);
         controller._contactService = mockContactService;
 
@@ -645,7 +645,7 @@ public class InfoControllerTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
-        
+
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
@@ -656,7 +656,7 @@ public class InfoControllerTests
                 ControllerName = "Info"
             }
         };
-        
+
         controller.ControllerContext = new ControllerContext(actionContext);
         var tempDataProvider = new MockTempDataProvider();
         controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
@@ -688,12 +688,12 @@ public class InfoControllerTests
     {
         // Arrange
         var mockContactService = new MockContactService();
-        
+
         var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
-        
+
         var controller = CreateTestController(mockCoreDbContext);
         controller._contactService = mockContactService;
 
@@ -701,7 +701,7 @@ public class InfoControllerTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
-        
+
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
@@ -712,7 +712,7 @@ public class InfoControllerTests
                 ControllerName = "Info"
             }
         };
-        
+
         controller.ControllerContext = new ControllerContext(actionContext);
         var tempDataProvider = new MockTempDataProvider();
         controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);
@@ -739,12 +739,12 @@ public class InfoControllerTests
     {
         // Arrange
         var mockContactService = new MockContactService();
-        
+
         var coreOptions = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
             .Options;
         var mockCoreDbContext = new ArvidsonFotoCoreDbContext(coreOptions);
-        
+
         var controller = CreateTestController(mockCoreDbContext);
         controller._contactService = mockContactService;
 
@@ -752,7 +752,7 @@ public class InfoControllerTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
-        
+
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
@@ -763,7 +763,7 @@ public class InfoControllerTests
                 ControllerName = "Info"
             }
         };
-        
+
         controller.ControllerContext = new ControllerContext(actionContext);
         var tempDataProvider = new MockTempDataProvider();
         controller.TempData = new TempDataDictionary(httpContext, tempDataProvider);

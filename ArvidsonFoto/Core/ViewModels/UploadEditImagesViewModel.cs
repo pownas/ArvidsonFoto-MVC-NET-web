@@ -19,13 +19,13 @@ public class UploadEditImagesViewModel
 
     /// <summary>Aktuell sida som visas</summary>
     public int CurrentPage { get; set; } = -1;
-    
+
     /// <summary>Aktuell URL för sidan</summary>
     public string CurrentUrl { get; set; } = string.Empty;
-    
+
     /// <summary>Meddelande att visa för användarfeedback</summary>
     public string DisplayMessage { get; set; } = string.Empty;
-    
+
     /// <summary>ID för den senast uppdaterade bilden</summary>
     public int? UpdatedId { get; set; } = null;
 }

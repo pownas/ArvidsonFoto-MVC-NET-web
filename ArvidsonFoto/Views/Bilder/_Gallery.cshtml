@@ -4,111 +4,120 @@
 @using ArvidsonFoto.Core.DTOs
 @using System.Net
 @{
-    string bilderBase = "https://arvidsonfoto.se/Bilder";
-    List<ImageDto> imageList = Model!.DisplayImagesList;
+  string bilderBase = "https://arvidsonfoto.se/Bilder";
+  List<ImageDto> imageList = Model!.DisplayImagesList;
 
-    int imageCount = 0;
-    if (imageList is not null)
-        imageCount = imageList.Count();
+  int imageCount = 0;
+  if (imageList is not null)
+      imageCount = imageList.Count();
 
-    //Kontroll om det är startsidan eller ej...
-    bool startsidan = false;
-    if (imageCount.Equals(12) && Model!.SelectedCategory is null || Model!.SelectedCategory is null)
-        startsidan = true;
+  // Räkna ut global offset för sidnumrering (sida 2 = offset 48, sida 3 = offset 96 osv.)
+  int pageOffset = Math.Max(0, Model.CurrentPage - 1) * Math.Max(1, Model.PageSize);
+  int totalCount = Model.TotalImageCount > 0 ? Model.TotalImageCount : imageCount;
 
-    //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
-    string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
-    //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga):
-    string imgCharWidth = startsidan ? "thumb-img-startpage" : "thumb-img-gallery";
-    string figcaptionCharWidth = startsidan ? "thumb-figcaption-startpage" : "thumb-figcaption-gallery";
+  //Kontroll om det är startsidan eller ej...
+  bool startsidan = false;
+  if (imageCount.Equals(12) && Model!.SelectedCategory is null || Model!.SelectedCategory is null)
+      startsidan = true;
+
+  //Om modellen är exakt 12 (som på startsidan) , så kommer det att justeras i bredd för startsidans, annars : justeras det för bredare galleri.
+  string rowSizeClass = startsidan ? "col-4 col-lg-3" : "col-4 col-sm-3 col-lg-2";
+  //bredden innan texten bryts på tumnaglarna (olika på startsidan/övriga):
+  string imgCharWidth = startsidan ? "thumb-img-startpage" : "thumb-img-gallery";
+  string figcaptionCharWidth = startsidan ? "thumb-figcaption-startpage" : "thumb-figcaption-gallery";
 }
 
 @if (imageList is null || imageList.Count.Equals(0))
 {
-    if (ViewData["Title"]!.Equals("Fåglar"))
-    {
-        <p class="m-4">Välj en fågel-kategori här ovanför ⤴</p>
-    }
-    else
-    {
-        <p>
-            Det finns inga bilder i denna kategori... <br />
-            Se istället alla bilder på sidan: <a href="/Senast/Fotograferad">ArvidsonFoto.se/Senast/Fotograferad</a>.
-        </p>
-        <p class="mt-4">
-            Här är en bild på en söt kanin 🐇 istället:
-        </p>
-        <div id="imageRabbit" class="col-12 col-sm-10 col-md-8 col-lg-6">
-            <figure class="figure alert alert-light" title="Kanin 🐇">
-                <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg" alt="Bild på en söt kanin..." />
-                <figcaption class="figure-caption text-center text-truncate">Kanin 🐇</figcaption>
-            </figure>
-        </div>
-        <h3>Sök bland kategorier</h3>
-        <div id="search" class="mb-5">
-            Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
-            <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a><br />
-            <partial name="../Bilder/_SearchBar" />
-        </div>
-    }
+  if (ViewData["Title"]!.Equals("Fåglar"))
+  {
+    <p class="m-4">Välj en fågel-kategori här ovanför ⤴</p>
+  }
+  else
+  {
+    <p>
+      Det finns inga bilder i denna kategori... <br />
+      Se istället alla bilder på sidan: <a href="/Senast/Fotograferad">ArvidsonFoto.se/Senast/Fotograferad</a>.
+    </p>
+    <p class="mt-4">
+      Här är en bild på en söt kanin 🐇 istället:
+    </p>
+    <div id="imageRabbit" class="col-12 col-sm-10 col-md-8 col-lg-6">
+      <figure class="figure alert alert-light" title="Kanin 🐇">
+        <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg" alt="Bild på en söt kanin..." />
+        <figcaption class="figure-caption text-center text-truncate">Kanin 🐇</figcaption>
+      </figure>
+    </div>
+    <h3>Sök bland kategorier</h3>
+    <div id="search" class="mb-5">
+      Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
+      <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a><br />
+      <partial name="../Bilder/_SearchBar" />
+    </div>
+  }
 }
 else
 {
-    <div id="gallery" class="row">
-        @{ var index = 1; }
-        @foreach (var img in imageList)
-        {
-            string customDesc = "custom-desc" + index;
+  <div id="gallery" class="row"
+       data-current-page="@Model.CurrentPage"
+       data-total-pages="@Model.TotalPages"
+       data-page-size="@Model.PageSize"
+       data-total-images="@Model.TotalImageCount"
+       data-gallery-url="@Model.CurrentUrl">
+    @{ var index = 1; }
+    @foreach (var img in imageList)
+    {
+      string customDesc = "custom-desc" + index;
 
-            string imgHref = img.UrlCategory ?? bilderBase;
-            // Extract category name from URL if Name is empty or default value
-            // In search scenario, prefer CategoryName over Name (which might be the filename)
-            string imgTitle = !string.IsNullOrWhiteSpace(img.CategoryName)
-                ? img.CategoryName
-                : (!string.IsNullOrWhiteSpace(img.Name) && !img.Name.Equals("Bild") && !img.Name.Equals("404-NotFound")
-                    ? img.Name 
-                    : (!string.IsNullOrWhiteSpace(img.UrlImage) ? img.UrlImage.Split('/').Last() : "Bild"));
-            string imgDesc = "";
+      string imgHref = img.UrlCategory ?? bilderBase;
+      // Extract category name from URL if Name is empty or default value
+      // In search scenario, prefer CategoryName over Name (which might be the filename)
+      string imgTitle = !string.IsNullOrWhiteSpace(img.CategoryName)
+          ? img.CategoryName
+          : (!string.IsNullOrWhiteSpace(img.Name) && !img.Name.Equals("Bild") && !img.Name.Equals("404-NotFound")
+              ? img.Name
+              : (!string.IsNullOrWhiteSpace(img.UrlImage) ? img.UrlImage.Split('/').Last() : "Bild"));
+      string imgDesc = "";
 
-            if (String.IsNullOrWhiteSpace(img.Description) is false)
-                imgDesc = ", " + img.Description + ".";
+      if (String.IsNullOrWhiteSpace(img.Description) is false)
+          imgDesc = ", " + img.Description + ".";
 
-            // UrlImage already contains the full path (e.g., "bilder/kategori/subcategory/filename")
-            // Just add the domain prefix for thumb and full image
-            string imgThumbSrc = $"https://arvidsonfoto.se/{img.UrlImage}.thumb.jpg";
-            string imgSrc = $"https://arvidsonfoto.se/{img.UrlImage}.jpg";
-            string imgName = img.UrlImage.Split('/').Last() + ".jpg";
+      // UrlImage already contains the full path (e.g., "bilder/kategori/subcategory/filename")
+      // Just add the domain prefix for thumb and full image
+      string imgThumbSrc = $"https://arvidsonfoto.se/{img.UrlImage}.thumb.jpg";
+      string imgSrc = $"https://arvidsonfoto.se/{img.UrlImage}.jpg";
+      string imgName = img.UrlImage.Split('/').Last() + ".jpg";
 
-            DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
-            string imgDateDisplay = imgDate.Year == 1900 ? "saknas" : imgDate.ToString("yyyy-MM-dd");
+      DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
+      string imgDateDisplay = imgDate.Year == 1900 ? "saknas" : imgDate.ToString("yyyy-MM-dd");
 
-            if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPath is not null && Model.SelectedCategory.UrlCategoryPath.Equals("/Search"))
-            {
-                <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                    <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
-                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
-                        <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
-                    </a>
-                </figure>
-            }
-            else
-            {
-                <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-                    <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
+      if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPath is not null && Model.SelectedCategory.UrlCategoryPath.Equals("/Search"))
+      {
+        <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+          <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
+            <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="Tryck för att se alla bilder av @imgTitle@imgDesc">
+            <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
+          </a>
+        </figure>
+      }
+      else
+      {
+        <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
+          <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
 Tryck för att förstora">
-                        <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle@imgDesc
+            <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle@imgDesc
 Tryck för att förstora">
-                        <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
-                    </a>
-                </figure>
+            <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
+          </a>
+        </figure>
 
-                <div class="glightbox-desc row @customDesc">
-                    <p>@index av @imageList.Count - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDateDisplay</p>
-                    <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
-                </div>
-            }
+        <div class="glightbox-desc row @customDesc">
+          <p>@(pageOffset + index) av @totalCount - <a href="@imgHref" title="Se alla bilder av @imgTitle@imgDesc">@imgTitle</a>@imgDesc Fotodatum: @imgDateDisplay</p>
+          <p>Bildnamn: @imgName <a rel="nofollow" href="/Info/Copyright">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="/Info/Kop_av_bilder?imgId=@img.ImageId">Köp av bilder</a></p>
+        </div>
+      }
 
-            index += 1;
-        }
-    </div><!-- /end-gallery-row -->
+      index += 1;
+    }
+  </div><!-- /end-gallery-row -->
 }

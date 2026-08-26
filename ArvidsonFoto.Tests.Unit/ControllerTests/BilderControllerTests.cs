@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
+
 public class BilderControllerTests
 {
     private readonly BilderController _controller;
@@ -170,7 +171,7 @@ public class BilderControllerTests
 
         // Act
         var result = _controller.Bilder(id);
-        
+
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
         Assert.Equal("./Senast/Fotograferad", redirectResult.Url);
@@ -185,7 +186,7 @@ public class BilderControllerTests
 
         // Act
         var result = _controller.Bilder(id);
-        
+
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
         Assert.Equal("./Senast/Fotograferad", redirectResult.Url);

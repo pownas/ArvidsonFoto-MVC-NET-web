@@ -16,7 +16,7 @@ public class MockApiImageService : IApiImageService
     public MockApiImageService()
     {
         _categoryService = new MockApiCategoryService();
-        
+
         // Convert ArvidsonFotoCoreDbSeeder image data to ImageDto format
         _testImages = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image.Select(image => new ImageDto
         {
@@ -41,30 +41,30 @@ public class MockApiImageService : IApiImageService
     private string GetCategoryPath(int categoryId)
     {
         if (categoryId <= 0) return "unknown";
-        
+
         var pathParts = new List<string>();
         var currentMenuId = categoryId;
-        
+
         while (currentMenuId > 0)
         {
             var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenuId);
             if (menu == null) break;
-            
+
             pathParts.Insert(0, menu.MenuUrlSegment ?? $"category-{currentMenuId}");
-            
+
             if (menu.MenuParentCategoryId == 0 || menu.MenuParentCategoryId == null)
                 break;
-                
+
             currentMenuId = menu.MenuParentCategoryId ?? 0;
         }
-        
+
         return string.Join("/", pathParts);
     }
 
     public bool AddImage(ImageDto image)
     {
         if (image?.UrlImage == null) return false;
-        
+
         var newId = _testImages.Count > 0 ? _testImages.Max(i => i.ImageId) + 1 : 1;
         image.ImageId = newId;
         image.DateUploaded = DateTime.UtcNow;
@@ -76,7 +76,7 @@ public class MockApiImageService : IApiImageService
     {
         var image = _testImages.FirstOrDefault(i => i.ImageId == imgId);
         if (image == null) return false;
-        
+
         _testImages.Remove(image);
         return true;
     }
@@ -93,9 +93,9 @@ public class MockApiImageService : IApiImageService
             .Where(i => i.CategoryId == categoryId)
             .OrderByDescending(i => i.DateUploaded)
             .FirstOrDefault();
-            
+
         if (image != null) return image;
-        
+
         // Check subcategories
         var subcategories = _categoryService.GetChildrenByParentId(categoryId);
         foreach (var subcategory in subcategories)
@@ -103,7 +103,7 @@ public class MockApiImageService : IApiImageService
             image = GetOneImageFromCategory(subcategory.CategoryId ?? -1, categoryName);
             if (image.ImageId != -1) return image;
         }
-            
+
         return CreateNotFoundImage();
     }
 
@@ -122,15 +122,29 @@ public class MockApiImageService : IApiImageService
 
     public List<ImageDto> GetImagesByCategoryID(int categoryID)
     {
-        return _testImages
+        var direct = _testImages
             .Where(i => i.CategoryId == categoryID)
             .ToList();
+
+        if (direct.Any())
+            return direct;
+
+        // Fall back to descendant categories (mirrors ApiImageService behaviour for parent categories)
+        var descendantIds = _categoryService.GetAllDescendantCategoryIds(categoryID);
+        if (descendantIds.Any())
+        {
+            return _testImages
+                .Where(i => descendantIds.Contains(i.CategoryId))
+                .ToList();
+        }
+
+        return new List<ImageDto>();
     }
 
     public ImageDto GetById(int imageId)
     {
         if (imageId <= 0) return CreateNotFoundImage();
-        
+
         var image = _testImages.FirstOrDefault(i => i.ImageId == imageId);
         return image ?? CreateNotFoundImage();
     }
@@ -153,16 +167,16 @@ public class MockApiImageService : IApiImageService
     public Task<bool> UpdateImageAsync(ImageDto image)
     {
         if (image?.ImageId == null) return Task.FromResult(false);
-        
+
         var existingImage = _testImages.FirstOrDefault(i => i.ImageId == image.ImageId);
         if (existingImage == null) return Task.FromResult(false);
-        
+
         existingImage.UrlImage = image.UrlImage;
         existingImage.CategoryId = image.CategoryId;
         existingImage.DateImageTaken = image.DateImageTaken;
         existingImage.Description = image.Description;
         existingImage.DateUploaded = DateTime.UtcNow;
-        
+
         return Task.FromResult(true);
     }
 

@@ -22,32 +22,35 @@ public class LoginModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    public IList<AuthenticationScheme> ExternalLogins { get; set; }
+    [BindProperty]
+    public PasskeyLoginInputModel PasskeyInput { get; set; } = null!;
 
-    public string ReturnUrl { get; set; }
+    public IList<AuthenticationScheme> ExternalLogins { get; set; } = [];
+
+    public string? ReturnUrl { get; set; }
 
     [TempData]
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public class InputModel
     {
         [Required]
         [EmailAddress]
         [Display(Name = "E-postadress")]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Lösenord")]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
 
         [Display(Name = "Kom ihåg inloggningen?")]
         public bool RememberMe { get; set; }
     }
 
-    public async Task OnGetAsync(string returnUrl = null)
+    public async Task OnGetAsync(string? returnUrl = null)
     {
         if (!string.IsNullOrEmpty(ErrorMessage))
         {
@@ -58,7 +61,7 @@ public class LoginModel : PageModel
 
 
         var url = Url.ActionContext.HttpContext;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+        string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
 
         Log.Warning($"A user visited UploadAdmin-login page via URL: {visitedUrl}.");
 
@@ -70,12 +73,38 @@ public class LoginModel : PageModel
         ReturnUrl = returnUrl;
     }
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
         returnUrl ??= Url.Content("~/");
 
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+        // Handle passkey sign-in
+        if (!string.IsNullOrEmpty(PasskeyInput?.Error))
+        {
+            ModelState.AddModelError(string.Empty, $"Passkey-fel: {PasskeyInput.Error}");
+            return Page();
+        }
+
+        if (!string.IsNullOrEmpty(PasskeyInput?.CredentialJson))
+        {
+            var passkeyResult = await _signInManager.PasskeySignInAsync(PasskeyInput.CredentialJson);
+            if (passkeyResult.Succeeded)
+            {
+                Log.Information("User signed in with a passkey.");
+                return LocalRedirect(returnUrl);
+            }
+            if (passkeyResult.IsLockedOut)
+            {
+                Log.Warning("User account locked out (passkey sign-in).");
+                return RedirectToPage("./Lockout");
+            }
+
+            ModelState.AddModelError(string.Empty, "Ogiltig passkey-inloggning.");
+            return Page();
+        }
+
+        // Handle password sign-in
         if (ModelState.IsValid)
         {
             // This doesn't count login failures towards account lockout
@@ -105,4 +134,10 @@ public class LoginModel : PageModel
         // If we got this far, something failed, redisplay form
         return Page();
     }
+}
+
+public class PasskeyLoginInputModel
+{
+    public string? CredentialJson { get; set; }
+    public string? Error { get; set; }
 }

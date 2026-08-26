@@ -27,17 +27,17 @@ jobs:
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
           **/packages.lock.json
-          **/*.sln
+          **/*.sln*
           **/*.csproj
 
     - name: Display .NET info
       run: dotnet --info
 
     - name: Restore dependencies
-      run: dotnet restore --verbosity minimal
+      run: dotnet restore ArvidsonFoto-MVC-NET-web.slnx --verbosity minimal
 
     - name: Build (Release)
-      run: dotnet build --configuration Release --no-restore --verbosity minimal
+      run: dotnet build ArvidsonFoto-MVC-NET-web.slnx --configuration Release --no-restore --verbosity minimal
 
   test:
     needs: build   # Run this job after 'build'
@@ -58,7 +58,7 @@ jobs:
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
-          **/*.sln
+          **/*.sln*
           **/*.csproj
 
     - name: Restore dependencies (web project)

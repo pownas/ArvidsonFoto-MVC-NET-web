@@ -1,4 +1,4 @@
-using ArvidsonFoto.Core.DTOs;
+﻿using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Core.Extensions;
@@ -21,8 +21,8 @@ public static class CategoryMappingExtensions
         if (menu == null)
             return new CategoryDto();
 
-        var categoryUrl = string.IsNullOrEmpty(baseUrl) 
-            ? $"bilder/{categoryPath}" 
+        var categoryUrl = string.IsNullOrEmpty(baseUrl)
+            ? $"bilder/{categoryPath}"
             : $"{baseUrl}/bilder/{categoryPath}";
 
         return new CategoryDto
@@ -55,7 +55,8 @@ public static class CategoryMappingExtensions
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.Name,
             MenuUrlSegment = categoryDto.UrlCategoryPath,
-            MenuParentCategoryId = categoryDto.ParentCategoryId
+            MenuParentCategoryId = categoryDto.ParentCategoryId,
+            MenuDateUpdated = categoryDto.DateUpdated
         };
     }
 

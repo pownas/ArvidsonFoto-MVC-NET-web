@@ -1,4 +1,4 @@
-using ArvidsonFoto.Core.Models;
+﻿using ArvidsonFoto.Core.Models;
 using System.Globalization;
 
 namespace ArvidsonFoto.Core.Extensions;
@@ -52,7 +52,7 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the ImageDate safely
     /// </summary>
-    public static DateTime GetImageDate(this TblImage image) => 
+    public static DateTime GetImageDate(this TblImage image) =>
         image.ImageDate ?? DateTime.Now;
 
     #endregion
@@ -62,22 +62,22 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the GbMessage (maps to GbText in the new model)
     /// </summary>
-    public static string GbMessage(this TblGb gb) => gb.GbText;
+    public static string? GbMessage(this TblGb gb) => gb.GbText;
 
     /// <summary>
     /// Gets the GbDate safely
     /// </summary>
-    public static DateTime GetGbDate(this TblGb gb) => 
+    public static DateTime GetGbDate(this TblGb gb) =>
         gb.GbDate ?? DateTime.Now;
 
     #endregion
 
     #region DateTime Extensions
-    
+
     /// <summary>
     /// Extension to allow ToString with format parameter
     /// </summary>
-    public static string ToString(this DateTime dateTime, string format) => 
+    public static string ToString(this DateTime dateTime, string format) =>
         dateTime.ToString(format, CultureInfo.InvariantCulture);
 
     #endregion
