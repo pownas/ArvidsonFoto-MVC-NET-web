@@ -11,6 +11,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
     <UserSecretsId>ArvidsonFoto-AppHost-327cb2dd-ebf6-45e3-af0f-e6311e932efe</UserSecretsId>
   </PropertyGroup>
 
