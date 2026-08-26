@@ -343,7 +343,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
             // Decode the URL-encoded path
             categoryPath = Uri.UnescapeDataString(categoryPath);
 
-            logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", categoryPath);
+            logger.LogInformation("Image - GetImagesByCategoryPath called with path: {CategoryPath}", SanitizeForLog(categoryPath));
 
             // Split the path into segments
             string[] segments = categoryPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -458,7 +458,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing category path: {CategoryPath}", categoryPath);
+            logger.LogError(ex, "Error processing category path: {CategoryPath}", SanitizeForLog(categoryPath));
             return StatusCode(500, "An error occurred while processing the request");
         }
     }
@@ -500,5 +500,18 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
         // else retur with Applied limit
         return sortedImages.Take(limit).ToList();
+    }
+
+    private static string SanitizeForLog(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return string.Empty;
+        }
+
+        return input
+            .Replace("\r", string.Empty, StringComparison.Ordinal)
+            .Replace("\n", string.Empty, StringComparison.Ordinal)
+            .Trim();
     }
 }
