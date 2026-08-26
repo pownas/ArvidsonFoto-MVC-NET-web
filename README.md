@@ -1,7 +1,7 @@
 ﻿![Last commit](https://img.shields.io/github/last-commit/pownas/ArvidsonFoto-MVC-NET-web?style=flat-square&cacheSeconds=86400)
 
 # ArvidsonFoto-MVC .NET web
-Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET7 till .NET8 till .NET9 till .NET10... osv. till senaste .NET)
+Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET7 till .NET8 till .NET9 till .NET10 till .NET11... osv. till senaste .NET)
   
   
 ## Instruktion för att starta webbsidan lokalt
@@ -59,13 +59,13 @@ Då behöver du installera dotnet-ef CLI (dotnet entity framework), som installe
 ```dotnet tool install --global dotnet-ef```
 
 ## Uppdatera entityframework till senaste versionen
-Uppdatera din dotnet-ef till version 10.0.0 eller högre med kommandot:  
+Uppdatera din dotnet-ef till version 11.0.0 eller högre med kommandot:  
 ```dotnet tool update --global dotnet-ef```
 
 Eller via CURL: 
 ```sh
-  Write-Host "Installing .NET 10 SDK using Microsoft's installation script..."
-  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 10.0
+  Write-Host "Installing .NET 11 SDK using Microsoft's installation script..."
+  curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version latest --channel 11.0
     
   Write-Host "Configuring PATH for .NET..."
   export PATH="$HOME/.dotnet:$PATH"
