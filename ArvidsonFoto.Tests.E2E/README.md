@@ -69,12 +69,20 @@ dotnet test --logger "console;verbosity=detailed"
 
 ## How It Works
 
-`PlaywrightWebApplicationFactory` inherits from `WebApplicationFactory<Program>` (the recommended
-approach per the [ASP.NET Core integration-test docs](https://learn.microsoft.com/aspnet/core/test/integration-tests)).
-It overrides `ConfigureWebHost` to inject an in-memory database and dummy SMTP settings, and overrides
-`CreateHost` to swap the default in-memory TestServer for a real Kestrel listener on a random port.
-`ContactFormTests.InitializeAsync` calls `EnsureStarted()` to trigger host creation and reads the
-resulting URL before handing it to Playwright.
+`PlaywrightWebApplicationFactory` implements `IAsyncLifetime` directly — it **does not** inherit from
+`WebApplicationFactory<Program>`. This is intentional: `WebApplicationFactory` unconditionally casts
+`IServer` to `TestServer` after host creation, which throws an `InvalidCastException` when Kestrel is
+used instead.
+
+Instead, `InitializeAsync` builds a real `WebApplication` using `WebApplication.CreateBuilder`, injects
+test overrides (in-memory database, stub SMTP), calls `Program.ConfigureServices()` and
+`Program.ConfigureMiddleware()` to replicate the production pipeline exactly, and binds Kestrel to a
+pre-allocated free port via `builder.WebHost.UseUrls(...)`.
+
+`ContactFormTests` consumes the factory via `IClassFixture<PlaywrightWebApplicationFactory>` — xUnit
+starts the Kestrel server once before the first test in the class, and stops it after the last test.
+Each individual test gets its own Playwright browser instance via `IAsyncLifetime`.
+
 
 ## Notes
 
