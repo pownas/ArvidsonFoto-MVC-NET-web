@@ -245,6 +245,10 @@ namespace ArvidsonFoto.Core.Migrations
                         .HasColumnType("int")
                         .HasColumnName("News_ID");
 
+                    b.Property<int?>("NewsImageId")
+                        .HasColumnType("int")
+                        .HasColumnName("News_ImageId");
+
                     b.Property<bool>("NewsPublished")
                         .HasColumnType("bit")
                         .HasColumnName("News_Published");

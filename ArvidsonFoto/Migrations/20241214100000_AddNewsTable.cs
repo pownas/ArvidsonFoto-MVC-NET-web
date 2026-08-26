@@ -21,7 +21,8 @@ namespace ArvidsonFoto.Migrations
                     news_created = table.Column<DateTime>(type: "datetime", nullable: true),
                     news_updated = table.Column<DateTime>(type: "datetime", nullable: true),
                     news_published = table.Column<bool>(type: "bit", nullable: false),
-                    news_summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                    news_summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    news_imageId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

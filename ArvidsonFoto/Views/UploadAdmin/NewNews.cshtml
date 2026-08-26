@@ -51,6 +51,8 @@
                 <small class="form-text text-muted">Detta visas som förhandsvisning i nyhetsflödet.</small>
             </div>
 
+            <partial name="_NewsImagePicker" model="Model" />
+
             <div class="form-group mb-3">
                 <label asp-for="NewsContent" class="form-label">Innehåll</label>
                 <textarea asp-for="NewsContent" class="form-control" rows="10" placeholder="Ange innehållet för nyhetsartikeln (HTML tillåts)"></textarea>

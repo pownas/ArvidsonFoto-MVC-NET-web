@@ -16,6 +16,9 @@ namespace ArvidsonFoto.Controllers;
 [Authorize]
 public class UploadAdminController : Controller
 {
+    private const int NewsImageSelectionLimit = 18;
+
+    private readonly ArvidsonFotoCoreDbContext _coreContext;
     internal IApiImageService _imageService;
     internal IApiCategoryService _categoryService;
     internal IGuestBookService _guestBookService;
@@ -33,6 +36,7 @@ public class UploadAdminController : Controller
         IMemoryCache memoryCache,
         INewsService newsService)
     {
+        _coreContext = coreContext;
         _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
         _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
         _guestBookService = new GuestBookService(coreContext);
@@ -395,7 +399,7 @@ public class UploadAdminController : Controller
     public IActionResult NewNews(NewsInputModel? inputModel = null)
     {
         ViewData["Title"] = "Ny nyhetsartikel";
-        return View(inputModel ?? new NewsInputModel());
+        return View(PrepareNewsInputModel(inputModel ?? new NewsInputModel()));
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -412,6 +416,7 @@ public class UploadAdminController : Controller
                 NewsContent = inputModel.NewsContent,
                 NewsAuthor = inputModel.NewsAuthor,
                 NewsSummary = inputModel.NewsSummary,
+                NewsImageId = inputModel.NewsImageId > 0 ? inputModel.NewsImageId : null,
                 NewsPublished = inputModel.NewsPublished,
                 NewsId = _newsService.GetLastId() + 1,
                 NewsCreated = DateTime.Now,
@@ -453,11 +458,12 @@ public class UploadAdminController : Controller
                 NewsContent = news.NewsContent,
                 NewsAuthor = news.NewsAuthor,
                 NewsSummary = news.NewsSummary,
+                NewsImageId = news.NewsImageId,
                 NewsPublished = news.NewsPublished
             };
         }
 
-        return View(inputModel);
+        return View(PrepareNewsInputModel(inputModel));
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -475,6 +481,7 @@ public class UploadAdminController : Controller
                 existingNews.NewsContent = inputModel.NewsContent;
                 existingNews.NewsAuthor = inputModel.NewsAuthor;
                 existingNews.NewsSummary = inputModel.NewsSummary;
+                existingNews.NewsImageId = inputModel.NewsImageId > 0 ? inputModel.NewsImageId : null;
                 existingNews.NewsPublished = inputModel.NewsPublished;
                 existingNews.NewsUpdated = DateTime.Now;
 
@@ -623,5 +630,48 @@ public class UploadAdminController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    private NewsInputModel PrepareNewsInputModel(NewsInputModel inputModel)
+    {
+        inputModel.AvailableImages = GetLatestNewsImageOptions();
+        return inputModel;
+    }
+
+    private List<NewsImageOptionViewModel> GetLatestNewsImageOptions()
+    {
+        return _coreContext.TblImages
+            .Where(image => image.ImageId.HasValue && image.ImageCategoryId.HasValue && !string.IsNullOrWhiteSpace(image.ImageUrlName))
+            .OrderByDescending(image => image.ImageId)
+            .Take(NewsImageSelectionLimit)
+            .AsEnumerable()
+            .Select(MapNewsImageOption)
+            .Where(image => !string.IsNullOrWhiteSpace(image.ThumbnailUrl))
+            .ToList();
+    }
+
+    private NewsImageOptionViewModel MapNewsImageOption(TblImage image)
+    {
+        var categoryPath = image.ImageCategoryId.HasValue
+            ? _categoryService.GetCategoryPathForImage(image.ImageCategoryId.Value)
+            : string.Empty;
+
+        if (string.IsNullOrWhiteSpace(categoryPath) || string.IsNullOrWhiteSpace(image.ImageUrlName))
+        {
+            return new NewsImageOptionViewModel();
+        }
+
+        var imageUrl = $"https://arvidsonfoto.se/bilder/{categoryPath}/{image.ImageUrlName}";
+        var title = _categoryService.GetNameById(image.ImageCategoryId);
+
+        return new NewsImageOptionViewModel
+        {
+            ImageId = image.ImageId ?? -1,
+            Title = string.IsNullOrWhiteSpace(title) || title == "Not found" ? image.ImageUrlName : title,
+            Description = image.ImageDescription,
+            ImageDate = image.ImageDate,
+            ImageUrl = imageUrl,
+            ThumbnailUrl = $"{imageUrl}.thumb.jpg"
+        };
     }
 }

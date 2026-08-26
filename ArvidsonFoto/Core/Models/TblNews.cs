@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ArvidsonFoto.Core.Models;
 
 /// <summary>
@@ -35,4 +37,22 @@ public partial class TblNews()
 
     /// <summary>Kort sammanfattning/ingress för artikeln</summary>
     public string NewsSummary { get; set; } = string.Empty;
+
+    /// <summary>Vald bild från bilddatabasen som används som omslagsbild</summary>
+    public int? NewsImageId { get; set; }
+
+    [NotMapped]
+    public string NewsExcerpt { get; set; } = string.Empty;
+
+    [NotMapped]
+    public string? NewsImageUrl { get; set; }
+
+    [NotMapped]
+    public string? NewsImageThumbnailUrl { get; set; }
+
+    [NotMapped]
+    public string? NewsImageAlt { get; set; }
+
+    [NotMapped]
+    public string? NewsImageDescription { get; set; }
 }

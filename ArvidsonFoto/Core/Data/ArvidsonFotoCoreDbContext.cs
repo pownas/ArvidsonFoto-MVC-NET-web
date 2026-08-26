@@ -262,6 +262,9 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(500)
                 .HasColumnName("News_Summary");
 
+            entity.Property(e => e.NewsImageId)
+                .HasColumnName("News_ImageId");
+
             entity.Property(e => e.NewsPublished)
                 .HasColumnType("bit")
                 .HasColumnName("News_Published");

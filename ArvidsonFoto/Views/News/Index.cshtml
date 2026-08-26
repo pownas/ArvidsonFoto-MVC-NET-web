@@ -23,27 +23,7 @@
             @foreach (var news in Model.NewsList)
             {
                 <div class="col mb-4">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">@news.NewsTitle</h5>
-                            <small class="text-muted">
-                                @news.NewsCreated?.ToString("yyyy-MM-dd HH:mm") av @news.NewsAuthor
-                            </small>
-                        </div>
-                        <div class="card-body">
-                            @if (!string.IsNullOrEmpty(news.NewsSummary))
-                            {
-                                <p class="card-text">@news.NewsSummary</p>
-                            }
-                            else
-                            {
-                                <p class="card-text">@Html.Raw(news.NewsContent.Length > 200 ? news.NewsContent.Substring(0, 200) + "..." : news.NewsContent)</p>
-                            }
-                        </div>
-                        <div class="card-footer">
-                            <a href="/Nyheter/@news.NewsId" class="btn btn-primary btn-sm">Läs mer</a>
-                        </div>
-                    </div>
+                    <partial name="_NewsCard" model="news" />
                 </div>
             }
         </div>

@@ -1,0 +1,46 @@
+@model NewsInputModel
+
+<div class="form-group mb-4">
+    <label class="form-label">Omslagsbild (valfritt)</label>
+    <p class="form-text text-muted mb-3">Välj en tidigare uppladdad bild som ska visas på nyhetskortet och överst i artikeln.</p>
+
+    <div class="news-image-none-option mb-3">
+        <input type="radio" class="btn-check" name="NewsImageId" id="news-image-none" value="" autocomplete="off" checked="@(!Model.NewsImageId.HasValue || Model.NewsImageId.Value <= 0 ? "checked" : null)" />
+        <label class="btn btn-outline-secondary" for="news-image-none">Ingen omslagsbild</label>
+    </div>
+
+    @if (Model.AvailableImages.Count > 0)
+    {
+        <div class="row g-3">
+            @foreach (var image in Model.AvailableImages)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+                    <input type="radio"
+                           class="btn-check"
+                           name="NewsImageId"
+                           id="news-image-@image.ImageId"
+                           value="@image.ImageId"
+                           autocomplete="off"
+                           checked="@(Model.NewsImageId == image.ImageId ? "checked" : null)" />
+                    <label class="card news-image-option h-100" for="news-image-@image.ImageId">
+                        <img src="@image.ThumbnailUrl" class="news-image-option-thumb" alt="@image.Title" loading="lazy" />
+                        <div class="card-body">
+                            <div class="news-image-option-meta">
+                                <span class="badge text-bg-dark">Bild #@image.ImageId</span>
+                                @if (image.ImageDate.HasValue)
+                                {
+                                    <span class="badge text-bg-light">@image.ImageDate.Value.ToString("yyyy-MM-dd")</span>
+                                }
+                            </div>
+                            <p class="news-image-option-title mb-1">@image.Title</p>
+                            @if (!string.IsNullOrWhiteSpace(image.Description))
+                            {
+                                <p class="news-image-option-description mb-0">@image.Description</p>
+                            }
+                        </div>
+                    </label>
+                </div>
+            }
+        </div>
+    }
+</div>

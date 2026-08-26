@@ -18,8 +18,8 @@
 <div id="page-content" class="brodtext">
     @if (Model.SelectedNews != null)
     {
-        <article>
-            <header>
+        <article class="news-article-shell">
+            <header class="news-article-header">
                 <h1>@Model.SelectedNews.NewsTitle</h1>
                 <div class="text-muted mb-3">
                     <small>
@@ -34,10 +34,21 @@
                     </small>
                 </div>
             </header>
+
+            @if (!string.IsNullOrWhiteSpace(Model.SelectedNews.NewsImageUrl))
+            {
+                <figure class="news-article-hero">
+                    <img src="@Model.SelectedNews.NewsImageUrl" class="img-fluid news-article-image" alt="@Model.SelectedNews.NewsImageAlt" />
+                    @if (!string.IsNullOrWhiteSpace(Model.SelectedNews.NewsImageDescription))
+                    {
+                        <figcaption>@Model.SelectedNews.NewsImageDescription</figcaption>
+                    }
+                </figure>
+            }
             
             @if (!string.IsNullOrEmpty(Model.SelectedNews.NewsSummary))
             {
-                <div class="alert alert-light" role="alert">
+                <div class="news-article-summary" role="note">
                     <strong>Sammanfattning:</strong> @Model.SelectedNews.NewsSummary
                 </div>
             }

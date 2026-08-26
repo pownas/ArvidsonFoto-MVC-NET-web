@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Bild</th>
                             <th>Titel</th>
                             <th>Författare</th>
                             <th>Skapad</th>
@@ -31,6 +32,16 @@
                         {
                             <tr>
                                 <td>@news.NewsId</td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(news.NewsImageThumbnailUrl))
+                                    {
+                                        <img src="@news.NewsImageThumbnailUrl" alt="@news.NewsTitle" class="rounded border" style="width:72px;height:48px;object-fit:cover;" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ingen</span>
+                                    }
+                                </td>
                                 <td>@news.NewsTitle</td>
                                 <td>@news.NewsAuthor</td>
                                 <td>@news.NewsCreated?.ToString("yyyy-MM-dd")</td>

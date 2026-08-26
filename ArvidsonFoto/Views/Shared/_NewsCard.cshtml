@@ -1,0 +1,24 @@
+@model TblNews
+
+<a href="/Nyheter/@Model.NewsId" class="news-card-link">
+    <article class="card news-card h-100">
+        @if (!string.IsNullOrWhiteSpace(Model.NewsImageThumbnailUrl))
+        {
+            <div class="news-card-media">
+                <img src="@Model.NewsImageThumbnailUrl" class="news-card-image" alt="@Model.NewsImageAlt" loading="lazy" />
+            </div>
+        }
+        <div class="card-body">
+            <div class="news-card-meta">
+                <span class="news-card-pill"><i class="bi bi-calendar-event"></i> @Model.NewsCreated?.ToString("yyyy-MM-dd")</span>
+                <span class="news-card-pill"><i class="bi bi-person"></i> @Model.NewsAuthor</span>
+            </div>
+            <h3 class="news-card-title h5">@Model.NewsTitle</h3>
+            <p class="news-card-text mb-0">@Model.NewsExcerpt</p>
+        </div>
+        <div class="card-footer news-card-footer">
+            <span>Läs artikeln</span>
+            <i class="bi bi-arrow-right"></i>
+        </div>
+    </article>
+</a>

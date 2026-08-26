@@ -50,30 +50,7 @@
                 @foreach (var news in (List<TblNews>)ViewBag.LatestNews)
                 {
                     <div class="col mb-3">
-                        <a href="/Nyheter/@news.NewsId" class="news-card-link">
-                            <div class="card news-card h-100">
-                                <div class="card-header bg-dark text-white">
-                                    <h6 class="card-title mb-0">@news.NewsTitle</h6>
-                                    <small class="text-secondary">@news.NewsCreated?.ToString("yyyy-MM-dd HH:mm") av @news.NewsAuthor</small>
-                                </div>
-                                <div class="card-body bg-light">
-                                    <p class="card-text text-dark">
-                                        @if (!string.IsNullOrEmpty(news.NewsSummary))
-                                        {
-                                            @news.NewsSummary
-                                        }
-                                        else
-                                        {
-                                            @Html.Raw(news.NewsContent.Length > 100 ? news.NewsContent.Substring(0, 100) + "..." : news.NewsContent)
-                                        }
-                                    </p>
-                                    <small class="text-secondary">@news.NewsCreated?.ToString("yyyy-MM-dd")</small>
-                                </div>
-                                <div class="card-footer bg-primary text-white">
-                                    <small>Läs mer <i class="bi bi-arrow-right"></i></small>
-                                </div>
-                            </div>
-                        </a>
+                        <partial name="_NewsCard" model="news" />
                     </div>
                 }
             </div>
