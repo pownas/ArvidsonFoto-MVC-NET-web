@@ -40,7 +40,7 @@ public class GuestbookFormInputDto
 
     /// <summary>Indikerar om inlägget har publicerats framgångsrikt</summary>
     public bool DisplayPublished { get; set; }
-    
+
     /// <summary>Indikerar om det uppstod ett fel vid publicering</summary>
     public bool DisplayErrorPublish { get; set; }
 

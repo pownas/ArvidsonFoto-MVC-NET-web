@@ -23,7 +23,7 @@ public class FacebookServiceTests
         // Arrange
         _mockConfiguration.SetValue("Facebook:PageAccessToken", null);
         _mockConfiguration.SetValue("Facebook:PageId", "123456789");
-        
+
         var service = new FacebookService(_mockConfiguration, _httpClient);
 
         // Act
@@ -39,7 +39,7 @@ public class FacebookServiceTests
         // Arrange
         _mockConfiguration.SetValue("Facebook:PageAccessToken", "test_token");
         _mockConfiguration.SetValue("Facebook:PageId", null);
-        
+
         var service = new FacebookService(_mockConfiguration, _httpClient);
 
         // Act
@@ -55,7 +55,7 @@ public class FacebookServiceTests
         // Arrange
         _mockConfiguration.SetValue("Facebook:PageAccessToken", "test_token");
         _mockConfiguration.SetValue("Facebook:PageId", "123456789");
-        
+
         var service = new FacebookService(_mockConfiguration, _httpClient);
 
         // Act
@@ -71,7 +71,7 @@ public class FacebookServiceTests
         // Arrange
         _mockConfiguration.SetValue("Facebook:PageAccessToken", null);
         _mockConfiguration.SetValue("Facebook:PageId", "123456789");
-        
+
         var service = new FacebookService(_mockConfiguration, _httpClient);
         var imageUrls = new List<string> { "https://example.com/image1.jpg" };
         var message = "Test message";
@@ -144,7 +144,7 @@ public class FacebookServiceTests
         // Arrange
         _mockConfiguration.SetValue("Facebook:PageAccessToken", "test_token");
         _mockConfiguration.SetValue("Facebook:PageId", "123456789");
-        
+
         var service = new FacebookService(_mockConfiguration, _httpClient);
         var imageUrls = new List<string>();
         var message = "Test message";

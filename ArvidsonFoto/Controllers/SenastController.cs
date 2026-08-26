@@ -8,7 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace ArvidsonFoto.Controllers;
 
 public class SenastController(
-    ArvidsonFotoCoreDbContext coreContext, 
+    ArvidsonFotoCoreDbContext coreContext,
     ILogger<ApiImageService> imageLogger,
     ILogger<ApiCategoryService> categoryLogger,
     IConfiguration configuration,
@@ -37,42 +37,43 @@ public class SenastController(
             ViewData["Title"] = "Per kategori";
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Per kategori");
-            
+
             // OPTIMIZED: Use SQL-level query to get one image per category efficiently
             var categories = coreContext.TblMenus
                 .Where(m => m.MenuCategoryId.HasValue)
                 .OrderBy(m => m.MenuDisplayName)
                 .ToList();
-            
+
             viewModel.AllImagesList = new List<Core.DTOs.ImageDto>();
-            
+
             // Get all category IDs that have images (including family and main family relationships)
             var categoriesWithImages = categories
-                .Where(cat => coreContext.TblImages.Any(img => 
-                    img.ImageCategoryId == cat.MenuCategoryId || 
-                    img.ImageFamilyId == cat.MenuCategoryId || 
+                .Where(cat => coreContext.TblImages.Any(img =>
+                    img.ImageCategoryId == cat.MenuCategoryId ||
+                    img.ImageFamilyId == cat.MenuCategoryId ||
                     img.ImageMainFamilyId == cat.MenuCategoryId))
                 .Select(cat => cat.MenuCategoryId)
                 .ToList();
-            
+
             // Fetch one image per category in a single optimized query
             foreach (var categoryId in categoriesWithImages)
             {
                 var image = coreContext.TblImages
-                    .Where(i => i.ImageCategoryId == categoryId || 
-                               i.ImageFamilyId == categoryId || 
+                    .Where(i => i.ImageCategoryId == categoryId ||
+                               i.ImageFamilyId == categoryId ||
                                i.ImageMainFamilyId == categoryId)
                     .OrderByDescending(i => i.ImageUpdate)
-                    .Select(i => new { 
-                        i.ImageId, 
-                        i.ImageCategoryId, 
-                        i.ImageUrlName, 
-                        i.ImageDate, 
-                        i.ImageUpdate, 
-                        i.ImageDescription 
+                    .Select(i => new
+                    {
+                        i.ImageId,
+                        i.ImageCategoryId,
+                        i.ImageUrlName,
+                        i.ImageDate,
+                        i.ImageUpdate,
+                        i.ImageDescription
                     })
                     .FirstOrDefault();
-                
+
                 if (image != null)
                 {
                     var category = categories.FirstOrDefault(c => c.MenuCategoryId == categoryId);
@@ -82,7 +83,7 @@ public class SenastController(
                     // Use the image's own category path for the actual file location,
                     // which may be in a subcategory folder (e.g. "Dagrovfåglar/Röd glada")
                     var imagePath = _categoryService.GetCategoryDisplayPathForImage(image.ImageCategoryId ?? 0);
-                    
+
                     viewModel.AllImagesList.Add(new Core.DTOs.ImageDto
                     {
                         ImageId = image.ImageId ?? 0,
@@ -97,7 +98,7 @@ public class SenastController(
                     });
                 }
             }
-            
+
             viewModel.TotalImageCount = viewModel.AllImagesList.Count;
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
             viewModel.DisplayImagesList = viewModel.AllImagesList
@@ -110,18 +111,19 @@ public class SenastController(
             ViewData["Title"] = "Uppladdad";
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
-            
+
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
             viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
-            
+
             // OPTIMIZED: Apply sorting and pagination at SQL level
             var images = coreContext.TblImages
                 .OrderByDescending(i => i.ImageUpdate)
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
                 .Take(pageSize)
-                .Select(i => new {
+                .Select(i => new
+                {
                     i.ImageId,
                     i.ImageCategoryId,
                     i.ImageUrlName,
@@ -130,7 +132,7 @@ public class SenastController(
                     i.ImageDescription
                 })
                 .ToList();
-            
+
             // Get unique category IDs for bulk path loading
             var categoryIds = images
                 .Where(i => i.ImageCategoryId.HasValue)
@@ -144,16 +146,16 @@ public class SenastController(
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
-            
+
             // Use bulk category name lookup to avoid N+1 queries
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
-            
+
             viewModel.DisplayImagesList = images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
-                
+
                 return new Core.DTOs.ImageDto
                 {
                     ImageId = image.ImageId ?? 0,
@@ -167,27 +169,28 @@ public class SenastController(
                     Description = image.ImageDescription ?? string.Empty
                 };
             }).ToList();
-            
+
             viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
         }
-        else if (sortOrder.Equals("Fotograferad"))
+        else if (sortOrder.Equals("Fotograferad", StringComparison.OrdinalIgnoreCase))
         {
             ViewData["Title"] = "Fotograferad";
             if (User?.Identity?.IsAuthenticated is false)
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
-            
+
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
             viewModel.TotalImageCount = totalImages;
             viewModel.TotalPages = (int)Math.Ceiling(totalImages / (decimal)pageSize);
-            
+
             // OPTIMIZED: Apply sorting and pagination at SQL level
             var images = coreContext.TblImages
                 .OrderByDescending(i => i.ImageDate)
                 .ThenByDescending(i => i.ImageUpdate)
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
                 .Take(pageSize)
-                .Select(i => new {
+                .Select(i => new
+                {
                     i.ImageId,
                     i.ImageCategoryId,
                     i.ImageUrlName,
@@ -196,29 +199,29 @@ public class SenastController(
                     i.ImageDescription
                 })
                 .ToList();
-            
+
             // Get unique category IDs for bulk path loading
             var categoryIds = images
                 .Where(i => i.ImageCategoryId.HasValue)
                 .Select(i => i.ImageCategoryId!.Value)
                 .Distinct()
                 .ToList();
-            
+
             // Use display paths (with ÅÄÖ) for physical folder structure
             var categoryDisplayPaths = new Dictionary<int, string>();
             foreach (var catId in categoryIds)
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
-            
+
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
-            
+
             viewModel.DisplayImagesList = images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
-                
+
                 return new Core.DTOs.ImageDto
                 {
                     ImageId = image.ImageId ?? 0,
@@ -232,7 +235,7 @@ public class SenastController(
                     Description = image.ImageDescription ?? string.Empty
                 };
             }).ToList();
-            
+
             viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
         }
         else

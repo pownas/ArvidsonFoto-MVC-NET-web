@@ -33,7 +33,7 @@ public interface IPageCounterService
     /// <summary> Hämtar de 20st mest besökta bild-Kategorierna. </summary>
     /// <returns>Lista med de 20 mest besökta bild-kategorierna</returns>
     List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount();
-    
+
     /// <summary> Hämtar alla sidvisningar utan gruppering. </summary>
     /// <returns>Lista med alla sidvisningar</returns>
     List<TblPageCounter> GetAllPageCounts();
