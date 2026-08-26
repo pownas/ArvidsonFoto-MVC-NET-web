@@ -3,14 +3,30 @@
 namespace ArvidsonFoto.Tests.E2E;
 
 /// <summary>
-/// End-to-end tests for contact form functionality
-/// Tests both contact page and image purchase page forms
+/// End-to-end tests for contact form functionality.
+/// Tests both contact page and image purchase page forms.
+///
+/// Follows the Microsoft integration-test pattern:
+/// https://learn.microsoft.com/aspnet/core/test/integration-tests
+///
+/// <see cref="PlaywrightWebApplicationFactory"/> is shared across all tests in
+/// this class via <see cref="IClassFixture{T}"/> — the Kestrel server starts
+/// once and is disposed by xUnit when the class is torn down.
+/// <see cref="IAsyncLifetime"/> is used for the per-test Playwright
+/// browser lifecycle (create browser before each test, close after).
 /// </summary>
-public sealed class ContactFormTests : IAsyncLifetime
+public sealed class ContactFormTests : IClassFixture<PlaywrightWebApplicationFactory>, IAsyncLifetime
 {
+    private readonly string _baseUrl;
     private IPlaywright? _playwright;
     private IBrowser? _browser;
-    private const string BaseUrl = "https://localhost:5001"; // Default local URL
+
+    public ContactFormTests(PlaywrightWebApplicationFactory factory)
+    {
+        // IAsyncLifetime.InitializeAsync on the fixture has already been called
+        // by xUnit before this constructor runs — Kestrel is bound and ready.
+        _baseUrl = factory.ServerAddress;
+    }
 
     async ValueTask IAsyncLifetime.InitializeAsync()
     {
@@ -29,6 +45,8 @@ public sealed class ContactFormTests : IAsyncLifetime
         GC.SuppressFinalize(this);
 
         _playwright?.Dispose();
+        // Factory lifecycle is managed by IClassFixture — xUnit disposes it
+        // after all tests in this class have run.
     }
 
     [Fact]
@@ -42,7 +60,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Take screenshot
@@ -74,7 +92,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Try to submit without filling fields
@@ -107,7 +125,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form
@@ -146,7 +164,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form with correct code
@@ -213,7 +231,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kontakta");
+        await page.GotoAsync($"{_baseUrl}/Info/Kontakta");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form with correct code
@@ -312,7 +330,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kop_av_bilder");
+        await page.GotoAsync($"{_baseUrl}/Info/Kop_av_bilder");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Take screenshot
@@ -343,7 +361,7 @@ public sealed class ContactFormTests : IAsyncLifetime
         var page = await context.NewPageAsync();
 
         // Act
-        await page.GotoAsync($"{BaseUrl}/Info/Kop_av_bilder");
+        await page.GotoAsync($"{_baseUrl}/Info/Kop_av_bilder");
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         // Fill form
