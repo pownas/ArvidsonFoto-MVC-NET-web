@@ -25,7 +25,7 @@ public partial class TblMenu()
     /// <example>Blåmes</example>
     //[JsonPropertyName("menu_text")] // ColumnName in database
     public string? MenuDisplayName { get; set; } = string.Empty;
-    
+
     //public string MenuEngtext { get; set; }
 
     /// <summary> URL text för menyn, används för att skapa sökvänliga URL:er. </summary>

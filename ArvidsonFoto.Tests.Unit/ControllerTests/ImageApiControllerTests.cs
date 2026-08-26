@@ -46,7 +46,7 @@ public class ImageApiControllerTests : IDisposable
         _mockCategoryService = new MockApiCategoryService();
 
         // Create controller
-        _controller = new ImageApiController(logger, _mockImageService, _dbContext, _mockCategoryService, configuration);
+        _controller = new ImageApiController(logger, _mockImageService, _dbContext, _mockCategoryService);
 
         // Setup HTTP context
         var httpContext = new DefaultHttpContext();
@@ -320,7 +320,7 @@ public class ImageApiControllerTests : IDisposable
 
         // Assert
         Assert.True(result);
-        
+
         // Verify the image was updated in the database
         var actualImage = _dbContext.TblImages.FirstOrDefault(i => i.ImageId == uploadImage.ImageId);
         Assert.NotNull(actualImage);
@@ -376,11 +376,50 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "Faglar/Hackspettar/Tretaig-hackspett";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
+    }
+
+    [Fact]
+    public void GetImagesByCategoryPath_ParentCategoryPath_ReturnsOkWithImagesFromSubcategories()
+    {
+        // Arrange - "Faglar" är en förälderkategori (categoryId=1) utan direkta bilder,
+        // men med underkategorier som innehåller bilder.
+        string categoryPath = "Faglar";
+
+        // Act
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert - Ska returnera Ok, inte 404 eller tom bildlista
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+
+        var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
+        // Fåglar-kategorin ska ha bilder från sina underkategorier
+        Assert.True(response.ImageResultCount > 0, "Parent category 'Faglar' should return images from subcategories");
+        Assert.True(response.Images.Count > 0, "Images list should not be empty for parent category");
+        // Kategorinamnet ska vara korrekt, inte 'Unknown'
+        Assert.Equal("Fåglar", response.CategoryName);
+    }
+
+    [Fact]
+    public void GetImagesByCategoryPath_ParentCategoryPath_HasCorrectCategoryName()
+    {
+        // Arrange - Besöker förälderkategorin "Fåglar" direkt via en enda segment
+        string categoryPath = "Faglar";
+
+        // Act
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
+        // CategoryName ska vara "Fåglar", INTE "Unknown"
+        Assert.NotEqual("Unknown", response.CategoryName);
+        Assert.Equal(1, response.CategoryId);
     }
 
     [Fact]
@@ -390,7 +429,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -404,7 +443,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "nonexistent/category/path";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -423,6 +462,7 @@ public class ImageApiControllerTests : IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _dbContext.Dispose();
     }
 }

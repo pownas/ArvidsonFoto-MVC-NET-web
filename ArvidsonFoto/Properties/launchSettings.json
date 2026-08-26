@@ -1,13 +1,5 @@
 ﻿{
   "$schema": "https://www.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:64778",
-      "sslPort": 44300
-    }
-  },
   "profiles": {
     "ArvidsonFoto": {
       "commandName": "Project",

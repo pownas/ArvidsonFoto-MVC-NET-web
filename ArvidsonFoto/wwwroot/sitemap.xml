@@ -25,19 +25,13 @@
     <priority>0.8</priority>
   </url>
 
-  <!--<url>
-    <loc>https://arvidsonfoto.se/Senast/Bildkalender</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>-->
-
   <url>
     <loc>https://arvidsonfoto.se/Info/Kop_av_bilder</loc>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/GB</loc>
+    <loc>https://arvidsonfoto.se/Info/Gastbok</loc>
     <changefreq>monthly</changefreq>
   </url>
 

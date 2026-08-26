@@ -11,13 +11,13 @@ public class PathResolutionResponse
 {
     /// <summary>Den fullständiga kategorisökvägen</summary>
     public string CategoryPath { get; set; } = string.Empty;
-    
+
     /// <summary>Antal segment som har lösts upp</summary>
     public int ResolvedSegments { get; set; }
-    
+
     /// <summary>Det slutliga kategori-ID:t för den lösta sökvägen</summary>
     public int? FinalCategoryId { get; set; }
-    
+
     /// <summary>Lista över sökvägsegment som ingår i lösningen</summary>
     public List<PathSegment> PathResolution { get; set; } = new List<PathSegment>();
 }
@@ -32,13 +32,13 @@ public class PathSegment
 {
     /// <summary>Nivå i hierarkin för detta segment</summary>
     public string Level { get; set; } = string.Empty;
-    
+
     /// <summary>Visningsnamn för segmentet</summary>
     public string Name { get; set; } = string.Empty;
-    
+
     /// <summary>Unikt ID för segmentet</summary>
     public int Id { get; set; }
-    
+
     /// <summary>URL-vänligt segment för routning</summary>
     public string UrlSegment { get; set; } = string.Empty;
 }

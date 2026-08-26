@@ -20,10 +20,11 @@ public class BilderController(
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
-    public IActionResult Index(string subLevel1, string subLevel2, string subLevel3, string subLevel4, string subLevel5ImageName, int? sida)
+    public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
         GalleryViewModel viewModel = new GalleryViewModel();
         int pageSize = 48;
+        viewModel.PageSize = pageSize;
 
         if (sida is null || sida < 1)
             sida = 1;
@@ -53,9 +54,9 @@ public class BilderController(
         }
 
         // Determine which category to load
-        string categoryName = null;
-        string currentUrl = null;
-        
+        string? categoryName = null;
+        string? currentUrl = null;
+
         if (subLevel4 is not null)
         {
             categoryName = subLevel4;
@@ -81,34 +82,37 @@ public class BilderController(
         {
             // Try to find category by name (case-insensitive via GetByName)
             var selectedCategory = _categoryService.GetByName(categoryName);
-            
+
             // If not found by display name, try by URL segment with fallback
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
             {
                 selectedCategory = _categoryService.GetByUrlSegmentWithFallback(categoryName);
             }
-            
+
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
             {
                 Log.Warning($"Invalid category requested: {currentUrl} (categoryName: {categoryName})");
                 return NotFound();
             }
-            
+
             viewModel.SelectedCategory = selectedCategory;
-            viewModel.CurrentUrl = currentUrl;
-            
+            viewModel.CurrentUrl = currentUrl ?? string.Empty;
+
             // OPTIMIZED: Use count method instead of loading all images into memory
             var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
-            
+
+            // Store total image count for metadata (SEO)
+            viewModel.TotalImageCount = totalImageCount;
+
             // Calculate pagination
             viewModel.TotalPages = (int)Math.Ceiling(totalImageCount / (decimal)pageSize);
-            
+
             // OPTIMIZED: Get only the images for the current page with SQL-level sorting and pagination
             viewModel.DisplayImagesList = _imageService.GetImagesByCategoryIDPaginated(
-                selectedCategory.CategoryId.Value, 
-                viewModel.CurrentPage, 
+                selectedCategory.CategoryId.Value,
+                viewModel.CurrentPage,
                 pageSize);
-                
+
             // Set AllImagesList to empty list to save memory (we don't need all images in memory)
             viewModel.AllImagesList = new List<ImageDto>();
         }
@@ -137,8 +141,8 @@ public class BilderController(
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
     {
-        var url = Url.ActionContext.HttpContext ?? null;
-        string visitedUrl = HttpRequestExtensions.GetRawUrl(url) ?? "";
+        var url = Url.ActionContext.HttpContext;
+        string visitedUrl = url?.GetRawUrl() ?? "";
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
@@ -150,16 +154,16 @@ public class BilderController(
     }
 
     [Route("/search")]
-    public IActionResult Search(string s)
+    public IActionResult Search(string? s)
     {
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("search");
 
         GalleryViewModel viewModel = new GalleryViewModel();
-        
+
         ViewBag.SearchQuery = s ?? "";
         ViewBag.SearchPerformed = !string.IsNullOrWhiteSpace(s); // Track if a search was actually performed
-        
+
         if (string.IsNullOrWhiteSpace(s))
         {
             ViewData["Title"] = "Sök bland bild-kategorierna";
@@ -174,9 +178,9 @@ public class BilderController(
             List<ImageDto> listOfFirstSearchedImages = new List<ImageDto>();
             foreach (var category in allCategories)
             {
-                if (category.Name != null && category.Name.ToUpper().Contains(s.ToUpper()) && category.CategoryId.HasValue)
+                if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)
                 {
-                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value);
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
                     listOfFirstSearchedImages.Add(imageDto);
                 }
             }
@@ -184,7 +188,7 @@ public class BilderController(
             viewModel.SelectedCategory = CategoryDto.CreateEmpty();
             viewModel.SelectedCategory.Name = "SearchFor: " + s;
             viewModel.SelectedCategory.UrlCategoryPath = "/Search";
-            
+
             if (listOfFirstSearchedImages.Count == 0)
                 Log.Warning("Hittade inget vid sökning: '" + s + "'");
         }

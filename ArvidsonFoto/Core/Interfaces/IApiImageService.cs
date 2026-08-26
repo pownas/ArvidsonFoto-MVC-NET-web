@@ -38,8 +38,9 @@ public interface IApiImageService
     /// Gets one image from a category
     /// </summary>
     /// <param name="categoryId">The category ID</param>
+    /// <param name="categoryName">Optional category name to use for display</param>
     /// <returns>An image from the category</returns>
-    ImageDto GetOneImageFromCategory(int categoryId);
+    ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "");
 
     /// <summary>
     /// Gets all images
@@ -82,31 +83,31 @@ public interface IApiImageService
     /// <param name="id">ID för bilden som ska tas bort</param>
     /// <returns>True om bilden togs bort framgångsrikt</returns>
     Task<bool> DeleteImageAsync(int id);
-    
+
     /// <summary>Hämtar de senaste bilderna</summary>
     /// <param name="limit">Antal bilder att hämta</param>
     /// <returns>Lista med de senaste bilderna</returns>
     List<ImageDto> GetLatestImageList(int limit);
-    
+
     /// <summary>Hämtar en bild baserat på dess ID</summary>
     /// <param name="id">Bild-ID</param>
     /// <returns>Bilden eller en standardbild om den inte hittas</returns>
     ImageDto GetImageById(int id);
-    
+
     /// <summary>Tar bort en bild</summary>
     /// <param name="id">ID för bilden som ska tas bort</param>
     /// <returns>True om bilden togs bort framgångsrikt</returns>
     bool DeleteImage(int id);
-    
+
     /// <summary>Hämtar alla bilder asynkront</summary>
     /// <returns>Lista med alla bilder</returns>
     Task<IEnumerable<ImageDto>> GetAllImagesAsync();
-    
+
     /// <summary>Hämtar en bild asynkront</summary>
     /// <param name="id">Bild-ID</param>
     /// <returns>Den begärda bilden</returns>
     Task<ImageDto> GetOneImageAsync(int id);
-    
+
     /// <summary>Skapar en ny bild asynkront</summary>
     /// <param name="image">Bilden som ska skapas</param>
     /// <returns>True om bilden skapades framgångsrikt</returns>
