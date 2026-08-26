@@ -470,8 +470,9 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     {
         // Apply sorting
         IOrderedEnumerable<ImageDto> sortedImages;
+        var normalizedSortBy = sortBy.ToLowerInvariant();
 
-        switch (sortBy)
+        switch (normalizedSortBy)
         {
             case "imagetaken":
                 sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
