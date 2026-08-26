@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup Label="Common">
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -22,7 +22,7 @@
     <IsPackable>false</IsPackable>
     <Year>$([System.DateTime]::UtcNow.ToString('yyyy'))</Year>
     <Copyright>Copyright © 2003-$(Year) Arvidson Foto. All rights reserved.</Copyright>
-    <Version>3.10.11</Version>
+    <Version>3.11.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <InformationalVersion>$(Version)+commit</InformationalVersion>
     <RepositoryUrl>https://github.com/pownas/ArvidsonFoto-MVC-NET-web</RepositoryUrl>

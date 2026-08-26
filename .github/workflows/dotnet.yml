@@ -1,4 +1,4 @@
-﻿name: .NET 10 - Windows
+﻿name: .NET 11 - Windows
 
 on:
   push:
@@ -18,15 +18,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 10
-      # Installs the latest stable 10.0 SDK
+    - name: Setup .NET SDK 11 (preview)
+      # Installs .NET 11 preview SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: '11.0.x'
+        dotnet-quality: 'preview'
         cache: true
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
           **/packages.lock.json
+          **/Directory.Packages.props
           **/*.sln*
           **/*.csproj
 
@@ -51,13 +53,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 10
+    - name: Setup .NET SDK 11 (preview)
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: '11.0.x'
+        dotnet-quality: 'preview'
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
+          **/Directory.Packages.props
           **/*.sln*
           **/*.csproj
 
