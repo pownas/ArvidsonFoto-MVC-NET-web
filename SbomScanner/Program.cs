@@ -219,7 +219,8 @@ var lookupTasks = uniqueLookups.Select(async item =>
             }
         }
     }
-    catch {
+    catch
+    {
         /* Ignorera API-missar, t.ex. interna paket */
     }
 

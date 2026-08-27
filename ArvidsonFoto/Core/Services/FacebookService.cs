@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.Interfaces;
+using System.Text.Json;
 
 namespace ArvidsonFoto.Core.Services;
 

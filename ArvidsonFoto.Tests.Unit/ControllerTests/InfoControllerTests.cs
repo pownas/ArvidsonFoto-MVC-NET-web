@@ -1,15 +1,15 @@
 ﻿using ArvidsonFoto.Controllers;
+using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
-using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
 

@@ -1,14 +1,14 @@
-﻿using ArvidsonFoto.Core.Data;
+﻿using ArvidsonFoto.Core.Configuration;
+using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
-using ArvidsonFoto.Core.Configuration;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using MimeKit;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace ArvidsonFoto.Controllers;
 
