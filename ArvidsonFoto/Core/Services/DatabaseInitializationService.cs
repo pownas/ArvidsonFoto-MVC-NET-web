@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ArvidsonFoto.Core.Data;
+﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 
 namespace ArvidsonFoto.Core.Services;

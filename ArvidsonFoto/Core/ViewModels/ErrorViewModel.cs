@@ -1,4 +1,4 @@
-namespace ArvidsonFoto.Core.ViewModels;
+﻿namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>
 /// ViewModel for error page display.

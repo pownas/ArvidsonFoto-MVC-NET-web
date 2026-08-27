@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace ArvidsonFoto.Tests.Unit.Security.Mocks;
 
