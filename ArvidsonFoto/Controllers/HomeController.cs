@@ -12,16 +12,19 @@ public class HomeController : Controller
 {
     private readonly IPageCounterService _pageCounterService;
     private readonly IApiImageService _imageService;
+    private readonly INewsService _newsService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HomeController"/> class.
     /// </summary>
     /// <param name="pageCounterService">The page counter service for tracking page views</param>
     /// <param name="imageService">The image service for fetching images</param>
-    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService)
+    /// <param name="newsService">The news service for fetching news articles</param>
+    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService, INewsService newsService)
     {
         _pageCounterService = pageCounterService;
         _imageService = imageService;
+        _newsService = newsService;
     }
 
     public IActionResult Index()
@@ -29,12 +32,14 @@ public class HomeController : Controller
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
             _pageCounterService.AddPageCount("Startsidan");
-        
+
         var viewModel = new GalleryViewModel
         {
             DisplayImagesList = _imageService.GetRandomNumberOfImages(12)
         };
-        
+
+        ViewBag.LatestNews = _newsService.GetLatestPublished(3);
+
         return View(viewModel);
     }
 
@@ -57,7 +62,7 @@ public class HomeController : Controller
 
         if (viewModel.VisitedUrl is null)
             ViewData["Title"] = "Error";
-        else if (viewModel.VisitedUrl.ToLower().StartsWith("/images/gallery"))
+        else if (viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase))
             ViewData["Title"] = "Error 301 - Old image Url";
         else
             ViewData["Title"] = "Error 404 - Page not found";
@@ -65,12 +70,14 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    private bool LogErrorUrlPost(string? visitedUrl)
+    private static bool LogErrorUrlPost(string? visitedUrl)
     {
         bool logThisPost = true;
 
-        if (visitedUrl?.StartsWith("/images/gallery") == true)
+        if (visitedUrl?.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase) == true)
+        {
             logThisPost = false;
+        }
 
         return logThisPost;
     }

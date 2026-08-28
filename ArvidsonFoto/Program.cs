@@ -83,7 +83,7 @@ public class Program
         }
     }
 
-    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    private static void ConfigureServices(IServiceCollection services, ConfigurationManager configuration, IWebHostEnvironment environment)
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -92,7 +92,7 @@ public class Program
             configuration.GetSection("SmtpSettings"));
 
         // Database configuration - ONLY Core DbContext now
-        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null ||
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
                            configuration.GetConnectionString("UseInMemoryDatabase") == "true";
 
@@ -137,6 +137,7 @@ public class Program
         services.AddScoped<IPageCounterService, PageCounterService>();
         services.AddScoped<IContactService, ContactService>();
         services.AddScoped<IFacebookService, FacebookService>();
+        services.AddScoped<INewsService, NewsService>();
 
         // Add HttpClient for FacebookService
         services.AddHttpClient<IFacebookService, FacebookService>();
@@ -205,7 +206,7 @@ public class Program
     private static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env, IConfiguration configuration)
     {
         // Seed in-memory database if using in-memory database
-        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null || 
+        var useInMemoryDb = Environment.GetEnvironmentVariable("CODESPACES") != null ||
                            Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
                            configuration.GetConnectionString("UseInMemoryDatabase") == "true";
 
@@ -215,7 +216,7 @@ public class Program
             {
                 var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
                 coreContext.Database.EnsureCreated();
-                
+
                 // Seeda data om databasen är tom
                 if (!coreContext.TblImages.Any())
                 {
@@ -241,27 +242,27 @@ public class Program
             try
             {
                 var categoryService = scope.ServiceProvider.GetRequiredService<IApiCategoryService>();
-                
+
                 Log.Debug("Pre-loading category cache...");
                 var startTime = DateTime.UtcNow;
-                
+
                 // Load all categories - this will cache them with GetAll()
                 var allCategories = categoryService.GetAll();
-                
+
                 // Pre-cache all category names and paths for bulk operations
                 var allCategoryIds = allCategories
                     .Where(c => c.CategoryId.HasValue)
                     .Select(c => c.CategoryId!.Value)
                     .ToList();
-                
+
                 if (allCategoryIds.Any())
                 {
                     categoryService.GetCategoryNamesBulk(allCategoryIds);
                     categoryService.GetCategoryPathsBulk(allCategoryIds);
                 }
-                
+
                 var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                Log.Debug("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories", 
+                Log.Debug("Category cache pre-loaded successfully in {ElapsedMs}ms with {Count} categories",
                     elapsed, allCategories.Count);
             }
             catch (Exception ex)
@@ -282,7 +283,7 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        
+
         // Only use HTTPS redirection in production, not in development/Codespaces
         if (!env.IsDevelopment())
         {
@@ -291,7 +292,7 @@ public class Program
 
         // WebOptimizer middleware - add before UseStaticFiles
         app.UseWebOptimizer();
-        
+
         app.UseStaticFiles();
 
         // Add input validation middleware to prevent SQL injection and malicious input
@@ -318,13 +319,13 @@ public class Program
 
         // Passkey (WebAuthn) endpoints (excluded from OpenAPI/Scalar). Used by passkey.js.
         app.MapPasskeyEndpoints();
-        
+
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
         {
             // Native .NET 10 OpenAPI JSON endpoint
             app.MapOpenApi();
-            
+
             // Scalar UI for interactive API documentation  
             app.MapScalarApiReference(options =>
             {
@@ -333,7 +334,7 @@ public class Program
                     .WithTheme(ScalarTheme.Purple)
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
             });
-            
+
             Log.Information("OpenAPI documentation available at: /scalar/v1");
             Log.Information("OpenAPI JSON schema available at: /openapi/v1.json");
         }

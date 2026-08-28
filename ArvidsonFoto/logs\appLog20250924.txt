@@ -1,0 +1,2 @@
+2025-09-24 21:59:57.301 +00:00 [WRN] A user visited UploadAdmin-login page via URL: /Identity/Account/Login?ReturnUrl=%2FUploadAdmin.
+2025-09-24 22:00:06.321 +00:00 [FTL] Navigation error to page: /Nyheter

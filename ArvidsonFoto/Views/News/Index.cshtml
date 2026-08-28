@@ -1,0 +1,38 @@
+@*<!-- News-Index -->*@
+@model NewsViewModel
+
+@section MetaData {
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Torbjörn Arvidson Foto - Nyheter och uppdateringar om fotografering och bildarkiv." />
+    <link rel="canonical" href="https://ArvidsonFoto.se/Nyheter" />
+}
+
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"] <i class="bi bi-newspaper mx-1"></i></li>
+    </ol>
+</nav>
+
+<h2><i class="bi bi-newspaper"></i> @ViewData["Title"]</h2>
+
+<div id="page-content" class="brodtext">
+    @if (Model.NewsList.Count > 0)
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            @foreach (var news in Model.NewsList)
+            {
+                <div class="col mb-4">
+                    <partial name="_NewsCard" model="news" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            Inga nyheter att visa för tillfället.
+        </div>
+    }
+</div>

@@ -1,0 +1,30 @@
+﻿<Project>
+  <PropertyGroup Label="Common">
+    <TargetFramework>net11.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <SatelliteResourceLanguages>en;sv</SatelliteResourceLanguages>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="AssemblyInfo">
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <AssemblyName>$(AssemblyName)</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <Year>$([System.DateTime]::UtcNow.ToString('yyyy'))</Year>
+    <Copyright>Copyright © 2003-$(Year) Arvidson Foto. All rights reserved.</Copyright>
+    <Version>3.11.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <InformationalVersion>$(Version)+commit</InformationalVersion>
+    <RepositoryUrl>https://github.com/pownas/ArvidsonFoto-MVC-NET-web</RepositoryUrl>
+  </PropertyGroup>
+</Project>

@@ -18,7 +18,7 @@ namespace ArvidsonFoto.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("Finnish_Swedish_CI_AS")
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -37,13 +37,11 @@ namespace ArvidsonFoto.Core.Migrations
                         .HasColumnName("GB_date");
 
                     b.Property<string>("GbEmail")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("GB_email");
 
                     b.Property<string>("GbHomepage")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("GB_homepage");
@@ -53,13 +51,11 @@ namespace ArvidsonFoto.Core.Migrations
                         .HasColumnName("GB_ID");
 
                     b.Property<string>("GbIp")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("GB_IP");
 
                     b.Property<string>("GbName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("GB_name");
@@ -69,7 +65,6 @@ namespace ArvidsonFoto.Core.Migrations
                         .HasColumnName("GB_ReadPost");
 
                     b.Property<string>("GbText")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("GB_text");
 
@@ -126,6 +121,63 @@ namespace ArvidsonFoto.Core.Migrations
                     b.ToTable("tbl_images", (string)null);
                 });
 
+            modelBuilder.Entity("ArvidsonFoto.Core.Models.TblKontakt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("Email");
+
+                    b.Property<bool>("EmailSent")
+                        .HasColumnType("bit")
+                        .HasColumnName("EmailSent");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("ErrorMessage");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnName("Message");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Name");
+
+                    b.Property<string>("SourcePage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("SourcePage");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Subject");
+
+                    b.Property<DateTime>("SubmitDate")
+                        .HasColumnType("datetime")
+                        .HasColumnName("SubmitDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_kontakt", (string)null);
+                });
+
             modelBuilder.Entity("ArvidsonFoto.Core.Models.TblMenu", b =>
                 {
                     b.Property<int>("Id")
@@ -138,6 +190,10 @@ namespace ArvidsonFoto.Core.Migrations
                     b.Property<int?>("MenuCategoryId")
                         .HasColumnType("int")
                         .HasColumnName("menu_ID");
+
+                    b.Property<DateTime?>("MenuDateUpdated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("menu_dateUpdated");
 
                     b.Property<string>("MenuDisplayName")
                         .HasMaxLength(50)
@@ -156,6 +212,63 @@ namespace ArvidsonFoto.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_menu", (string)null);
+                });
+
+            modelBuilder.Entity("ArvidsonFoto.Core.Models.TblNews", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NewsAuthor")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("News_Author");
+
+                    b.Property<string>("NewsContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("News_Content");
+
+                    b.Property<DateTime?>("NewsCreated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("News_Created");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int")
+                        .HasColumnName("News_ID");
+
+                    b.Property<int?>("NewsImageId")
+                        .HasColumnType("int")
+                        .HasColumnName("News_ImageId");
+
+                    b.Property<bool>("NewsPublished")
+                        .HasColumnType("bit")
+                        .HasColumnName("News_Published");
+
+                    b.Property<string>("NewsSummary")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("News_Summary");
+
+                    b.Property<string>("NewsTitle")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("News_Title");
+
+                    b.Property<DateTime?>("NewsUpdated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("News_Updated");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_news", (string)null);
                 });
 
             modelBuilder.Entity("ArvidsonFoto.Core.Models.TblPageCounter", b =>

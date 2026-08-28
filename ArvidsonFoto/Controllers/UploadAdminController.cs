@@ -3,6 +3,7 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
@@ -16,9 +17,13 @@ namespace ArvidsonFoto.Controllers;
 [Authorize]
 public class UploadAdminController : Controller
 {
+    private const int NewsImageSelectionLimit = 18;
+
+    private readonly ArvidsonFotoCoreDbContext _coreContext;
     internal IApiImageService _imageService;
     internal IApiCategoryService _categoryService;
     internal IGuestBookService _guestBookService;
+    internal INewsService _newsService;
     internal readonly UserManager<ArvidsonFotoUser> _userManager;
     internal readonly IFacebookService _facebookService;
 
@@ -29,13 +34,16 @@ public class UploadAdminController : Controller
         ILogger<ApiImageService> imageLogger,
         ILogger<ApiCategoryService> categoryLogger,
         IConfiguration configuration,
-        IMemoryCache memoryCache)
+        IMemoryCache memoryCache,
+        INewsService newsService)
     {
+        _coreContext = coreContext;
         _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
         _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
         _guestBookService = new GuestBookService(coreContext);
         _userManager = userManager;
         _facebookService = facebookService;
+        _newsService = newsService;
     }
 
     public IActionResult Index()
@@ -52,10 +60,10 @@ public class UploadAdminController : Controller
     public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4)
     {
         ViewData["Title"] = "Länka till ny bild";
-        
+
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
-        
+
         UploadImageViewModel viewModel = new UploadImageViewModel();
         viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
 
@@ -129,12 +137,12 @@ public class UploadAdminController : Controller
                 var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
                 coreContext.TblImages.Add(newImage);
                 coreContext.SaveChanges();
-                
+
                 // Använd TempData för att visa framgångsmeddelande
                 TempData["ImageCreated"] = true;
                 TempData["ImageCategoryId"] = model.ImageArt;
                 TempData["ImageUrl"] = model.ImageUrl;
-                
+
                 return RedirectToAction("NyBild");
             }
             catch (Exception ex)
@@ -144,7 +152,7 @@ public class UploadAdminController : Controller
                 TempData["ErrorMessage"] = "Ett fel uppstod vid skapande av bilden.";
             }
         }
-        
+
         // Om validering misslyckades, skicka tillbaka till formuläret med felmeddelanden
         TempData["ImageCreated"] = false;
         return RedirectToAction("NyBild");
@@ -161,7 +169,7 @@ public class UploadAdminController : Controller
                 var existingImage = coreContext.TblImages
                     .Where(i => i.ImageId == model.ImageId)
                     .FirstOrDefault();
-                    
+
                 if (existingImage != null)
                 {
                     existingImage.ImageUrlName = model.ImageUrl;
@@ -171,7 +179,7 @@ public class UploadAdminController : Controller
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
                     existingImage.ImageUpdate = DateTime.Now;
-                    
+
                     await coreContext.SaveChangesAsync();
                     return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
                 }
@@ -233,8 +241,8 @@ public class UploadAdminController : Controller
             CurrentPage = (int)sida,
             CurrentUrl = "./UploadAdmin/RedigeraBilder"
         };
-        
-        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count() / (decimal)imagesPerPage);
+
+        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage);
         var displayTblImages = allImages
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
@@ -270,7 +278,7 @@ public class UploadAdminController : Controller
 
             // Get category path using the service method
             var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
-            
+
             // Build the full source URL with the correct path
             inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/bilder/{categoryPath}/{inputModel.ImageUrl}";
 
@@ -342,15 +350,17 @@ public class UploadAdminController : Controller
     /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
     public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
     {
-        ViewData["Title"] = "Läser loggboken för: " + datum.ToString("yyyy-MM-dd dddd");
+        ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
 
         AppLogReaderService logReader = new AppLogReaderService();
-        string appLogFile = "appLog" + datum.ToString("yyyyMMdd") + ".txt";
+        string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
 
-        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel();
-        viewModel.ExistingLogFiles = logReader.ExistingLogFiles();
-        viewModel.LogBook = logReader.ReadData(appLogFile);
-        viewModel.DateShown = datum;
+        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel
+        {
+            ExistingLogFiles = logReader.ExistingLogFiles(),
+            LogBook = logReader.ReadData(appLogFile),
+            DateShown = datum
+        };
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         viewModel.ShowAllLogs = user.ShowAllLogs;
@@ -375,6 +385,130 @@ public class UploadAdminController : Controller
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
+    }
+
+
+    [Route("/[controller]/Nyheter")]
+    public IActionResult NewsAdmin()
+    {
+        ViewData["Title"] = "Nyhetsadministration";
+        var viewModel = new NewsViewModel
+        {
+            NewsList = _newsService.GetAll(),
+            ShowAdminControls = true
+        };
+        return View(viewModel);
+    }
+
+    [Route("/[controller]/NyNyhet")]
+    public IActionResult NewNews(NewsInputModel? inputModel = null)
+    {
+        ViewData["Title"] = "Ny nyhetsartikel";
+        return View(PrepareNewsInputModel(inputModel ?? new NewsInputModel()));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult CreateNews(NewsInputModel inputModel)
+    {
+        inputModel.NewsCreated = false;
+        inputModel.DisplayErrorPublish = false;
+
+        if (ModelState.IsValid)
+        {
+            TblNews newNews = new TblNews()
+            {
+                NewsTitle = inputModel.NewsTitle,
+                NewsContent = inputModel.NewsContent,
+                NewsAuthor = inputModel.NewsAuthor,
+                NewsSummary = inputModel.NewsSummary,
+                NewsImageId = inputModel.NewsImageId > 0 ? inputModel.NewsImageId : null,
+                NewsPublished = inputModel.NewsPublished,
+                NewsId = _newsService.GetLastId() + 1,
+                NewsCreated = DateTime.Now,
+                NewsUpdated = DateTime.Now
+            };
+
+            if (_newsService.CreateNews(newNews))
+            {
+                inputModel.NewsCreated = true;
+                inputModel = new NewsInputModel(); // Reset form
+            }
+            else
+            {
+                inputModel.DisplayErrorPublish = true;
+            }
+        }
+
+        return RedirectToAction("NewNews", inputModel);
+    }
+
+    [Route("/[controller]/RedigeraNyhet/{id}")]
+    public IActionResult EditNews(int id, NewsInputModel? inputModel = null)
+    {
+        ViewData["Title"] = "Redigera nyhetsartikel";
+        
+        if (inputModel == null)
+        {
+            var news = _newsService.GetById(id);
+            if (news == null)
+            {
+                return RedirectToAction("NewsAdmin");
+            }
+            
+            inputModel = new NewsInputModel
+            {
+                Id = news.Id,
+                NewsId = news.NewsId,
+                NewsTitle = news.NewsTitle,
+                NewsContent = news.NewsContent,
+                NewsAuthor = news.NewsAuthor,
+                NewsSummary = news.NewsSummary,
+                NewsImageId = news.NewsImageId,
+                NewsPublished = news.NewsPublished
+            };
+        }
+
+        return View(PrepareNewsInputModel(inputModel));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult UpdateNews(NewsInputModel inputModel)
+    {
+        inputModel.NewsUpdated = false;
+        inputModel.DisplayErrorPublish = false;
+
+        if (ModelState.IsValid)
+        {
+            var existingNews = _newsService.GetById(inputModel.Id);
+            if (existingNews != null)
+            {
+                existingNews.NewsTitle = inputModel.NewsTitle;
+                existingNews.NewsContent = inputModel.NewsContent;
+                existingNews.NewsAuthor = inputModel.NewsAuthor;
+                existingNews.NewsSummary = inputModel.NewsSummary;
+                existingNews.NewsImageId = inputModel.NewsImageId > 0 ? inputModel.NewsImageId : null;
+                existingNews.NewsPublished = inputModel.NewsPublished;
+                existingNews.NewsUpdated = DateTime.Now;
+
+                if (_newsService.UpdateNews(existingNews))
+                {
+                    inputModel.NewsUpdated = true;
+                }
+                else
+                {
+                    inputModel.DisplayErrorPublish = true;
+                }
+            }
+        }
+
+        return RedirectToAction("EditNews", new { id = inputModel.Id });
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteNews(int id)
+    {
+        _newsService.DeleteNews(id);
+        return RedirectToAction("NewsAdmin");
     }
 
     /// <summary>
@@ -460,22 +594,22 @@ public class UploadAdminController : Controller
             foreach (var image in selectedImages)
             {
                 string imageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
-                
+
                 if (image.ImageMainFamilyId is not null)
                 {
                     var huvudfamiljNamn = _categoryService.GetNameById(image.ImageMainFamilyId);
                     imageUrlFullSrc += "/" + huvudfamiljNamn;
                 }
-                
+
                 if (image.ImageFamilyId is not null)
                 {
                     var familjNamn = _categoryService.GetNameById(image.ImageFamilyId);
                     imageUrlFullSrc += "/" + familjNamn;
                 }
-                
+
                 var artNamn = _categoryService.GetNameById(image.ImageCategoryId);
                 imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrlName;
-                
+
                 imageUrls.Add(imageUrlFullSrc);
             }
 
@@ -501,5 +635,48 @@ public class UploadAdminController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    private NewsInputModel PrepareNewsInputModel(NewsInputModel inputModel)
+    {
+        inputModel.AvailableImages = GetLatestNewsImageOptions();
+        return inputModel;
+    }
+
+    private List<NewsImageOptionViewModel> GetLatestNewsImageOptions()
+    {
+        return _coreContext.TblImages
+            .Where(image => image.ImageId.HasValue && image.ImageCategoryId.HasValue && !string.IsNullOrWhiteSpace(image.ImageUrlName))
+            .OrderByDescending(image => image.ImageId)
+            .Take(NewsImageSelectionLimit)
+            .AsEnumerable()
+            .Select(MapNewsImageOption)
+            .Where(image => !string.IsNullOrWhiteSpace(image.ThumbnailUrl))
+            .ToList();
+    }
+
+    private NewsImageOptionViewModel MapNewsImageOption(TblImage image)
+    {
+        var categoryPath = image.ImageCategoryId.HasValue
+            ? _categoryService.GetCategoryPathForImage(image.ImageCategoryId.Value)
+            : string.Empty;
+
+        if (string.IsNullOrWhiteSpace(categoryPath) || string.IsNullOrWhiteSpace(image.ImageUrlName))
+        {
+            return new NewsImageOptionViewModel();
+        }
+
+        var imageUrl = $"https://arvidsonfoto.se/bilder/{categoryPath}/{image.ImageUrlName}";
+        var title = _categoryService.GetNameById(image.ImageCategoryId);
+
+        return new NewsImageOptionViewModel
+        {
+            ImageId = image.ImageId ?? -1,
+            Title = string.IsNullOrWhiteSpace(title) || title == "Not found" ? image.ImageUrlName : title,
+            Description = image.ImageDescription,
+            ImageDate = image.ImageDate,
+            ImageUrl = imageUrl,
+            ThumbnailUrl = $"{imageUrl}.thumb.jpg"
+        };
     }
 }

@@ -320,7 +320,7 @@ public class ImageApiControllerTests : IDisposable
 
         // Assert
         Assert.True(result);
-        
+
         // Verify the image was updated in the database
         var actualImage = _dbContext.TblImages.FirstOrDefault(i => i.ImageId == uploadImage.ImageId);
         Assert.NotNull(actualImage);
@@ -376,7 +376,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "Faglar/Hackspettar/Tretaig-hackspett";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -391,7 +391,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "Faglar";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert - Ska returnera Ok, inte 404 eller tom bildlista
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -412,7 +412,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "Faglar";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -429,7 +429,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -443,7 +443,7 @@ public class ImageApiControllerTests : IDisposable
         string categoryPath = "nonexistent/category/path";
 
         // Act
-        var result = _controller.GetImagesByCategoryPath(categoryPath);
+        var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -462,6 +462,7 @@ public class ImageApiControllerTests : IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _dbContext.Dispose();
     }
 }

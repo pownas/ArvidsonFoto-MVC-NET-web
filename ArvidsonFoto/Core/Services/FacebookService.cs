@@ -22,7 +22,7 @@ public class FacebookService : IFacebookService
     {
         var pageAccessToken = _configuration["Facebook:PageAccessToken"];
         var pageId = _configuration["Facebook:PageId"];
-        
+
         return !string.IsNullOrWhiteSpace(pageAccessToken) && !string.IsNullOrWhiteSpace(pageId);
     }
 
@@ -68,7 +68,7 @@ public class FacebookService : IFacebookService
         try
         {
             var endpoint = $"{GraphApiBaseUrl}/{pageId}/photos";
-            
+
             var parameters = new Dictionary<string, string>
             {
                 { "url", imageUrl },
@@ -78,12 +78,12 @@ public class FacebookService : IFacebookService
 
             var content = new FormUrlEncodedContent(parameters);
             var response = await _httpClient.PostAsync(endpoint, content);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
-                
+
                 if (jsonResponse != null && jsonResponse.ContainsKey("id"))
                 {
                     var postId = jsonResponse["id"].GetString();
@@ -111,7 +111,7 @@ public class FacebookService : IFacebookService
         {
             // Steg 1: Ladda upp varje bild och få media-ID:n
             var mediaIds = new List<string>();
-            
+
             foreach (var imageUrl in imageUrls)
             {
                 var mediaId = await UploadPhotoForAlbumAsync(pageId, accessToken, imageUrl);
@@ -135,7 +135,7 @@ public class FacebookService : IFacebookService
 
             // Steg 2: Skapa inlägg med alla media-ID:n
             var endpoint = $"{GraphApiBaseUrl}/{pageId}/feed";
-            
+
             var parameters = new Dictionary<string, string>
             {
                 { "message", message },
@@ -150,12 +150,12 @@ public class FacebookService : IFacebookService
 
             var content = new FormUrlEncodedContent(parameters);
             var response = await _httpClient.PostAsync(endpoint, content);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
-                
+
                 if (jsonResponse != null && jsonResponse.ContainsKey("id"))
                 {
                     var postId = jsonResponse["id"].GetString();
@@ -182,7 +182,7 @@ public class FacebookService : IFacebookService
         try
         {
             var endpoint = $"{GraphApiBaseUrl}/{pageId}/photos";
-            
+
             var parameters = new Dictionary<string, string>
             {
                 { "url", imageUrl },
@@ -192,12 +192,12 @@ public class FacebookService : IFacebookService
 
             var content = new FormUrlEncodedContent(parameters);
             var response = await _httpClient.PostAsync(endpoint, content);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
-                
+
                 if (jsonResponse != null && jsonResponse.ContainsKey("id"))
                 {
                     return jsonResponse["id"].GetString();
