@@ -1,4 +1,4 @@
-namespace ArvidsonFoto.Core.Attributes;
+﻿namespace ArvidsonFoto.Core.Attributes;
 
 /// <summary>
 /// Represents an attribute used to specify a security requirement for a Swagger operation.

@@ -11,6 +11,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+    <DcpDir Condition="'$(DcpDir)' == '' and $([MSBuild]::IsOsPlatform('Linux'))">$(NuGetPackageRoot)aspire.hosting.orchestration.linux-x64/$(AspireHostingSDKVersion)/tools</DcpDir>
+    <AspireDashboardDir Condition="'$(AspireDashboardDir)' == '' and $([MSBuild]::IsOsPlatform('Linux'))">$(NuGetPackageRoot)aspire.dashboard.sdk.linux-x64/$(AspireHostingSDKVersion)/tools</AspireDashboardDir>
+    <DcpDir Condition="'$(DcpDir)' == '' and '$(OS)' == 'Windows_NT'">$(NuGetPackageRoot)aspire.hosting.orchestration.win-x64\$(AspireHostingSDKVersion)\tools</DcpDir>
+    <AspireDashboardDir Condition="'$(AspireDashboardDir)' == '' and '$(OS)' == 'Windows_NT'">$(NuGetPackageRoot)aspire.dashboard.sdk.win-x64\$(AspireHostingSDKVersion)\tools</AspireDashboardDir>
     <UserSecretsId>ArvidsonFoto-AppHost-327cb2dd-ebf6-45e3-af0f-e6311e932efe</UserSecretsId>
   </PropertyGroup>
 

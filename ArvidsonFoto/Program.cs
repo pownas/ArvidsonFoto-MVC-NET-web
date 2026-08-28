@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using JavaScriptEngineSwitcher.V8;
-using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
-using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Security;
-using ArvidsonFoto.Areas.Identity.Data;
-using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
-using Scalar.AspNetCore;
+using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
+using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
+using Scalar.AspNetCore;
+using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
 
 namespace ArvidsonFoto;
 

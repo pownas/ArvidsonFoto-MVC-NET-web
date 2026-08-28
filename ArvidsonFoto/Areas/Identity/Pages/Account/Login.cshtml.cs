@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Views.Shared;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ArvidsonFoto.Views.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
