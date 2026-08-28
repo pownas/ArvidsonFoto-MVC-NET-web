@@ -752,11 +752,11 @@ body {
 }
 .news-card {
   overflow: hidden;
-  border: 1px solid #66707a;
+  border: 1px solid #6a7077;
   border-radius: 1rem;
-  background: linear-gradient(180deg, #fdfefe 0%, #f5f8fb 100%);
+  background-color: #f5f6f7;
   color: #142033;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .news-card-link:hover .news-card,
@@ -775,7 +775,7 @@ body {
 .news-card-media {
   position: relative;
   aspect-ratio: 16 / 10;
-  background: linear-gradient(135deg, #10203d 0%, #1d4ed8 100%);
+  background-color: #2c3540;
 }
 .news-card-image,
 .news-image-option-thumb,
@@ -802,8 +802,8 @@ body {
   gap: 0.35rem;
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  background-color: #e5edf9;
-  color: #10203d;
+  background-color: #e7eaee;
+  color: #1f2a37;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -822,18 +822,18 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem 1.25rem;
-  background: linear-gradient(90deg, #10203d 0%, #1d4ed8 100%);
+  background-color: #2f3944;
   color: #fff;
   font-weight: 600;
-  border-top: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .news-article-shell {
   padding: 2rem;
-  border: 1px solid #66707a;
+  border: 1px solid #6a7077;
   border-radius: 1.25rem;
-  background: linear-gradient(180deg, #fafcff 0%, #f3f7fb 100%);
+  background-color: #f5f6f7;
   color: #142033;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
 }
 .news-article-header h1 {
   margin-bottom: 0.75rem;
@@ -842,11 +842,11 @@ body {
   margin: 0 0 1.5rem;
   overflow: hidden;
   border-radius: 1rem;
-  background-color: #d9e4f7;
+  background-color: #cfd6de;
 }
 .news-article-hero figcaption {
   padding: 0.85rem 1rem;
-  background-color: #10203d;
+  background-color: #2f3944;
   color: #fff;
 }
 .news-article-image {
@@ -856,17 +856,17 @@ body {
 .news-article-summary {
   margin-bottom: 1.5rem;
   padding: 1rem 1.25rem;
-  border-left: 4px solid #1d4ed8;
+  border-left: 4px solid #4e6782;
   border-radius: 0.75rem;
-  background-color: #e9f0fb;
+  background-color: #eceff2;
   color: #10203d;
 }
 .news-image-option {
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid #66707a;
+  border: 1px solid #6a7077;
   border-radius: 1rem;
-  background: linear-gradient(180deg, #fcfdff 0%, #f4f7fb 100%);
+  background-color: #f5f6f7;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .news-image-option-thumb {
@@ -881,8 +881,8 @@ body {
   font-size: 0.95rem;
 }
 .btn-check:checked + .news-image-option {
-  border-color: #1d4ed8;
-  box-shadow: 0 0 0 0.25rem rgba(29, 78, 216, 0.22);
+  border-color: #4e6782;
+  box-shadow: 0 0 0 0.25rem rgba(78, 103, 130, 0.18);
   transform: translateY(-2px);
 }
 .news-image-none-option .btn {
@@ -890,7 +890,7 @@ body {
 }
 [data-bs-theme=dark] .news-card {
   border-color: #4b5563;
-  background: linear-gradient(180deg, #1b2430 0%, #121923 100%);
+  background-color: #1b2026;
   color: #f3f4f6;
 }
 [data-bs-theme=dark] .news-card-title,
@@ -898,21 +898,25 @@ body {
   color: #f3f4f6;
 }
 [data-bs-theme=dark] .news-card-pill {
-  background-color: #23324a;
+  background-color: #2a3139;
   color: #eff6ff;
+}
+[data-bs-theme=dark] .news-card-footer {
+  background-color: #10151b;
+  border-top-color: rgba(255, 255, 255, 0.06);
 }
 [data-bs-theme=dark] .news-article-shell {
   border-color: #4b5563;
-  background: linear-gradient(180deg, #1b2430 0%, #121923 100%);
+  background-color: #1b2026;
   color: #f3f4f6;
 }
 [data-bs-theme=dark] .news-article-summary {
-  background-color: #1d2a3d;
+  background-color: #252c34;
   color: #eff6ff;
 }
 [data-bs-theme=dark] .news-image-option {
   border-color: #4b5563;
-  background: linear-gradient(180deg, #1b2430 0%, #121923 100%);
+  background-color: #1b2026;
 }
 [data-bs-theme=dark] .news-image-option-title,
 [data-bs-theme=dark] .news-image-option-description {
