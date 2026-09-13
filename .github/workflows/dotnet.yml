@@ -18,12 +18,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 11 (preview)
-      # Installs .NET 11 preview SDK
+    - name: Setup .NET SDK 11 (RC1)
+      # Installs .NET 11 RC1 SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '11.0.x'
-        dotnet-quality: 'preview'
+        dotnet-version: '11.0.100-rc.1.26425.128'
         cache: true
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
@@ -53,11 +52,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 11 (preview)
+    - name: Setup .NET SDK 11 (RC1)
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '11.0.x'
-        dotnet-quality: 'preview'
+        dotnet-version: '11.0.100-rc.1.26425.128'
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
@@ -75,10 +73,10 @@ jobs:
       run: dotnet build ./ArvidsonFoto/ArvidsonFoto.csproj -c Release --no-restore --verbosity minimal
 
     - name: Running Unit Tests
-      run: dotnet test ./ArvidsonFoto.Tests.Unit/ArvidsonFoto.Tests.Unit.csproj --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --configuration Release
+      run: dotnet test ./ArvidsonFoto.Tests.Unit/ArvidsonFoto.Tests.Unit.csproj --verbosity normal --configuration Release
 
     - name: Running Integration Tests
-      run: dotnet test ./ArvidsonFoto.Tests.Integration/ArvidsonFoto.Tests.Integration.csproj --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --configuration Release
+      run: dotnet test ./ArvidsonFoto.Tests.Integration/ArvidsonFoto.Tests.Integration.csproj --verbosity normal --configuration Release
 
     # - name: Running End-to-End Tests
     #   run: dotnet test ./ArvidsonFoto.Tests.E2E/ArvidsonFoto.Tests.E2E.csproj --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --configuration Release

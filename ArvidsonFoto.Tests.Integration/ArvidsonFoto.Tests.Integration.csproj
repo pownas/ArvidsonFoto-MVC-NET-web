@@ -3,6 +3,8 @@
   <PropertyGroup Label="Common">
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Label="DeterministicBuild">

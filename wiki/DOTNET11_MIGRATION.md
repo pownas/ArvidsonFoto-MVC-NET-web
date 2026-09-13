@@ -1,4 +1,4 @@
-# Migreringslogg: .NET 10 → .NET 11 (preview.7)
+# Migreringslogg: .NET 10 → .NET 11 (RC1)
 
 **Datum**: 2026-08-26  
 **Version**: v3.10.11 → v3.11.0  
@@ -6,23 +6,23 @@
 
 ## Krav
 
-- .NET 11 SDK `11.0.100-preview.7.26381.103`
+- .NET 11 SDK `11.0.100-rc.1.26425.128`
 - Installera från: https://dotnet.microsoft.com/download/dotnet/11.0
 
 ## Ändrade filer (Sammanfattning)
 
 | Fil | Ändring |
 |-----|---------|
-| `global.json` | SDK `10.0.300` → `11.0.100-preview.7.26381.103`, MSTest.Sdk `4.2.3` → `4.3.3` |
+| `global.json` | SDK `10.0.300` → `11.0.100-rc.1.26425.128`, MSTest.Sdk `4.2.3` → `4.3.3` |
 | `Directory.Build.props` | TFM `net10.0` → `net11.0`, Version `3.10.11` → `3.11.0` |
-| `Directory.Packages.props` | Alla `10.0.9` Microsoft-paket → `11.0.0-preview.7.26381.103` |
+| `Directory.Packages.props` | Alla `10.0.9` Microsoft-paket → `11.0.0-rc.1.26425.128` |
 | `ArvidsonFoto.AppHost/ArvidsonFoto.AppHost.csproj` | Aspire.AppHost.Sdk `13.4.3` → `13.5.3` |
-| `.config/dotnet-tools.json` | dotnet-ef `10.0.9` → `11.0.0-preview.7.26381.103` |
-| `.github/workflows/dotnet.yml` | .NET 10 → .NET 11 preview |
+| `.config/dotnet-tools.json` | dotnet-ef `10.0.9` → `11.0.0-rc.1.26425.128` |
+| `.github/workflows/dotnet.yml` | .NET 10 → .NET 11 RC1 |
 
 ## Paketlyft
 
-### Microsoft-paket till `11.0.0-preview.7.26381.103`
+### Microsoft-paket till `11.0.0-rc.1.26425.128`
 
 - `Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore`
 - `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
@@ -107,24 +107,23 @@ Följande paket behöll sina versioner (ingen nyare kompatibel version tillgäng
 - `Serilog.Sinks.File` 7.0.0
 - `xunit` 2.9.3
 
-## Kända begränsningar (preview)
+## Kända begränsningar (RC)
 
-- .NET 11 är i preview-läge och kan innehålla inkompatibiliteter som löses i kommande release candidates.
+- .NET 11 är i RC-läge och kan innehålla inkompatibiliteter som löses i kommande release candidates.
 - `LigerShark.WebOptimizer.Core` och `LigerShark.WebOptimizer.Sass` har inga .NET 11-specifika versioner och kör via .NET-kompatibilitetslagret.
 - `JavaScriptEngineSwitcher.V8` är inte uppdaterad för .NET 11 men är bakåtkompatibel via `netstandard2.0`-targeting.
 - `AngleSharp` har inte stabila 1.x-utgåvor (alla är beta/alpha).
 - `Microsoft.Data.SqlClient` 7.0.2 är stabilt och fungerar med .NET 11.
-- Preview-SDK:n (`allowPrerelease: true` i `global.json`) krävs för att köra projektet tills .NET 11 officiellt lanseras.
+- RC-SDK:n (`allowPrerelease: true` i `global.json`) krävs för att köra projektet tills .NET 11 officiellt lanseras.
 
 ## CI/CD
 
-GitHub Actions-workflödet (`dotnet.yml`) har uppdaterats från `.NET 10` till `.NET 11 preview`:
+GitHub Actions-workflödet (`dotnet.yml`) har uppdaterats från `.NET 10` till `.NET 11 RC1`:
 
 ```yaml
 uses: actions/setup-dotnet@v4
 with:
-  dotnet-version: '11.0.x'
-  dotnet-quality: 'preview'
+  dotnet-version: '11.0.100-rc.1.26425.128'
 ```
 
 ## Kodändringar
