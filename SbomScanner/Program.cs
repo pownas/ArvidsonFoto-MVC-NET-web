@@ -490,20 +490,11 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
             continue;
         }
 
-        string statusBadge;
-
-        if (item.HasVersionMismatch)
-        {
-            statusBadge = "<span style=\"background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">⚠️ Konflikt</span>";
-        }
-        else if (item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion)
-        {
-            statusBadge = "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">🔄 Uppdatering</span>";
-        }
-        else
-        {
-            statusBadge = "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">✓ OK</span>";
-        }
+        string statusBadge = item.HasVersionMismatch
+            ? "<span style=\"background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">⚠️ Konflikt</span>"
+            : item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion
+                ? "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">🔄 Uppdatering</span>"
+                : "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">✓ OK</span>";
 
         // --- BYGGER UPPDATERAD CELL FÖR CPM-STATUS OCH URSPRUNG ---
         string cpmCellContent;
@@ -735,7 +726,7 @@ sealed record LockFile(
     Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
 
-sealed record LockDependency(
+internal sealed record LockDependency(
     [property: JsonPropertyName("type")]
     string Type,
 
