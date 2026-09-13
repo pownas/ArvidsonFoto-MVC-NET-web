@@ -6,10 +6,10 @@ namespace ArvidsonFoto.Security;
 /// Middleware to validate and sanitize all incoming HTTP requests
 /// to prevent SQL injection and other malicious input attempts.
 /// </summary>
-public class InputValidationMiddleware
+public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValidationMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<InputValidationMiddleware> _logger;
+    private readonly RequestDelegate _next = next;
+    private readonly ILogger<InputValidationMiddleware> _logger = logger;
 
     // Patterns that indicate potential SQL injection attempts
     private static readonly List<Regex> SqlInjectionPatterns = new()
@@ -41,12 +41,6 @@ public class InputValidationMiddleware
         new Regex(@"(user\s*\(\))", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(convert\s*\(int)", RegexOptions.IgnoreCase | RegexOptions.Compiled)
     };
-
-    public InputValidationMiddleware(RequestDelegate next, ILogger<InputValidationMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
 
     public async Task InvokeAsync(HttpContext context)
     {

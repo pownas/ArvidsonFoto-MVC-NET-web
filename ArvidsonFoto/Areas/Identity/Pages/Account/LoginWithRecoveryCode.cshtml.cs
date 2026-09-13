@@ -7,16 +7,10 @@ using System.ComponentModel.DataAnnotations;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LoginWithRecoveryCodeModel : PageModel
+public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInManager, ILogger<LoginWithRecoveryCodeModel> logger) : PageModel
 {
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly ILogger<LoginWithRecoveryCodeModel> _logger;
-
-    public LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInManager, ILogger<LoginWithRecoveryCodeModel> logger)
-    {
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly ILogger<LoginWithRecoveryCodeModel> _logger = logger;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

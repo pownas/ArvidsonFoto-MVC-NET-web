@@ -11,16 +11,10 @@ using System.Text.Encodings.Web;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ForgotPasswordModel : PageModel
+public class ForgotPasswordModel(UserManager<ArvidsonFotoUser> userManager, IEmailSender emailSender) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly IEmailSender _emailSender;
-
-    public ForgotPasswordModel(UserManager<ArvidsonFotoUser> userManager, IEmailSender emailSender)
-    {
-        _userManager = userManager;
-        _emailSender = emailSender;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly IEmailSender _emailSender = emailSender;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

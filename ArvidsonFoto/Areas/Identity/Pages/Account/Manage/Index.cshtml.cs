@@ -7,18 +7,12 @@ using System.ComponentModel.DataAnnotations;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public partial class IndexModel : PageModel
+public partial class IndexModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public IndexModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     public string? Username { get; set; }
 

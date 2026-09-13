@@ -12,18 +12,13 @@ namespace ArvidsonFoto.Core.Services;
 /// and Core models. It provides methods for creating, reading, updating, and deleting
 /// guestbook entries, both synchronously and asynchronously.
 /// </remarks>
-public class GuestBookService : IGuestBookService
+/// <remarks>
+/// Initializes a new instance of the <see cref="GuestBookService"/> class.
+/// </remarks>
+/// <param name="context">The Core database context</param>
+public class GuestBookService(ArvidsonFotoCoreDbContext context) : IGuestBookService
 {
-    private readonly ArvidsonFotoCoreDbContext _entityContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GuestBookService"/> class.
-    /// </summary>
-    /// <param name="context">The Core database context</param>
-    public GuestBookService(ArvidsonFotoCoreDbContext context)
-    {
-        _entityContext = context;
-    }
+    private readonly ArvidsonFotoCoreDbContext _entityContext = context;
 
     public List<TblGb> GetAll()
     {

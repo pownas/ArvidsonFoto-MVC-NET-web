@@ -8,16 +8,10 @@ using System.Text;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ConfirmEmailChangeModel : PageModel
+public class ConfirmEmailChangeModel(UserManager<ArvidsonFotoUser> userManager, SignInManager<ArvidsonFotoUser> signInManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public ConfirmEmailChangeModel(UserManager<ArvidsonFotoUser> userManager, SignInManager<ArvidsonFotoUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     [TempData]
     public string? StatusMessage { get; set; }

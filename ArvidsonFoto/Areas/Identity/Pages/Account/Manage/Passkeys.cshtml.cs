@@ -9,23 +9,16 @@ using System.ComponentModel.DataAnnotations;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class PasskeysModel : PageModel
+public class PasskeysModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager,
+    ILogger<PasskeysModel> logger) : PageModel
 {
     private const int MaxPasskeyCount = 100;
 
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly ILogger<PasskeysModel> _logger;
-
-    public PasskeysModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager,
-        ILogger<PasskeysModel> logger)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly ILogger<PasskeysModel> _logger = logger;
 
     public IList<UserPasskeyInfo> CurrentPasskeys { get; set; } = [];
 

@@ -9,18 +9,12 @@ using System.ComponentModel.DataAnnotations;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class RenamePasskeyModel : PageModel
+public class RenamePasskeyModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    ILogger<RenamePasskeyModel> logger) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly ILogger<RenamePasskeyModel> _logger;
-
-    public RenamePasskeyModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        ILogger<RenamePasskeyModel> logger)
-    {
-        _userManager = userManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly ILogger<RenamePasskeyModel> _logger = logger;
 
     public UserPasskeyInfo? Passkey { get; set; }
 

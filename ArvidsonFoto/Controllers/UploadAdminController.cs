@@ -14,29 +14,20 @@ using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class UploadAdminController : Controller
+public class UploadAdminController(
+    ArvidsonFotoCoreDbContext coreContext,
+    UserManager<ArvidsonFotoUser> userManager,
+    IFacebookService facebookService,
+    ILogger<ApiImageService> imageLogger,
+    ILogger<ApiCategoryService> categoryLogger,
+    IConfiguration configuration,
+    IMemoryCache memoryCache) : Controller
 {
-    internal IApiImageService _imageService;
-    internal IApiCategoryService _categoryService;
-    internal IGuestBookService _guestBookService;
-    internal readonly UserManager<ArvidsonFotoUser> _userManager;
-    internal readonly IFacebookService _facebookService;
-
-    public UploadAdminController(
-        ArvidsonFotoCoreDbContext coreContext,
-        UserManager<ArvidsonFotoUser> userManager,
-        IFacebookService facebookService,
-        ILogger<ApiImageService> imageLogger,
-        ILogger<ApiCategoryService> categoryLogger,
-        IConfiguration configuration,
-        IMemoryCache memoryCache)
-    {
-        _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
-        _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
-        _guestBookService = new GuestBookService(coreContext);
-        _userManager = userManager;
-        _facebookService = facebookService;
-    }
+    internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
+    internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
+    internal IGuestBookService _guestBookService = new GuestBookService(coreContext);
+    internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    internal readonly IFacebookService _facebookService = facebookService;
 
     public IActionResult Index()
     {
@@ -242,7 +233,7 @@ public class UploadAdminController : Controller
         {
             CurrentPage = (int)sida,
             CurrentUrl = "./UploadAdmin/RedigeraBilder",
-            TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage)
+            TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage),
             DisplayImagesList = []
         };
 

@@ -9,14 +9,9 @@ using System.Text;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ResetPasswordModel : PageModel
+public class ResetPasswordModel(UserManager<ArvidsonFotoUser> userManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-
-    public ResetPasswordModel(UserManager<ArvidsonFotoUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

@@ -9,17 +9,11 @@ using System.ComponentModel.DataAnnotations;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LoginModel : PageModel
+public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
+    UserManager<ArvidsonFotoUser> userManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
-        UserManager<ArvidsonFotoUser> userManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

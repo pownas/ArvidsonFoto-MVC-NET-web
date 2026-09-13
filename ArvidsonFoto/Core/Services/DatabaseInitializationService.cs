@@ -14,31 +14,23 @@ namespace ArvidsonFoto.Core.Services;
 /// - Operations are idempotent (safe to run multiple times)
 /// - Only runs in development environment for security
 /// </summary>
-public class DatabaseInitializationService
+/// <remarks>
+/// Initializes a new instance of the DatabaseInitializationService.
+/// </remarks>
+/// <param name="serviceProvider">The service provider to resolve dependencies</param>
+/// <param name="environment">The hosting environment to check if we're in development</param>
+/// <param name="logger">Logger for tracking initialization progress and errors</param>
+/// <param name="configuration">Configuration to check for database seeding settings</param>
+public class DatabaseInitializationService(
+    IServiceProvider serviceProvider,
+    IHostEnvironment environment,
+    ILogger<DatabaseInitializationService> logger,
+    IConfiguration configuration)
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IHostEnvironment _environment;
-    private readonly ILogger<DatabaseInitializationService> _logger;
-    private readonly IConfiguration _configuration;
-
-    /// <summary>
-    /// Initializes a new instance of the DatabaseInitializationService.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider to resolve dependencies</param>
-    /// <param name="environment">The hosting environment to check if we're in development</param>
-    /// <param name="logger">Logger for tracking initialization progress and errors</param>
-    /// <param name="configuration">Configuration to check for database seeding settings</param>
-    public DatabaseInitializationService(
-        IServiceProvider serviceProvider,
-        IHostEnvironment environment,
-        ILogger<DatabaseInitializationService> logger,
-        IConfiguration configuration)
-    {
-        _serviceProvider = serviceProvider;
-        _environment = environment;
-        _logger = logger;
-        _configuration = configuration;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IHostEnvironment _environment = environment;
+    private readonly ILogger<DatabaseInitializationService> _logger = logger;
+    private readonly IConfiguration _configuration = configuration;
 
     /// <summary>
     /// Initializes the database with schema and seed data if running in development environment.

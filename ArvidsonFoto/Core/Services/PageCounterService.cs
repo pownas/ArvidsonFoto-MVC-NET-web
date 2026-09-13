@@ -12,18 +12,13 @@ namespace ArvidsonFoto.Core.Services;
 /// and Core models. It provides methods for adding page counts, retrieving statistics,
 /// and generating monthly page view charts.
 /// </remarks>
-public class PageCounterService : IPageCounterService
+/// <remarks>
+/// Initializes a new instance of the <see cref="PageCounterService"/> class.
+/// </remarks>
+/// <param name="context">The Core database context</param>
+public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounterService
 {
-    private readonly ArvidsonFotoCoreDbContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PageCounterService"/> class.
-    /// </summary>
-    /// <param name="context">The Core database context</param>
-    public PageCounterService(ArvidsonFotoCoreDbContext context)
-    {
-        _context = context;
-    }
+    private readonly ArvidsonFotoCoreDbContext _context = context;
 
     /// <summary>
     /// Räknar upp en sidvisning och sätter datum till att sidan nu besöks.
