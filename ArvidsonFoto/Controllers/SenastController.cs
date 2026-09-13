@@ -25,10 +25,14 @@ public class SenastController(
         int pageSize = 48;
 
         if (sida is null || sida < 1)
+        {
             sida = 1;
+        }
 
         if (sortOrder is null)
+        {
             sortOrder = "Fotograferad";
+        }
 
         viewModel.CurrentPage = (int)sida;
 
@@ -36,7 +40,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Per kategori";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Per kategori");
+            }
 
             // OPTIMIZED: Use SQL-level query to get one image per category efficiently
             var categories = coreContext.TblMenus
@@ -110,7 +116,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Uppladdad";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
+            }
 
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
@@ -176,7 +184,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Fotograferad";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
+            }
 
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();

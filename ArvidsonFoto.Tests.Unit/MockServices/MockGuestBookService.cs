@@ -44,7 +44,9 @@ public class MockGuestBookService : IGuestBookService
     public bool CreateGBpost(TblGb gb)
     {
         if (gb == null)
+        {
             return false;
+        }
 
         gb.Id = _nextId++;
         gb.GbDate = DateTime.Now;
@@ -56,7 +58,9 @@ public class MockGuestBookService : IGuestBookService
     {
         var post = _mockGuestbookEntries.FirstOrDefault(g => g.GbId == gbId);
         if (post == null)
+        {
             return false;
+        }
 
         post.GbReadPost = true;
         return true;
@@ -66,7 +70,9 @@ public class MockGuestBookService : IGuestBookService
     {
         var post = _mockGuestbookEntries.FirstOrDefault(g => g.GbId == gbId);
         if (post == null)
+        {
             return false;
+        }
 
         _mockGuestbookEntries.Remove(post);
         return true;
@@ -80,7 +86,9 @@ public class MockGuestBookService : IGuestBookService
     public int GetLastGbId()
     {
         if (!_mockGuestbookEntries.Any())
+        {
             return 0;
+        }
 
         return _mockGuestbookEntries.Max(g => g.GbId);
     }

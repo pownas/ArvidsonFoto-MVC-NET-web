@@ -416,7 +416,9 @@ public class Program
     private static string SanitizeConnectionString(string? connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
+        {
             return "(not configured)";
+        }
 
         return System.Text.RegularExpressions.Regex.Replace(
             connectionString,

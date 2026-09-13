@@ -56,7 +56,10 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Info";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Info");
+        }
+
         return View();
     }
 
@@ -64,7 +67,9 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Gästbok";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Gästbok");
+        }
 
         if (inputModel.FormSubmitDate < new DateTime(2000, 01, 01) && inputModel.Message is null)
         {
@@ -292,7 +297,9 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Kontaktinformation";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Kontaktinformation");
+        }
 
         // Retrieve display flags from TempData
         if (TempData["DisplayEmailSent"] is bool displayEmailSent)
@@ -334,7 +341,9 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Köp av bilder";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Köp av bilder");
+        }
 
         // Retrieve display flags from TempData
         if (TempData["DisplayEmailSent"] is bool displayEmailSent)
@@ -414,7 +423,10 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Om mig, Torbjörn Arvidson";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Om mig");
+        }
+
         return View();
     }
 
@@ -422,7 +434,10 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Sidkarta";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Sidkarta");
+        }
+
         return View();
     }
 
@@ -430,7 +445,10 @@ public class InfoController : Controller
     {
         ViewData["Title"] = "Copyright";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Copyright");
+        }
+
         return View();
     }
 }

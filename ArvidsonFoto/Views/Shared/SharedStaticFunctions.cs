@@ -60,7 +60,11 @@ public static class SharedStaticFunctions
 
     public static string ReplaceUrlText(string? urlText)
     {
-        if (urlText == null) return string.Empty;
+        if (urlText == null)
+        {
+            return string.Empty;
+        }
+
         urlText = urlText.Replace(" ", "%20");
 
         return urlText;
@@ -90,7 +94,10 @@ public static class SharedStaticFunctions
     /// <returns>A URL-safe segment string, or an empty string if <paramref name="displayName"/> is null or empty.</returns>
     public static string ToUrlSegment(string? displayName)
     {
-        if (string.IsNullOrEmpty(displayName)) return string.Empty;
+        if (string.IsNullOrEmpty(displayName))
+        {
+            return string.Empty;
+        }
 
         // NFD decomposes each accented character into base letter + combining diacritical mark(s).
         // Filtering out NonSpacingMark characters then removes all diacritics (å→a, é→e, ü→u, etc.).

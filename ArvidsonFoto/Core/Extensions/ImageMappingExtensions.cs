@@ -18,7 +18,9 @@ public static class ImageMappingExtensions
     public static ImageDto ToImageDto(this TblImage image, string categoryPath = "", string categoryName = "")
     {
         if (image == null)
+        {
             return new ImageDto();
+        }
 
         var imgUrl = string.IsNullOrEmpty(categoryPath)
             ? $"bilder/{image.ImageUrlName}"
@@ -51,7 +53,9 @@ public static class ImageMappingExtensions
     public static TblImage ToTblImage(this ImageDto imageDto)
     {
         if (imageDto == null)
+        {
             return new TblImage();
+        }
 
         return new TblImage
         {

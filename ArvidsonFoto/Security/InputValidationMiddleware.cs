@@ -103,7 +103,9 @@ public class InputValidationMiddleware
     private static bool ContainsSqlInjectionAttempt(string? input)
     {
         if (string.IsNullOrWhiteSpace(input))
+        {
             return false;
+        }
 
         try
         {

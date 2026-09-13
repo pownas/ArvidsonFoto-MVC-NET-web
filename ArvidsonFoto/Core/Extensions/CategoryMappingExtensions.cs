@@ -19,7 +19,9 @@ public static class CategoryMappingExtensions
     public static CategoryDto ToCategoryDto(this TblMenu menu, string categoryPath, string lastImageFilename, int? imageCounted = null, string baseUrl = "")
     {
         if (menu == null)
+        {
             return new CategoryDto();
+        }
 
         var categoryUrl = string.IsNullOrEmpty(baseUrl)
             ? $"bilder/{categoryPath}"
@@ -48,7 +50,9 @@ public static class CategoryMappingExtensions
     public static TblMenu ToTblMenu(this CategoryDto categoryDto)
     {
         if (categoryDto == null)
+        {
             return new TblMenu();
+        }
 
         return new TblMenu
         {

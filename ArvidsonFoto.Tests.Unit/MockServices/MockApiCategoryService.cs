@@ -33,7 +33,10 @@ public class MockApiCategoryService : IApiCategoryService
     private static string BuildCategoryPath(int menuId)
     {
         var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == menuId);
-        if (menu == null) return string.Empty;
+        if (menu == null)
+        {
+            return string.Empty;
+        }
 
         var pathParts = new List<string>();
         var currentMenu = menu;
@@ -42,10 +45,14 @@ public class MockApiCategoryService : IApiCategoryService
         {
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuUrlSegment))
+            {
                 pathParts.Insert(0, currentMenu.MenuUrlSegment ?? $"category-{currentMenu.MenuCategoryId ?? 0}");
+            }
 
             if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+            {
                 break;
+            }
 
             currentMenu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenu.MenuParentCategoryId);
         }
@@ -70,7 +77,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public bool AddCategory(CategoryDto category)
     {
-        if (category?.Name == null) return false;
+        if (category?.Name == null)
+        {
+            return false;
+        }
 
         var newId = _testCategories.Max(c => c.CategoryId ?? 0) + 1;
         category.CategoryId = newId;
@@ -86,7 +96,9 @@ public class MockApiCategoryService : IApiCategoryService
     public CategoryDto GetByName(string categoryName)
     {
         if (string.IsNullOrEmpty(categoryName))
+        {
             return CreateNotFoundCategory();
+        }
 
         var category = _testCategories.FirstOrDefault(c =>
             string.Equals(c.Name, categoryName, StringComparison.OrdinalIgnoreCase));
@@ -97,7 +109,9 @@ public class MockApiCategoryService : IApiCategoryService
     public CategoryDto GetById(int? id)
     {
         if (id == null || id <= 0)
+        {
             return CreateNotFoundCategory();
+        }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
         return category ?? CreateNotFoundCategory();
@@ -117,7 +131,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetNameById(int? id)
     {
-        if (id == null || id <= 0) return "Not found";
+        if (id == null || id <= 0)
+        {
+            return "Not found";
+        }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
         return category?.Name ?? "Not found";
@@ -125,7 +142,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public int GetIdByName(string categoryName)
     {
-        if (string.IsNullOrEmpty(categoryName)) return -1;
+        if (string.IsNullOrEmpty(categoryName))
+        {
+            return -1;
+        }
 
         var category = _testCategories.FirstOrDefault(c =>
             string.Equals(c.Name, categoryName, StringComparison.OrdinalIgnoreCase) ||
@@ -136,10 +156,16 @@ public class MockApiCategoryService : IApiCategoryService
 
     public bool UpdateCategory(CategoryDto updatedCategory)
     {
-        if (updatedCategory?.CategoryId == null) return false;
+        if (updatedCategory?.CategoryId == null)
+        {
+            return false;
+        }
 
         var existingCategory = _testCategories.FirstOrDefault(c => c.CategoryId == updatedCategory.CategoryId);
-        if (existingCategory == null) return false;
+        if (existingCategory == null)
+        {
+            return false;
+        }
 
         existingCategory.Name = updatedCategory.Name;
         existingCategory.UrlCategoryPath = updatedCategory.UrlCategoryPath;
@@ -149,10 +175,16 @@ public class MockApiCategoryService : IApiCategoryService
 
     public bool DeleteCategory(int? id)
     {
-        if (id == null || id <= 0) return false;
+        if (id == null || id <= 0)
+        {
+            return false;
+        }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
-        if (category == null) return false;
+        if (category == null)
+        {
+            return false;
+        }
 
         _testCategories.Remove(category);
         return true;
@@ -165,7 +197,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetCategoryUrl(int? id)
     {
-        if (id == null || id <= 0) return string.Empty;
+        if (id == null || id <= 0)
+        {
+            return string.Empty;
+        }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
         return category?.UrlCategory ?? string.Empty;
@@ -229,7 +264,9 @@ public class MockApiCategoryService : IApiCategoryService
     public CategoryDto GetByUrlSegment(string urlSegment)
     {
         if (string.IsNullOrEmpty(urlSegment))
+        {
             return CreateNotFoundCategory();
+        }
 
         var category = _testCategories.FirstOrDefault(c =>
             string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
@@ -239,7 +276,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public int GetIdByUrlSegment(string urlSegment)
     {
-        if (string.IsNullOrEmpty(urlSegment)) return -1;
+        if (string.IsNullOrEmpty(urlSegment))
+        {
+            return -1;
+        }
 
         var category = _testCategories.FirstOrDefault(c =>
             string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
@@ -250,13 +290,19 @@ public class MockApiCategoryService : IApiCategoryService
     public CategoryDto GetByUrlSegmentWithFallback(string urlSegment)
     {
         var category = GetByUrlSegment(urlSegment);
-        if (category.CategoryId != -1) return category;
+        if (category.CategoryId != -1)
+        {
+            return category;
+        }
 
         // Try by ID if numeric
         if (int.TryParse(urlSegment, out int id))
         {
             category = GetById(id);
-            if (category.CategoryId != -1) return category;
+            if (category.CategoryId != -1)
+            {
+                return category;
+            }
         }
 
         // Try by name
@@ -266,7 +312,10 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetCategoryPathForImage(int categoryId)
     {
-        if (categoryId <= 0) return string.Empty;
+        if (categoryId <= 0)
+        {
+            return string.Empty;
+        }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == categoryId);
         return category?.UrlCategoryPathFull ?? string.Empty;
@@ -274,11 +323,17 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetCategoryDisplayPathForImage(int categoryId)
     {
-        if (categoryId <= 0) return string.Empty;
+        if (categoryId <= 0)
+        {
+            return string.Empty;
+        }
 
         // Build display path with ÅÄÖ from category names
         var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == categoryId);
-        if (menu == null) return string.Empty;
+        if (menu == null)
+        {
+            return string.Empty;
+        }
 
         var pathParts = new List<string>();
         var currentMenu = menu;
@@ -287,10 +342,14 @@ public class MockApiCategoryService : IApiCategoryService
         {
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (currentMenu.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(currentMenu.MenuDisplayName))
+            {
                 pathParts.Insert(0, currentMenu.MenuDisplayName);
+            }
 
             if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+            {
                 break;
+            }
 
             currentMenu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == currentMenu.MenuParentCategoryId);
         }

@@ -242,7 +242,10 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower() == categoryName.ToLower());
             if (category == null)
+            {
                 category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLower() == categoryName.ToLower());
+            }
+
             if (category == null)
             {
                 Log.Information("Could not find category id for name: {Name}", categoryName);
@@ -332,13 +335,17 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            {
                 segments.Insert(0, category.MenuUrlSegment);
+            }
 
             currentId = category.MenuParentCategoryId;
         }
 
         if (segments.Count == 0)
+        {
             return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {id}";
+        }
 
         var url = "/" + string.Join("/", segments).Trim().ToLowerInvariant();
         return url;
@@ -372,13 +379,17 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             // Certain names (e.g., "Fåglar") are intentionally preserved here; any
             // path-safe normalization is handled elsewhere when constructing file paths.
             if (!string.IsNullOrWhiteSpace(category.MenuDisplayName))
+            {
                 segments.Insert(0, category.MenuDisplayName);
+            }
 
             currentId = category.MenuParentCategoryId;
         }
 
         if (segments.Count == 0)
+        {
             return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {id}";
+        }
 
         var url = "/" + string.Join("/", segments).Trim().ToLowerInvariant();
         return url;
@@ -599,7 +610,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     internal string GetLastImageFilename(int categoryId)
     {
         if (categoryId <= 0)
+        {
             return string.Empty;
+        }
 
         var lastImage = _entityContext.TblImages
                             .Where(i => i.ImageCategoryId == categoryId || i.ImageFamilyId == categoryId || i.ImageMainFamilyId == categoryId)
@@ -613,7 +626,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     public string GetCategoryPathForImage(int categoryId)
     {
         if (categoryId <= 0)
+        {
             return string.Empty;
+        }
 
         var segments = new List<string>();
         var currentId = categoryId;
@@ -626,11 +641,15 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 .FirstOrDefault();
 
             if (category == null)
+            {
                 break;
+            }
 
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            {
                 segments.Insert(0, category.MenuUrlSegment);
+            }
 
             currentId = category.MenuParentCategoryId.GetValueOrDefault();
         }
@@ -646,7 +665,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     public string GetCategoryDisplayPathForImage(int categoryId)
     {
         if (categoryId <= 0)
+        {
             return string.Empty;
+        }
 
         var segments = new List<string>();
         var currentId = categoryId;
@@ -659,11 +680,15 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 .FirstOrDefault();
 
             if (category == null)
+            {
                 break;
+            }
 
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuDisplayName))
+            {
                 segments.Insert(0, category.MenuDisplayName);
+            }
 
             currentId = category.MenuParentCategoryId.GetValueOrDefault();
         }
@@ -676,7 +701,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var result = new Dictionary<int, string>();
 
         if (!categoryIds.Any())
+        {
             return result;
+        }
 
         try
         {
@@ -743,7 +770,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             // Skip "Fåglar" category (ID = 1) as it's not a physical folder
             if (currentId != 1 && !string.IsNullOrWhiteSpace(category.UrlSegment))
+            {
                 segments.Insert(0, category.UrlSegment);
+            }
 
             currentId = category.ParentId.GetValueOrDefault();
         }
@@ -755,7 +784,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     public List<int> GetAllDescendantCategoryIds(int categoryId)
     {
         if (categoryId <= 0)
+        {
             return new List<int>();
+        }
 
         try
         {
@@ -800,7 +831,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var result = new Dictionary<int, string>();
 
         if (!categoryIds.Any())
+        {
             return result;
+        }
 
         try
         {

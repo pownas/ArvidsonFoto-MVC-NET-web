@@ -117,7 +117,9 @@ public class ImageApiController(ILogger<ImageApiController> logger,
             var category = categoryService.GetById(categoryId);
 
             if (category == null || category.CategoryId <= 0)
+            {
                 return string.Empty;
+            }
 
             var path = category.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
 
@@ -495,7 +497,9 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
         // if limit = 0, then no limit
         if (limit == 0)
+        {
             return sortedImages.ToList();
+        }
 
         // else retur with Applied limit
         return sortedImages.Take(limit).ToList();

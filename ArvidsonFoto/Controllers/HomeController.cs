@@ -28,7 +28,9 @@ public class HomeController : Controller
     {
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Startsidan");
+        }
 
         var viewModel = new GalleryViewModel
         {
@@ -53,14 +55,22 @@ public class HomeController : Controller
         viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
 
         if (LogErrorUrlPost(viewModel.VisitedUrl))
+        {
             Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
+        }
 
         if (viewModel.VisitedUrl is null)
+        {
             ViewData["Title"] = "Error";
+        }
         else if (viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase))
+        {
             ViewData["Title"] = "Error 301 - Old image Url";
+        }
         else
+        {
             ViewData["Title"] = "Error 404 - Page not found";
+        }
 
         return View(viewModel);
     }

@@ -375,8 +375,15 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 return new List<ImageDto>();
             }
 
-            if (page < 1) page = 1;
-            if (pageSize < 1) pageSize = 48;
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            if (pageSize < 1)
+            {
+                pageSize = 48;
+            }
 
             // Try direct category images first (materialised to avoid a second .Any() round-trip)
             var images = _entityContext.TblImages
@@ -648,7 +655,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     private string GetOldCategoryPathForImage(TblImage image)
     {
         if (image.ImageCategoryId == null || image.ImageCategoryId <= 0)
+        {
             return string.Empty;
+        }
 
         // Build the category path by traversing up the parent chain
         var segments = new List<string>();
@@ -664,15 +673,21 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 .FirstOrDefault();
 
             if (currentId == 1)
+            {
                 break; // If the category is "Fåglar", return empty string
+            }
 
             // If the category is not found, break the loop
             if (category == null)
+            {
                 break;
+            }
 
             // Insert the URL segment at the beginning of the list
             if (!string.IsNullOrWhiteSpace(category.MenuDisplayName))
+            {
                 segments.Insert(0, category.MenuDisplayName);
+            }
 
             // Move to the parent category
             currentId = category.MenuParentCategoryId;

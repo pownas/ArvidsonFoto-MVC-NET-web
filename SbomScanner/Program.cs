@@ -32,7 +32,10 @@ if (Directory.Exists(lockFilesFolder))
         string jsonContent = await File.ReadAllTextAsync(file).ConfigureAwait(true);
         var lockFile = JsonSerializer.Deserialize<LockFile>(jsonContent);
 
-        if (lockFile?.Dependencies is null) continue;
+        if (lockFile?.Dependencies is null)
+        {
+            continue;
+        }
 
         foreach (var framework in lockFile.Dependencies)
         {
@@ -60,7 +63,9 @@ if (Directory.Exists(lockFilesFolder))
             foreach (var package in framework.Value)
             {
                 if (package.Value.Type == "Project" || string.IsNullOrEmpty(package.Value.ContentHash))
+                {
                     continue;
+                }
 
                 string packageName = package.Key;
                 string packageVersion = package.Value.Resolved ?? "Okänd";
@@ -198,7 +203,10 @@ var lookupTasks = uniqueLookups.Select(async item =>
             for (int p = regIndex.Pages.Count - 1; p >= 0; p--)
             {
                 var page = regIndex.Pages[p];
-                if (page.Items == null || page.Items.Count == 0) continue;
+                if (page.Items == null || page.Items.Count == 0)
+                {
+                    continue;
+                }
 
                 // Leta bakifrån bland paketen på den sidan (senaste först)
                 for (int i = page.Items.Count - 1; i >= 0; i--)
@@ -215,7 +223,10 @@ var lookupTasks = uniqueLookups.Select(async item =>
                 }
 
                 // Om vi hittade en version, avbryt sökningen efter äldre sidor
-                if (latestVersion != "Okänd") break;
+                if (latestVersion != "Okänd")
+                {
+                    break;
+                }
             }
         }
     }
@@ -474,7 +485,10 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
     foreach (var item in items)
     {
-        if (item.ActiveVulnerabilities.Count != 0) continue;
+        if (item.ActiveVulnerabilities.Count != 0)
+        {
+            continue;
+        }
 
         string statusBadge;
 
@@ -528,15 +542,25 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
 static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 {
-    if (string.IsNullOrWhiteSpace(rangeStr)) return false;
-    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion)) return false;
+    if (string.IsNullOrWhiteSpace(rangeStr))
+    {
+        return false;
+    }
+
+    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion))
+    {
+        return false;
+    }
 
     rangeStr = rangeStr.Trim();
 
     if (rangeStr.StartsWith('(') || rangeStr.StartsWith('['))
     {
         var parts = rangeStr.Substring(1, rangeStr.Length - 2).Split(',');
-        if (parts.Length != 2) return false;
+        if (parts.Length != 2)
+        {
+            return false;
+        }
 
         bool isMinInclusive = rangeStr.StartsWith('[');
         bool isMaxInclusive = rangeStr.EndsWith(']');
@@ -546,14 +570,28 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 
         if (!string.IsNullOrEmpty(minStr) && Version.TryParse(minStr.Split('-')[0], out var minVersion))
         {
-            if (isMinInclusive && currentVersion < minVersion) return false;
-            if (!isMinInclusive && currentVersion <= minVersion) return false;
+            if (isMinInclusive && currentVersion < minVersion)
+            {
+                return false;
+            }
+
+            if (!isMinInclusive && currentVersion <= minVersion)
+            {
+                return false;
+            }
         }
 
         if (!string.IsNullOrEmpty(maxStr) && Version.TryParse(maxStr.Split('-')[0], out var maxVersion))
         {
-            if (isMaxInclusive && currentVersion > maxVersion) return false;
-            if (!isMaxInclusive && currentVersion >= maxVersion) return false;
+            if (isMaxInclusive && currentVersion > maxVersion)
+            {
+                return false;
+            }
+
+            if (!isMaxInclusive && currentVersion >= maxVersion)
+            {
+                return false;
+            }
         }
 
         return true;
@@ -561,11 +599,17 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 
     if (rangeStr.StartsWith("<=", StringComparison.OrdinalIgnoreCase))
     {
-        if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v)) return currentVersion <= v;
+        if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v))
+        {
+            return currentVersion <= v;
+        }
     }
     if (rangeStr.StartsWith('<'))
     {
-        if (Version.TryParse(rangeStr.Replace("<", "").Trim().Split('-')[0], out var v)) return currentVersion < v;
+        if (Version.TryParse(rangeStr.Replace("<", "").Trim().Split('-')[0], out var v))
+        {
+            return currentVersion < v;
+        }
     }
 
     return false;
@@ -579,7 +623,10 @@ static void FindDirectRoots(
     HashSet<string> visited)
 {
     // Förhindra oändliga loopar om det finns cirkulära referenser i graferna
-    if (!visited.Add(currentPackage)) return;
+    if (!visited.Add(currentPackage))
+    {
+        return;
+    }
 
     if (dependentOnTracker.TryGetValue(currentPackage, out var parents))
     {

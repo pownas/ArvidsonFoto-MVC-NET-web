@@ -27,7 +27,9 @@ public class BilderController(
         viewModel.PageSize = pageSize;
 
         if (sida is null || sida < 1)
+        {
             sida = 1;
+        }
 
         viewModel.CurrentPage = (int)sida;
 
@@ -157,7 +159,9 @@ public class BilderController(
     public IActionResult Search(string? s)
     {
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("search");
+        }
 
         GalleryViewModel viewModel = new GalleryViewModel();
 
@@ -190,7 +194,9 @@ public class BilderController(
             viewModel.SelectedCategory.UrlCategoryPath = "/Search";
 
             if (listOfFirstSearchedImages.Count == 0)
+            {
                 Log.Warning("Hittade inget vid sökning: '" + s + "'");
+            }
         }
         return View(viewModel);
     }

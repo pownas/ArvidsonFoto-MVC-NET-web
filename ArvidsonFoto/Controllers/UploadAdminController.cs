@@ -104,13 +104,19 @@ public class UploadAdminController : Controller
         if (ModelState.IsValid)
         {
             if (model.ImageHuvudfamilj.Equals(0))
+            {
                 model.ImageHuvudfamilj = null;
+            }
 
             if (model.ImageFamilj.Equals(0))
+            {
                 model.ImageFamilj = null;
+            }
 
             if (model.ImageHuvudfamilj.Equals(1))
+            {
                 model.ImageHuvudfamilj = null;
+            }
 
             Core.Models.TblImage newImage = new Core.Models.TblImage
             {
@@ -223,7 +229,9 @@ public class UploadAdminController : Controller
 
         int imagesPerPage = 25;
         if (sida is null || sida < 1)
+        {
             sida = 1;
+        }
 
         var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
         var allImages = coreContext.TblImages.OrderByDescending(i => i.ImageId).ToList();
@@ -367,13 +375,19 @@ public class UploadAdminController : Controller
     public async Task<IActionResult> ToggleShowAllLogs(string date)
     {
         if (string.IsNullOrWhiteSpace(date))
+        {
             date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+        }
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         if (user.ShowAllLogs)
+        {
             user.ShowAllLogs = false;
+        }
         else
+        {
             user.ShowAllLogs = true;
+        }
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
@@ -417,9 +431,14 @@ public class UploadAdminController : Controller
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
             if (inputModel.ImageHuvudfamilj is not null)
+            {
                 inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
+            }
+
             if (inputModel.ImageFamilj is not null)
+            {
                 inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
+            }
 
             inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
 

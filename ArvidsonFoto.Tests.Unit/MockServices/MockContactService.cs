@@ -20,7 +20,9 @@ public class MockContactService : IContactService
     public int SaveContactSubmission(TblKontakt kontakt)
     {
         if (kontakt == null)
+        {
             throw new ArgumentNullException(nameof(kontakt));
+        }
 
         kontakt.Id = _nextId++;
         _mockContactSubmissions.Add(kontakt);
@@ -31,7 +33,9 @@ public class MockContactService : IContactService
     {
         var kontakt = _mockContactSubmissions.FirstOrDefault(k => k.Id == contactId);
         if (kontakt == null)
+        {
             return false;
+        }
 
         kontakt.EmailSent = emailSent;
         kontakt.ErrorMessage = errorMessage;
