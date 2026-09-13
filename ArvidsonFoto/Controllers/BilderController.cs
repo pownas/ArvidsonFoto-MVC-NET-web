@@ -22,7 +22,7 @@ public class BilderController(
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
     public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
         int pageSize = 48;
         viewModel.PageSize = pageSize;
 
@@ -163,7 +163,7 @@ public class BilderController(
             _pageCounterService.AddPageCount("search");
         }
 
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
 
         ViewBag.SearchQuery = s ?? "";
         ViewBag.SearchPerformed = !string.IsNullOrWhiteSpace(s); // Track if a search was actually performed
@@ -179,7 +179,7 @@ public class BilderController(
             s = s.Trim();
             s = s.Replace("+", " ");
             List<CategoryDto> allCategories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
-            List<ImageDto> listOfFirstSearchedImages = new List<ImageDto>();
+            List<ImageDto> listOfFirstSearchedImages = new();
             foreach (var category in allCategories)
             {
                 if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)

@@ -21,7 +21,7 @@ public class SenastController(
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
     {
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
         int pageSize = 48;
 
         if (sida is null or < 1)

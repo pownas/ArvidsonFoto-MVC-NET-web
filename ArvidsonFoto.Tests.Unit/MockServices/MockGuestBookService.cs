@@ -15,8 +15,7 @@ public class MockGuestBookService : IGuestBookService
     {
         _mockGuestbookEntries = new List<TblGb>
         {
-            new TblGb
-            {
+            new() {
                 Id = 1,
                 GbId = 1,
                 GbName = "Test User 1",
@@ -26,8 +25,7 @@ public class MockGuestBookService : IGuestBookService
                 GbDate = DateTime.Now.AddDays(-2),
                 GbReadPost = true
             },
-            new TblGb
-            {
+            new() {
                 Id = 2,
                 GbId = 2,
                 GbName = "Test User 2",

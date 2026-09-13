@@ -50,7 +50,7 @@ public class PageCounterService : IPageCounterService
             else
             {
                 // Create new record - DO NOT set Id, let database generate it
-                TblPageCounter pageCounter = new TblPageCounter()
+                TblPageCounter pageCounter = new()
                 {
                     MonthViewed = monthViewed,
                     PageName = pageName,
@@ -96,7 +96,7 @@ public class PageCounterService : IPageCounterService
             else
             {
                 // Create new record - DO NOT set Id, let database generate it
-                TblPageCounter pageCounter = new TblPageCounter()
+                TblPageCounter pageCounter = new()
                 {
                     MonthViewed = monthViewed,
                     PageName = pageName,

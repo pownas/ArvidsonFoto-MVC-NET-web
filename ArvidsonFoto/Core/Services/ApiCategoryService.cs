@@ -463,11 +463,11 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var testCategories = new List<CategoryDto>
             {
-                new CategoryDto { CategoryId = 1, Name = "Däggdjur", UrlCategoryPath = "daggdjur", UrlCategoryPathFull = "daggdjur" },
-                new CategoryDto { CategoryId = 2, Name = "Fåglar", UrlCategoryPath = "faglar", UrlCategoryPathFull = "faglar" },
-                new CategoryDto { CategoryId = 3, Name = "Insekter", UrlCategoryPath = "insekter", UrlCategoryPathFull = "insekter" },
-                new CategoryDto { CategoryId = 4, Name = "Landskap", UrlCategoryPath = "landskap", UrlCategoryPathFull = "landskap" },
-                new CategoryDto { CategoryId = 5, Name = "Växter", UrlCategoryPath = "vaxter", UrlCategoryPathFull = "vaxter" }
+                new() { CategoryId = 1, Name = "Däggdjur", UrlCategoryPath = "daggdjur", UrlCategoryPathFull = "daggdjur" },
+                new() { CategoryId = 2, Name = "Fåglar", UrlCategoryPath = "faglar", UrlCategoryPathFull = "faglar" },
+                new() { CategoryId = 3, Name = "Insekter", UrlCategoryPath = "insekter", UrlCategoryPathFull = "insekter" },
+                new() { CategoryId = 4, Name = "Landskap", UrlCategoryPath = "landskap", UrlCategoryPathFull = "landskap" },
+                new() { CategoryId = 5, Name = "Växter", UrlCategoryPath = "vaxter", UrlCategoryPathFull = "vaxter" }
             };
 
             _cache.Set(MAIN_CATEGORIES_CACHE_KEY, testCategories, _longCacheExpiry);

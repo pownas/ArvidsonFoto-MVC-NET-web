@@ -12,7 +12,7 @@ public static class SharedStaticFunctions
         //Code from: https://docs.microsoft.com/en-us/dotnet/api/system.globalization.calendar.getweekofyear?view=net-5.0
 
         // Gets the Calendar instance associated with a CultureInfo.
-        CultureInfo myCI = new CultureInfo("sv-SE");
+        CultureInfo myCI = new("sv-SE");
         Calendar myCal = myCI.Calendar;
 
         // Gets the DTFI properties required by GetWeekOfYear.

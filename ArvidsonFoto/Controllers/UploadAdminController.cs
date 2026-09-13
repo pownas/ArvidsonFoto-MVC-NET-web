@@ -56,7 +56,7 @@ public class UploadAdminController : Controller
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
 
-        UploadImageViewModel viewModel = new UploadImageViewModel();
+        UploadImageViewModel viewModel = new();
         viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
 
         var selectedCategory = CategoryDto.CreateEmpty();
@@ -118,7 +118,7 @@ public class UploadAdminController : Controller
                 model.ImageHuvudfamilj = null;
             }
 
-            Core.Models.TblImage newImage = new Core.Models.TblImage
+            Core.Models.TblImage newImage = new()
             {
                 ImageId = _imageService.GetImageLastId() + 1,
                 ImageMainFamilyId = model.ImageHuvudfamilj,
@@ -204,7 +204,7 @@ public class UploadAdminController : Controller
 
         if (ModelState.IsValid)
         {
-            CategoryDto newCategory = new CategoryDto
+            CategoryDto newCategory = new()
             {
                 Name = inputModel.MenuText,
                 CategoryId = _categoryService.GetLastId() + 1,
@@ -236,7 +236,7 @@ public class UploadAdminController : Controller
         var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
         var allImages = coreContext.TblImages.OrderByDescending(i => i.ImageId).ToList();
 
-        UploadEditImagesViewModel viewModel = new UploadEditImagesViewModel()
+        UploadEditImagesViewModel viewModel = new()
         {
             CurrentPage = (int)sida,
             CurrentUrl = "./UploadAdmin/RedigeraBilder"
@@ -291,7 +291,7 @@ public class UploadAdminController : Controller
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
         ViewData["Title"] = "Hantera gästboken";
-        UploadGbViewModel viewModel = new UploadGbViewModel();
+        UploadGbViewModel viewModel = new();
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
             viewModel.DisplayMessage = "";
@@ -352,10 +352,10 @@ public class UploadAdminController : Controller
     {
         ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
 
-        AppLogReaderService logReader = new AppLogReaderService();
+        AppLogReaderService logReader = new();
         string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
 
-        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel
+        UploadLogReaderViewModel viewModel = new()
         {
             ExistingLogFiles = logReader.ExistingLogFiles(),
             LogBook = logReader.ReadData(appLogFile),

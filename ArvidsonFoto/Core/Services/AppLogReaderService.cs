@@ -12,8 +12,8 @@ public class AppLogReaderService
     public List<string> ReadData(string appLogFile)
     {
         string inputDataPath = folderDataPath + appLogFile; //Sätter sökvägen till filen.
-        List<string> dataList = new List<string>();
-        List<string> returnList = new List<string>();
+        List<string> dataList = new();
+        List<string> returnList = new();
         try
         { //Försöker öppna filen och läsa den...
             using (StreamReader reader = File.OpenText(inputDataPath))//Läser filen, eller ger null om ingen fil finns
@@ -41,9 +41,9 @@ public class AppLogReaderService
 
     public List<string> ExistingLogFiles()
     {
-        List<string> returnList = new List<string>();
+        List<string> returnList = new();
 
-        DirectoryInfo di = new DirectoryInfo(folderDataPath);
+        DirectoryInfo di = new(folderDataPath);
         var files = di.GetFiles("appLog*.txt");
         foreach (var fileInfo in files)
         {
