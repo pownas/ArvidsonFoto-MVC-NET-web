@@ -231,7 +231,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                                .ToList();
 
         // Early return if no images found
-        if (!images.Any())
+        if (images.Count == 0)
         {
             return new List<ImageDto>();
         }
@@ -297,10 +297,10 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                         .ToList();
 
             // If no direct images found, check descendant categories (e.g. parent category like "Fåglar")
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
-                if (descendantIds.Any())
+                if (descendantIds.Count != 0)
                 {
                     images = _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
@@ -311,7 +311,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
 
             // Early return if no images found
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 return new List<ImageDto>();
             }
@@ -398,10 +398,10 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             // If no direct images found on this page, check whether there are descendant categories
             // (e.g. a parent category like "Fåglar" that has no images assigned directly)
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
-                if (descendantIds.Any())
+                if (descendantIds.Count != 0)
                 {
                     images = _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
@@ -416,7 +416,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
 
             // Early return if no images found
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 return new List<ImageDto>();
             }
@@ -602,7 +602,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         if (totalImagesForCategoryId == 0)
         {
             var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId);
-            if (descendantIds.Any())
+            if (descendantIds.Count != 0)
             {
                 totalImagesForCategoryId = _entityContext.TblImages
                     .Count(x => (x.ImageCategoryId.HasValue && descendantIds.Contains(x.ImageCategoryId.Value))

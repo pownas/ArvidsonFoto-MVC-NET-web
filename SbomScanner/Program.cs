@@ -3,10 +3,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
 #pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1308 // Normalize strings to uppercase
-#pragma warning disable IDE0058 // Expression value is never used
+#pragma warning disable IDE0057 // Use range operator
 
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
@@ -48,12 +46,13 @@ if (Directory.Exists(lockFilesFolder))
                 {
                     foreach (var childDep in package.Value.Dependencies)
                     {
-                        if (!dependentOnTracker.ContainsKey(childDep.Key))
+                        if (!dependentOnTracker.TryGetValue(childDep.Key, out List<string>? value))
                         {
-                            dependentOnTracker[childDep.Key] = new List<string>();
+                            value = [];
+                            dependentOnTracker[childDep.Key] = value;
                         }
-                        // 'package.Key' är föräldern som kräver 'childDep.Key'
-                        dependentOnTracker[childDep.Key].Add(package.Key);
+
+                        value.Add(package.Key);
                     }
                 }
             }
@@ -79,7 +78,7 @@ if (Directory.Exists(lockFilesFolder))
                 else
                 {
                     // Hitta alla Direct-paket som i slutändan leder till detta transitiva paket
-                    FindDirectRoots(packageName, framework.Value, dependentOnTracker, roots, new HashSet<string>());
+                    FindDirectRoots(packageName, framework.Value, dependentOnTracker, roots, []);
                 }
 
                 string introducedByString = roots.Count > 0 ? string.Join(", ", roots) : "Okänd källa";

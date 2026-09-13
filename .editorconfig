@@ -276,3 +276,6 @@ dotnet_diagnostic.IDE0160.severity = none
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = suggestion
+
+# CA1862: Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
+dotnet_diagnostic.CA1862.severity = none

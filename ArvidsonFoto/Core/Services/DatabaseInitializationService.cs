@@ -182,7 +182,7 @@ public class DatabaseInitializationService(
                               ctx.GetType().BaseType?.GetGenericTypeDefinition() == typeof(IdentityDbContext<>)))
                 .ToList();
 
-            if (identityDbContexts.Any())
+            if (identityDbContexts.Count != 0)
             {
                 foreach (var context in identityDbContexts)
                 {

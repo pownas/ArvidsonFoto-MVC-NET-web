@@ -83,7 +83,7 @@ public class MockGuestBookService : IGuestBookService
 
     public int GetLastGbId()
     {
-        if (!_mockGuestbookEntries.Any())
+        if (_mockGuestbookEntries.Count == 0)
         {
             return 0;
         }

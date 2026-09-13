@@ -210,25 +210,23 @@ public class Program
 
         if (useInMemoryDb)
         {
-            using (var scope = app.Services.CreateScope())
-            {
-                var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
-                coreContext.Database.EnsureCreated();
+            using var scope = app.Services.CreateScope();
+            var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
+            coreContext.Database.EnsureCreated();
 
-                // Seeda data om databasen är tom
-                if (!coreContext.TblImages.Any())
-                {
-                    Log.Information("Seeding in-memory database with test data...");
-                    coreContext.SeedInMemoryDatabase();
-                    Log.Information("In-memory database seeded successfully with {ImageCount} images, {CategoryCount} categories, {GuestbookCount} guestbook entries",
-                        coreContext.TblImages.Count(),
-                        coreContext.TblMenus.Count(),
-                        coreContext.TblGbs.Count());
-                }
-                else
-                {
-                    Log.Information("In-memory database already contains data - skipping seed");
-                }
+            // Seeda data om databasen är tom
+            if (!coreContext.TblImages.Any())
+            {
+                Log.Information("Seeding in-memory database with test data...");
+                coreContext.SeedInMemoryDatabase();
+                Log.Information("In-memory database seeded successfully with {ImageCount} images, {CategoryCount} categories, {GuestbookCount} guestbook entries",
+                    coreContext.TblImages.Count(),
+                    coreContext.TblMenus.Count(),
+                    coreContext.TblGbs.Count());
+            }
+            else
+            {
+                Log.Information("In-memory database already contains data - skipping seed");
             }
         }
 
@@ -253,7 +251,7 @@ public class Program
                     .Select(c => c.CategoryId!.Value)
                     .ToList();
 
-                if (allCategoryIds.Any())
+                if (allCategoryIds.Count != 0)
                 {
                     categoryService.GetCategoryNamesBulk(allCategoryIds);
                     categoryService.GetCategoryPathsBulk(allCategoryIds);
@@ -403,10 +401,12 @@ public class Program
     /// Returns <c>true</c> when the application is configured to use an in-memory database,
     /// either via Codespaces environment variables or the <c>UseInMemoryDatabase</c> connection string.
     /// </summary>
-    private static bool IsUsingInMemoryDatabase(IConfiguration configuration) =>
-        Environment.GetEnvironmentVariable("CODESPACES") != null ||
+    private static bool IsUsingInMemoryDatabase(IConfiguration configuration)
+    {
+        return Environment.GetEnvironmentVariable("CODESPACES") != null ||
         Environment.GetEnvironmentVariable("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN") != null ||
         configuration.GetConnectionString("UseInMemoryDatabase") == "true";
+    }
 
     /// <summary>
     /// Returns a sanitized connection string safe for logging by replacing any password value

@@ -150,14 +150,14 @@ public class MockApiImageService : IApiImageService
             .Where(i => i.CategoryId == categoryID)
             .ToList();
 
-        if (direct.Any())
+        if (direct.Count != 0)
         {
             return direct;
         }
 
         // Fall back to descendant categories (mirrors ApiImageService behaviour for parent categories)
         var descendantIds = _categoryService.GetAllDescendantCategoryIds(categoryID);
-        if (descendantIds.Any())
+        if (descendantIds.Count != 0)
         {
             return _testImages
                 .Where(i => descendantIds.Contains(i.CategoryId))

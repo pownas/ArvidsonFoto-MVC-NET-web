@@ -142,7 +142,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         // OPTIMIZED: Bulk load all category IDs to pre-cache paths
         var allCategoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
-        if (allCategoryIds.Any())
+        if (allCategoryIds.Count != 0)
         {
             GetCategoryPathsBulk(allCategoryIds);
         }
@@ -171,7 +171,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
             // OPTIMIZED: Pre-cache all category paths for these children
             var categoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
-            if (categoryIds.Any())
+            if (categoryIds.Count != 0)
             {
                 GetCategoryPathsBulk(categoryIds);
             }
@@ -239,10 +239,10 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower() == categoryName.ToLower());
+            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == categoryName.ToLowerInvariant());
             if (category == null)
             {
-                category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLower() == categoryName.ToLower());
+                category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == categoryName.ToLowerInvariant());
             }
 
             if (category == null)
@@ -480,10 +480,25 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         }
     }
 
-    public Task<List<CategoryDto>> GetAllCategoriesAsync() => Task.FromResult(GetAll());
-    public Task<bool> CreateCategoryAsync(CategoryDto category) => Task.FromResult(AddCategory(category));
-    public List<CategoryDto> GetSubsList(int parentId) => GetChildrenByParentId(parentId);
-    public List<CategoryDto> GetAllCategories() => GetAll();
+    public Task<List<CategoryDto>> GetAllCategoriesAsync()
+    {
+        return Task.FromResult(GetAll());
+    }
+
+    public Task<bool> CreateCategoryAsync(CategoryDto category)
+    {
+        return Task.FromResult(AddCategory(category));
+    }
+
+    public List<CategoryDto> GetSubsList(int parentId)
+    {
+        return GetChildrenByParentId(parentId);
+    }
+
+    public List<CategoryDto> GetAllCategories()
+    {
+        return GetAll();
+    }
 
     public int GetAllSubCategoriesCounted()
     {
@@ -500,7 +515,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment != null && c.MenuUrlSegment.ToLower() == urlSegment.ToLower());
+            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment != null && c.MenuUrlSegment.ToLowerInvariant() == urlSegment.ToLowerInvariant());
             if (category == null)
             {
                 Log.Warning("Could not find category with URL segment: '{UrlSegment}'", urlSegment);
@@ -529,7 +544,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower() == urlSegment.ToLower());
+            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
             if (category == null)
             {
                 Log.Information("Could not find category id for URL segment: {UrlSegment}", urlSegment);
@@ -554,7 +569,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower() == urlSegment.ToLower());
+            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
             if (category != null)
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
@@ -576,7 +591,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 }
             }
 
-            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLower() == urlSegment.ToLower());
+            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
             if (category != null)
             {
                 Log.Debug("Found category by display name fallback: {Name}", urlSegment);
@@ -586,7 +601,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
             }
 
-            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLower().Contains(urlSegment.ToLower()) || c.MenuDisplayName!.ToLower().Contains(urlSegment.ToLower()));
+            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()) || c.MenuDisplayName!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()));
             if (category != null)
             {
                 Log.Debug("Found category by partial match: {Segment}", urlSegment);
@@ -699,7 +714,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     {
         var result = new Dictionary<int, string>();
 
-        if (!categoryIds.Any())
+        if (categoryIds.Count == 0)
         {
             return result;
         }
@@ -710,7 +725,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var needsCacheRefresh = now - _cacheLastUpdated > _cacheExpiry;
             var uncachedIds = needsCacheRefresh ? categoryIds.ToList() : categoryIds.Where(id => !_categoryPathCache.ContainsKey(id)).ToList();
 
-            if (uncachedIds.Any() || needsCacheRefresh)
+            if (uncachedIds.Count != 0 || needsCacheRefresh)
             {
                 var allCategories = _entityContext.TblMenus
                     .Where(c => c.MenuCategoryId.HasValue)
@@ -784,7 +799,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     {
         if (categoryId <= 0)
         {
-            return new List<int>();
+            return [];
         }
 
         try
@@ -829,7 +844,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     {
         var result = new Dictionary<int, string>();
 
-        if (!categoryIds.Any())
+        if (categoryIds.Count == 0)
         {
             return result;
         }
@@ -839,7 +854,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             // Get all unique category IDs that aren't already cached
             var uncachedIds = categoryIds.Where(id => !_categoryNameCache.ContainsKey(id)).Distinct().ToList();
 
-            if (uncachedIds.Any())
+            if (uncachedIds.Count != 0)
             {
                 // Bulk load all uncached category names in a single query
                 var categories = _entityContext.TblMenus

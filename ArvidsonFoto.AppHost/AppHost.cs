@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+
+var builder = DistributedApplication.CreateBuilder(args);
 
 // Load configuration from the ArvidsonFoto project directory
 string appHostBasePath = builder.Environment.ContentRootPath; // AppHost project directory
@@ -58,7 +60,7 @@ if (!useInMemoryDatabase)
 // Add a second instance for API documentation and Admin panel
 // Uses the 'arvidsonfoto-dev-portal' launch profile from launchSettings.json
 // which defines https://localhost:5011 and launchUrl /dev
-builder
+var arvidsonFotoDevPortal = builder
     .AddProject<Projects.ArvidsonFoto>("arvidsonfoto-dev-and-api-portal", launchProfileName: "ArvidsonFoto-dev-portal")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development");
 

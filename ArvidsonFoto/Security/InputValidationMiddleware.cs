@@ -45,7 +45,7 @@ public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValida
     public async Task InvokeAsync(HttpContext context)
     {
         // Check query string parameters
-        if (context.Request.Query.Any())
+        if (context.Request.Query.Count != 0)
         {
             foreach (var param in context.Request.Query)
             {
@@ -69,7 +69,7 @@ public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValida
         }
 
         // Check route values
-        if (context.Request.RouteValues.Any())
+        if (context.Request.RouteValues.Count != 0)
         {
             foreach (var routeValue in context.Request.RouteValues)
             {
