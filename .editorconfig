@@ -102,11 +102,6 @@ dotnet_style_allow_statement_immediately_after_block_experimental = true
 
 #### C# Coding Conventions ####
 
-# var preferences
-csharp_style_var_elsewhere = false
-csharp_style_var_for_built_in_types = false
-csharp_style_var_when_type_is_apparent = false
-
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true
 csharp_style_expression_bodied_constructors = false
@@ -269,3 +264,6 @@ dotnet_analyzer_diagnostic.category-Style.severity = suggestion
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = suggestion
+
+# IDE0008: Use explicit type
+dotnet_diagnostic.IDE0008.severity = none

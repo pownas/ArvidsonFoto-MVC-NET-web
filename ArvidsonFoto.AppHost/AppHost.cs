@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
@@ -7,7 +7,7 @@ string appHostBasePath = builder.Environment.ContentRootPath; // AppHost project
 string arvidsonFotoPath = Path.GetFullPath(Path.Combine(appHostBasePath, "..", "ArvidsonFoto"));
 
 // Build a configuration that reads from the ArvidsonFoto project directory
-IConfigurationRoot configuration = new ConfigurationBuilder()
+var configuration = new ConfigurationBuilder()
     .SetBasePath(arvidsonFotoPath)
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile("appsettings.Development.json", optional: true)
@@ -16,19 +16,19 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 builder.Configuration.AddConfiguration(configuration);
 
 // Add parameters from the ArvidsonFoto configuration
-Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ParameterResource> smtpServer = builder.AddParameterFromConfiguration(
+var smtpServer = builder.AddParameterFromConfiguration(
     "smtpServer",
     "SmtpSettings:Server");
 
-Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ParameterResource> smtpSenderEmail = builder.AddParameterFromConfiguration(
+var smtpSenderEmail = builder.AddParameterFromConfiguration(
     "smtpSenderEmail",
     "SmtpSettings:SenderEmail");
 
-Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ParameterResource> smtpRecipientEmail = builder.AddParameterFromConfiguration(
+var smtpRecipientEmail = builder.AddParameterFromConfiguration(
     "smtpRecipientEmail",
     "SmtpSettings:RecipientEmail");
 
-Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ParameterResource> databaseInMemory = builder.AddParameterFromConfiguration(
+var databaseInMemory = builder.AddParameterFromConfiguration(
     "databaseInMemory",
     "ConnectionStrings:UseInMemoryDatabase");
 bool useInMemoryDatabase = builder.Configuration.GetValue<bool>(
@@ -36,7 +36,7 @@ bool useInMemoryDatabase = builder.Configuration.GetValue<bool>(
 
 
 // Add the main ArvidsonFoto web application (public-facing website)
-Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ProjectResource> arvidsonFoto = builder
+var arvidsonFoto = builder
     .AddProject<Projects.ArvidsonFoto>("arvidsonfoto", launchProfileName: "ArvidsonFoto")
     .WithEnvironment("SmtpSettings__Server", smtpServer)
     .WithEnvironment("SmtpSettings__SenderEmail", smtpSenderEmail)
@@ -47,7 +47,7 @@ Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel
 // Only add the SQL Server connection string if not using in-memory database
 if (!useInMemoryDatabase)
 {
-    Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ParameterResource> databaseConnectionString = builder.AddParameterFromConfiguration(
+    var databaseConnectionString = builder.AddParameterFromConfiguration(
     "databaseConnectionString",
     "ConnectionStrings:DefaultConnection");
 
