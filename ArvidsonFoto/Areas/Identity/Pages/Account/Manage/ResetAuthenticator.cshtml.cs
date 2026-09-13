@@ -8,9 +8,9 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 [Authorize]
 public class ResetAuthenticatorModel : PageModel
 {
-    UserManager<ArvidsonFotoUser> _userManager;
+    private UserManager<ArvidsonFotoUser> _userManager;
     private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    ILogger<ResetAuthenticatorModel> _logger;
+    private ILogger<ResetAuthenticatorModel> _logger;
 
     public ResetAuthenticatorModel(
         UserManager<ArvidsonFotoUser> userManager,

@@ -677,7 +677,7 @@ static string GetWikiOutputPath(string fileName = "sbom-report.md")
 
 #region DataModeller
 
-sealed record ReportItem(
+internal sealed record ReportItem(
     string PackageName,
     string InstalledVersion,
     string LatestVersion,
@@ -689,12 +689,12 @@ sealed record ReportItem(
     string IntroducedBy
 );
 
-sealed record ServiceIndex(
+internal sealed record ServiceIndex(
     [property: JsonPropertyName("resources")]
     List<Resource> Resources
 );
 
-sealed record Resource(
+internal sealed record Resource(
     [property: JsonPropertyName("@id")]
     string Id,
 
@@ -702,7 +702,7 @@ sealed record Resource(
     string Type
 );
 
-sealed record VulnerabilityFile(
+internal sealed record VulnerabilityFile(
     [property: JsonPropertyName("@name")]
     string Name,
 
@@ -710,7 +710,7 @@ sealed record VulnerabilityFile(
     string Id
 );
 
-sealed record Vulnerability(
+internal sealed record Vulnerability(
     [property: JsonPropertyName("severity")]
     int Severity,
 
@@ -721,7 +721,7 @@ sealed record Vulnerability(
     string Url
 );
 
-sealed record LockFile(
+internal sealed record LockFile(
     [property: JsonPropertyName("dependencies")]
     Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
@@ -740,7 +740,7 @@ internal sealed record LockDependency(
     Dictionary<string, string>? Dependencies
 );
 
-sealed record NuGetPackage
+internal sealed record NuGetPackage
 {
     public string Name { get; init; }
     public string Version { get; init; }
@@ -755,22 +755,22 @@ sealed record NuGetPackage
     }
 }
 
-sealed record NugetRegistrationIndex(
+internal sealed record NugetRegistrationIndex(
     [property: JsonPropertyName("items")]
     List<RegistrationPage> Pages
 );
 
-sealed record RegistrationPage(
+internal sealed record RegistrationPage(
     [property: JsonPropertyName("items")]
     List<RegistrationItem> Items
 );
 
-sealed record RegistrationItem(
+internal sealed record RegistrationItem(
     [property: JsonPropertyName("catalogEntry")]
     CatalogEntry CatalogEntry
 );
 
-sealed record CatalogEntry(
+internal sealed record CatalogEntry(
     [property: JsonPropertyName("version")]
     string Version
 );

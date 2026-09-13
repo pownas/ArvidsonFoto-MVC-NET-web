@@ -2,7 +2,7 @@
 
 public class AppLogReaderService
 {
-    string folderDataPath = @".\logs\"; //Pekar på mappen där loggfilen ligger
+    private string folderDataPath = @".\logs\"; //Pekar på mappen där loggfilen ligger
 
     /// <summary>
     /// En funktion som läser en loggfil. Tar ett filnamn som parameter.
