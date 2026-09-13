@@ -24,7 +24,7 @@ public class SenastController(
         GalleryViewModel viewModel = new GalleryViewModel();
         int pageSize = 48;
 
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
         {
             sida = 1;
         }

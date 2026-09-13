@@ -233,7 +233,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     {
         try
         {
-            if (count <= 0 || count > 100)
+            if (count is <= 0 or > 100)
             {
                 return Problem(
                     title: "Invalid Parameter",

@@ -49,7 +49,7 @@ public class MockApiCategoryService : IApiCategoryService
                 pathParts.Insert(0, currentMenu.MenuUrlSegment ?? $"category-{currentMenu.MenuCategoryId ?? 0}");
             }
 
-            if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+            if (currentMenu.MenuParentCategoryId is 0 or null)
             {
                 break;
             }
@@ -108,7 +108,7 @@ public class MockApiCategoryService : IApiCategoryService
 
     public CategoryDto GetById(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             return CreateNotFoundCategory();
         }
@@ -131,7 +131,7 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetNameById(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             return "Not found";
         }
@@ -175,7 +175,7 @@ public class MockApiCategoryService : IApiCategoryService
 
     public bool DeleteCategory(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             return false;
         }
@@ -197,7 +197,7 @@ public class MockApiCategoryService : IApiCategoryService
 
     public string GetCategoryUrl(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             return string.Empty;
         }
@@ -346,7 +346,7 @@ public class MockApiCategoryService : IApiCategoryService
                 pathParts.Insert(0, currentMenu.MenuDisplayName);
             }
 
-            if (currentMenu.MenuParentCategoryId == 0 || currentMenu.MenuParentCategoryId == null)
+            if (currentMenu.MenuParentCategoryId is 0 or null)
             {
                 break;
             }

@@ -35,7 +35,7 @@ public class ArvidsonFotoIdentityContextFactory : IDesignTimeDbContextFactory<Ar
         // Check if connection string is provided via command line arguments
         for (int i = 0; i < args.Length - 1; i++)
         {
-            if (args[i] == "--connection" || args[i] == "-c")
+            if (args[i] is "--connection" or "-c")
             {
                 return args[i + 1];
             }

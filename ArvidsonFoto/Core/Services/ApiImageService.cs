@@ -654,7 +654,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>bilder/hackspettar/tretåig-hackspett , utan "/fåglar" och med ÅÄÖ</returns>
     private string GetOldCategoryPathForImage(TblImage image)
     {
-        if (image.ImageCategoryId == null || image.ImageCategoryId <= 0)
+        if (image.ImageCategoryId is null or <= 0)
         {
             return string.Empty;
         }
@@ -664,7 +664,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         var currentId = image.ImageCategoryId;
 
         // Start with the current category and traverse up to the root category
-        while (currentId != null && currentId > 0)
+        while (currentId is not null and > 0)
         {
             // Fetch the current category and its parent category from the database
             var category = _entityContext.TblMenus

@@ -26,7 +26,7 @@ public class BilderController(
         int pageSize = 48;
         viewModel.PageSize = pageSize;
 
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
         {
             sida = 1;
         }

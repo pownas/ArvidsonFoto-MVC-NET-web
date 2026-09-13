@@ -102,7 +102,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public CategoryDto GetById(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             Log.Information("Invalid category id: {Id}", id);
             return DefaultCategoryNotFound;
@@ -195,7 +195,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public string GetNameById(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             Log.Information("Invalid category id for GetNameById: {Id}", id);
             return "Not found";
@@ -311,7 +311,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public string GetCategoryUrl(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             Log.Warning("Invalid category ID provided: {CategoryId}. Must be a positive integer.", id);
             return $"{(int)HttpStatusCode.BadRequest}-{HttpStatusCode.BadRequest}. Must be a positive integer: {id}";
@@ -320,7 +320,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var segments = new List<string>();
         var currentId = id;
 
-        while (currentId != null && currentId > 0)
+        while (currentId is not null and > 0)
         {
             var category = _entityContext.TblMenus
                 .Where(c => c.MenuCategoryId == currentId)
@@ -353,7 +353,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     private string GetSortingUrl(int? id)
     {
-        if (id == null || id <= 0)
+        if (id is null or <= 0)
         {
             Log.Warning("Invalid category ID provided: {CategoryId}. Must be a positive integer.", id);
             return $"{(int)HttpStatusCode.BadRequest}-{HttpStatusCode.BadRequest}. Must be a positive integer: {id}";
@@ -362,7 +362,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var segments = new List<string>();
         var currentId = id;
 
-        while (currentId != null && currentId > 0)
+        while (currentId is not null and > 0)
         {
             var category = _entityContext.TblMenus
                 .Where(c => c.MenuCategoryId == currentId)

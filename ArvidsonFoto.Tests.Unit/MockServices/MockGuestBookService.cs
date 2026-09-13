@@ -80,7 +80,7 @@ public class MockGuestBookService : IGuestBookService
 
     public int GetCountOfUnreadPosts()
     {
-        return _mockGuestbookEntries.Count(g => g.GbReadPost == null || g.GbReadPost == false);
+        return _mockGuestbookEntries.Count(g => g.GbReadPost is null or false);
     }
 
     public int GetLastGbId()

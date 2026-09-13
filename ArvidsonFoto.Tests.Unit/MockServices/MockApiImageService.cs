@@ -62,7 +62,7 @@ public class MockApiImageService : IApiImageService
 
             pathParts.Insert(0, menu.MenuUrlSegment ?? $"category-{currentMenuId}");
 
-            if (menu.MenuParentCategoryId == 0 || menu.MenuParentCategoryId == null)
+            if (menu.MenuParentCategoryId is 0 or null)
             {
                 break;
             }

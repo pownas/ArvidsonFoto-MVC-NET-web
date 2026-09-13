@@ -228,7 +228,7 @@ public class UploadAdminController : Controller
         ViewData["Title"] = "Redigera bland bilderna";
 
         int imagesPerPage = 25;
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
         {
             sida = 1;
         }
