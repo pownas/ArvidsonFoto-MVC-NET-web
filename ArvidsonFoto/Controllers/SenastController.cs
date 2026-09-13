@@ -246,7 +246,7 @@ public class SenastController(
                 };
             }).ToList();
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
+            viewModel.AllImagesList = []; // Don't load all images
         }
         else
         {

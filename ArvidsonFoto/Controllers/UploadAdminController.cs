@@ -56,8 +56,10 @@ public class UploadAdminController : Controller
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
 
-        UploadImageViewModel viewModel = new();
-        viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
+        UploadImageViewModel viewModel = new()
+        {
+            ImageInputModel = UploadImageInputDto.CreateEmpty()
+        };
 
         var selectedCategory = CategoryDto.CreateEmpty();
         var subCategories = new List<CategoryDto>();
@@ -239,15 +241,15 @@ public class UploadAdminController : Controller
         UploadEditImagesViewModel viewModel = new()
         {
             CurrentPage = (int)sida,
-            CurrentUrl = "./UploadAdmin/RedigeraBilder"
+            CurrentUrl = "./UploadAdmin/RedigeraBilder",
+            TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage)
+            DisplayImagesList = []
         };
 
-        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage);
         var displayTblImages = allImages
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
-        viewModel.DisplayImagesList = new List<UploadImageInputDto>();
 
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
         {
@@ -380,14 +382,7 @@ public class UploadAdminController : Controller
         }
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
-        if (user.ShowAllLogs)
-        {
-            user.ShowAllLogs = false;
-        }
-        else
-        {
-            user.ShowAllLogs = true;
-        }
+        user.ShowAllLogs = !user.ShowAllLogs;
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
