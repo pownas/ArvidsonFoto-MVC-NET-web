@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace ArvidsonFoto.Core.Data;
@@ -34,7 +34,7 @@ public class ArvidsonFotoCoreDbContextFactory : IDesignTimeDbContextFactory<Arvi
         // Check if connection string is provided via command line arguments
         for (int i = 0; i < args.Length - 1; i++)
         {
-            if (args[i] == "--connection" || args[i] == "-c")
+            if (args[i] is "--connection" or "-c")
             {
                 return args[i + 1];
             }

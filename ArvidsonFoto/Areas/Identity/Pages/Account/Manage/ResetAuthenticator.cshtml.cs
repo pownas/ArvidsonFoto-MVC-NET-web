@@ -6,21 +6,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class ResetAuthenticatorModel : PageModel
+public class ResetAuthenticatorModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager,
+    ILogger<ResetAuthenticatorModel> logger) : PageModel
 {
-    UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    ILogger<ResetAuthenticatorModel> _logger;
-
-    public ResetAuthenticatorModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager,
-        ILogger<ResetAuthenticatorModel> logger)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private ILogger<ResetAuthenticatorModel> _logger = logger;
 
     [TempData]
     public string? StatusMessage { get; set; }

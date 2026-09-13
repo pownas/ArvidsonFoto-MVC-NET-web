@@ -11,7 +11,7 @@ public class MockImageService : IApiImageService
 {
     public bool AddImage(ImageDto image) => true;
 
-    public ImageDto GetById(int imageId) => new ImageDto
+    public ImageDto GetById(int imageId) => new()
     {
         ImageId = imageId,
         Name = "Test Image",
@@ -19,7 +19,7 @@ public class MockImageService : IApiImageService
         CategoryId = 1
     };
 
-    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "") => new ImageDto
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "") => new()
     {
         ImageId = 1,
         CategoryId = categoryId,
@@ -27,7 +27,7 @@ public class MockImageService : IApiImageService
         UrlImage = "bilder/test/category-image"
     };
 
-    public List<ImageDto> GetAll() => new List<ImageDto>
+    public List<ImageDto> GetAll() => new()
     {
         new ImageDto
         {
@@ -38,7 +38,7 @@ public class MockImageService : IApiImageService
         }
     };
 
-    public List<ImageDto> GetImagesByCategoryID(int categoryID) => new List<ImageDto>
+    public List<ImageDto> GetImagesByCategoryID(int categoryID) => new()
     {
         new ImageDto
         {

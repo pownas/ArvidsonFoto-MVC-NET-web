@@ -1,22 +1,16 @@
-﻿using System.Text.Json;
-using ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.Interfaces;
+using System.Text.Json;
 
 namespace ArvidsonFoto.Core.Services;
 
 /// <summary>
 /// Service för att integrera med Facebook Graph API
 /// </summary>
-public class FacebookService : IFacebookService
+public class FacebookService(IConfiguration configuration, HttpClient httpClient) : IFacebookService
 {
-    private readonly IConfiguration _configuration;
-    private readonly HttpClient _httpClient;
+    private readonly IConfiguration _configuration = configuration;
+    private readonly HttpClient _httpClient = httpClient;
     private const string GraphApiBaseUrl = "https://graph.facebook.com/v19.0";
-
-    public FacebookService(IConfiguration configuration, HttpClient httpClient)
-    {
-        _configuration = configuration;
-        _httpClient = httpClient;
-    }
 
     public bool IsConfigured()
     {

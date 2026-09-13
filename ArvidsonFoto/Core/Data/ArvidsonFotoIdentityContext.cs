@@ -11,16 +11,12 @@ namespace ArvidsonFoto.Core.Data;
 /// Denna klass hanterar autentisering och auktorisering för applikationen
 /// genom att utöka IdentityDbContext med anpassade användarmodeller.
 /// </remarks>
-public class ArvidsonFotoIdentityContext : IdentityDbContext<ArvidsonFotoIdentityUser>
+/// <remarks>
+/// Initierar en ny instans av ArvidsonFotoIdentityContext.
+/// </remarks>
+/// <param name="options">Databaskontext-alternativ för Identity</param>
+public class ArvidsonFotoIdentityContext(DbContextOptions<ArvidsonFotoIdentityContext> options) : IdentityDbContext<ArvidsonFotoIdentityUser>(options)
 {
-    /// <summary>
-    /// Initierar en ny instans av ArvidsonFotoIdentityContext.
-    /// </summary>
-    /// <param name="options">Databaskontext-alternativ för Identity</param>
-    public ArvidsonFotoIdentityContext(DbContextOptions<ArvidsonFotoIdentityContext> options)
-        : base(options)
-    {
-    }
 
     /// <summary>
     /// Konfigurerar Identity-modellen och anpassar standardbeteendet.

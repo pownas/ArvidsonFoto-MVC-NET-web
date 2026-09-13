@@ -136,7 +136,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                         Level = "Main",
                         Name = category.Name,
                         Id = category.CategoryId,
-                        UrlSegment = category.UrlCategoryPath?.ToLower()
+                        UrlSegment = category.UrlCategoryPath?.ToLowerInvariant()
                     });
                 }
                 else
@@ -151,7 +151,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     {
                         return NotFound($"Category '{segment}' not found under parent category");
                     }
-                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLower();
+                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLowerInvariant();
 
 
                     currentCategoryId = matchingChild.CategoryId;

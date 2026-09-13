@@ -1,24 +1,18 @@
-﻿using System.Text.Json;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class DownloadPersonalDataModel : PageModel
+public class DownloadPersonalDataModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    ILogger<DownloadPersonalDataModel> logger) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly ILogger<DownloadPersonalDataModel> _logger;
-
-    public DownloadPersonalDataModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        ILogger<DownloadPersonalDataModel> logger)
-    {
-        _userManager = userManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly ILogger<DownloadPersonalDataModel> _logger = logger;
 
     public async Task<IActionResult> OnPostAsync()
     {

@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoBuild>true</NoBuild>
     <IsPackable>false</IsPackable>
     <NuGetAudit>false</NuGetAudit>
     <IsTrimmable>true</IsTrimmable>

@@ -1,19 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LogoutModel : PageModel
+public class LogoutModel(SignInManager<ArvidsonFotoUser> signInManager) : PageModel
 {
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public LogoutModel(SignInManager<ArvidsonFotoUser> signInManager)
-    {
-        _signInManager = signInManager;
-    }
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     public void OnGet()
     {

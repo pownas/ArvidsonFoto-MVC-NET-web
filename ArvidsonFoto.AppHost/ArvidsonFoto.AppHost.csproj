@@ -11,6 +11,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
     <UserSecretsId>ArvidsonFoto-AppHost-327cb2dd-ebf6-45e3-af0f-e6311e932efe</UserSecretsId>
   </PropertyGroup>
 

@@ -24,7 +24,9 @@ public sealed class ContactFormTests : IAsyncLifetime
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (_browser != null)
+        {
             await _browser.CloseAsync().ConfigureAwait(true);
+        }
 
         GC.SuppressFinalize(this);
 

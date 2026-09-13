@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Load configuration from the ArvidsonFoto project directory
-var appHostBasePath = builder.Environment.ContentRootPath; // AppHost project directory
-var arvidsonFotoPath = Path.GetFullPath(Path.Combine(appHostBasePath, "..", "ArvidsonFoto"));
+string appHostBasePath = builder.Environment.ContentRootPath; // AppHost project directory
+string arvidsonFotoPath = Path.GetFullPath(Path.Combine(appHostBasePath, "..", "ArvidsonFoto"));
 
 // Build a configuration that reads from the ArvidsonFoto project directory
 var configuration = new ConfigurationBuilder()
@@ -31,7 +33,7 @@ var smtpRecipientEmail = builder.AddParameterFromConfiguration(
 var databaseInMemory = builder.AddParameterFromConfiguration(
     "databaseInMemory",
     "ConnectionStrings:UseInMemoryDatabase");
-var useInMemoryDatabase = builder.Configuration.GetValue<bool>(
+bool useInMemoryDatabase = builder.Configuration.GetValue<bool>(
     "ConnectionStrings:UseInMemoryDatabase");
 
 
@@ -45,7 +47,7 @@ var arvidsonFoto = builder
     .WithExternalHttpEndpoints();
 
 // Only add the SQL Server connection string if not using in-memory database
-if (useInMemoryDatabase.Equals(false))
+if (!useInMemoryDatabase)
 {
     var databaseConnectionString = builder.AddParameterFromConfiguration(
     "databaseConnectionString",

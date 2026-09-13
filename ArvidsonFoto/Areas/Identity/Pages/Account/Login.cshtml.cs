@@ -1,25 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Views.Shared;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ArvidsonFoto.Views.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LoginModel : PageModel
+public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
+    UserManager<ArvidsonFotoUser> userManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
-        UserManager<ArvidsonFotoUser> userManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

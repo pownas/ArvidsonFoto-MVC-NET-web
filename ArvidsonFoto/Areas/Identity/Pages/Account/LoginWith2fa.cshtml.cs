@@ -1,22 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
-using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LoginWith2faModel : PageModel
+public class LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, ILogger<LoginWith2faModel> logger) : PageModel
 {
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly ILogger<LoginWith2faModel> _logger;
-
-    public LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, ILogger<LoginWith2faModel> logger)
-    {
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly ILogger<LoginWith2faModel> _logger = logger;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

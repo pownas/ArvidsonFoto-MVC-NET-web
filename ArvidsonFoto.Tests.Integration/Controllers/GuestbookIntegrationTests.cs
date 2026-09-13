@@ -360,8 +360,8 @@ public class GuestbookIntegrationTests
 
         // Assert - Should return either 405 Method Not Allowed or 404 Not Found (GET is not allowed)
         Assert.IsTrue(
-            response.StatusCode == HttpStatusCode.MethodNotAllowed ||
-            response.StatusCode == HttpStatusCode.NotFound,
+            response.StatusCode is HttpStatusCode.MethodNotAllowed or
+            HttpStatusCode.NotFound,
             $"Expected 405 or 404, but got {response.StatusCode}");
     }
 
