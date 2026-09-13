@@ -3,7 +3,6 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
 using System.Net;

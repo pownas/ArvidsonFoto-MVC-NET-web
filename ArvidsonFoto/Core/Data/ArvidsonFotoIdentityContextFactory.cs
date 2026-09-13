@@ -1,5 +1,4 @@
-﻿using ArvidsonFoto.Areas.Identity.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace ArvidsonFoto.Core.Data;

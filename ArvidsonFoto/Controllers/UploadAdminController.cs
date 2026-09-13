@@ -1,7 +1,6 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
-using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
