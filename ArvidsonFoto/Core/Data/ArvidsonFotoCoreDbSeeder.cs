@@ -27,6 +27,7 @@ public static class ArvidsonFotoCoreDbSeeder
             GbDate = new DateTime(2021, 11, 22),
             GbEmail = "pownas@outlook.com",
             GbName = "pownas",
+            GbNameEn = "pownas",
             GbHomepage = "github.com/pownas",
             GbReadPost = false,
             GbText = "Ett första test inlägg i databasen...",
@@ -38,9 +39,11 @@ public static class ArvidsonFotoCoreDbSeeder
             GbDate = new DateTime(2025, 12, 16),
             GbEmail = "pownas@outlook.com",
             GbName = "pownas",
+            GbNameEn = "pownas",
             GbHomepage = "github.com/pownas",
             GbReadPost = false,
-            GbText = "Ett andra test inlägg i databasen... 😊"
+            GbText = "Ett andra test inlägg i databasen... 😊",
+            GbTextEn = "A second test entry in the database... 😊"
         },
     };
 
@@ -752,14 +755,14 @@ public static class ArvidsonFotoCoreDbSeeder
     /// </remarks>
     public static List<TblImage> DbSeed_Tbl_Image => new()
     {
-        new() { Id = 1, ImageId = 1, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6321", ImageDescription = "Beskrivning", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
-        new() { Id = 2, ImageId = 2, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6366", ImageDescription = "Testar lite text", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
-        new() { Id = 3, ImageId = 3, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6437", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
-        new() { Id = 4, ImageId = 4, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6492", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
-        new() { Id = 5, ImageId = 5, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "_N0Q8131", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2005, 7, 27, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 39, 0) },
-        new() { Id = 6, ImageId = 6, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "_N0Q8168", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2005, 7, 27, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 40, 0) },
-        new() { Id = 7, ImageId = 7, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "IMG_8129 kopiera", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2004, 7, 25, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 41, 0) },
-        new() { Id = 8, ImageId = 8, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "IMG_8139 kopiera", ImageDescription = "Mer beskrivande info...", ImageDate = new DateTime(2004, 7, 25, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 42, 0) },
+        new() { Id = 1, ImageId = 1, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6321", ImageDescription = "Beskrivning", ImageDescriptionEn = "Description", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
+        new() { Id = 2, ImageId = 2, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6366", ImageDescription = "Testar lite text", ImageDescriptionEn = "Testing some text", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
+        new() { Id = 3, ImageId = 3, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6437", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
+        new() { Id = 4, ImageId = 4, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6492", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
+        new() { Id = 5, ImageId = 5, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "_N0Q8131", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2005, 7, 27, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 39, 0) },
+        new() { Id = 6, ImageId = 6, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "_N0Q8168", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2005, 7, 27, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 40, 0) },
+        new() { Id = 7, ImageId = 7, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "IMG_8129 kopiera", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2004, 7, 25, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 41, 0) },
+        new() { Id = 8, ImageId = 8, ImageCategoryId = 50, ImageFamilyId = 4, ImageMainFamilyId = 5, ImageUrlName = "IMG_8139 kopiera", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2004, 7, 25, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 42, 0) },
         new() { Id = 9, ImageId = 9, ImageCategoryId = 51, ImageFamilyId = 10, ImageMainFamilyId = null, ImageUrlName = "AP2D9330", ImageDescription = "", ImageDate = new DateTime(2011, 5, 17, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 43, 0) },
         new() { Id = 10, ImageId = 10, ImageCategoryId = 51, ImageFamilyId = 10, ImageMainFamilyId = null, ImageUrlName = "AP2D9461", ImageDescription = "", ImageDate = new DateTime(2011, 5, 18, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 44, 0) },
         new() { Id = 11, ImageId = 11, ImageCategoryId = 51, ImageFamilyId = 10, ImageMainFamilyId = null, ImageUrlName = "AP2D9486", ImageDescription = "", ImageDate = new DateTime(2011, 5, 18, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 44, 0) },
