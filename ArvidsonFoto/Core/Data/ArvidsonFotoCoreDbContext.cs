@@ -87,8 +87,15 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("GB_name");
 
+            entity.Property(e => e.GbNameEn)
+                .HasMaxLength(100)
+                .HasColumnName("GB_name_en");
+
             entity.Property(e => e.GbText)
                 .HasColumnName("GB_text");
+
+            entity.Property(e => e.GbTextEn)
+                .HasColumnName("GB_text_en");
 
             entity.HasKey(e => e.Id);
         });
@@ -123,6 +130,10 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(150)
                 .HasColumnName("image_description");
 
+            entity.Property(e => e.ImageDescriptionEn)
+                .HasMaxLength(150)
+                .HasColumnName("image_description_en");
+
             entity.Property(e => e.ImageUpdate)
                 .HasColumnType("datetime")
                 .HasColumnName("image_update");
@@ -149,9 +160,17 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("menu_text");
 
+            entity.Property(e => e.MenuDisplayNameEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_text_en");
+
             entity.Property(e => e.MenuUrlSegment)
                 .HasMaxLength(50)
                 .HasColumnName("menu_URLtext");
+
+            entity.Property(e => e.MenuUrlSegmentEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_URLtext_en");
 
             entity.Property(e => e.MenuDateUpdated)
                 .HasColumnType("datetime")

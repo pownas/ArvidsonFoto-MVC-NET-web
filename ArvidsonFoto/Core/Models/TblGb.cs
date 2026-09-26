@@ -18,6 +18,8 @@ public partial class TblGb()
     /// <summary>Namn på personen som skrev inlägget</summary>
     public string? GbName { get; set; }
 
+    public string? GbNameEn { get; set; }
+
     /// <summary>E-postadress för personen som skrev inlägget</summary>
     public string? GbEmail { get; set; }
 
@@ -26,6 +28,8 @@ public partial class TblGb()
 
     /// <summary>Innehåll i gästboksinlägget</summary>
     public string? GbText { get; set; }
+
+    public string? GbTextEn { get; set; }
 
     /// <summary>Datum när inlägget skapades</summary>
     public DateTime? GbDate { get; set; } = DateTime.Now;
