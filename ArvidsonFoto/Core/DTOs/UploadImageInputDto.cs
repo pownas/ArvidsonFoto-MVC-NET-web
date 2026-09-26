@@ -59,6 +59,10 @@ public class UploadImageInputDto
     [MaxLength(150, ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
     public string? ImageDescription { get; set; } = "";
 
+    [Display(Name = "Description (English)")]
+    [MaxLength(150)]
+    public string? ImageDescriptionEn { get; set; }
+
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
 

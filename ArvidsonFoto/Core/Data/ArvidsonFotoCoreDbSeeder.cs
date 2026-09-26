@@ -29,7 +29,8 @@ public static class ArvidsonFotoCoreDbSeeder
             GbName = "pownas",
             GbHomepage = "github.com/pownas",
             GbReadPost = false,
-            GbText = "Ett första test inlägg i databasen..."
+            GbText = "Ett första test inlägg i databasen...",
+            GbTextEn = "A first test entry in the database..."
         },
         new() {
             Id = 2,
@@ -80,8 +81,8 @@ public static class ArvidsonFotoCoreDbSeeder
     public static List<TblMenu> DbSeed_Tbl_MenuCategories => new()
     {
         // Main categories (parent = 0)
-        new() { Id = 1, MenuCategoryId = 1, MenuParentCategoryId = 0, MenuDisplayName = "Fåglar", MenuUrlSegment = "Faglar", MenuDateUpdated = DateTime.Parse("2021-03-25T20:27:00") },
-        new() { Id = 2, MenuCategoryId = 2, MenuParentCategoryId = 0, MenuDisplayName = "Däggdjur", MenuUrlSegment = "Daggdjur", MenuDateUpdated = DateTime.Parse("2021-03-19T13:56:00") },
+        new() { Id = 1, MenuCategoryId = 1, MenuParentCategoryId = 0, MenuDisplayName = "Fåglar", MenuDisplayNameEn = "Birds", MenuUrlSegment = "Faglar", MenuUrlSegmentEn = "birds", MenuDateUpdated = DateTime.Parse("2021-03-25T20:27:00") },
+        new() { Id = 2, MenuCategoryId = 2, MenuParentCategoryId = 0, MenuDisplayName = "Däggdjur", MenuDisplayNameEn = "Mammals", MenuUrlSegment = "Daggdjur", MenuUrlSegmentEn = "mammals", MenuDateUpdated = DateTime.Parse("2021-03-19T13:56:00") },
         new() { Id = 3, MenuCategoryId = 3, MenuParentCategoryId = 0, MenuDisplayName = "Kräldjur", MenuUrlSegment = "Kraldjur", MenuDateUpdated = DateTime.Parse("2021-03-17T14:40:00") },
         new() { Id = 4, MenuCategoryId = 4, MenuParentCategoryId = 5, MenuDisplayName = "Fjärilar", MenuUrlSegment = "Fjarilar", MenuDateUpdated = DateTime.Parse("2021-03-09T08:55:12") },
         new() { Id = 5, MenuCategoryId = 5, MenuParentCategoryId = 0, MenuDisplayName = "Insekter", MenuUrlSegment = "Insekter", MenuDateUpdated = DateTime.Parse("2021-03-10T11:53:00") },

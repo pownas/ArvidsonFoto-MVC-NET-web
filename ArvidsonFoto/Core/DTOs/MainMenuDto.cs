@@ -11,7 +11,10 @@ public class MainMenuDto()
     public string MenuUrl { get; set; } = "/404-NotFound";
 
     /// <summary> Meny-kategorins namn </summary>
-    public string MenuDisplayName { get; set; } = "404 - Not Found";
+    private string _menuDisplayName = "404 - Not Found";
+    public string MenuDisplayName { get => Extensions.LocalizedText.Select(_menuDisplayName, MenuDisplayNameEn); set => _menuDisplayName = value; }
+    public string? MenuDisplayNameEn { get; set; }
+    public string? MenuUrlSegmentEn { get; set; }
 
     ///// <summary> Meny-kategorins unika id </summary>
     //public int MenuId { get; set; } = -1;

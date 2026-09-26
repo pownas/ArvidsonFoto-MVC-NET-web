@@ -31,9 +31,11 @@ public static class CategoryMappingExtensions
         {
             CategoryId = menu.MenuCategoryId,
             Name = menu.MenuDisplayName ?? string.Empty,
+            NameEn = menu.MenuDisplayNameEn,
             UrlImage = string.IsNullOrEmpty(lastImageFilename) ? string.Empty : $"{lastImageFilename}",
             UrlCategory = categoryUrl,
             UrlCategoryPath = menu.MenuUrlSegment ?? string.Empty,
+            UrlCategoryPathEn = menu.MenuUrlSegmentEn,
             UrlCategoryPathFull = categoryPath ?? menu.MenuUrlSegment ?? string.Empty, // This might need more complex logic for full paths
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
@@ -57,8 +59,10 @@ public static class CategoryMappingExtensions
         return new TblMenu
         {
             MenuCategoryId = categoryDto.CategoryId,
-            MenuDisplayName = categoryDto.Name,
+            MenuDisplayName = categoryDto.NameSv,
+            MenuDisplayNameEn = categoryDto.NameEn,
             MenuUrlSegment = categoryDto.UrlCategoryPath,
+            MenuUrlSegmentEn = categoryDto.UrlCategoryPathEn,
             MenuParentCategoryId = categoryDto.ParentCategoryId,
             MenuDateUpdated = categoryDto.DateUpdated
         };

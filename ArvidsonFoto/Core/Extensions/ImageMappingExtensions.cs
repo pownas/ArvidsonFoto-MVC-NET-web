@@ -41,7 +41,8 @@ public static class ImageMappingExtensions
             UrlCategory = string.IsNullOrEmpty(categoryPath) ? string.Empty : $"bilder/{categoryPath}",
             DateImageTaken = image.ImageDate,
             DateUploaded = image.ImageUpdate,
-            Description = image.ImageDescription ?? string.Empty
+            Description = image.ImageDescription ?? string.Empty,
+            DescriptionEn = image.ImageDescriptionEn
         };
     }
 
@@ -64,7 +65,8 @@ public static class ImageMappingExtensions
             ImageUrlName = imageDto.Name,
             ImageDate = imageDto.DateImageTaken,
             ImageUpdate = imageDto.DateUploaded ?? DateTime.UtcNow,
-            ImageDescription = imageDto.Description
+            ImageDescription = imageDto.DescriptionSv,
+            ImageDescriptionEn = imageDto.DescriptionEn
         };
     }
 }

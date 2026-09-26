@@ -554,6 +554,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 existingImage.ImageMainFamilyId = tblImage.ImageMainFamilyId;
                 existingImage.ImageDate = tblImage.ImageDate;
                 existingImage.ImageDescription = tblImage.ImageDescription;
+                if (tblImage.ImageDescriptionEn != null)
+                    existingImage.ImageDescriptionEn = tblImage.ImageDescriptionEn;
                 existingImage.ImageUpdate = DateTime.UtcNow;
 
                 await _entityContext.SaveChangesAsync();

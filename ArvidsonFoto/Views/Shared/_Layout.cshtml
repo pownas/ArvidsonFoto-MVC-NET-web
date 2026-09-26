@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="sv-se" data-bs-theme="dark">
+<html lang="@(ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish ? "en" : "sv")" data-bs-theme="dark">
 <head>
     <!-- Character encoding -->
     <meta charset="utf-8" />
@@ -34,6 +34,10 @@
 <body>
     <header>
         <partial name="_NavBar" />
+        <nav aria-label="Language" class="container-md">
+            <a href="@(Context.Request.PathBase + Context.Request.Path)?culture=sv-SE" lang="sv">Svenska</a>
+            <a href="@(Context.Request.PathBase + Context.Request.Path)?culture=en-US" lang="en">English</a>
+        </nav>
     </header>
     <main class="container-md pb-5">
         @RenderBody()
