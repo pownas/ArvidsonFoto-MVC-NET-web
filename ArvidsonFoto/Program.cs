@@ -3,6 +3,7 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Security;
+using Microsoft.AspNetCore.Localization;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
@@ -163,6 +164,12 @@ public class Program
 
         services.AddControllersWithViews();
         services.AddRazorPages();
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.SetDefaultCulture("sv-SE")
+                .AddSupportedCultures("sv-SE", "en-US")
+                .AddSupportedUICultures("sv-SE", "en-US");
+        });
 
         // ===== ROUTING CONFIGURATION =====
         // Enable case-insensitive and URL-decoding routing
@@ -290,6 +297,27 @@ public class Program
         app.UseWebOptimizer();
 
         app.UseStaticFiles();
+
+        app.UseRequestLocalization();
+        app.Use(async (context, next) =>
+        {
+            var culture = context.Request.Query["culture"].ToString();
+            if (culture is "sv-SE" or "en-US")
+            {
+                context.Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = context.Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        IsEssential = true,
+                        Expires = DateTimeOffset.UtcNow.AddYears(1)
+                    });
+            }
+            await next();
+        });
 
         // Add input validation middleware to prevent SQL injection and malicious input
         app.UseMiddleware<InputValidationMiddleware>();

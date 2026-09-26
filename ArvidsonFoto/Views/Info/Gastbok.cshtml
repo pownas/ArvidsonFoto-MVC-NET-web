@@ -1,6 +1,7 @@
 ﻿@using System.Web
 @using ArvidsonFoto.Core.Models
 @using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Extensions
 @model GuestbookFormInputDto
 
 @section MetaData {
@@ -111,12 +112,12 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-person-circle me-2 fs-5"></i>
-                                <strong>@(gbPost.GbName ?? "Anonym användare")</strong>
+                                <strong>@(LocalizedText.Select(gbPost.GbName, gbPost.GbNameEn) is { Length: > 0 } name ? name : "Anonym användare")</strong>
                             </div>
                         </div>
                         <div class="card-body">
                             @* Decode HTML entities from database. Input is validated on submission. *@
-                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode((gbPost.GbText ?? string.Empty).Replace("<br>", "\n"))</p>
+                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode(LocalizedText.Select(gbPost.GbText, gbPost.GbTextEn).Replace("<br>", "\n"))</p>
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">

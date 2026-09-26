@@ -43,6 +43,8 @@ dotnet ef database update --context ArvidsonFotoIdentityContext
 ## Skapa nya Migrations
 För att skapa någon ny migration om en data-modell ändras på, kör kommandot: 
 ```dotnet-ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
+
+Engelska innehållskolumner, språkval, fallback och migrations-/rollback-steg beskrivs i [inventeringen](wiki/EnglishContentInventory.md).
   
   
 ## Fel vid körning med EF-core

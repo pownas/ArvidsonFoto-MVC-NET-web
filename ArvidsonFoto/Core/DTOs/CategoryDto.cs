@@ -17,7 +17,10 @@ public class CategoryDto()
     /// <summary> Namn på kategori </summary>
     /// <remarks> Exempel: "Amiral" </remarks>
     /// <example>Amiral</example>
-    public string? Name { get; set; } = string.Empty;
+    private string? _name = string.Empty;
+    public string? Name { get => Extensions.LocalizedText.Select(_name, NameEn); set => _name = value; }
+    public string? NameSv { get => _name; set => _name = value; }
+    public string? NameEn { get; set; }
 
     /// <summary> En bild sökväg för den senast fotograferade bilden i denna kategorin </summary>
     /// <remarks> Exempel: "bilder/faglar/masar-trutar-tarnor/trana/AP2D1201" </remarks>
@@ -34,6 +37,8 @@ public class CategoryDto()
     /// Exempel: "masar-trutar-tarnor" </remarks>
     /// <example>masar-trutar-tarnor</example>
     public string? UrlCategoryPath { get; set; } = string.Empty;
+    public string? UrlCategoryPathEn { get; set; }
+    public string DisplayUrlCategoryPath => Extensions.LocalizedText.Select(UrlCategoryPath, UrlCategoryPathEn);
 
     /// <summary> Fullständig kategori sökväg </summary>
     /// <remarks> Används för att bygga upp fullständiga sökvägar i applikationen.

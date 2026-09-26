@@ -119,6 +119,7 @@ public class UploadAdminController(
                 ImageUpdate = DateTime.Now,
                 ImageDate = model.ImageDate,
                 ImageDescription = model.ImageDescription,
+                ImageDescriptionEn = model.ImageDescriptionEn,
                 ImageUrlName = model.ImageUrl
             };
 
@@ -168,6 +169,7 @@ public class UploadAdminController(
                     existingImage.ImageMainFamilyId = model.ImageHuvudfamilj;
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
+                    existingImage.ImageDescriptionEn = model.ImageDescriptionEn;
                     existingImage.ImageUpdate = DateTime.Now;
 
                     await coreContext.SaveChangesAsync();
@@ -266,6 +268,7 @@ public class UploadAdminController(
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
 
             // Get category path using the service method
@@ -412,6 +415,7 @@ public class UploadAdminController(
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? string.Empty;
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? string.Empty;
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
