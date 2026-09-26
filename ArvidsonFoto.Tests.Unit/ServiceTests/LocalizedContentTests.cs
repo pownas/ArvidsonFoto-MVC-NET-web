@@ -82,5 +82,42 @@ public class LocalizedContentTests
             Assert.True(property.IsNullable);
             Assert.Equal(length, property.GetMaxLength());
         }
+
+        [Fact]
+        public void SeededCategoriesHaveEnglishNamesAndDistinctSlugs()
+        {
+            var categories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories;
+
+            Assert.Equal(543, categories.Count);
+            Assert.All(categories, category =>
+            {
+                Assert.False(string.IsNullOrWhiteSpace(category.MenuDisplayNameEn), $"Missing English name for {category.MenuCategoryId}");
+                Assert.False(string.IsNullOrWhiteSpace(category.MenuUrlSegmentEn), $"Missing English URL for {category.MenuCategoryId}");
+                Assert.True(category.MenuDisplayNameEn!.Length <= 50, $"English name too long for {category.MenuCategoryId}");
+                Assert.True(category.MenuUrlSegmentEn!.Length <= 50, $"English URL too long for {category.MenuCategoryId}");
+            });
+            Assert.Equal(categories.Count, categories.Select(category => category.MenuUrlSegmentEn)
+                .Distinct(StringComparer.OrdinalIgnoreCase).Count());
+        }
+
+        [Fact]
+        public void SeededGuestbookAndNonEmptyImageDescriptionsHaveEnglishContent()
+        {
+            Assert.All(ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Guestbook, post =>
+            {
+                Assert.False(string.IsNullOrWhiteSpace(post.GbNameEn));
+                Assert.False(string.IsNullOrWhiteSpace(post.GbTextEn));
+            });
+
+            var images = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image;
+            Assert.Equal(8, images.Count(image => !string.IsNullOrWhiteSpace(image.ImageDescription)));
+            Assert.All(images, image =>
+            {
+                if (string.IsNullOrWhiteSpace(image.ImageDescription))
+                    Assert.Null(image.ImageDescriptionEn);
+                else
+                    Assert.False(string.IsNullOrWhiteSpace(image.ImageDescriptionEn));
+            });
+        }
     }
 }
