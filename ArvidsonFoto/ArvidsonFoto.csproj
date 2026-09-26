@@ -19,6 +19,10 @@
   <ItemGroup Label="PackageReferences">
     <PackageReference Include="Azure.Identity" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="MailKit" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="MimeKit" /> <!-- Används för kryptering av skicka mail -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" /> <!-- Används för inloggning på sidan -->

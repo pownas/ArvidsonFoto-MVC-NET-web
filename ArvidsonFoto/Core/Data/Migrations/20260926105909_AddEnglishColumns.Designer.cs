@@ -4,21 +4,19 @@ using ArvidsonFoto.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ArvidsonFoto.Core.Migrations;
+namespace ArvidsonFoto.Core.Data.Migrations;
 
 [DbContext(typeof(ArvidsonFotoCoreDbContext))]
-partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
+[Migration("20260926105909_AddEnglishColumns")]
+partial class _20260926105909_AddEnglishColumns
 {
-    // If you encounter a merge conflict in the line below, it means you need to
-    // discard one of the migration branches and recreate its migrations on top of
-    // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20260926105909_AddEnglishColumns";
-
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
 #pragma warning disable 612, 618
         modelBuilder
