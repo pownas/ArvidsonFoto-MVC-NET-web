@@ -34,9 +34,18 @@
 <body>
     <header>
         <partial name="_NavBar" />
-        <nav aria-label="Language" class="container-md">
-            <a href="@(Context.Request.PathBase + Context.Request.Path)?culture=sv-SE" lang="sv">Svenska</a>
-            <a href="@(Context.Request.PathBase + Context.Request.Path)?culture=en-US" lang="en">English</a>
+        @{
+            var existingQuery = Context.Request.Query
+                .Where(pair => pair.Key != "culture")
+                .SelectMany(pair => pair.Value.Select(value => new KeyValuePair<string, string?>(pair.Key, value)));
+            string LanguageLink(string culture) =>
+                (Context.Request.PathBase + Context.Request.Path).ToString() +
+                QueryString.Create(existingQuery.Append(new KeyValuePair<string, string?>("culture", culture)));
+            var english = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish;
+        }
+        <nav aria-label="Language / Språk" class="container-md d-flex gap-2 justify-content-end my-2">
+            <a href="@LanguageLink("sv-SE")" lang="sv" hreflang="sv" class="btn btn-sm @(english ? "btn-outline-light" : "btn-light")" aria-current="@(english ? null : "true")">Svenska</a>
+            <a href="@LanguageLink("en-US")" lang="en" hreflang="en" class="btn btn-sm @(english ? "btn-light" : "btn-outline-light")" aria-current="@(english ? "true" : null)">English</a>
         </nav>
     </header>
     <main class="container-md pb-5">

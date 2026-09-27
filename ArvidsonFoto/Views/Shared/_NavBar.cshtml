@@ -2,6 +2,9 @@
 @using ArvidsonFoto.Core.Interfaces
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @using System.Net
 @inject IApiCategoryService CategoryService
 
@@ -24,11 +27,11 @@
       <partial name="_NavUploadAdmin" />
     </li>
     <li class="pe-1">
-      <a href="./Senast">Senast</a>
+      <a href="./Senast">@T["Latest"]</a>
       <ul>
-        <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> Fotograferad</a></li>
-        <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> Uppladdad</a></li>
-        <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> Per kategori</a></li>
+        <li><a href="./Senast/Fotograferad"><i class="bi bi-camera"></i> @T["Photographed"]</a></li>
+        <li><a href="./Senast/Uppladdad"><i class="bi bi-calendar-week"></i> @T["Uploaded"]</a></li>
+        <li><a href="./Senast/Per%20kategori"><i class="bi bi-grid-3x3-gap"></i> @T["ByCategory"]</a></li>
       </ul>
     </li>
     @if (categories == null || !categories.Any())
@@ -105,18 +108,18 @@
     <li class="pe-1">
       <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
       <ul>
-        <li><a href="./Info/Kop_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
-        <li><a href="./Info/Gastbok"><i class="bi bi-book"></i> Gästbok</a></li>
+        <li><a href="./Info/Kop_av_bilder"><i class="bi bi-cart3"></i> @T["BuyPhotos"]</a></li>
+        <li><a href="./Info/Gastbok"><i class="bi bi-book"></i> @T["Guestbook"]</a></li>
         <li class="divider"></li>
-        <li><a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
-        <li><a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
+        <li><a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> @T["Contact"]</a></li>
+        <li><a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> @T["About"]</a></li>
         <li class="divider"></li>
-        <li><a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
+        <li><a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> @T["Sitemap"]</a></li>
         <li><a href="./Info/Copyright">&copy; Copyright</a></li>
         <partial name="_NavLoginPartial" />
       </ul>
     </li>
-    <li class="pe-2"><a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
+    <li class="pe-2"><a href="./Search" aria-label="@T["Search"]"><i class="bi bi-search"></i> @T["Search"]</a></li>
     <li class="pe-2"><a href="#" id="dark-mode-toggle" title="Tänd ljuset"><i class="bi bi-lightbulb"></i></a></li>
   </ul>
 </nav>

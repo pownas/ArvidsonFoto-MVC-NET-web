@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Latest" xml:space="preserve"><value>Latest</value></data>
+  <data name="Photographed" xml:space="preserve"><value>Photographed</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>Uploaded</value></data>
+  <data name="ByCategory" xml:space="preserve"><value>By category</value></data>
+  <data name="Guestbook" xml:space="preserve"><value>Guestbook</value></data>
+  <data name="Contact" xml:space="preserve"><value>Contact information</value></data>
+  <data name="About" xml:space="preserve"><value>About me, Torbjörn Arvidson</value></data>
+  <data name="Sitemap" xml:space="preserve"><value>Sitemap</value></data>
+  <data name="Search" xml:space="preserve"><value>Search</value></data>
+  <data name="BuyPhotos" xml:space="preserve"><value>Buy photos</value></data>
+  <data name="GuestbookPosts" xml:space="preserve"><value>Guestbook entries</value></data>
+  <data name="WriteGuestbook" xml:space="preserve"><value>Sign the guestbook</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Homepage" xml:space="preserve"><value>Website</value></data>
+  <data name="Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Send" xml:space="preserve"><value>Send entry</value></data>
+  <data name="Anonymous" xml:space="preserve"><value>Anonymous visitor</value></data>
+  <data name="NoImages" xml:space="preserve"><value>There are no photos in this category.</value></data>
+  <data name="PhotoDate" xml:space="preserve"><value>Date photographed</value></data>
+  <data name="ImageName" xml:space="preserve"><value>Image name</value></data>
+  <data name="Subject" xml:space="preserve"><value>Subject</value></data>
+  <data name="SendMessage" xml:space="preserve"><value>Send message</value></data>
+  <data name="SendFailed" xml:space="preserve"><value>Something went wrong while sending your message.</value></data>
+  <data name="GuestbookSent" xml:space="preserve"><value>Thank you! Your entry has been published.</value></data>
+  <data name="ContactSent" xml:space="preserve"><value>Thank you for your email! I will reply within 1–5 days.</value></data>
+</root>

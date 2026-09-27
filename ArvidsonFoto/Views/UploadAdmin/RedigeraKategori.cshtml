@@ -1,0 +1,35 @@
+@model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
+@using ArvidsonFoto.Core.Models
+@{
+    var categories = ViewData["Categories"] as List<TblMenu> ?? [];
+}
+<h1>@ViewData["Title"]</h1>
+<partial name="_NavUploadAdmin" />
+<form method="get" asp-action="RedigeraKategori">
+    <label for="search">Sök efter kategori eller art</label>
+    <input id="search" name="search" value="@ViewData["Search"]" />
+    <button type="submit">Sök</button>
+</form>
+<ul>
+@foreach (var category in categories)
+{
+    <li><a asp-action="RedigeraKategori" asp-route-id="@category.MenuCategoryId">@category.MenuDisplayName (@category.MenuDisplayNameEn)</a></li>
+}
+</ul>
+@if (Model.CategoryId > 0)
+{
+    <form method="post" asp-action="SaveCategory">
+        @Html.AntiForgeryToken()
+        <input asp-for="CategoryId" type="hidden" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <label asp-for="NameSv">Svenskt namn</label>
+        <input asp-for="NameSv" maxlength="50" />
+        <label asp-for="NameEn">Engelskt namn</label>
+        <input asp-for="NameEn" maxlength="50" />
+        <label asp-for="UrlSegmentSv">Svenskt URL-segment</label>
+        <input asp-for="UrlSegmentSv" maxlength="50" />
+        <label asp-for="UrlSegmentEn">Engelskt URL-segment</label>
+        <input asp-for="UrlSegmentEn" maxlength="50" />
+        <button type="submit">Spara kategori</button>
+    </form>
+}

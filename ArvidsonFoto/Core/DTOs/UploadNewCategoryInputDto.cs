@@ -13,7 +13,17 @@ public class UploadNewCategoryInputDto
 {
     /// <summary>Kategorinamn som ska visas i menyn</summary>
     [Required(ErrorMessage = "Ange ett kategorinamn")]
+    [MaxLength(50)]
     public required string MenuText { get; set; }
+
+    [MaxLength(50)]
+    public string? MenuTextEn { get; set; }
+
+    [MaxLength(50), RegularExpression(@"^[a-zA-Z0-9-]*$")]
+    public string? MenuUrlSegment { get; set; }
+
+    [MaxLength(50), RegularExpression(@"^[a-zA-Z0-9-]*$")]
+    public string? MenuUrlSegmentEn { get; set; }
 
     /// <summary>Huvudmeny ID som den nya kategorin ska kopplas till</summary>
     [Required(ErrorMessage = "Välj en kategori att koppla den nya till")]

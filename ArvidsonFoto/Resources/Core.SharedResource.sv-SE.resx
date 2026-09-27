@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Latest" xml:space="preserve"><value>Senast</value></data>
+  <data name="Photographed" xml:space="preserve"><value>Fotograferad</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>Uppladdad</value></data>
+  <data name="ByCategory" xml:space="preserve"><value>Per kategori</value></data>
+  <data name="Guestbook" xml:space="preserve"><value>Gästbok</value></data>
+  <data name="Contact" xml:space="preserve"><value>Kontaktinformation</value></data>
+  <data name="About" xml:space="preserve"><value>Om mig, Torbjörn Arvidson</value></data>
+  <data name="Sitemap" xml:space="preserve"><value>Sidkarta</value></data>
+  <data name="Search" xml:space="preserve"><value>Sök</value></data>
+  <data name="BuyPhotos" xml:space="preserve"><value>Köp av bilder</value></data>
+  <data name="GuestbookPosts" xml:space="preserve"><value>Inlägg i gästboken</value></data>
+  <data name="WriteGuestbook" xml:space="preserve"><value>Skriv i gästboken</value></data>
+  <data name="Name" xml:space="preserve"><value>Namn</value></data>
+  <data name="Email" xml:space="preserve"><value>Epost</value></data>
+  <data name="Homepage" xml:space="preserve"><value>Hemsida</value></data>
+  <data name="Message" xml:space="preserve"><value>Meddelande</value></data>
+  <data name="Send" xml:space="preserve"><value>Skicka inlägget</value></data>
+  <data name="Anonymous" xml:space="preserve"><value>Anonym användare</value></data>
+  <data name="NoImages" xml:space="preserve"><value>Det finns inga bilder i denna kategori.</value></data>
+  <data name="PhotoDate" xml:space="preserve"><value>Fotodatum</value></data>
+  <data name="ImageName" xml:space="preserve"><value>Bildnamn</value></data>
+  <data name="Subject" xml:space="preserve"><value>Rubrik</value></data>
+  <data name="SendMessage" xml:space="preserve"><value>Skicka meddelandet</value></data>
+  <data name="SendFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas.</value></data>
+  <data name="GuestbookSent" xml:space="preserve"><value>Tack för ditt inlägg! Ditt meddelande har publicerats i gästboken.</value></data>
+  <data name="ContactSent" xml:space="preserve"><value>Tack för ditt mejl! Jag återkommer inom 1–5 dagar med svar.</value></data>
+</root>
