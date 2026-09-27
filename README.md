@@ -45,6 +45,8 @@ För att skapa någon ny migration om en data-modell ändras på, kör kommandot
 ```dotnet-ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
 
 Engelska innehållskolumner, språkval, fallback och migrations-/rollback-steg beskrivs i [inventeringen](wiki/EnglishContentInventory.md).
+
+Redaktörer kan söka efter kategorier och arter på `/UploadAdmin/RedigeraKategori` och ändra svenska och engelska namn samt URL-segment. Nya kategorier får motsvarande fält på `/UploadAdmin/NyKategori`; bildens engelska beskrivning kan ändras under `/UploadAdmin/RedigeraBilder`. Bilder har ingen egen rubrik: visat namn kommer från kategorin/arten. Svenska texter används som fallback när engelska saknas. Seed-översättningar påverkar bara nya databaser; översätt befintligt innehåll separat via admin efter granskning. Var försiktig med att ändra publicerade URL-segment: gamla direktlänkar får ännu ingen automatisk omdirigering.
   
   
 ## Fel vid körning med EF-core

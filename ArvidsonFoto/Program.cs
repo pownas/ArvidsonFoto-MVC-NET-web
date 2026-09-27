@@ -164,6 +164,7 @@ public class Program
 
         services.AddControllersWithViews();
         services.AddRazorPages();
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
         services.Configure<RequestLocalizationOptions>(options =>
         {
             options.SetDefaultCulture("sv-SE")
