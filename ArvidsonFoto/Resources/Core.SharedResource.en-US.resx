@@ -30,4 +30,23 @@
   <data name="SendFailed" xml:space="preserve"><value>Something went wrong while sending your message.</value></data>
   <data name="GuestbookSent" xml:space="preserve"><value>Thank you! Your entry has been published.</value></data>
   <data name="ContactSent" xml:space="preserve"><value>Thank you for your email! I will reply within 1–5 days.</value></data>
+  <data name="HomeMeta" xml:space="preserve"><value>Torbjörn Arvidson Photography - Welcome to my photo archive. Wildlife and nature photography.</value></data>
+  <data name="HomeTitle" xml:space="preserve"><value>Torbjörn Arvidson Photography - Welcome to my photo archive</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Welcome to my photo archive</value></data>
+  <data name="Intro" xml:space="preserve"><value>Here you can find a selection of my photographs.</value></data>
+  <data name="BuyIntro" xml:space="preserve"><value>Interested in buying high-resolution photographs?</value></data>
+  <data name="EmailIntro" xml:space="preserve"><value>Contact me at</value></data>
+  <data name="ReadAbout" xml:space="preserve"><value>Read more about me</value></data>
+  <data name="RandomPhotos" xml:space="preserve"><value>Randomly selected photographs</value></data>
+  <data name="Explore" xml:space="preserve"><value>Explore more</value></data>
+  <data name="LatestPhotos" xml:space="preserve"><value>Recently photographed</value></data>
+  <data name="LatestPhotosDetail" xml:space="preserve"><value>Discover the newest photos in the collection and explore the latest additions.</value></data>
+  <data name="ViewLatest" xml:space="preserve"><value>View recent photos</value></data>
+  <data name="AllCategories" xml:space="preserve"><value>All categories</value></data>
+  <data name="AllCategoriesDetail" xml:space="preserve"><value>Browse photo categories and see the latest photos in each. Find what you are looking for.</value></data>
+  <data name="ViewCategories" xml:space="preserve"><value>View all categories</value></data>
+  <data name="BuyPhotosDetail" xml:space="preserve"><value>Interested in buying high-resolution photos? Contact me for prices and usage details.</value></data>
+  <data name="ReadBuyPhotos" xml:space="preserve"><value>Learn about buying photos</value></data>
+  <data name="SitemapDetail" xml:space="preserve"><value>Find all photo categories and pages on the website. A complete overview of the content.</value></data>
+  <data name="ViewSitemap" xml:space="preserve"><value>View sitemap</value></data>
 </root>

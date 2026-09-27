@@ -54,6 +54,21 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task EnglishGuestbook_TranslatesNavigationAndPreservesQueryWhenSwitching()
+    {
+        var response = await _client!.GetAsync("/Info/Gastbok?culture=en-US&page=2&search=birds");
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsTrue(document.Body!.TextContent.Contains("Sign the guestbook"));
+        var swedishLink = document.QuerySelector("a[lang='sv']")?.GetAttribute("href");
+        Assert.IsNotNull(swedishLink);
+        Assert.IsTrue(swedishLink.Contains("page=2"));
+        Assert.IsTrue(swedishLink.Contains("search=birds"));
+        Assert.IsTrue(swedishLink.Contains("culture=sv-SE"));
+    }
+
+    [TestMethod]
     public async Task GetGastbok_ContainsGuestbookForm()
     {
         // Act

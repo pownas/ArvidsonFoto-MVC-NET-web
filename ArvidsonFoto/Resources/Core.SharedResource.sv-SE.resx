@@ -30,4 +30,23 @@
   <data name="SendFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas.</value></data>
   <data name="GuestbookSent" xml:space="preserve"><value>Tack för ditt inlägg! Ditt meddelande har publicerats i gästboken.</value></data>
   <data name="ContactSent" xml:space="preserve"><value>Tack för ditt mejl! Jag återkommer inom 1–5 dagar med svar.</value></data>
+  <data name="HomeMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv. Bilder på djur och natur.</value></data>
+  <data name="HomeTitle" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Välkommen till mitt bildarkiv</value></data>
+  <data name="Intro" xml:space="preserve"><value>Här finner du ett urval av mina bilder.</value></data>
+  <data name="BuyIntro" xml:space="preserve"><value>Är du intresserad av att köpa högupplösta bilder?</value></data>
+  <data name="EmailIntro" xml:space="preserve"><value>Kontakta mig på</value></data>
+  <data name="ReadAbout" xml:space="preserve"><value>Läs mer om mig</value></data>
+  <data name="RandomPhotos" xml:space="preserve"><value>Slumpmässigt utvalda bilder</value></data>
+  <data name="Explore" xml:space="preserve"><value>Utforska mer</value></data>
+  <data name="LatestPhotos" xml:space="preserve"><value>Senast fotograferade</value></data>
+  <data name="LatestPhotosDetail" xml:space="preserve"><value>Upptäck de nyaste bilderna i samlingen. Se vad som har fotograferats senast och utforska de färskaste tillskotten.</value></data>
+  <data name="ViewLatest" xml:space="preserve"><value>Se senaste bilderna</value></data>
+  <data name="AllCategories" xml:space="preserve"><value>Alla kategorier</value></data>
+  <data name="AllCategoriesDetail" xml:space="preserve"><value>Bläddra bland bildkategorier och se de senaste bilderna per kategori. Hitta snabbt det du letar efter.</value></data>
+  <data name="ViewCategories" xml:space="preserve"><value>Visa alla kategorier</value></data>
+  <data name="BuyPhotosDetail" xml:space="preserve"><value>Intresserad av att köpa högupplösta bilder? Ta kontakt för mer information om priser och användningsområden.</value></data>
+  <data name="ReadBuyPhotos" xml:space="preserve"><value>Läs mer om bildköp</value></data>
+  <data name="SitemapDetail" xml:space="preserve"><value>Hitta snabbt till alla bildkategorier och sidor på webbplatsen. En komplett översikt över allt innehåll.</value></data>
+  <data name="ViewSitemap" xml:space="preserve"><value>Visa sidkarta</value></data>
 </root>
