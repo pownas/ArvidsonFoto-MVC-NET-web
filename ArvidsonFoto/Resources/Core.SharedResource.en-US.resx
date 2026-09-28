@@ -49,4 +49,26 @@
   <data name="ReadBuyPhotos" xml:space="preserve"><value>Learn about buying photos</value></data>
   <data name="SitemapDetail" xml:space="preserve"><value>Find all photo categories and pages on the website. A complete overview of the content.</value></data>
   <data name="ViewSitemap" xml:space="preserve"><value>View sitemap</value></data>
+  <data name="Photos" xml:space="preserve"><value>Photos</value></data>
+  <data name="GalleryTitle" xml:space="preserve"><value>Photos of {0} - Torbjörn Arvidson Photography</value></data>
+  <data name="GalleryMeta" xml:space="preserve"><value>Torbjörn Arvidson Photography - Photos of {0}. Number of photos: {1}.</value></data>
+  <data name="ImageCount" xml:space="preserve"><value>Photos: {0}, page {1} of {2}</value></data>
+  <data name="CategoryCount" xml:space="preserve"><value>Categories: {0}, page {1} of {2}</value></data>
+  <data name="PageNavigation" xml:space="preserve"><value>Page navigation</value></data>
+  <data name="First" xml:space="preserve"><value>First</value></data>
+  <data name="Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="Current" xml:space="preserve"><value>Current</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Last" xml:space="preserve"><value>Last</value></data>
+  <data name="ChooseBirdCategory" xml:space="preserve"><value>Choose a bird category above</value></data>
+  <data name="SeeAllPhotos" xml:space="preserve"><value>See all photos instead at:</value></data>
+  <data name="RabbitInstead" xml:space="preserve"><value>Here is a photo of a rabbit instead:</value></data>
+  <data name="Rabbit" xml:space="preserve"><value>Rabbit</value></data>
+  <data name="SearchCategories" xml:space="preserve"><value>Search categories</value></data>
+  <data name="SearchOrSitemap" xml:space="preserve"><value>You can search the categories below or browse them in the</value></data>
+  <data name="Missing" xml:space="preserve"><value>unknown</value></data>
+  <data name="ViewAllOf" xml:space="preserve"><value>View all photos of {0}</value></data>
+  <data name="Enlarge" xml:space="preserve"><value>Click to enlarge</value></data>
+  <data name="ImagePosition" xml:space="preserve"><value>{0} of {1}</value></data>
+  <data name="InterestedInPhoto" xml:space="preserve"><value>Interested in this photo? See:</value></data>
 </root>
