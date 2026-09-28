@@ -1,8 +1,11 @@
-﻿<form asp-controller="Bilder" asp-action="@(nameof(BilderController.Search))" method="get" class="d-flex gap-2" role="search">
+﻿@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
+<form asp-controller="Bilder" asp-action="@(nameof(BilderController.Search))" method="get" class="d-flex gap-2" role="search">
     <div class="flex-grow-1">
-        <input name="s" class="form-control form-control-lg" type="search" placeholder="Sök efter kategori..." aria-label="Sök ruta" value="@ViewBag.SearchQuery" autofocus>
+        <input name="s" class="form-control form-control-lg" type="search" placeholder="@T["SearchPlaceholder"]" aria-label="@T["Search"]" value="@ViewBag.SearchQuery" autofocus>
     </div>
     <button class="btn btn-primary btn-lg" type="submit">
-        <i class="bi bi-search"></i> Sök
+        <i class="bi bi-search"></i> @T["Search"]
     </button>
 </form>

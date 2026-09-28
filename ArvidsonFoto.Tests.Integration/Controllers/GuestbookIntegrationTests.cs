@@ -78,13 +78,29 @@ public class GuestbookIntegrationTests
         Assert.IsTrue(english.QuerySelector("#gallery figcaption")?.TextContent.Contains("Eurasian three-toed woodpecker"));
         Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos"));
         Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:"));
-        Assert.IsTrue(english.QuerySelector("a[lang='sv']")?.TextContent.Contains("🇸🇪"));
+        Assert.IsNotNull(english.QuerySelector("a[lang='sv'] svg[aria-hidden='true']"));
+        Assert.IsNotNull(english.QuerySelector("a[lang='en'] svg[aria-hidden='true']"));
 
         var swedishResponse = await _client.GetAsync("/Bilder/Faglar/Tretaig-hackspett?culture=sv-SE");
         var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
         Assert.AreEqual(HttpStatusCode.OK, swedishResponse.StatusCode);
         Assert.IsTrue(swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Tretåig hackspett"));
         Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:"));
+    }
+
+    [TestMethod]
+    public async Task EnglishSearch_FindsEnglishAndSwedishCategoryNames()
+    {
+        foreach (var term in new[] { "Eurasian", "Tretåig" })
+        {
+            var response = await _client!.GetAsync($"/Search?s={Uri.EscapeDataString(term)}&culture=en-US");
+            var document = await HtmlHelpers.GetDocumentAsync(response);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsTrue(document.QuerySelectorAll("#gallery figcaption")
+                .Any(caption => caption.TextContent.Contains("Eurasian three-toed woodpecker")));
+            Assert.IsTrue(document.Body!.TextContent.Contains("Search results"));
+        }
     }
 
     [TestMethod]

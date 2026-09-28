@@ -71,4 +71,40 @@
   <data name="Enlarge" xml:space="preserve"><value>Tryck för att förstora</value></data>
   <data name="ImagePosition" xml:space="preserve"><value>{0} av {1}</value></data>
   <data name="InterestedInPhoto" xml:space="preserve"><value>Intresserad av bilden? Se:</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>Sök efter kategori...</value></data>
+  <data name="SearchMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida.</value></data>
+  <data name="SearchTitle" xml:space="preserve"><value>Sök - Torbjörn Arvidson Foto</value></data>
+  <data name="SearchingFor" xml:space="preserve"><value>Söker efter:</value></data>
+  <data name="SearchHint" xml:space="preserve"><value>Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".</value></data>
+  <data name="SearchSuccess" xml:space="preserve"><value>Sökningen lyckades!</value></data>
+  <data name="FoundCategories" xml:space="preserve"><value>Hittade {0} kategorier.</value></data>
+  <data name="FoundCategory" xml:space="preserve"><value>Hittade {0} kategori.</value></data>
+  <data name="NoResults" xml:space="preserve"><value>Inga resultat hittades</value></data>
+  <data name="NoSearchMatches" xml:space="preserve"><value>Sökte efter "{0}", men hittade inget.</value></data>
+  <data name="Tip" xml:space="preserve"><value>Tips:</value></data>
+  <data name="TrySearchingFor" xml:space="preserve"><value>Prova att söka på:</value></data>
+  <data name="SearchExampleAnimal" xml:space="preserve"><value>Ett djurnamn (t.ex. "Räv", "Örn", "Fjäril")</value></data>
+  <data name="SearchExampleCategory" xml:space="preserve"><value>En kategori (t.ex. "Fåglar", "Däggdjur", "Landskap")</value></data>
+  <data name="SearchExampleGeneral" xml:space="preserve"><value>Ett mer generellt sökord</value></data>
+  <data name="SearchBug" xml:space="preserve"><value>Upplever du att det verkar vara en bugg med sökningen?</value></data>
+  <data name="ContactMe" xml:space="preserve"><value>Kontakta mig gärna</value></data>
+  <data name="ViewAvailableCategories" xml:space="preserve"><value>Visa alla tillgängliga kategorier</value></data>
+  <data name="GoToSitemap" xml:space="preserve"><value>Till sidkartan</value></data>
+  <data name="SeeNewestPhotos" xml:space="preserve"><value>Se de nyaste bilderna i arkivet</value></data>
+  <data name="RecentlyUploaded" xml:space="preserve"><value>Senast uppladdade</value></data>
+  <data name="HowToSearch" xml:space="preserve"><value>Hur söker jag?</value></data>
+  <data name="SearchInstructions" xml:space="preserve"><value>Ange ett sökord i sökfältet ovan och tryck på "Sök" eller Enter.</value></data>
+  <data name="ExampleKeywords" xml:space="preserve"><value>Exempel på sökord:</value></data>
+  <data name="ExampleButterfly" xml:space="preserve"><value>Fjäril</value></data>
+  <data name="ExampleEagle" xml:space="preserve"><value>Havsörn</value></data>
+  <data name="ExampleFox" xml:space="preserve"><value>Räv</value></data>
+  <data name="ExampleLandscape" xml:space="preserve"><value>Landskap</value></data>
+  <data name="QuickLinks" xml:space="preserve"><value>Snabblänkar</value></data>
+  <data name="SeeCategoriesInSitemap" xml:space="preserve"><value>Se alla kategorier i sidkartan</value></data>
+  <data name="RecentByCategory" xml:space="preserve"><value>Senaste bilder per kategori</value></data>
+  <data name="BrowseBirdPhotos" xml:space="preserve"><value>Bläddra bland fågelbilder</value></data>
+  <data name="SearchResults" xml:space="preserve"><value>Sökresultat</value></data>
+  <data name="YourSearchFor" xml:space="preserve"><value>Din sökning efter</value></data>
+  <data name="Returned" xml:space="preserve"><value>gav:</value></data>
+  <data name="NewSearch" xml:space="preserve"><value>Ny sökning</value></data>
 </root>

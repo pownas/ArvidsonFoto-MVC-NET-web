@@ -1,18 +1,26 @@
 ﻿@model GalleryViewModel
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
+@{
+    ViewData["Title"] = string.IsNullOrWhiteSpace(ViewBag.SearchQuery)
+        ? T["SearchCategories"].Value
+        : $"{T["SearchingFor"].Value} {ViewBag.SearchQuery}";
+}
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida." />
+    <meta name="description" content="@T["SearchMeta"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se/Search" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sök - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida.">
+    <meta name="twitter:title" content="@T["SearchTitle"]">
+    <meta name="twitter:description" content="@T["SearchMeta"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Sök - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida." />
+    <meta property="og:title" content="@T["SearchTitle"]" />
+    <meta property="og:description" content="@T["SearchMeta"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
     <meta property="og:url" content="https://ArvidsonFoto.se/Search" />
 }
@@ -20,7 +28,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a rel="nofollow" href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Sök<i class="bi bi-search mx-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Search"]<i class="bi bi-search mx-1"></i></li>
     </ol>
 </nav>
 
@@ -30,13 +38,13 @@
             @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
             {
                 <h1 class="mb-4">
-                    <i class="bi bi-search"></i> Söker efter: <span class="text-primary">"@ViewBag.SearchQuery"</span>
+                    <i class="bi bi-search"></i> @T["SearchingFor"] <span class="text-primary">"@ViewBag.SearchQuery"</span>
                 </h1>
             }
             else
             {
                 <h1 class="mb-4">
-                    <i class="bi bi-search"></i> @ViewData["Title"]
+                    <i class="bi bi-search"></i> @T["SearchCategories"]
                 </h1>
             }
 
@@ -45,7 +53,7 @@
                 <div class="card-body">
                     <partial name="_SearchBar" />
                     <small class="form-text text-muted d-block mt-2">
-                        <i class="bi bi-info-circle"></i> Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".
+                        <i class="bi bi-info-circle"></i> @T["SearchHint"]
                     </small>
                 </div>
             </div>
@@ -56,7 +64,9 @@
                 <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
                     <i class="bi bi-check-circle-fill me-2 fs-5"></i>
                     <div>
-                        <strong>Sökningen lyckades!</strong> Hittade <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier").
+                        <strong>@T["SearchSuccess"]</strong> @(Model.DisplayImagesList.Count == 1
+                            ? T["FoundCategory", Model.DisplayImagesList.Count]
+                            : T["FoundCategories", Model.DisplayImagesList.Count])
                     </div>
                 </div>
             }
@@ -66,20 +76,20 @@
                 <div class="alert alert-warning d-flex align-items-start" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
                     <div>
-                        <h4 class="alert-heading">Inga resultat hittades</h4>
-                        <p class="mb-2">@ViewData["Title"], men hittade inget.</p>
+                        <h4 class="alert-heading">@T["NoResults"]</h4>
+                        <p class="mb-2">@T["NoSearchMatches", ViewBag.SearchQuery]</p>
                         <hr>
                         <p class="mb-0">
-                            <i class="bi bi-lightbulb"></i> <strong>Tips:</strong> Prova att söka på:
+                            <i class="bi bi-lightbulb"></i> <strong>@T["Tip"]</strong> @T["TrySearchingFor"]
                         </p>
                         <ul class="mb-2">
-                            <li>Ett djurnamn (t.ex. "Räv", "Örn", "Fjäril")</li>
-                            <li>En kategori (t.ex. "Fåglar", "Däggdjur", "Landskap")</li>
-                            <li>Ett mer generellt sökord</li>
+                            <li>@T["SearchExampleAnimal"]</li>
+                            <li>@T["SearchExampleCategory"]</li>
+                            <li>@T["SearchExampleGeneral"]</li>
                         </ul>
                         <p class="mb-0">
-                            Upplever du att det verkar vara en bugg med sökningen? 
-                            <a href="/Info/Kontakta" class="alert-link">Kontakta mig gärna</a>.
+                            @T["SearchBug"]
+                            <a href="/Info/Kontakta" class="alert-link">@T["ContactMe"]</a>.
                         </p>
                     </div>
                 </div>
@@ -90,10 +100,10 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <i class="bi bi-diagram-3 fs-1 text-primary mb-3"></i>
-                                <h5 class="card-title">Sidkarta</h5>
-                                <p class="card-text">Visa alla tillgängliga kategorier</p>
+                                <h5 class="card-title">@T["Sitemap"]</h5>
+                                <p class="card-text">@T["ViewAvailableCategories"]</p>
                                 <a href="/Info/Sidkarta" class="btn btn-outline-primary">
-                                    <i class="bi bi-diagram-3"></i> Till sidkartan
+                                    <i class="bi bi-diagram-3"></i> @T["GoToSitemap"]
                                 </a>
                             </div>
                         </div>
@@ -102,10 +112,10 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <i class="bi bi-calendar-week fs-1 text-success mb-3"></i>
-                                <h5 class="card-title">Senaste bilderna</h5>
-                                <p class="card-text">Se de nyaste bilderna i arkivet</p>
+                                <h5 class="card-title">@T["LatestPhotos"]</h5>
+                                <p class="card-text">@T["SeeNewestPhotos"]</p>
                                 <a href="/Senast/Uppladdad" class="btn btn-outline-success">
-                                    <i class="bi bi-camera"></i> Senast uppladdade
+                                    <i class="bi bi-camera"></i> @T["RecentlyUploaded"]
                                 </a>
                             </div>
                         </div>
@@ -120,15 +130,15 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-info-circle text-info"></i> Hur söker jag?
+                                    <i class="bi bi-info-circle text-info"></i> @T["HowToSearch"]
                                 </h5>
-                                <p class="card-text">Ange ett sökord i sökfältet ovan och tryck på "Sök" eller Enter.</p>
-                                <p class="mb-0"><strong>Exempel på sökord:</strong></p>
+                                <p class="card-text">@T["SearchInstructions"]</p>
+                                <p class="mb-0"><strong>@T["ExampleKeywords"]</strong></p>
                                 <div class="d-flex flex-wrap gap-2 mt-2">
-                                    <a href="/Search?s=Fjäril" class="badge bg-secondary text-decoration-none">Fjäril</a>
-                                    <a href="/Search?s=Havsörn" class="badge bg-secondary text-decoration-none">Havsörn</a>
-                                    <a href="/Search?s=Räv" class="badge bg-secondary text-decoration-none">Räv</a>
-                                    <a href="/Search?s=Landskap" class="badge bg-secondary text-decoration-none">Landskap</a>
+                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleButterfly"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleButterfly"]</a>
+                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleEagle"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleEagle"]</a>
+                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleFox"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleFox"]</a>
+                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleLandscape"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleLandscape"]</a>
                                 </div>
                             </div>
                         </div>
@@ -137,22 +147,22 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-lightning text-warning"></i> Snabblänkar
+                                    <i class="bi bi-lightning text-warning"></i> @T["QuickLinks"]
                                 </h5>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         <a href="/Info/Sidkarta" class="text-decoration-none">
-                                            <i class="bi bi-diagram-3 text-primary"></i> Se alla kategorier i sidkartan
+                                            <i class="bi bi-diagram-3 text-primary"></i> @T["SeeCategoriesInSitemap"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="/Senast/Per%20kategori" class="text-decoration-none">
-                                            <i class="bi bi-grid-3x3-gap text-success"></i> Senaste bilder per kategori
+                                            <i class="bi bi-grid-3x3-gap text-success"></i> @T["RecentByCategory"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="/Bilder/Fåglar" class="text-decoration-none">
-                                            <i class="bi bi-camera text-info"></i> Bläddra bland fågelbilder
+                                            <i class="bi bi-camera text-info"></i> @T["BrowseBirdPhotos"]
                                         </a>
                                     </li>
                                 </ul>
@@ -179,21 +189,23 @@
                 <div class="card shadow-sm mt-4 mb-4">
                     <div class="card-body text-center">
                         <h3 class="mb-3">
-                            <i class="bi bi-check-circle text-success"></i> Sökresultat
+                            <i class="bi bi-check-circle text-success"></i> @T["SearchResults"]
                         </h3>
                         <p class="text-muted mb-2">
-                            Din sökning efter <strong class="text-primary">"@ViewBag.SearchQuery"</strong> gav:
+                            @T["YourSearchFor"] <strong class="text-primary">"@ViewBag.SearchQuery"</strong> @T["Returned"]
                         </p>
                         <p class="fs-4 mb-0">
-                            <i class="bi bi-images"></i> <strong>@Model.DisplayImagesList.Count</strong> @(Model.DisplayImagesList.Count == 1 ? "kategori" : "kategorier")
+                            <i class="bi bi-images"></i> @(Model.DisplayImagesList.Count == 1
+                                ? T["FoundCategory", Model.DisplayImagesList.Count]
+                                : T["FoundCategories", Model.DisplayImagesList.Count])
                         </p>
                         <hr class="my-3">
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
                             <a href="/Search" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-arrow-clockwise"></i> Ny sökning
+                                <i class="bi bi-arrow-clockwise"></i> @T["NewSearch"]
                             </a>
                             <a href="/Info/Sidkarta" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-diagram-3"></i> Visa alla kategorier
+                                <i class="bi bi-diagram-3"></i> @T["ViewCategories"]
                             </a>
                         </div>
                     </div>
