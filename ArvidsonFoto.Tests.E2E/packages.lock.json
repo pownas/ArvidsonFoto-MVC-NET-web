@@ -257,10 +257,7 @@
       "Microsoft.Extensions.FileProviders.Embedded": {
         "type": "Transitive",
         "resolved": "11.0.0-rc.1.26425.128",
-        "contentHash": "KR+SCFBVh02vcApdsa4h34TdPKcYuNy/Z8LXecrJ0sXHgLgyMIP1A4oN7nmkiKIhV93TUvop9f9w8tz45Z39XQ==",
-        "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "11.0.0-rc.1.26425.128"
-        }
+        "contentHash": "KR+SCFBVh02vcApdsa4h34TdPKcYuNy/Z8LXecrJ0sXHgLgyMIP1A4oN7nmkiKIhV93TUvop9f9w8tz45Z39XQ=="
       },
       "Microsoft.Extensions.FileProviders.Physical": {
         "type": "Transitive",
@@ -935,12 +932,6 @@
           "Microsoft.Extensions.Configuration": "11.0.0-rc.1.26425.128",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "11.0.0-rc.1.26425.128"
         }
-      },
-      "Microsoft.Extensions.FileProviders.Abstractions": {
-        "type": "CentralTransitive",
-        "requested": "[11.0.0-rc.1.26425.128, )",
-        "resolved": "11.0.0-rc.1.26425.128",
-        "contentHash": "k9cf1DoJDIFnImTDOL4Px/JYEc9qElPCXwRzoaw/1kqy59B1T2EcMP6dIW6Xcx9bM4fiVKwVAzekK5NFWNhEOQ=="
       },
       "Microsoft.Extensions.Http": {
         "type": "CentralTransitive",

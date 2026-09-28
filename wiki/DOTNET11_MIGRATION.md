@@ -1,4 +1,4 @@
-# Migreringslogg: .NET 10 → .NET 11 (RC1)
+﻿# Migreringslogg: .NET 10 → .NET 11 (RC1)
 
 **Datum**: 2026-08-26  
 **Version**: v3.10.11 → v3.11.0  
@@ -16,7 +16,7 @@
 | `global.json` | SDK `10.0.300` → `11.0.100-rc.1.26425.128`, MSTest.Sdk `4.2.3` → `4.3.3` |
 | `Directory.Build.props` | TFM `net10.0` → `net11.0`, Version `3.10.11` → `3.11.0` |
 | `Directory.Packages.props` | Alla `10.0.9` Microsoft-paket → `11.0.0-rc.1.26425.128` |
-| `ArvidsonFoto.AppHost/ArvidsonFoto.AppHost.csproj` | Aspire.AppHost.Sdk `13.4.3` → `13.5.3` |
+| `ArvidsonFoto.AppHost/ArvidsonFoto.AppHost.csproj` | Aspire.AppHost.Sdk `13.4.3` → `13.5.4` |
 | `.config/dotnet-tools.json` | dotnet-ef `10.0.9` → `11.0.0-rc.1.26425.128` |
 | `.github/workflows/dotnet.yml` | .NET 10 → .NET 11 RC1 |
 
@@ -56,8 +56,8 @@
 
 | Paket | Från | Till |
 |-------|------|------|
-| `Aspire.Hosting.SqlServer` | 13.4.3 | 13.5.3 |
-| `Aspire.Hosting.Testing` | 13.4.3 | 13.5.3 |
+| `Aspire.Hosting.SqlServer` | 13.4.3 | 13.5.4 |
+| `Aspire.Hosting.Testing` | 13.4.3 | 13.5.4 |
 | `Azure.Core` | 1.59.0 | 1.62.0 |
 | `BouncyCastle.Cryptography` | 2.6.2 | 2.7.0 |
 | `MessagePack` | 3.1.7 | 3.1.8 |
