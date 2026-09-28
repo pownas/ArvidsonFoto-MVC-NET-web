@@ -7,6 +7,7 @@
 - **Version Policy**: Latest stable versions compatible with the existing .NET 11 target; do not include prerelease package versions
 - **Report Language**: Swedish
 - **.NET 11 RC1 packages**: Keep the existing `11.0.0-rc.1.26425.128` references unchanged rather than downgrading to stable 10.0.12.
+- **Warnings**: Resolve build and code-style warnings without suppressing them; target fewer than 30 warnings.
 
 ## Source Control
 - **Source Branch**: copilot/add-english-columns-to-database-again
