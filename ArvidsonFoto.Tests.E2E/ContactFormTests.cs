@@ -6,11 +6,12 @@ namespace ArvidsonFoto.Tests.E2E;
 /// End-to-end tests for contact form functionality
 /// Tests both contact page and image purchase page forms
 /// </summary>
-public sealed class ContactFormTests : IAsyncLifetime
+[Collection("E2E")]
+public sealed class ContactFormTests(E2EWebApplicationFactory app) : IAsyncLifetime
 {
     private IPlaywright? _playwright;
     private IBrowser? _browser;
-    private const string BaseUrl = "https://localhost:5001"; // Default local URL
+    private string BaseUrl => app.BaseUrl;
 
     async ValueTask IAsyncLifetime.InitializeAsync()
     {
