@@ -18,24 +18,24 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <!-- ArvidsonFoto.csproj -->
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
-    <PackageVersion Include="MailKit" Version="4.17.0" />
-    <PackageVersion Include="MimeKit" Version="4.17.0" />
+    <PackageVersion Include="MailKit" Version="4.18.1" />
+    <PackageVersion Include="MimeKit" Version="4.18.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="11.0.0-rc.1.26425.128" />
-    <PackageVersion Include="Serilog" Version="4.3.1" />
+    <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="10.0.1" />
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
     <PackageVersion Include="LigerShark.WebOptimizer.Sass" Version="3.0.147" />
-    <PackageVersion Include="JavaScriptEngineSwitcher.V8" Version="3.34.1" />
+    <PackageVersion Include="JavaScriptEngineSwitcher.V8" Version="3.35.2" />
     <PackageVersion Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.31.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0-rc.1.26425.128" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.10" />
     <!-- ArvidsonFoto.AppHost.csproj -->
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.5.4" />
     <PackageVersion Include="MessagePack" Version="3.1.8" />

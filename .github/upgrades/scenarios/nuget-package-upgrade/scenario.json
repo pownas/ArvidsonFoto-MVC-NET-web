@@ -3,11 +3,12 @@
   "operationId": "179d8bbb-ca20-425d-aaa8-affca8b3124a",
   "description": "Upgrade one or more NuGet packages from their current version to a target version across a project, several projects, a folder, a solution, or the whole repository. Use when the user wants to bump, update, or upgrade a specific NuGet package (or packages) to a given version or to the latest supported version, detect breaking API changes introduced by the new version, and fix the resulting code. User-initiated \u2014 match the user\u0027s stated package(s) and version intent.\n",
   "startTime": "2026-09-28T20:02:27.0530124Z",
-  "lastUpdateTime": "2026-09-28T20:31:48.3606714Z",
+  "lastUpdateTime": "2026-09-28T20:32:15.0600695Z",
   "properties": {
     "taskStates": {
       "01-update-nuget-packages": "InProgress",
-      "01.01-service-defaults": "Completed"
+      "01.01-service-defaults": "Completed",
+      "01.02-web-application": "InProgress"
     }
   },
   "folderPath": ""
