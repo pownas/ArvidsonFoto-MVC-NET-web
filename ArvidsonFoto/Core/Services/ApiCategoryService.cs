@@ -862,6 +862,16 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
+            if (LocalizedText.IsEnglish)
+            {
+                var names = _entityContext.TblMenus
+                    .Where(c => c.MenuCategoryId.HasValue && categoryIds.Contains(c.MenuCategoryId.Value))
+                    .Select(c => new { Id = c.MenuCategoryId!.Value, c.MenuDisplayName, c.MenuDisplayNameEn })
+                    .AsEnumerable()
+                    .ToDictionary(c => c.Id, c => LocalizedText.Select(c.MenuDisplayName, c.MenuDisplayNameEn));
+                return categoryIds.Distinct().ToDictionary(id => id, id => names.GetValueOrDefault(id, "Not found"));
+            }
+
             // Get all unique category IDs that aren't already cached
             var uncachedIds = categoryIds.Where(id => !_categoryNameCache.ContainsKey(id)).Distinct().ToList();
 

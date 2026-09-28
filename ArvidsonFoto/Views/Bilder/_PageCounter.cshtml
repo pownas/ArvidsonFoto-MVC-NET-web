@@ -1,4 +1,7 @@
 ﻿@model GalleryViewModel
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @{
     string idSuffix = ViewData["suffix"] as string ?? "";
 }
@@ -6,37 +9,36 @@
 @if (Model!.TotalImageCount > 0)
 {
   <p class="text-center">
-      Antal @if (Model.SelectedCategory.Name != null && Model.SelectedCategory.Name.Equals("Per kategori"))
-      {<text>kategorier</text> }
-    else
-    { <text>bilder</text>}: @(Model.TotalImageCount)st , sida: @Model.CurrentPage av @Model.TotalPages
+      @(Model.SelectedCategory?.NameSv == "Per kategori"
+        ? T["CategoryCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]
+        : T["ImageCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages])
   </p>
 }
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-  <nav id="page-counter@(idSuffix)" aria-label="Sid-navigering">
+  <nav id="page-counter@(idSuffix)" aria-label="@T["PageNavigation"]">
     <ul class="pagination justify-content-center">
     @if (Model.CurrentPage > 1)
     {
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">@T["First"]</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="@T["Previous"]"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
     }
     else
     {
-      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@T["First"]</a></li>
       <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
     }
-      <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only"> (nuvarande)</span></a></li>
+      <li class="page-item active"><a class="page-link" aria-label="@T["Current"]">@(Model.CurrentPage)<span class="sr-only"> (@T["Current"])</span></a></li>
     @if (Model.CurrentPage == Model.TotalPages)
     {
       <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
-      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@T["Last"]</a></li>
     }
     else
     {
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="@T["Next"]">@(Model.CurrentPage + 1) »</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">@T["Last"]</a></li>
     }
     </ul>
   </nav>

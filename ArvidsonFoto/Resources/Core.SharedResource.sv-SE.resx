@@ -49,4 +49,26 @@
   <data name="ReadBuyPhotos" xml:space="preserve"><value>Läs mer om bildköp</value></data>
   <data name="SitemapDetail" xml:space="preserve"><value>Hitta snabbt till alla bildkategorier och sidor på webbplatsen. En komplett översikt över allt innehåll.</value></data>
   <data name="ViewSitemap" xml:space="preserve"><value>Visa sidkarta</value></data>
+  <data name="Photos" xml:space="preserve"><value>Bilder</value></data>
+  <data name="GalleryTitle" xml:space="preserve"><value>Bilder på: {0} - Torbjörn Arvidson Foto</value></data>
+  <data name="GalleryMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Bilder på: {0}. Antal bilder: {1}st.</value></data>
+  <data name="ImageCount" xml:space="preserve"><value>Antal bilder: {0}st, sida: {1} av {2}</value></data>
+  <data name="CategoryCount" xml:space="preserve"><value>Antal kategorier: {0}st, sida: {1} av {2}</value></data>
+  <data name="PageNavigation" xml:space="preserve"><value>Sid-navigering</value></data>
+  <data name="First" xml:space="preserve"><value>Första</value></data>
+  <data name="Previous" xml:space="preserve"><value>Föregående</value></data>
+  <data name="Current" xml:space="preserve"><value>Nuvarande</value></data>
+  <data name="Next" xml:space="preserve"><value>Nästa</value></data>
+  <data name="Last" xml:space="preserve"><value>Sista</value></data>
+  <data name="ChooseBirdCategory" xml:space="preserve"><value>Välj en fågel-kategori här ovanför</value></data>
+  <data name="SeeAllPhotos" xml:space="preserve"><value>Se istället alla bilder på sidan:</value></data>
+  <data name="RabbitInstead" xml:space="preserve"><value>Här är en bild på en söt kanin istället:</value></data>
+  <data name="Rabbit" xml:space="preserve"><value>Kanin</value></data>
+  <data name="SearchCategories" xml:space="preserve"><value>Sök bland kategorier</value></data>
+  <data name="SearchOrSitemap" xml:space="preserve"><value>Du kan även söka bland kategorierna här nedan eller se alla kategorier via:</value></data>
+  <data name="Missing" xml:space="preserve"><value>saknas</value></data>
+  <data name="ViewAllOf" xml:space="preserve"><value>Se alla bilder av {0}</value></data>
+  <data name="Enlarge" xml:space="preserve"><value>Tryck för att förstora</value></data>
+  <data name="ImagePosition" xml:space="preserve"><value>{0} av {1}</value></data>
+  <data name="InterestedInPhoto" xml:space="preserve"><value>Intresserad av bilden? Se:</value></data>
 </root>

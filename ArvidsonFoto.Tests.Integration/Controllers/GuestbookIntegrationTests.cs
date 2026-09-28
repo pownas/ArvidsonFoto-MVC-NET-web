@@ -69,6 +69,25 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task Gallery_TranslatesImageCaptionsBreadcrumbsAndCount()
+    {
+        var englishResponse = await _client!.GetAsync("/Bilder/birds/eurasian-three-toed-woodpecker?culture=en-US");
+        var english = await HtmlHelpers.GetDocumentAsync(englishResponse);
+
+        Assert.AreEqual(HttpStatusCode.OK, englishResponse.StatusCode);
+        Assert.IsTrue(english.QuerySelector("#gallery figcaption")?.TextContent.Contains("Eurasian three-toed woodpecker"));
+        Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos"));
+        Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:"));
+        Assert.IsTrue(english.QuerySelector("a[lang='sv']")?.TextContent.Contains("🇸🇪"));
+
+        var swedishResponse = await _client.GetAsync("/Bilder/Faglar/Tretaig-hackspett?culture=sv-SE");
+        var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
+        Assert.AreEqual(HttpStatusCode.OK, swedishResponse.StatusCode);
+        Assert.IsTrue(swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Tretåig hackspett"));
+        Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:"));
+    }
+
+    [TestMethod]
     public async Task GetGastbok_ContainsGuestbookForm()
     {
         // Act
