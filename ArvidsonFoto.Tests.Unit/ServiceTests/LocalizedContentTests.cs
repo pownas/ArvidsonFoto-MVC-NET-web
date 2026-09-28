@@ -3,7 +3,10 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ArvidsonFoto.Tests.Unit.ServiceTests;
 
@@ -58,9 +61,39 @@ public class LocalizedContentTests
             Assert.Equal("Älg i skogen", image.Description);
             Assert.Equal("Svensk text", LocalizedText.Select("Svensk text", ""));
         }
+
         finally
         {
             CultureInfo.CurrentUICulture = original;
+        }
+    }
+
+    [Fact]
+    public void BulkCategoryNames_UseRequestLanguageAndFallbackAfterSwedishCache()
+    {
+        using var db = new ArvidsonFotoCoreDbContext(
+            new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+        db.TblMenus.AddRange(
+            new TblMenu { Id = 1, MenuCategoryId = 1, MenuDisplayName = "Bäver", MenuDisplayNameEn = "Beaver" },
+            new TblMenu { Id = 2, MenuCategoryId = 2, MenuDisplayName = "Älg", MenuDisplayNameEn = " " });
+        db.SaveChanges();
+        using var cache = new MemoryCache(new MemoryCacheOptions());
+        var service = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, db, cache);
+        var original = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+            Assert.Equal("Bäver", service.GetCategoryNamesBulk([1])[1]);
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            var names = service.GetCategoryNamesBulk([1, 2]);
+            Assert.Equal("Beaver", names[1]);
+            Assert.Equal("Älg", names[2]);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = original;
+            service.ClearCache();
         }
     }
 

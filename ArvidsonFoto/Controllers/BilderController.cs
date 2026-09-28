@@ -181,7 +181,9 @@ public class BilderController(
             List<ImageDto> listOfFirstSearchedImages = new();
             foreach (var category in allCategories)
             {
-                if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)
+                if (category.CategoryId.HasValue &&
+                    ((category.NameSv?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+                     (category.NameEn?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false)))
                 {
                     var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
                     listOfFirstSearchedImages.Add(imageDto);
