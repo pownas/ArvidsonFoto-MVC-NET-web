@@ -31,7 +31,7 @@
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
     <header>
@@ -46,13 +46,13 @@
                 QueryString.Create(existingQuery.Append(new KeyValuePair<string, string?>("culture", culture)));
             var english = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish;
         }
-        <nav aria-label="Language / Språk" class="container-md d-flex gap-2 justify-content-end my-2">
-            <a href="@LanguageLink("sv-SE")" lang="sv" hreflang="sv" class="btn btn-sm @(english ? "btn-outline-light" : "btn-light")" aria-current="@(english ? null : "true")"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#006aa7" d="M0 0h32v20H0z"/><path fill="#fecc00" d="M10 0h4v20h-4zM0 8h32v4H0z"/></svg> Svenska</a>
-            <a href="@LanguageLink("en-US")" lang="en" hreflang="en" class="btn btn-sm @(english ? "btn-light" : "btn-outline-light")" aria-current="@(english ? "true" : null)"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#012169" d="M0 0h32v20H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 32 20M32 0 0 20"/><path stroke="#c8102e" stroke-width="2" d="m0 0 32 20M32 0 0 20"/><path fill="#fff" d="M0 7h32v6H0zM13 0h6v20h-6z"/><path fill="#c8102e" d="M0 8.5h32v3H0zM14.5 0h3v20h-3z"/></svg> English</a>
-        </nav>
     </header>
     <main class="container-md pb-5">
         @RenderBody()
+        <nav aria-label="Language / Språk" class="page-language-switcher">
+            <a href="@LanguageLink("sv-SE")" lang="sv" hreflang="sv" class="btn btn-sm @(english ? "btn-outline-light" : "btn-light")" aria-current="@(english ? null : "true")"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#006aa7" d="M0 0h32v20H0z"/><path fill="#fecc00" d="M10 0h4v20h-4zM0 8h32v4H0z"/></svg> Svenska</a>
+            <a href="@LanguageLink("en-US")" lang="en" hreflang="en" class="btn btn-sm @(english ? "btn-light" : "btn-outline-light")" aria-current="@(english ? "true" : null)"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#012169" d="M0 0h32v20H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 32 20M32 0 0 20"/><path stroke="#c8102e" stroke-width="2" d="m0 0 32 20M32 0 0 20"/><path fill="#fff" d="M0 7h32v6H0zM13 0h6v20h-6z"/><path fill="#c8102e" d="M0 8.5h32v3H0zM14.5 0h3v20h-3z"/></svg> English</a>
+        </nav>
     </main>
     <footer class="footer overridden-footer">
         <div class="container">
