@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
@@ -157,7 +158,7 @@ public class BilderController(
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
             return RedirectPermanent(redirectUrl);
         }
-        return Redirect("./Senast/Fotograferad");
+        return Redirect(LocalizedRoutes.Page("/Senast/Fotograferad"));
     }
 
     [Route("/search")]
