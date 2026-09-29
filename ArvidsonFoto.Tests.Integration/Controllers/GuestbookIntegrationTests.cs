@@ -104,6 +104,38 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task Sitemap_UsesWorkingLocalizedRoutesAndPreservesSwedishLinks()
+    {
+        using var freshClient = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var response = await freshClient.GetAsync("/information/sitemap");
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsTrue(document.Body!.TextContent.Contains("Explore all pages and photo categories"));
+
+        foreach (var path in new[] { "/images/birds/woodpeckers/eurasian-three-toed-woodpecker",
+                     "/latest/photographed", "/information/contact", "/information/guestbook" })
+        {
+            Assert.IsNotNull(document.QuerySelector($"a[href='{path}']"), path);
+            Assert.AreEqual(HttpStatusCode.OK, (await _client.GetAsync($"{path}?culture=en-US")).StatusCode, path);
+        }
+
+        var languageLink = document.QuerySelector("a[lang='sv']")?.GetAttribute("href");
+        Assert.IsTrue(languageLink?.StartsWith("/Info/Sidkarta", StringComparison.Ordinal) == true);
+        var swedishResponse = await _client.GetAsync("/Info/Sidkarta?culture=sv-SE");
+        var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
+        Assert.IsNotNull(swedish.QuerySelector("a[href='/Bilder/Faglar/Hackspettar/Tretaig-hackspett']"));
+    }
+
+    [TestMethod]
+    public async Task SwitchingGalleryLanguage_PreservesCategoryAndPage()
+    {
+        var response = await _client!.GetAsync("/images/birds/woodpeckers/eurasian-three-toed-woodpecker?culture=en-US&sida=2");
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsTrue(document.QuerySelector("a[lang='sv']")?.GetAttribute("href")
+            ?.Contains("/Bilder/Faglar/Hackspettar/Tretaig-hackspett?sida=2", StringComparison.Ordinal) == true);
+    }
+    [TestMethod]
     public async Task GetGastbok_ContainsGuestbookForm()
     {
         // Act

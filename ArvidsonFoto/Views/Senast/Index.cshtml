@@ -1,4 +1,8 @@
 ﻿@*<!-- Senast-index -->*@
+@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @model GalleryViewModel
 
 @section MetaData {
@@ -23,25 +27,31 @@
     string classIcon = "bi-camera";
     classIcon = ViewData["Title"]!.Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
     classIcon = ViewData["Title"]!.Equals("Per kategori") ? "bi-grid-3x3-gap" : classIcon;
+    var sortLabel = ViewData["Title"]!.ToString() switch
+    {
+        "Uppladdad" => T["Uploaded"].Value,
+        "Per kategori" => T["ByCategory"].Value,
+        _ => T["Photographed"].Value
+    };
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Senast">Senast</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi @classIcon mx-1"></i></li>
+        <li class="breadcrumb-item"><a href="@LocalizedRoutes.Page("/Senast")">@T["Latest"]</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@sortLabel<i class="bi @classIcon mx-1"></i></li>
     </ol>
 </nav>
 
-<h2>Senast - @ViewData["Title"] <i class="bi @classIcon"></i></h2>
+<h2>@T["Latest"] - @sortLabel <i class="bi @classIcon"></i></h2>
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
     <div class="row justify-content-center mt-4">
         <div class="col-12 text-center">
-            <h3>Sök bland kategorierna</h3>
+            <h3>@T["SearchCategories"]</h3>
             <p>
-                Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
-                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
+                @T["SearchOrSitemap"]
+                <a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Sitemap"] <i class="bi bi-diagram-3"></i></a>
             </p>
         </div>
         <div class="mb-4">
