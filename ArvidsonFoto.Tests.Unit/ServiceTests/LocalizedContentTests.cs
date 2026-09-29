@@ -69,6 +69,33 @@ public class LocalizedContentTests
     }
 
     [Fact]
+    public void CategoryRoutes_TranslateSegmentsAndPreserveSwedishFallback()
+    {
+        var original = CultureInfo.CurrentUICulture;
+        var categories = new List<CategoryDto>
+        {
+            new() { CategoryId = 1, ParentCategoryId = 0, NameSv = "Fåglar", NameEn = "Birds", UrlCategoryPath = "Faglar", UrlCategoryPathEn = "birds" },
+            new() { CategoryId = 2, ParentCategoryId = 1, NameSv = "Hackspettar", NameEn = "Woodpeckers", UrlCategoryPath = "Hackspettar", UrlCategoryPathEn = "woodpeckers" },
+            new() { CategoryId = 3, ParentCategoryId = 2, NameSv = "Tretåig hackspett", UrlCategoryPath = "Tretaig-hackspett" }
+        };
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            Assert.Equal("/images/birds/woodpeckers/Tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
+            Assert.Equal("/Bilder/Faglar/Hackspettar/Tretaig-hackspett",
+                LocalizedRoutes.Switch("/images/birds/woodpeckers/Tretaig-hackspett", false, categories));
+            Assert.Equal("/information/sitemap", LocalizedRoutes.Page("/Info/Sidkarta"));
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+            Assert.Equal("/Bilder/Faglar/Hackspettar/Tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = original;
+        }
+    }
+
+    [Fact]
     public void BulkCategoryNames_UseRequestLanguageAndFallbackAfterSwedishCache()
     {
         using var db = new ArvidsonFotoCoreDbContext(

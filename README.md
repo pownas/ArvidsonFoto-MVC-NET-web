@@ -47,6 +47,8 @@ För att skapa någon ny migration om en data-modell ändras på, kör kommandot
 Engelska innehållskolumner, språkval, fallback och migrations-/rollback-steg beskrivs i [inventeringen](wiki/EnglishContentInventory.md).
 
 Redaktörer kan söka efter kategorier och arter på `/UploadAdmin/RedigeraKategori` och ändra svenska och engelska namn samt URL-segment. Nya kategorier får motsvarande fält på `/UploadAdmin/NyKategori`; bildens engelska beskrivning kan ändras under `/UploadAdmin/RedigeraBilder`. Bilder har ingen egen rubrik: visat namn kommer från kategorin/arten. Svenska texter används som fallback när engelska saknas. Seed-översättningar påverkar bara nya databaser; översätt befintligt innehåll separat via admin efter granskning. Var försiktig med att ändra publicerade URL-segment: gamla direktlänkar får ännu ingen automatisk omdirigering.
+
+Publika engelska länkar använder `/images`, `/latest` och `/information` med engelska sidnamn och kategorisegment. Svenska `/Bilder`, `/Senast` och `/Info` fungerar fortfarande; språkväxlaren byter också URL och behåller queryparametrar. Den synliga webbkartan visar länkar på valt språk och `wwwroot/sitemap.xml` listar fasta sidlänkar på båda språken. Sökvägar till faktiska bildfiler i `/bilder` är oförändrade.
   
   
 ## Fel vid körning med EF-core

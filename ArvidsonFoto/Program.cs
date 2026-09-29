@@ -7,6 +7,7 @@ using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
@@ -170,6 +171,16 @@ public class Program
             options.SetDefaultCulture("sv-SE")
                 .AddSupportedCultures("sv-SE", "en-US")
                 .AddSupportedUICultures("sv-SE", "en-US");
+            options.RequestCultureProviders.Insert(1, new CustomRequestCultureProvider(context =>
+            {
+                var path = context.Request.Path.Value ?? string.Empty;
+                var englishPath = path.Equals("/search", StringComparison.Ordinal) ||
+                    new[] { "/images", "/latest", "/information" }
+                    .Any(prefix => path.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+                                   path.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase));
+                return Task.FromResult<ProviderCultureResult?>(
+                    englishPath ? new ProviderCultureResult("en-US") : null);
+            }));
         });
 
         // ===== ROUTING CONFIGURATION =====
@@ -334,6 +345,21 @@ public class Program
         // Map Aspire default endpoints (health checks, alive checks)
         app.MapDefaultEndpoints();
 
+        foreach (var (path, controller, action, sortOrder) in new (string Path, string Controller, string Action, string? SortOrder)[]
+        {
+            ("information", "Info", "Index", null),
+            ("information/buy-photos", "Info", "Kop_av_bilder", null),
+            ("information/guestbook", "Info", "Gastbok", null),
+            ("information/contact", "Info", "Kontakta", null),
+            ("information/about", "Info", "Om_mig", null),
+            ("information/sitemap", "Info", "Sidkarta", null),
+            ("information/copyright", "Info", "Copyright", null)
+        })
+        {
+            app.MapControllerRoute($"english-{path}", path,
+                new { controller, action, sortOrder })
+                .Add(endpoint => endpoint.Metadata.Add(new SuppressLinkGenerationMetadata()));
+        }
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -1,5 +1,7 @@
 ﻿@model GalleryViewModel
 @using ArvidsonFoto.Core
+@using ArvidsonFoto.Core.Extensions
+@inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> T
 @{
@@ -89,7 +91,7 @@
                         </ul>
                         <p class="mb-0">
                             @T["SearchBug"]
-                            <a href="/Info/Kontakta" class="alert-link">@T["ContactMe"]</a>.
+                            <a href="@LocalizedRoutes.Page("/Info/Kontakta")" class="alert-link">@T["ContactMe"]</a>.
                         </p>
                     </div>
                 </div>
@@ -102,7 +104,7 @@
                                 <i class="bi bi-diagram-3 fs-1 text-primary mb-3"></i>
                                 <h5 class="card-title">@T["Sitemap"]</h5>
                                 <p class="card-text">@T["ViewAvailableCategories"]</p>
-                                <a href="/Info/Sidkarta" class="btn btn-outline-primary">
+                                <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="btn btn-outline-primary">
                                     <i class="bi bi-diagram-3"></i> @T["GoToSitemap"]
                                 </a>
                             </div>
@@ -114,7 +116,7 @@
                                 <i class="bi bi-calendar-week fs-1 text-success mb-3"></i>
                                 <h5 class="card-title">@T["LatestPhotos"]</h5>
                                 <p class="card-text">@T["SeeNewestPhotos"]</p>
-                                <a href="/Senast/Uppladdad" class="btn btn-outline-success">
+                                <a href="@LocalizedRoutes.Page("/Senast/Uppladdad")" class="btn btn-outline-success">
                                     <i class="bi bi-camera"></i> @T["RecentlyUploaded"]
                                 </a>
                             </div>
@@ -135,10 +137,10 @@
                                 <p class="card-text">@T["SearchInstructions"]</p>
                                 <p class="mb-0"><strong>@T["ExampleKeywords"]</strong></p>
                                 <div class="d-flex flex-wrap gap-2 mt-2">
-                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleButterfly"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleButterfly"]</a>
-                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleEagle"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleEagle"]</a>
-                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleFox"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleFox"]</a>
-                                    <a href="/Search?s=@Uri.EscapeDataString(T["ExampleLandscape"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleLandscape"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleButterfly"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleButterfly"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleEagle"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleEagle"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleFox"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleFox"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleLandscape"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleLandscape"]</a>
                                 </div>
                             </div>
                         </div>
@@ -151,17 +153,17 @@
                                 </h5>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
-                                        <a href="/Info/Sidkarta" class="text-decoration-none">
+                                        <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="text-decoration-none">
                                             <i class="bi bi-diagram-3 text-primary"></i> @T["SeeCategoriesInSitemap"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
-                                        <a href="/Senast/Per%20kategori" class="text-decoration-none">
+                                        <a href="@LocalizedRoutes.Page("/Senast/Per kategori")" class="text-decoration-none">
                                             <i class="bi bi-grid-3x3-gap text-success"></i> @T["RecentByCategory"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
-                                        <a href="/Bilder/Fåglar" class="text-decoration-none">
+                                        <a href="@LocalizedRoutes.CategoryForId(1, CategoryService.GetAll())" class="text-decoration-none">
                                             <i class="bi bi-camera text-info"></i> @T["BrowseBirdPhotos"]
                                         </a>
                                     </li>
@@ -201,10 +203,10 @@
                         </p>
                         <hr class="my-3">
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
-                            <a href="/Search" class="btn btn-outline-primary btn-sm">
+                            <a href="@LocalizedRoutes.Search" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-arrow-clockwise"></i> @T["NewSearch"]
                             </a>
-                            <a href="/Info/Sidkarta" class="btn btn-outline-secondary btn-sm">
+                            <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-diagram-3"></i> @T["ViewCategories"]
                             </a>
                         </div>

@@ -1,4 +1,8 @@
-﻿@*<!-- Info-index -->*@
+﻿@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
+@*<!-- Info-index -->*@
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
     <meta name="description" content="Informationssidor på ArvidsonFoto.se – hitta information om bildköp, kontaktuppgifter, gästbok och mer om naturfotograf Torbjörn Arvidson." />
@@ -28,14 +32,13 @@
 
 <ul class="sitemap h4">
     @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li> <!-- Kräver inloggning --> *@
-    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Kop_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="@LocalizedRoutes.Page("/Info/Kop_av_bilder")"><i class="bi bi-cart3"></i> @T["BuyPhotos"]</a></li>
     @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Gastbok"><i class="bi bi-book"></i> Gästbok</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="@LocalizedRoutes.Page("/Info/Gastbok")"><i class="bi bi-book"></i> @T["Guestbook"]</a></li>
     @*<li class="disabled"><i class="bi bi-arrow-bar-right"></i> <a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
-    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
-    <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
-    <li><i class="bi bi-arrow-return-right"></i> <a href="./Info/Copyright">&copy; Copyright</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="@LocalizedRoutes.Page("/Info/Kontakta")"><i class="bi bi-mailbox"></i> @T["Contact"]</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="@LocalizedRoutes.Page("/Info/Om_mig")"><i class="bi bi-question-circle"></i> @T["About"]</a></li>
+    <li><i class="bi bi-arrow-bar-right"></i> <a href="@LocalizedRoutes.Page("/Info/Sidkarta")"><i class="bi bi-diagram-3"></i> @T["Sitemap"]</a></li>
+    <li><i class="bi bi-arrow-return-right"></i> <a href="@LocalizedRoutes.Page("/Info/Copyright")">&copy; Copyright</a></li>
     @*<partial name="_LoginPartial" />*@
 </ul>
-

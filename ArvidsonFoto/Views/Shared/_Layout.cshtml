@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using ArvidsonFoto.Core.Extensions
+@inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
+<!DOCTYPE html>
 <html lang="@(ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish ? "en" : "sv")" data-bs-theme="dark">
 <head>
     <!-- Character encoding -->
@@ -39,7 +41,8 @@
                 .Where(pair => pair.Key != "culture")
                 .SelectMany(pair => pair.Value.Select(value => new KeyValuePair<string, string?>(pair.Key, value)));
             string LanguageLink(string culture) =>
-                (Context.Request.PathBase + Context.Request.Path).ToString() +
+                Context.Request.PathBase.ToString() + LocalizedRoutes.Switch(Context.Request.Path.Value ?? "/",
+                    culture == "en-US", CategoryService.GetAll()) +
                 QueryString.Create(existingQuery.Append(new KeyValuePair<string, string?>("culture", culture)));
             var english = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish;
         }
