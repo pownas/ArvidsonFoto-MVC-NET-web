@@ -49,11 +49,17 @@
     </header>
     <main class="container-md pb-5">
         @RenderBody()
+    </main>
+    <section class="site-pre-footer-controls" aria-label="@(english ? "Language and appearance settings" : "Språk- och utseendeinställningar")">
         <nav aria-label="Language / Språk" class="page-language-switcher">
             <a href="@LanguageLink("sv-SE")" lang="sv" hreflang="sv" class="btn btn-sm @(english ? "btn-outline-light" : "btn-light")" aria-current="@(english ? null : "true")"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#006aa7" d="M0 0h32v20H0z"/><path fill="#fecc00" d="M10 0h4v20h-4zM0 8h32v4H0z"/></svg> Svenska</a>
             <a href="@LanguageLink("en-US")" lang="en" hreflang="en" class="btn btn-sm @(english ? "btn-light" : "btn-outline-light")" aria-current="@(english ? "true" : null)"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#012169" d="M0 0h32v20H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 32 20M32 0 0 20"/><path stroke="#c8102e" stroke-width="2" d="m0 0 32 20M32 0 0 20"/><path fill="#fff" d="M0 7h32v6H0zM13 0h6v20h-6z"/><path fill="#c8102e" d="M0 8.5h32v3H0zM14.5 0h3v20h-3z"/></svg> English</a>
         </nav>
-    </main>
+        <div class="theme-switcher">
+            <p id="theme-switcher-description">@(english ? "Switch between dark mode and light mode" : "Växla mellan mörkt och ljust läge")</p>
+            <button type="button" id="dark-mode-toggle" class="btn btn-secondary" aria-describedby="theme-switcher-description" aria-label="@(english ? "Switch to light mode" : "Växla till ljust läge")" data-label-light="@(english ? "Switch to light mode" : "Växla till ljust läge")" data-label-dark="@(english ? "Switch to dark mode" : "Växla till mörkt läge")" title="@(english ? "Switch to light mode" : "Växla till ljust läge")"><span id="dark-mode-toggle-btn-text">@(english ? "Switch to dark mode" : "Växla till mörkt läge")</span> <i class="bi bi-lightbulb" aria-hidden="true"></i></button>
+        </div>
+    </section>
     <footer class="footer overridden-footer">
         <div class="container">
             <partial name="_Footer" />

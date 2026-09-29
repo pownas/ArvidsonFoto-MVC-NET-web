@@ -85,36 +85,30 @@ header {
     background-color: #111;
 }
 
-.page-language-switcher {
+.site-pre-footer-controls {
     display: flex;
-    gap: .5rem;
-    justify-content: flex-end;
-    margin: .5rem 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 6rem;
 }
 
-@media (min-width: 768px) {
-    main.container-md:has(> #page-breadcrumbs) {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        column-gap: 1rem;
-        align-items: start;
-    }
+.page-language-switcher {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+}
 
-    main.container-md:has(> #page-breadcrumbs) > #page-breadcrumbs {
-        grid-column: 1;
-        grid-row: 1;
-        min-width: 0;
-    }
+.theme-switcher {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    text-align: center;
+}
 
-    main.container-md:has(> #page-breadcrumbs) > .page-language-switcher {
-        grid-column: 2;
-        grid-row: 1;
-        margin: 0;
-    }
-
-    main.container-md:has(> #page-breadcrumbs) > :not(#page-breadcrumbs):not(.page-language-switcher) {
-        grid-column: 1 / -1;
-    }
+.theme-switcher p {
+    margin: 0;
 }
 
 /* Sticky footer styles

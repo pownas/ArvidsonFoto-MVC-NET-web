@@ -40,6 +40,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Core" /> <!-- För CSS/JS minifiering och bundling -->
     <PackageReference Include="LigerShark.WebOptimizer.Sass" /> <!-- För SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.V8" /> <!-- JavaScript engine för SCSS kompilering -->
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" /> <!-- Native V8-bibliotek saknas annars på Windows ARM64 -->
     <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" /> <!-- DI för JS engine -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" /> <!-- OpenAPI support -->
     <PackageReference Include="Scalar.AspNetCore" /> <!-- Scalar UI för OpenAPI dokumentation -->
