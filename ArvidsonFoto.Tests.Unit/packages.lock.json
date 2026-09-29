@@ -959,6 +959,7 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[11.0.0-rc.1.26425.128, )",
           "Microsoft.AspNetCore.Identity.UI": "[11.0.0-rc.1.26425.128, )",
           "Microsoft.AspNetCore.OpenApi": "[11.0.0-rc.1.26425.128, )",
+          "Microsoft.ClearScript.V8.Native.win-arm64": "[7.5.1.1, )",
           "Microsoft.EntityFrameworkCore.InMemory": "[11.0.0-rc.1.26425.128, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[11.0.0-rc.1.26425.128, )",
           "MimeKit": "[4.18.1, )",
@@ -1115,6 +1116,12 @@
         "requested": "[11.0.0-rc.1.26425.128, )",
         "resolved": "11.0.0-rc.1.26425.128",
         "contentHash": "+KuxwT6syLFi5bNKopwO09VGphb2EQd3YZSjiMtPaT6YIWv0+oBa2h4l4Zpj1yUTn8smeqzGPLviaBVH7pkJPA=="
+      },
+      "Microsoft.ClearScript.V8.Native.win-arm64": {
+        "type": "CentralTransitive",
+        "requested": "[7.5.1.1, )",
+        "resolved": "7.5.1.1",
+        "contentHash": "ZvAKQ+zKsn7QGmKefd8Eh1AjascYR4j5QDchNwJkEbYxlFJNY1Q9QNjdExS4NG4QDOqp2iD1WkQgR70ZX4BnIQ=="
       },
       "Microsoft.Data.SqlClient": {
         "type": "CentralTransitive",

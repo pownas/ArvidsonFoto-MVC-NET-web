@@ -95,6 +95,12 @@
           "Microsoft.OpenApi": "[3.10.0, 4.0.0)"
         }
       },
+      "Microsoft.ClearScript.V8.Native.win-arm64": {
+        "type": "Direct",
+        "requested": "[7.5.1.1, )",
+        "resolved": "7.5.1.1",
+        "contentHash": "ZvAKQ+zKsn7QGmKefd8Eh1AjascYR4j5QDchNwJkEbYxlFJNY1Q9QNjdExS4NG4QDOqp2iD1WkQgR70ZX4BnIQ=="
+      },
       "Microsoft.EntityFrameworkCore.Design": {
         "type": "Direct",
         "requested": "[11.0.0-rc.1.26425.128, )",

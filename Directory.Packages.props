@@ -34,6 +34,7 @@
     <PackageVersion Include="LigerShark.WebOptimizer.Sass" Version="3.0.147" />
     <PackageVersion Include="JavaScriptEngineSwitcher.V8" Version="3.35.2" />
     <PackageVersion Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.31.0" />
+    <PackageVersion Include="Microsoft.ClearScript.V8.Native.win-arm64" Version="7.5.1.1" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.10" />
     <!-- ArvidsonFoto.AppHost.csproj -->
