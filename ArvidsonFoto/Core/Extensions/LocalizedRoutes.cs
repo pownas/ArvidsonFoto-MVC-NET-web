@@ -4,6 +4,12 @@ namespace ArvidsonFoto.Core.Extensions;
 
 public static class LocalizedRoutes
 {
+    public static bool IsEnglishPath(string? path) =>
+        path is not null && (path.Equals("/search", StringComparison.OrdinalIgnoreCase) ||
+            new[] { "/images", "/latest", "/information" }
+                .Any(prefix => path.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+                    path.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase)));
+
     public static string Gallery => LocalizedText.IsEnglish ? "/images" : "/Bilder";
     public static string Search => LocalizedText.IsEnglish ? "/search" : "/Search";
 

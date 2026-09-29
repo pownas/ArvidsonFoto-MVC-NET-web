@@ -1,7 +1,8 @@
-﻿@section MetaData {
+﻿@using ArvidsonFoto.Core.Extensions
+@section MetaData {
     <meta name="robots" content="noimageindex" />
     <meta name="description" content="Copyright och upphovsrätt för bilder på ArvidsonFoto.se. Alla bilder tillhör fotografen Torbjörn Arvidson och får inte användas utan tillstånd." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Copyright" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Copyright"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">

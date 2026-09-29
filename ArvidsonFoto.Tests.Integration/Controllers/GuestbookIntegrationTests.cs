@@ -116,14 +116,30 @@ public class GuestbookIntegrationTests
                      "/latest/photographed", "/information/contact", "/information/guestbook" })
         {
             Assert.IsNotNull(document.QuerySelector($"a[href='{path}']"), path);
-            Assert.AreEqual(HttpStatusCode.OK, (await _client.GetAsync($"{path}?culture=en-US")).StatusCode, path);
+            Assert.AreEqual(HttpStatusCode.OK, (await _client!.GetAsync($"{path}?culture=en-US")).StatusCode, path);
         }
 
         var languageLink = document.QuerySelector("a[lang='sv']")?.GetAttribute("href");
         Assert.IsTrue(languageLink?.StartsWith("/Info/Sidkarta", StringComparison.Ordinal) == true);
-        var swedishResponse = await _client.GetAsync("/Info/Sidkarta?culture=sv-SE");
+        var swedishResponse = await _client!.GetAsync("/Info/Sidkarta?culture=sv-SE");
         var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
         Assert.IsNotNull(swedish.QuerySelector("a[href='/Bilder/Faglar/Hackspettar/Tretaig-hackspett']"));
+    }
+
+    [TestMethod]
+    public async Task EnglishAlias_PersistsLanguageAndUsesEnglishCanonical()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var gallery = await client.GetAsync("/images/");
+        Assert.AreEqual(HttpStatusCode.Redirect, gallery.StatusCode);
+        Assert.AreEqual("/latest/photographed", gallery.Headers.Location?.OriginalString);
+
+        var contact = await client.GetAsync("/information/contact");
+        var contactPage = await HtmlHelpers.GetDocumentAsync(contact);
+        Assert.IsNotNull(contactPage.QuerySelector("link[rel='canonical'][href='https://ArvidsonFoto.se/information/contact']"));
+
+        var home = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/"));
+        Assert.IsNotNull(home.QuerySelector("a[href^='/images/']"));
     }
 
     [TestMethod]

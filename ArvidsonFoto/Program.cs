@@ -1,5 +1,6 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Security;
@@ -173,13 +174,8 @@ public class Program
                 .AddSupportedUICultures("sv-SE", "en-US");
             options.RequestCultureProviders.Insert(1, new CustomRequestCultureProvider(context =>
             {
-                var path = context.Request.Path.Value ?? string.Empty;
-                var englishPath = path.Equals("/search", StringComparison.Ordinal) ||
-                    new[] { "/images", "/latest", "/information" }
-                    .Any(prefix => path.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
-                                   path.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase));
                 return Task.FromResult<ProviderCultureResult?>(
-                    englishPath ? new ProviderCultureResult("en-US") : null);
+                    LocalizedRoutes.IsEnglishPath(context.Request.Path.Value) ? new ProviderCultureResult("en-US") : null);
             }));
         });
 
@@ -314,6 +310,8 @@ public class Program
         app.Use(async (context, next) =>
         {
             var culture = context.Request.Query["culture"].ToString();
+            if (culture.Length == 0 && LocalizedRoutes.IsEnglishPath(context.Request.Path.Value))
+                culture = "en-US";
             if (culture is "sv-SE" or "en-US")
             {
                 context.Response.Cookies.Append(

@@ -1,10 +1,11 @@
 ﻿@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Extensions
 @model ContactFormInputDto
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
     <meta name="description" content="Kontakta naturfotograf Torbjörn Arvidson via telefon, e-post eller kontaktformulär. Välkommen att höra av dig för frågor om bildköp eller föredrag." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Kontakta" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kontakta"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">

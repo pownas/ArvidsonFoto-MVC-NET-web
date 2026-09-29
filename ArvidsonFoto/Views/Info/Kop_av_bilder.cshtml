@@ -1,10 +1,11 @@
 ﻿@using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Extensions
 @model ContactFormInputDto
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
     <meta name="description" content="Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Kop_av_bilder" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
