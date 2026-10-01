@@ -38,7 +38,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0-rc.1.26425.128" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.10" />
     <!-- ArvidsonFoto.AppHost.csproj -->
-    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.6.0" />
     <PackageVersion Include="MessagePack" Version="3.1.8" />
     <!-- ArvidsonFoto.ServiceDefaults.csproj -->
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
@@ -49,7 +49,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.19.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.19.0" />
     <!-- ArvidsonFoto.Tests.Unit.csproj -->
-    <PackageVersion Include="Aspire.Hosting.Testing" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="13.6.0" />
     <PackageVersion Include="KubernetesClient" Version="19.0.2" />
     <!-- ArvidsonFoto.Tests.Integration.csproj -->
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0-rc.1.26425.128" />
