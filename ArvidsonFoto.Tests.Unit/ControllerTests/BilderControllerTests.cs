@@ -97,9 +97,8 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        // Controller använder GetNameById som returnerar MenuText (display-namn), inte MenuUrltext
         Assert.Equal("/Bilder/Faglar", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]
@@ -114,7 +113,7 @@ public class BilderControllerTests
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
         Assert.Equal("/Bilder/Insekter", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]

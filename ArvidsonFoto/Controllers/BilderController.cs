@@ -156,7 +156,7 @@ public class BilderController(
         {
             string redirectUrl = LocalizedRoutes.CategoryForId(ID.Value, _categoryService.GetAll());
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
-            return RedirectPermanent(redirectUrl);
+            return Redirect(redirectUrl);
         }
         return Redirect(LocalizedRoutes.Page("/Senast/Fotograferad"));
     }
