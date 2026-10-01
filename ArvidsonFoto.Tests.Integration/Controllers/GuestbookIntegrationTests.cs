@@ -35,7 +35,7 @@ public class GuestbookIntegrationTests
     public async Task GetGastbok_ReturnsSuccessStatusCode()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
+        var response = await _client!.GetAsync("/Info/Gastbok?culture=sv-SE");
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -45,12 +45,11 @@ public class GuestbookIntegrationTests
     public async Task GetGastbok_ReturnsHtmlContent()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
-        var content = await response.Content.ReadAsStringAsync();
-
+        var response = await _client!.GetAsync("/Info/Gastbok?culture=sv-SE");
         // Assert
         Assert.IsTrue(response.Content.Headers.ContentType?.MediaType?.Contains("text/html") ?? false);
-        Assert.IsTrue(content.Contains("Gästbok"));
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+        Assert.IsTrue(document.Body!.TextContent.Contains("Gästbok"));
     }
 
     [TestMethod]
@@ -86,6 +85,16 @@ public class GuestbookIntegrationTests
         Assert.AreEqual(HttpStatusCode.OK, swedishResponse.StatusCode);
         Assert.IsTrue(swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Tretåig hackspett"));
         Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:"));
+    }
+
+    [TestMethod]
+    public async Task BeaverCategoryName_UsesEnglishEvenAfterSwedishRequest()
+    {
+        var swedish = await HtmlHelpers.GetDocumentAsync(await _client!.GetAsync("/Bilder/Daggdjur/Baver?culture=sv-SE"));
+        var english = await HtmlHelpers.GetDocumentAsync(await _client.GetAsync("/images/mammals/beaver?culture=en-US"));
+        Assert.IsTrue(swedish.QuerySelector("h1, h2")?.TextContent.Contains("Bäver") == true ||
+            swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Bäver") == true);
+        Assert.IsTrue(english.QuerySelector("#gallery figcaption")?.TextContent.Contains("Beaver") == true);
     }
 
     [TestMethod]
@@ -140,6 +149,39 @@ public class GuestbookIntegrationTests
 
         var home = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/"));
         Assert.IsNotNull(home.QuerySelector("a[href^='/images/']"));
+    }
+
+    [TestMethod]
+    public async Task InformationPagesAndForms_TranslateEnglishAndRetainSwedish()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        foreach (var (englishPath, englishText, swedishPath, swedishText) in new[]
+        {
+            ("/information/about", "A passion for nature photography", "/Info/Om_mig", "Passion för naturfotografi"),
+            ("/information/contact", "You can contact me by email or phone.", "/Info/Kontakta", "Om du vill kontakta mig"),
+            ("/information/buy-photos", "What can I help you with?", "/Info/Kop_av_bilder", "Vad kan jag hjälpa till med?"),
+            ("/information/copyright", "All rights reserved by the photographer.", "/Info/Copyright", "Alla rättigheter förbehållna fotografen.")
+        })
+        {
+            var english = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"{englishPath}?culture=en-US"));
+            Assert.IsTrue(english.Body!.TextContent.Contains(englishText), englishPath);
+            var swedish = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"{swedishPath}?culture=sv-SE"));
+            Assert.IsTrue(swedish.Body!.TextContent.Contains(swedishText), swedishPath);
+        }
+
+        var contact = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/information/contact?culture=en-US"));
+        Assert.AreEqual("Your name", contact.QuerySelector("#Name")?.GetAttribute("placeholder"));
+        Assert.AreEqual("Enter your name.", contact.QuerySelector("#Name")?.GetAttribute("data-val-required"));
+        Assert.AreEqual("Enter the digits shown in the image", contact.QuerySelector("label[for='Code']")?.TextContent.Trim().TrimEnd('*').Trim());
+        var guestbook = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/information/guestbook?culture=en-US"));
+        Assert.AreEqual("Name (leave blank to be anonymous)", guestbook.QuerySelector("#Name")?.GetAttribute("placeholder"));
+        Assert.AreEqual("Enter a message.", guestbook.QuerySelector("#Message")?.GetAttribute("data-val-required"));
+
+        var swedishContact = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/Info/Kontakta?culture=sv-SE"));
+        Assert.AreEqual("Ditt namn", swedishContact.QuerySelector("#Name")?.GetAttribute("placeholder"));
+        Assert.AreEqual("Ange ditt namn", swedishContact.QuerySelector("#Name")?.GetAttribute("data-val-required"));
+        var latest = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/latest/photographed?culture=en-US"));
+        Assert.IsTrue(latest.QuerySelector("meta[name='description']")?.GetAttribute("content")?.Contains("nature and wildlife photos") == true);
     }
 
     [TestMethod]

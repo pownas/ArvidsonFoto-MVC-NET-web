@@ -154,7 +154,7 @@ public class BilderController(
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
-            string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
+            string redirectUrl = LocalizedRoutes.CategoryForId(ID.Value, _categoryService.GetAll());
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
             return RedirectPermanent(redirectUrl);
         }

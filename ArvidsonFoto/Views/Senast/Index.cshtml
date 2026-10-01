@@ -5,24 +5,6 @@
 @inject IStringLocalizer<SharedResource> T
 @model GalleryViewModel
 
-@section MetaData {
-    <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur. Antal bilder: @if (Model.AllImagesList is not null) {@Model.AllImagesList.Count} else {@("0")}st" />
-    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur.">
-    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
-
-    <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur." />
-    <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/@Model.CurrentUrl" />
-}
-
 @{
     string classIcon = "bi-camera";
     classIcon = ViewData["Title"]!.Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
@@ -34,6 +16,24 @@
         _ => T["Photographed"].Value
     };
 }
+@section MetaData {
+    <meta name="robots" content="noimageindex, nofollow" />
+    <meta name="description" content="@T["LatestMeta", sortLabel] @T["LatestMetaCount", Model.AllImagesList?.Count ?? 0]" />
+    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@T["Latest"] @sortLabel - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="@T["LatestMeta", sortLabel]">
+    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
+
+    <!-- Open Graph for social media sharing -->
+    <meta property="og:title" content="@T["Latest"] @sortLabel - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@T["LatestMeta", sortLabel]" />
+    <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
+    <meta property="og:url" content="https://ArvidsonFoto.se/@Model.CurrentUrl" />
+}
+
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>

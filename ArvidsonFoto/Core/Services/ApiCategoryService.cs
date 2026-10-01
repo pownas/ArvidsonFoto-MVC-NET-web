@@ -204,7 +204,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         try
         {
             // Check cache first
-            if (_categoryNameCache.TryGetValue(id.Value, out var cachedName))
+            if (!LocalizedText.IsEnglish && _categoryNameCache.TryGetValue(id.Value, out var cachedName))
             {
                 return cachedName;
             }
@@ -216,10 +216,12 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return "Not found";
             }
 
-            var name = category.MenuDisplayName ?? "Not found";
+            var name = LocalizedText.Select(category.MenuDisplayName ?? "Not found", category.MenuDisplayNameEn);
 
-            // Cache the result
-            _categoryNameCache[id.Value] = name;
+            if (!LocalizedText.IsEnglish)
+            {
+                _categoryNameCache[id.Value] = name;
+            }
 
             return name;
         }
