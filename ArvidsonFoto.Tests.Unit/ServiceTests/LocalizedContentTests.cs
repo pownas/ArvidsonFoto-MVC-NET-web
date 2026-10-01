@@ -1,8 +1,7 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Resources;
-using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;

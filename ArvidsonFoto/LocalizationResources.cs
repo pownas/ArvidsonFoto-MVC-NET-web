@@ -1,16 +1,18 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Resources;
 
-namespace ArvidsonFoto.Core;
+namespace ArvidsonFoto;
 
 public class HomeResource;
 public class GalleryResource;
 public class SearchResource;
 public class InfoResource;
 public class LatestResource;
+public class SharedResource;
+
 public class ValidationResource
 {
-    private static readonly ResourceManager Resources = new("ArvidsonFoto.Resources.Core.ValidationResource", typeof(ValidationResource).Assembly);
+    private static readonly ResourceManager Resources = new("ArvidsonFoto.Resources.ValidationResource", typeof(ValidationResource).Assembly);
 
     private static string Get(string key) => Resources.GetString(key, CultureInfo.CurrentUICulture) ?? key;
 

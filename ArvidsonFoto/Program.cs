@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
-using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -9,7 +8,6 @@ using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
