@@ -1,5 +1,4 @@
 ﻿using ArvidsonFoto.Core.Configuration;
-using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;

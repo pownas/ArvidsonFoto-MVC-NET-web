@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -21,4 +21,10 @@
   <data name="Form.Label.Subject" xml:space="preserve"><value>Rubrik</value></data>
   <data name="Navigation.Photos" xml:space="preserve"><value>Bilder</value></data>
   <data name="Navigation.ToggleMenu" xml:space="preserve"><value>Växla menyns synlighet</value></data>
+  <data name="Footer.Address" xml:space="preserve"><value>Adress</value></data>
+  <data name="Footer.Mobile" xml:space="preserve"><value>Mobil</value></data>
+  <data name="Footer.Email" xml:space="preserve"><value>E-post</value></data>
+  <data name="Footer.Webmaster" xml:space="preserve"><value>Webbmaster</value></data>
+  <data name="Footer.PoweredBy" xml:space="preserve"><value>Drivs av</value></data>
+  <data name="Footer.FacebookTitle" xml:space="preserve"><value>ArvidsonFoto på Facebook</value></data>
 </root>
