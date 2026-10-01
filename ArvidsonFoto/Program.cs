@@ -166,7 +166,7 @@ public class Program
         });
 
         services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
-            options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(SharedResource)));
+            options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(ValidationResource)));
         services.AddRazorPages();
         services.AddLocalization(options => options.ResourcesPath = "Resources");
         services.Configure<RequestLocalizationOptions>(options =>

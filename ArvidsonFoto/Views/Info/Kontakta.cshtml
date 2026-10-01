@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Core.DTOs
+﻿@inject IStringLocalizer<InfoResource> I
+@using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Extensions
 @using ArvidsonFoto.Core
 @using Microsoft.Extensions.Localization
@@ -7,18 +8,18 @@
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="@T["ContactMeta"]" />
+    <meta name="description" content="@I["Contact.Metadata.Description"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kontakta"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@T["Contact"] - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="@T["ContactMeta"]">
+    <meta name="twitter:title" content="@T["Navigation.Contact"] - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="@I["Contact.Metadata.Description"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="@T["Contact"] - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="@T["ContactMeta"]" />
+    <meta property="og:title" content="@T["Navigation.Contact"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@I["Contact.Metadata.Description"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
     <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kontakta"))" />
 }
@@ -27,7 +28,7 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="@ArvidsonFoto.Core.Extensions.LocalizedRoutes.Page("/Info")">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@T["Contact"]<i class="bi bi-mailbox mx-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.Contact"]<i class="bi bi-mailbox mx-1"></i></li>
     </ol>
 </nav>
 
@@ -38,20 +39,20 @@
         <div class="col-lg-6">
             <div class="card shadow-sm h-100 d-flex flex-column">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> @T["ContactHeading"]</h3>
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> @I["Contact.Header.Details"]</h3>
                 </div>
                 <div class="card-body flex-grow-1">
-                    <p>@T["ContactIntro"]</p>
+                    <p>@I["Contact.Content.Intro"]</p>
                     <div class="mb-3">
-                        <h4><i class="bi bi-geo-alt-fill"></i> @T["Address"]</h4>
+                        <h4><i class="bi bi-geo-alt-fill"></i> @I["Contact.Label.Address"]</h4>
                         <p class="ms-4">Hagmarksgatan 8, 70216 Örebro</p>
                     </div>
                     <div class="mb-3">
-                        <h4><i class="bi bi-phone-fill"></i> @T["Mobile"]</h4>
+                        <h4><i class="bi bi-phone-fill"></i> @I["Contact.Label.Mobile"]</h4>
                         <p class="ms-4"><a href="tel:0708120412">0708-12 04 12</a></p>
                     </div>
                     <div class="mb-3">
-                        <h4><i class="bi bi-envelope-fill"></i> @T["Email"]</h4>
+                        <h4><i class="bi bi-envelope-fill"></i> @T["Form.Label.Email"]</h4>
                         <p class="ms-4"><a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
                     </div>
                     <div class="mb-0">
@@ -63,7 +64,7 @@
                 </div>
                 <div class="card-footer bg-light">
                     <small class="text-muted">
-                        <i class="bi bi-clock"></i> @T["ReplyTime"]
+                        <i class="bi bi-clock"></i> @I["Contact.Content.ReplyTime"]
                     </small>
                 </div>
             </div>
@@ -72,7 +73,7 @@
         <div class="col-lg-6">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> @T["ContactForm"]</h3>
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> @I["Contact.Form.Header"]</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ContactForm" model="Model" />

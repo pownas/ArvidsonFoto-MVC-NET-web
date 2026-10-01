@@ -1,4 +1,8 @@
 using System.Globalization;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.Resources;
+using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
@@ -12,6 +16,54 @@ namespace ArvidsonFoto.Tests.Unit.ServiceTests;
 
 public class LocalizedContentTests
 {
+    [Theory]
+    [InlineData("SharedResource")]
+    [InlineData("HomeResource")]
+    [InlineData("GalleryResource")]
+    [InlineData("SearchResource")]
+    [InlineData("InfoResource")]
+    [InlineData("LatestResource")]
+    [InlineData("ValidationResource")]
+    public void Resources_HaveMatchingNonEmptySwedishAndEnglishKeys(string resourceName)
+    {
+        var resources = new ResourceManager("ArvidsonFoto.Resources.Core." + resourceName, typeof(SharedResource).Assembly);
+        static Dictionary<string, string> Read(ResourceManager manager, string culture)
+        {
+            var set = manager.GetResourceSet(CultureInfo.GetCultureInfo(culture), true, false);
+            Assert.NotNull(set);
+            return set.Cast<DictionaryEntry>().ToDictionary(
+                entry => (string)entry.Key, entry => (string)entry.Value!);
+        }
+
+        var swedish = Read(resources, "sv-SE");
+        var english = Read(resources, "en-US");
+        Assert.NotEmpty(swedish);
+        Assert.Equal(swedish.Keys.OrderBy(key => key), english.Keys.OrderBy(key => key));
+        Assert.All(swedish.Values.Concat(english.Values), value => Assert.False(string.IsNullOrWhiteSpace(value)));
+    }
+
+    [Theory]
+    [InlineData("sv-SE", "Fel kod angiven")]
+    [InlineData("en-US", "Incorrect code.")]
+    public void DirectValidation_UsesLocalizedResourceOutsideHttpRequest(string culture, string expected)
+    {
+        var previous = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+            var input = GuestbookFormInputDto.CreateEmpty();
+            input.Code = "1234";
+            input.Message = "Test";
+            var errors = new List<ValidationResult>();
+            Validator.TryValidateObject(input, new ValidationContext(input), errors, true);
+            Assert.Contains(errors, error => error.ErrorMessage == expected);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previous;
+        }
+    }
+
     [Theory]
     [InlineData("sv-SE", "Fåglar", "faglar", "Svensk beskrivning")]
     [InlineData("en-US", "Birds", "birds", "English description")]

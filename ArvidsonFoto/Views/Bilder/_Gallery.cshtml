@@ -1,4 +1,5 @@
-﻿@model GalleryViewModel
+﻿@inject IStringLocalizer<GalleryResource> G
+@model GalleryViewModel
 @inject IApiImageService _imageService
 @using ArvidsonFoto.Core.Interfaces
 @using ArvidsonFoto.Core.DTOs
@@ -37,27 +38,27 @@
 {
   if (Model.SelectedCategory?.NameSv == "Fåglar")
   {
-    <p class="m-4">@T["ChooseBirdCategory"] ⤴</p>
+    <p class="m-4">@G["Gallery.Empty.ChooseBirdCategory"] ⤴</p>
   }
   else
   {
     <p>
-      @T["NoImages"] <br />
-      @T["SeeAllPhotos"] <a href="@LocalizedRoutes.Page("/Senast/Fotograferad")">ArvidsonFoto.se@LocalizedRoutes.Page("/Senast/Fotograferad")</a>.
+      @G["Gallery.Empty.Message"] <br />
+      @G["Gallery.Empty.SeeAllPhotos"] <a href="@LocalizedRoutes.Page("/Senast/Fotograferad")">ArvidsonFoto.se@LocalizedRoutes.Page("/Senast/Fotograferad")</a>.
     </p>
     <p class="mt-4">
-      @T["RabbitInstead"] 🐇
+      @G["Gallery.Empty.RabbitInstead"] 🐇
     </p>
     <div id="imageRabbit" class="col-12 col-sm-10 col-md-8 col-lg-6">
-      <figure class="figure alert alert-light" title="@T["Rabbit"] 🐇">
-        <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg" alt="@T["Rabbit"]" />
-        <figcaption class="figure-caption text-center text-truncate">@T["Rabbit"] 🐇</figcaption>
+      <figure class="figure alert alert-light" title="@G["Gallery.Empty.Rabbit"] 🐇">
+        <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg" alt="@G["Gallery.Empty.Rabbit"]" />
+        <figcaption class="figure-caption text-center text-truncate">@G["Gallery.Empty.Rabbit"] 🐇</figcaption>
       </figure>
     </div>
-    <h3>@T["SearchCategories"]</h3>
+    <h3>@G["Gallery.Empty.SearchCategories"]</h3>
     <div id="search" class="mb-5">
-      @T["SearchOrSitemap"]
-      <a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Sitemap"] <i class="bi bi-diagram-3"></i></a><br />
+      @G["Gallery.Empty.SearchOrSitemap"]
+      <a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Navigation.Sitemap"] <i class="bi bi-diagram-3"></i></a><br />
       <partial name="../Bilder/_SearchBar" />
     </div>
   }
@@ -97,13 +98,13 @@ else
       string imgName = img.UrlImage.Split('/').Last() + ".jpg";
 
       DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
-      string imgDateDisplay = imgDate.Year == 1900 ? T["Missing"].Value : imgDate.ToString("yyyy-MM-dd");
+      string imgDateDisplay = imgDate.Year == 1900 ? G["Gallery.Image.Missing"].Value : imgDate.ToString("yyyy-MM-dd");
 
       if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPath is not null && Model.SelectedCategory.UrlCategoryPath.Equals("/Search"))
       {
         <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
-          <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="@T["ViewAllOf", imgTitle]@imgDesc">
-            <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@T["ViewAllOf", imgTitle]@imgDesc">
+          <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="@G["Gallery.Image.ViewAllOf", imgTitle]@imgDesc">
+            <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@G["Gallery.Image.ViewAllOf", imgTitle]@imgDesc">
             <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
           </a>
         </figure>
@@ -112,16 +113,16 @@ else
       {
         <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
           <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
-@T["Enlarge"]">
+@G["Gallery.Image.Enlarge"]">
             <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" title="@imgTitle@imgDesc
-@T["Enlarge"]">
+@G["Gallery.Image.Enlarge"]">
             <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
           </a>
         </figure>
 
         <div class="glightbox-desc row @customDesc">
-          <p>@T["ImagePosition", pageOffset + index, totalCount] - <a href="@imgHref" title="@T["ViewAllOf", imgTitle]@imgDesc">@imgTitle</a>@imgDesc @T["PhotoDate"]: @imgDateDisplay</p>
-          <p>@T["ImageName"]: @imgName <a rel="nofollow" href="@LocalizedRoutes.Page("/Info/Copyright")">© Torbjörn Arvidson</a>. @T["InterestedInPhoto"] <a rel="nofollow" href="@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))?imgId=@img.ImageId">@T["BuyPhotos"]</a></p>
+          <p>@G["Gallery.Image.Position", pageOffset + index, totalCount] - <a href="@imgHref" title="@G["Gallery.Image.ViewAllOf", imgTitle]@imgDesc">@imgTitle</a>@imgDesc @G["Gallery.Image.Date"]: @imgDateDisplay</p>
+          <p>@G["Gallery.Image.FileName"]: @imgName <a rel="nofollow" href="@LocalizedRoutes.Page("/Info/Copyright")">© Torbjörn Arvidson</a>. @G["Gallery.Image.BuyPrompt"] <a rel="nofollow" href="@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))?imgId=@img.ImageId">@T["Navigation.BuyPhotos"]</a></p>
         </div>
       }
 

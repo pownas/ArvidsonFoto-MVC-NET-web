@@ -4,182 +4,21 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
-  <data name="Latest" xml:space="preserve"><value>Senast</value></data>
-  <data name="Photographed" xml:space="preserve"><value>Fotograferad</value></data>
-  <data name="Uploaded" xml:space="preserve"><value>Uppladdad</value></data>
-  <data name="ByCategory" xml:space="preserve"><value>Per kategori</value></data>
-  <data name="Guestbook" xml:space="preserve"><value>Gästbok</value></data>
-  <data name="Contact" xml:space="preserve"><value>Kontaktinformation</value></data>
-  <data name="About" xml:space="preserve"><value>Om mig, Torbjörn Arvidson</value></data>
-  <data name="Sitemap" xml:space="preserve"><value>Sidkarta</value></data>
-  <data name="Search" xml:space="preserve"><value>Sök</value></data>
-  <data name="BuyPhotos" xml:space="preserve"><value>Köp av bilder</value></data>
-  <data name="GuestbookPosts" xml:space="preserve"><value>Inlägg i gästboken</value></data>
-  <data name="WriteGuestbook" xml:space="preserve"><value>Skriv i gästboken</value></data>
-  <data name="Name" xml:space="preserve"><value>Namn</value></data>
-  <data name="Email" xml:space="preserve"><value>Epost</value></data>
-  <data name="Homepage" xml:space="preserve"><value>Hemsida</value></data>
-  <data name="Message" xml:space="preserve"><value>Meddelande</value></data>
-  <data name="Send" xml:space="preserve"><value>Skicka inlägget</value></data>
-  <data name="Anonymous" xml:space="preserve"><value>Anonym användare</value></data>
-  <data name="NoImages" xml:space="preserve"><value>Det finns inga bilder i denna kategori.</value></data>
-  <data name="PhotoDate" xml:space="preserve"><value>Fotodatum</value></data>
-  <data name="ImageName" xml:space="preserve"><value>Bildnamn</value></data>
-  <data name="Subject" xml:space="preserve"><value>Rubrik</value></data>
-  <data name="SendMessage" xml:space="preserve"><value>Skicka meddelandet</value></data>
-  <data name="SendFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas.</value></data>
-  <data name="GuestbookSent" xml:space="preserve"><value>Tack för ditt inlägg! Ditt meddelande har publicerats i gästboken.</value></data>
-  <data name="ContactSent" xml:space="preserve"><value>Tack för ditt mejl! Jag återkommer inom 1–5 dagar med svar.</value></data>
-  <data name="HomeMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv. Bilder på djur och natur.</value></data>
-  <data name="HomeTitle" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv</value></data>
-  <data name="Welcome" xml:space="preserve"><value>Välkommen till mitt bildarkiv</value></data>
-  <data name="Intro" xml:space="preserve"><value>Här finner du ett urval av mina bilder.</value></data>
-  <data name="BuyIntro" xml:space="preserve"><value>Är du intresserad av att köpa högupplösta bilder?</value></data>
-  <data name="EmailIntro" xml:space="preserve"><value>Kontakta mig på</value></data>
-  <data name="ReadAbout" xml:space="preserve"><value>Läs mer om mig</value></data>
-  <data name="RandomPhotos" xml:space="preserve"><value>Slumpmässigt utvalda bilder</value></data>
-  <data name="Explore" xml:space="preserve"><value>Utforska mer</value></data>
-  <data name="LatestPhotos" xml:space="preserve"><value>Senast fotograferade</value></data>
-  <data name="LatestPhotosDetail" xml:space="preserve"><value>Upptäck de nyaste bilderna i samlingen. Se vad som har fotograferats senast och utforska de färskaste tillskotten.</value></data>
-  <data name="ViewLatest" xml:space="preserve"><value>Se senaste bilderna</value></data>
-  <data name="AllCategories" xml:space="preserve"><value>Alla kategorier</value></data>
-  <data name="AllCategoriesDetail" xml:space="preserve"><value>Bläddra bland bildkategorier och se de senaste bilderna per kategori. Hitta snabbt det du letar efter.</value></data>
-  <data name="ViewCategories" xml:space="preserve"><value>Visa alla kategorier</value></data>
-  <data name="BuyPhotosDetail" xml:space="preserve"><value>Intresserad av att köpa högupplösta bilder? Ta kontakt för mer information om priser och användningsområden.</value></data>
-  <data name="ReadBuyPhotos" xml:space="preserve"><value>Läs mer om bildköp</value></data>
-  <data name="SitemapDetail" xml:space="preserve"><value>Hitta snabbt till alla bildkategorier och sidor på webbplatsen. En komplett översikt över allt innehåll.</value></data>
-  <data name="ViewSitemap" xml:space="preserve"><value>Visa sidkarta</value></data>
-  <data name="Photos" xml:space="preserve"><value>Bilder</value></data>
-  <data name="GalleryTitle" xml:space="preserve"><value>Bilder på: {0} - Torbjörn Arvidson Foto</value></data>
-  <data name="GalleryMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Bilder på: {0}. Antal bilder: {1}st.</value></data>
-  <data name="ImageCount" xml:space="preserve"><value>Antal bilder: {0}st, sida: {1} av {2}</value></data>
-  <data name="CategoryCount" xml:space="preserve"><value>Antal kategorier: {0}st, sida: {1} av {2}</value></data>
-  <data name="PageNavigation" xml:space="preserve"><value>Sid-navigering</value></data>
-  <data name="First" xml:space="preserve"><value>Första</value></data>
-  <data name="Previous" xml:space="preserve"><value>Föregående</value></data>
-  <data name="Current" xml:space="preserve"><value>Nuvarande</value></data>
-  <data name="Next" xml:space="preserve"><value>Nästa</value></data>
-  <data name="Last" xml:space="preserve"><value>Sista</value></data>
-  <data name="ChooseBirdCategory" xml:space="preserve"><value>Välj en fågel-kategori här ovanför</value></data>
-  <data name="SeeAllPhotos" xml:space="preserve"><value>Se istället alla bilder på sidan:</value></data>
-  <data name="RabbitInstead" xml:space="preserve"><value>Här är en bild på en söt kanin istället:</value></data>
-  <data name="Rabbit" xml:space="preserve"><value>Kanin</value></data>
-  <data name="SearchCategories" xml:space="preserve"><value>Sök bland kategorier</value></data>
-  <data name="SearchOrSitemap" xml:space="preserve"><value>Du kan även söka bland kategorierna här nedan eller se alla kategorier via:</value></data>
-  <data name="Missing" xml:space="preserve"><value>saknas</value></data>
-  <data name="ViewAllOf" xml:space="preserve"><value>Se alla bilder av {0}</value></data>
-  <data name="Enlarge" xml:space="preserve"><value>Tryck för att förstora</value></data>
-  <data name="ImagePosition" xml:space="preserve"><value>{0} av {1}</value></data>
-  <data name="InterestedInPhoto" xml:space="preserve"><value>Intresserad av bilden? Se:</value></data>
-  <data name="SearchPlaceholder" xml:space="preserve"><value>Sök efter kategori...</value></data>
-  <data name="SearchMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida.</value></data>
-  <data name="SearchTitle" xml:space="preserve"><value>Sök - Torbjörn Arvidson Foto</value></data>
-  <data name="SearchingFor" xml:space="preserve"><value>Söker efter:</value></data>
-  <data name="SearchHint" xml:space="preserve"><value>Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".</value></data>
-  <data name="SearchSuccess" xml:space="preserve"><value>Sökningen lyckades!</value></data>
-  <data name="FoundCategories" xml:space="preserve"><value>Hittade {0} kategorier.</value></data>
-  <data name="FoundCategory" xml:space="preserve"><value>Hittade {0} kategori.</value></data>
-  <data name="NoResults" xml:space="preserve"><value>Inga resultat hittades</value></data>
-  <data name="NoSearchMatches" xml:space="preserve"><value>Sökte efter "{0}", men hittade inget.</value></data>
-  <data name="Tip" xml:space="preserve"><value>Tips:</value></data>
-  <data name="TrySearchingFor" xml:space="preserve"><value>Prova att söka på:</value></data>
-  <data name="SearchExampleAnimal" xml:space="preserve"><value>Ett djurnamn (t.ex. "Räv", "Örn", "Fjäril")</value></data>
-  <data name="SearchExampleCategory" xml:space="preserve"><value>En kategori (t.ex. "Fåglar", "Däggdjur", "Landskap")</value></data>
-  <data name="SearchExampleGeneral" xml:space="preserve"><value>Ett mer generellt sökord</value></data>
-  <data name="SearchBug" xml:space="preserve"><value>Upplever du att det verkar vara en bugg med sökningen?</value></data>
-  <data name="ContactMe" xml:space="preserve"><value>Kontakta mig gärna</value></data>
-  <data name="ViewAvailableCategories" xml:space="preserve"><value>Visa alla tillgängliga kategorier</value></data>
-  <data name="GoToSitemap" xml:space="preserve"><value>Till sidkartan</value></data>
-  <data name="SeeNewestPhotos" xml:space="preserve"><value>Se de nyaste bilderna i arkivet</value></data>
-  <data name="RecentlyUploaded" xml:space="preserve"><value>Senast uppladdade</value></data>
-  <data name="HowToSearch" xml:space="preserve"><value>Hur söker jag?</value></data>
-  <data name="SearchInstructions" xml:space="preserve"><value>Ange ett sökord i sökfältet ovan och tryck på "Sök" eller Enter.</value></data>
-  <data name="ExampleKeywords" xml:space="preserve"><value>Exempel på sökord:</value></data>
-  <data name="ExampleButterfly" xml:space="preserve"><value>Fjäril</value></data>
-  <data name="ExampleEagle" xml:space="preserve"><value>Havsörn</value></data>
-  <data name="ExampleFox" xml:space="preserve"><value>Räv</value></data>
-  <data name="ExampleLandscape" xml:space="preserve"><value>Landskap</value></data>
-  <data name="QuickLinks" xml:space="preserve"><value>Snabblänkar</value></data>
-  <data name="SeeCategoriesInSitemap" xml:space="preserve"><value>Se alla kategorier i sidkartan</value></data>
-  <data name="RecentByCategory" xml:space="preserve"><value>Senaste bilder per kategori</value></data>
-  <data name="BrowseBirdPhotos" xml:space="preserve"><value>Bläddra bland fågelbilder</value></data>
-  <data name="SearchResults" xml:space="preserve"><value>Sökresultat</value></data>
-  <data name="YourSearchFor" xml:space="preserve"><value>Din sökning efter</value></data>
-  <data name="Returned" xml:space="preserve"><value>gav:</value></data>
-  <data name="NewSearch" xml:space="preserve"><value>Ny sökning</value></data>
-  <data name="SitemapIntro" xml:space="preserve"><value>En sidkarta över alla sidor och bildkategorier:</value></data>
-  <data name="InfoMeta" xml:space="preserve"><value>Informationssidor på ArvidsonFoto.se – hitta information om bildköp, kontaktuppgifter, gästbok och mer om naturfotograf Torbjörn Arvidson.</value></data>
-  <data name="AboutMeta" xml:space="preserve"><value>Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare.</value></data>
-  <data name="ContactMeta" xml:space="preserve"><value>Kontakta naturfotograf Torbjörn Arvidson via telefon, e-post eller kontaktformulär. Välkommen att höra av dig för frågor om bildköp eller föredrag.</value></data>
-  <data name="BuyMeta" xml:space="preserve"><value>Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden.</value></data>
-  <data name="GuestbookMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok.</value></data>
-  <data name="CopyrightMeta" xml:space="preserve"><value>Copyright och upphovsrätt för bilder på ArvidsonFoto.se. Alla bilder tillhör fotografen Torbjörn Arvidson och får inte användas utan tillstånd.</value></data>
-  <data name="AboutPassion" xml:space="preserve"><value>Passion för naturfotografi</value></data>
-  <data name="AboutBirds" xml:space="preserve"><value>Mitt intresse för fåglar började i unga år och med närheten till klassiska fågelmarker så som Oset, Kvismaren och Tysslingen så tilltog intresset alltmer.</value></data>
-  <data name="AboutTravel" xml:space="preserve"><value>Började tidigt att fotografera och dokumentera naturen runt om i Sverige. Med åren har det blivit många resor för fotografering runt om i världen. Jag är också en flitigt anlitad föredragshållare.</value></data>
-  <data name="MyPhotography" xml:space="preserve"><value>Min fotografering</value></data>
-  <data name="AboutEarly" xml:space="preserve"><value>Naturfotografi sedan tidiga år</value></data>
-  <data name="AboutBirdSpecialist" xml:space="preserve"><value>Specialiserad på fågelfotografi</value></data>
-  <data name="AboutWorldTravel" xml:space="preserve"><value>Resor runt om i världen</value></data>
-  <data name="AboutSpeaker" xml:space="preserve"><value>Föredragshållare</value></data>
-  <data name="AboutCaption" xml:space="preserve"><value>Född 1953 och bor i Örebro</value></data>
-  <data name="ContactHeading" xml:space="preserve"><value>Kontaktinformation</value></data>
-  <data name="ContactIntro" xml:space="preserve"><value>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon.</value></data>
-  <data name="Address" xml:space="preserve"><value>Adress</value></data>
-  <data name="Mobile" xml:space="preserve"><value>Mobil</value></data>
-  <data name="ReplyTime" xml:space="preserve"><value>Svarar vanligtvis inom 1-5 dagar</value></data>
-  <data name="ContactForm" xml:space="preserve"><value>Kontaktformulär</value></data>
-  <data name="BuyInfo" xml:space="preserve"><value>Information om bildköp</value></data>
-  <data name="BuyQuestion" xml:space="preserve"><value>Intresserad av att köpa bilder?</value></data>
-  <data name="BuyInstructions" xml:space="preserve"><value>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</value></data>
-  <data name="BuySeeContact" xml:space="preserve"><value>Se även mer information under sidan</value></data>
-  <data name="BuyHelp" xml:space="preserve"><value>Vad kan jag hjälpa till med?</value></data>
-  <data name="BuyPrint" xml:space="preserve"><value>Högupplösta bilder för tryck</value></data>
-  <data name="BuyDigital" xml:space="preserve"><value>Digitala bildfiler</value></data>
-  <data name="BuyEditorial" xml:space="preserve"><value>Redaktionellt bruk</value></data>
-  <data name="BuyCommercial" xml:space="preserve"><value>Kommersiellt bruk</value></data>
-  <data name="RightsReserved" xml:space="preserve"><value>Alla rättigheter förbehållna fotografen.</value></data>
-  <data name="CopyrightNotice" xml:space="preserve"><value>Alla bilder är skyddade av upphovsrätten och får inte laddas ner utan tillstånd.</value></data>
-  <data name="FormError" xml:space="preserve"><value>Ett fel uppstod!</value></data>
-  <data name="ContactBackup" xml:space="preserve"><value>Ditt meddelande har sparats som backup.</value></data>
-  <data name="Alternative" xml:space="preserve"><value>Alternativ:</value></data>
-  <data name="EmailDirectly" xml:space="preserve"><value>Skicka ett mail direkt till</value></data>
-  <data name="Close" xml:space="preserve"><value>Stäng</value></data>
-  <data name="YourName" xml:space="preserve"><value>Ditt namn</value></data>
-  <data name="EmailExample" xml:space="preserve"><value>din.epost@exempel.se</value></data>
-  <data name="SubjectPlaceholder" xml:space="preserve"><value>Rubrik på ditt meddelande</value></data>
-  <data name="ContactMessagePlaceholder" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna vad ni önskar kontakt om)</value></data>
-  <data name="BuyMessagePlaceholder" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna bildnamn på de bilderna ni är intresserade av)</value></data>
-  <data name="BuyMessageIntro" xml:space="preserve"><value>Hej! Jag är intresserad av att köpa bilden:</value></data>
-  <data name="BuyImageName" xml:space="preserve"><value>Bildnamn:</value></data>
-  <data name="BuyCategory" xml:space="preserve"><value>Från kategorin:</value></data>
-  <data name="BuySubject" xml:space="preserve"><value>Intresse att köpa en bild i kategorin: {0}</value></data>
-  <data name="CaptchaAlt" xml:space="preserve"><value>CAPTCHA bild med siffror</value></data>
-  <data name="CaptchaPrompt" xml:space="preserve"><value>Ange siffrorna från bilden</value></data>
-  <data name="CaptchaPlaceholder" xml:space="preserve"><value>Siffror från bilden</value></data>
-  <data name="GuestbookFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas...</value></data>
-  <data name="GuestbookNamePlaceholder" xml:space="preserve"><value>Namn (blank för anonym)</value></data>
-  <data name="GuestbookEmailPlaceholder" xml:space="preserve"><value>Epost (visas ej)</value></data>
-  <data name="GuestbookWebsitePlaceholder" xml:space="preserve"><value>Hemsida (om du vill)</value></data>
-  <data name="Digits" xml:space="preserve"><value>Siffror</value></data>
-  <data name="GuestbookMessagePlaceholder" xml:space="preserve"><value>Skriv ditt meddelande här...</value></data>
-  <data name="NoPhotosNow" xml:space="preserve"><value>Det finns inga bilder att visa för tillfället.</value></data>
-  <data name="ViewCategoryPhotos" xml:space="preserve"><value>Se alla bilder i kategorin {0}</value></data>
-  <data name="ToggleMenu" xml:space="preserve"><value>Växla menyns synlighet</value></data>
-  <data name="LatestMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Senast {0}. Bilder på djur och natur.</value></data>
-  <data name="LatestMetaCount" xml:space="preserve"><value>Antal bilder: {0}st</value></data>
-  <data name="Vänligen fyll i en kod" xml:space="preserve"><value>Vänligen fyll i en kod</value></data>
-  <data name="Fel kod angiven" xml:space="preserve"><value>Fel kod angiven</value></data>
-  <data name="Ange din e-postadress" xml:space="preserve"><value>Ange din e-postadress</value></data>
-  <data name="Du har inte angivit en korrekt e-postadress" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress</value></data>
-  <data name="Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt</value></data>
-  <data name="Du har angivit en för lång epost-adress. Max 150 tecken" xml:space="preserve"><value>Du har angivit en för lång epost-adress. Max 150 tecken</value></data>
-  <data name="Ange ditt namn" xml:space="preserve"><value>Ange ditt namn</value></data>
-  <data name="För långt namn (max 50 tecken)" xml:space="preserve"><value>För långt namn (max 50 tecken)</value></data>
-  <data name="Ange en rubrik" xml:space="preserve"><value>Ange en rubrik</value></data>
-  <data name="För lång rubrik (max 50 tecken)" xml:space="preserve"><value>För lång rubrik (max 50 tecken)</value></data>
-  <data name="För lång rubrik (max 250 tecken)" xml:space="preserve"><value>För lång rubrik (max 250 tecken)</value></data>
-  <data name="Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt" xml:space="preserve"><value>Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt</value></data>
-  <data name="Ange ett meddelande" xml:space="preserve"><value>Ange ett meddelande</value></data>
-  <data name="För långt meddelande (max 2000 tecken)" xml:space="preserve"><value>För långt meddelande (max 2000 tecken)</value></data>
+  <data name="Navigation.Latest" xml:space="preserve"><value>Senast</value></data>
+  <data name="Navigation.Photographed" xml:space="preserve"><value>Fotograferad</value></data>
+  <data name="Navigation.Uploaded" xml:space="preserve"><value>Uppladdad</value></data>
+  <data name="Navigation.ByCategory" xml:space="preserve"><value>Per kategori</value></data>
+  <data name="Navigation.Guestbook" xml:space="preserve"><value>Gästbok</value></data>
+  <data name="Navigation.Contact" xml:space="preserve"><value>Kontaktinformation</value></data>
+  <data name="Navigation.About" xml:space="preserve"><value>Om mig, Torbjörn Arvidson</value></data>
+  <data name="Navigation.Sitemap" xml:space="preserve"><value>Sidkarta</value></data>
+  <data name="Navigation.Search" xml:space="preserve"><value>Sök</value></data>
+  <data name="Navigation.BuyPhotos" xml:space="preserve"><value>Köp av bilder</value></data>
+  <data name="Form.Label.Name" xml:space="preserve"><value>Namn</value></data>
+  <data name="Form.Label.Email" xml:space="preserve"><value>Epost</value></data>
+  <data name="Form.Label.Homepage" xml:space="preserve"><value>Hemsida</value></data>
+  <data name="Form.Label.Message" xml:space="preserve"><value>Meddelande</value></data>
+  <data name="Form.Label.Subject" xml:space="preserve"><value>Rubrik</value></data>
+  <data name="Navigation.Photos" xml:space="preserve"><value>Bilder</value></data>
+  <data name="Navigation.ToggleMenu" xml:space="preserve"><value>Växla menyns synlighet</value></data>
 </root>

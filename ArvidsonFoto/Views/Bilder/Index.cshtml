@@ -1,4 +1,5 @@
-﻿@*<!-- Bilder-index (Galleriet) -->*@
+﻿@inject IStringLocalizer<GalleryResource> G
+@*<!-- Bilder-index (Galleriet) -->*@
 @model GalleryViewModel
 @inject IApiImageService _imageService
 @inject IApiCategoryService _categoryService
@@ -18,18 +19,18 @@
     string firstImageUrl = Model.DisplayImagesList?.FirstOrDefault()?.UrlImage ?? "";
     string fullImageUrl = !string.IsNullOrEmpty(firstImageUrl) ? $"https://ArvidsonFoto.se/{firstImageUrl}.jpg" : "";
   }
-  <meta name="description" content="@T["GalleryMeta", ViewData["Title"], totalImgCount]" />
+  <meta name="description" content="@G["Gallery.Metadata.Description", ViewData["Title"], totalImgCount]" />
   <link rel="canonical" href="@($"https://ArvidsonFoto.se{Model.CurrentUrl}")" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="@T["GalleryTitle", ViewData["Title"]]">
-  <meta name="twitter:description" content="@T["GalleryMeta", ViewData["Title"], totalImgCount]">
+  <meta name="twitter:title" content="@G["Gallery.Metadata.Title", ViewData["Title"]]">
+  <meta name="twitter:description" content="@G["Gallery.Metadata.Description", ViewData["Title"], totalImgCount]">
   <meta name="twitter:image" content="@Html.Raw(fullImageUrl)">
 
   <!-- Open Graph for social media sharing -->
-  <meta property="og:title" content="@T["GalleryTitle", ViewData["Title"]]">
-  <meta name="og:description" content="@T["GalleryMeta", ViewData["Title"], totalImgCount]" />
+  <meta property="og:title" content="@G["Gallery.Metadata.Title", ViewData["Title"]]">
+  <meta name="og:description" content="@G["Gallery.Metadata.Description", ViewData["Title"], totalImgCount]" />
   <meta property="og:image" content="@Html.Raw(fullImageUrl)">
   <meta property="og:url" content="@($"https://ArvidsonFoto.se{Model.CurrentUrl}")">
 }
@@ -91,7 +92,7 @@
       for (int i = 0; i < splittUrl.Length; i++)
       {
         currentUrl += "/" + splittUrl[i];
-        var label = i == 0 ? T["Photos"].Value :
+        var label = i == 0 ? T["Navigation.Photos"].Value :
           _categoryService.GetByUrlSegmentWithFallback(splittUrl[i]).Name is { Length: > 0 } name ? name : splittUrl[i];
         if (i == splittUrl.Length - 1)
         {
@@ -144,7 +145,7 @@ else
 {
   if (Model.TotalImageCount > 12)
   {
-    <p id="page-image-counter-top" class="text-center">@T["ImageCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]</p>
+    <p id="page-image-counter-top" class="text-center">@G["Gallery.Counter.Images", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]</p>
   }
 }
 
@@ -158,6 +159,6 @@ else
 {
   if (Model.TotalImageCount > 0)
   {
-    <p id="page-image-counter-bottom" class="text-center">@T["ImageCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]</p>
+    <p id="page-image-counter-bottom" class="text-center">@G["Gallery.Counter.Images", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]</p>
   }
 }

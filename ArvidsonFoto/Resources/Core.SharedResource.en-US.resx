@@ -4,182 +4,21 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
-  <data name="Latest" xml:space="preserve"><value>Latest</value></data>
-  <data name="Photographed" xml:space="preserve"><value>Photographed</value></data>
-  <data name="Uploaded" xml:space="preserve"><value>Uploaded</value></data>
-  <data name="ByCategory" xml:space="preserve"><value>By category</value></data>
-  <data name="Guestbook" xml:space="preserve"><value>Guestbook</value></data>
-  <data name="Contact" xml:space="preserve"><value>Contact information</value></data>
-  <data name="About" xml:space="preserve"><value>About me, Torbjörn Arvidson</value></data>
-  <data name="Sitemap" xml:space="preserve"><value>Sitemap</value></data>
-  <data name="Search" xml:space="preserve"><value>Search</value></data>
-  <data name="BuyPhotos" xml:space="preserve"><value>Buy photos</value></data>
-  <data name="GuestbookPosts" xml:space="preserve"><value>Guestbook entries</value></data>
-  <data name="WriteGuestbook" xml:space="preserve"><value>Sign the guestbook</value></data>
-  <data name="Name" xml:space="preserve"><value>Name</value></data>
-  <data name="Email" xml:space="preserve"><value>Email</value></data>
-  <data name="Homepage" xml:space="preserve"><value>Website</value></data>
-  <data name="Message" xml:space="preserve"><value>Message</value></data>
-  <data name="Send" xml:space="preserve"><value>Send entry</value></data>
-  <data name="Anonymous" xml:space="preserve"><value>Anonymous visitor</value></data>
-  <data name="NoImages" xml:space="preserve"><value>There are no photos in this category.</value></data>
-  <data name="PhotoDate" xml:space="preserve"><value>Date photographed</value></data>
-  <data name="ImageName" xml:space="preserve"><value>Image name</value></data>
-  <data name="Subject" xml:space="preserve"><value>Subject</value></data>
-  <data name="SendMessage" xml:space="preserve"><value>Send message</value></data>
-  <data name="SendFailed" xml:space="preserve"><value>Something went wrong while sending your message.</value></data>
-  <data name="GuestbookSent" xml:space="preserve"><value>Thank you! Your entry has been published.</value></data>
-  <data name="ContactSent" xml:space="preserve"><value>Thank you for your email! I will reply within 1–5 days.</value></data>
-  <data name="HomeMeta" xml:space="preserve"><value>Torbjörn Arvidson Photography - Welcome to my photo archive. Wildlife and nature photography.</value></data>
-  <data name="HomeTitle" xml:space="preserve"><value>Torbjörn Arvidson Photography - Welcome to my photo archive</value></data>
-  <data name="Welcome" xml:space="preserve"><value>Welcome to my photo archive</value></data>
-  <data name="Intro" xml:space="preserve"><value>Here you can find a selection of my photographs.</value></data>
-  <data name="BuyIntro" xml:space="preserve"><value>Interested in buying high-resolution photographs?</value></data>
-  <data name="EmailIntro" xml:space="preserve"><value>Contact me at</value></data>
-  <data name="ReadAbout" xml:space="preserve"><value>Read more about me</value></data>
-  <data name="RandomPhotos" xml:space="preserve"><value>Randomly selected photographs</value></data>
-  <data name="Explore" xml:space="preserve"><value>Explore more</value></data>
-  <data name="LatestPhotos" xml:space="preserve"><value>Recently photographed</value></data>
-  <data name="LatestPhotosDetail" xml:space="preserve"><value>Discover the newest photos in the collection and explore the latest additions.</value></data>
-  <data name="ViewLatest" xml:space="preserve"><value>View recent photos</value></data>
-  <data name="AllCategories" xml:space="preserve"><value>All categories</value></data>
-  <data name="AllCategoriesDetail" xml:space="preserve"><value>Browse photo categories and see the latest photos in each. Find what you are looking for.</value></data>
-  <data name="ViewCategories" xml:space="preserve"><value>View all categories</value></data>
-  <data name="BuyPhotosDetail" xml:space="preserve"><value>Interested in buying high-resolution photos? Contact me for prices and usage details.</value></data>
-  <data name="ReadBuyPhotos" xml:space="preserve"><value>Learn about buying photos</value></data>
-  <data name="SitemapDetail" xml:space="preserve"><value>Find all photo categories and pages on the website. A complete overview of the content.</value></data>
-  <data name="ViewSitemap" xml:space="preserve"><value>View sitemap</value></data>
-  <data name="Photos" xml:space="preserve"><value>Photos</value></data>
-  <data name="GalleryTitle" xml:space="preserve"><value>Photos of {0} - Torbjörn Arvidson Photography</value></data>
-  <data name="GalleryMeta" xml:space="preserve"><value>Torbjörn Arvidson Photography - Photos of {0}. Number of photos: {1}.</value></data>
-  <data name="ImageCount" xml:space="preserve"><value>Photos: {0}, page {1} of {2}</value></data>
-  <data name="CategoryCount" xml:space="preserve"><value>Categories: {0}, page {1} of {2}</value></data>
-  <data name="PageNavigation" xml:space="preserve"><value>Page navigation</value></data>
-  <data name="First" xml:space="preserve"><value>First</value></data>
-  <data name="Previous" xml:space="preserve"><value>Previous</value></data>
-  <data name="Current" xml:space="preserve"><value>Current</value></data>
-  <data name="Next" xml:space="preserve"><value>Next</value></data>
-  <data name="Last" xml:space="preserve"><value>Last</value></data>
-  <data name="ChooseBirdCategory" xml:space="preserve"><value>Choose a bird category above</value></data>
-  <data name="SeeAllPhotos" xml:space="preserve"><value>See all photos instead at:</value></data>
-  <data name="RabbitInstead" xml:space="preserve"><value>Here is a photo of a rabbit instead:</value></data>
-  <data name="Rabbit" xml:space="preserve"><value>Rabbit</value></data>
-  <data name="SearchCategories" xml:space="preserve"><value>Search categories</value></data>
-  <data name="SearchOrSitemap" xml:space="preserve"><value>You can search the categories below or browse them in the</value></data>
-  <data name="Missing" xml:space="preserve"><value>unknown</value></data>
-  <data name="ViewAllOf" xml:space="preserve"><value>View all photos of {0}</value></data>
-  <data name="Enlarge" xml:space="preserve"><value>Click to enlarge</value></data>
-  <data name="ImagePosition" xml:space="preserve"><value>{0} of {1}</value></data>
-  <data name="InterestedInPhoto" xml:space="preserve"><value>Interested in this photo? See:</value></data>
-  <data name="SearchPlaceholder" xml:space="preserve"><value>Search for a category...</value></data>
-  <data name="SearchMeta" xml:space="preserve"><value>Torbjörn Arvidson Photography - Search photo categories.</value></data>
-  <data name="SearchTitle" xml:space="preserve"><value>Search - Torbjörn Arvidson Photography</value></data>
-  <data name="SearchingFor" xml:space="preserve"><value>Searching for:</value></data>
-  <data name="SearchHint" xml:space="preserve"><value>Enter a category, for example "Butterfly" or a bird species such as "Sea eagle".</value></data>
-  <data name="SearchSuccess" xml:space="preserve"><value>Search successful!</value></data>
-  <data name="FoundCategories" xml:space="preserve"><value>Found {0} categories.</value></data>
-  <data name="FoundCategory" xml:space="preserve"><value>Found {0} category.</value></data>
-  <data name="NoResults" xml:space="preserve"><value>No results found</value></data>
-  <data name="NoSearchMatches" xml:space="preserve"><value>No matches for "{0}".</value></data>
-  <data name="Tip" xml:space="preserve"><value>Tip:</value></data>
-  <data name="TrySearchingFor" xml:space="preserve"><value>Try searching for:</value></data>
-  <data name="SearchExampleAnimal" xml:space="preserve"><value>An animal (e.g. "Fox", "Eagle", "Butterfly")</value></data>
-  <data name="SearchExampleCategory" xml:space="preserve"><value>A category (e.g. "Birds", "Mammals", "Landscapes")</value></data>
-  <data name="SearchExampleGeneral" xml:space="preserve"><value>A more general keyword</value></data>
-  <data name="SearchBug" xml:space="preserve"><value>Think there's a problem with search?</value></data>
-  <data name="ContactMe" xml:space="preserve"><value>Contact me</value></data>
-  <data name="ViewAvailableCategories" xml:space="preserve"><value>Browse all available categories</value></data>
-  <data name="GoToSitemap" xml:space="preserve"><value>Go to the sitemap</value></data>
-  <data name="SeeNewestPhotos" xml:space="preserve"><value>See the newest photos in the archive</value></data>
-  <data name="RecentlyUploaded" xml:space="preserve"><value>Recently uploaded</value></data>
-  <data name="HowToSearch" xml:space="preserve"><value>How do I search?</value></data>
-  <data name="SearchInstructions" xml:space="preserve"><value>Enter a keyword in the search field and press Search or Enter.</value></data>
-  <data name="ExampleKeywords" xml:space="preserve"><value>Example keywords:</value></data>
-  <data name="ExampleButterfly" xml:space="preserve"><value>Butterfly</value></data>
-  <data name="ExampleEagle" xml:space="preserve"><value>Sea eagle</value></data>
-  <data name="ExampleFox" xml:space="preserve"><value>Fox</value></data>
-  <data name="ExampleLandscape" xml:space="preserve"><value>Landscape</value></data>
-  <data name="QuickLinks" xml:space="preserve"><value>Quick links</value></data>
-  <data name="SeeCategoriesInSitemap" xml:space="preserve"><value>See all categories in the sitemap</value></data>
-  <data name="RecentByCategory" xml:space="preserve"><value>Recent photos by category</value></data>
-  <data name="BrowseBirdPhotos" xml:space="preserve"><value>Browse bird photos</value></data>
-  <data name="SearchResults" xml:space="preserve"><value>Search results</value></data>
-  <data name="YourSearchFor" xml:space="preserve"><value>Your search for</value></data>
-  <data name="Returned" xml:space="preserve"><value>returned:</value></data>
-  <data name="NewSearch" xml:space="preserve"><value>New search</value></data>
-  <data name="SitemapIntro" xml:space="preserve"><value>Explore all pages and photo categories:</value></data>
-  <data name="InfoMeta" xml:space="preserve"><value>Information about buying photos, contacting me, the guestbook and nature photographer Torbjörn Arvidson.</value></data>
-  <data name="AboutMeta" xml:space="preserve"><value>Learn about nature photographer Torbjörn Arvidson from Örebro, his passion for birds and photography, travels and talks.</value></data>
-  <data name="ContactMeta" xml:space="preserve"><value>Contact nature photographer Torbjörn Arvidson by phone, email or the contact form about photos and talks.</value></data>
-  <data name="BuyMeta" xml:space="preserve"><value>Buy high-resolution nature photos by Torbjörn Arvidson. Contact me for prices and usage details.</value></data>
-  <data name="GuestbookMeta" xml:space="preserve"><value>Leave a message in Torbjörn Arvidson's guestbook.</value></data>
-  <data name="CopyrightMeta" xml:space="preserve"><value>All photos belong to Torbjörn Arvidson and may not be downloaded without permission.</value></data>
-  <data name="AboutPassion" xml:space="preserve"><value>A passion for nature photography</value></data>
-  <data name="AboutBirds" xml:space="preserve"><value>My interest in birds started at an early age and grew thanks to nearby birdwatching sites such as Oset, Kvismaren and Tysslingen.</value></data>
-  <data name="AboutTravel" xml:space="preserve"><value>I started photographing and documenting nature around Sweden early on. Over the years, I have travelled around the world to take photos. I am also a frequent speaker.</value></data>
-  <data name="MyPhotography" xml:space="preserve"><value>My photography</value></data>
-  <data name="AboutEarly" xml:space="preserve"><value>Nature photography from an early age</value></data>
-  <data name="AboutBirdSpecialist" xml:space="preserve"><value>Specializing in bird photography</value></data>
-  <data name="AboutWorldTravel" xml:space="preserve"><value>Travels around the world</value></data>
-  <data name="AboutSpeaker" xml:space="preserve"><value>Public speaker</value></data>
-  <data name="AboutCaption" xml:space="preserve"><value>Born in 1953 and lives in Örebro</value></data>
-  <data name="ContactHeading" xml:space="preserve"><value>Contact details</value></data>
-  <data name="ContactIntro" xml:space="preserve"><value>You can contact me by email or phone.</value></data>
-  <data name="Address" xml:space="preserve"><value>Address</value></data>
-  <data name="Mobile" xml:space="preserve"><value>Mobile</value></data>
-  <data name="ReplyTime" xml:space="preserve"><value>I usually reply within 1–5 days</value></data>
-  <data name="ContactForm" xml:space="preserve"><value>Contact form</value></data>
-  <data name="BuyInfo" xml:space="preserve"><value>Buying photos</value></data>
-  <data name="BuyQuestion" xml:space="preserve"><value>Interested in buying photos?</value></data>
-  <data name="BuyInstructions" xml:space="preserve"><value>Contact me if you would like to buy photos. Fill in the form and I will get back to you.</value></data>
-  <data name="BuySeeContact" xml:space="preserve"><value>For more information, see the</value></data>
-  <data name="BuyHelp" xml:space="preserve"><value>What can I help you with?</value></data>
-  <data name="BuyPrint" xml:space="preserve"><value>High-resolution photos for print</value></data>
-  <data name="BuyDigital" xml:space="preserve"><value>Digital image files</value></data>
-  <data name="BuyEditorial" xml:space="preserve"><value>Editorial use</value></data>
-  <data name="BuyCommercial" xml:space="preserve"><value>Commercial use</value></data>
-  <data name="RightsReserved" xml:space="preserve"><value>All rights reserved by the photographer.</value></data>
-  <data name="CopyrightNotice" xml:space="preserve"><value>All photos are protected by copyright and may not be downloaded without permission.</value></data>
-  <data name="FormError" xml:space="preserve"><value>An error occurred!</value></data>
-  <data name="ContactBackup" xml:space="preserve"><value>Your message has been saved as a backup.</value></data>
-  <data name="Alternative" xml:space="preserve"><value>Alternatively:</value></data>
-  <data name="EmailDirectly" xml:space="preserve"><value>Email me directly at</value></data>
-  <data name="Close" xml:space="preserve"><value>Close</value></data>
-  <data name="YourName" xml:space="preserve"><value>Your name</value></data>
-  <data name="EmailExample" xml:space="preserve"><value>your.email@example.com</value></data>
-  <data name="SubjectPlaceholder" xml:space="preserve"><value>Subject of your message</value></data>
-  <data name="ContactMessagePlaceholder" xml:space="preserve"><value>Message&#10;(What would you like to contact me about?)</value></data>
-  <data name="BuyMessagePlaceholder" xml:space="preserve"><value>Message&#10;(Which photos are you interested in?)</value></data>
-  <data name="BuyMessageIntro" xml:space="preserve"><value>Hello! I am interested in buying this photo:</value></data>
-  <data name="BuyImageName" xml:space="preserve"><value>Image name:</value></data>
-  <data name="BuyCategory" xml:space="preserve"><value>From the category:</value></data>
-  <data name="BuySubject" xml:space="preserve"><value>Interested in buying a photo in the category: {0}</value></data>
-  <data name="CaptchaAlt" xml:space="preserve"><value>CAPTCHA image with digits</value></data>
-  <data name="CaptchaPrompt" xml:space="preserve"><value>Enter the digits shown in the image</value></data>
-  <data name="CaptchaPlaceholder" xml:space="preserve"><value>Digits from the image</value></data>
-  <data name="GuestbookFailed" xml:space="preserve"><value>Something went wrong while publishing your entry.</value></data>
-  <data name="GuestbookNamePlaceholder" xml:space="preserve"><value>Name (leave blank to be anonymous)</value></data>
-  <data name="GuestbookEmailPlaceholder" xml:space="preserve"><value>Email (not displayed)</value></data>
-  <data name="GuestbookWebsitePlaceholder" xml:space="preserve"><value>Website (optional)</value></data>
-  <data name="Digits" xml:space="preserve"><value>Digits</value></data>
-  <data name="GuestbookMessagePlaceholder" xml:space="preserve"><value>Write your message here...</value></data>
-  <data name="NoPhotosNow" xml:space="preserve"><value>There are no photos to display right now.</value></data>
-  <data name="ViewCategoryPhotos" xml:space="preserve"><value>View all photos in the {0} category</value></data>
-  <data name="ToggleMenu" xml:space="preserve"><value>Toggle menu visibility</value></data>
-  <data name="LatestMeta" xml:space="preserve"><value>Recently {0} - nature and wildlife photos by Torbjörn Arvidson.</value></data>
-  <data name="LatestMetaCount" xml:space="preserve"><value>Photos: {0}</value></data>
-  <data name="Vänligen fyll i en kod" xml:space="preserve"><value>Please enter the code.</value></data>
-  <data name="Fel kod angiven" xml:space="preserve"><value>Incorrect code.</value></data>
-  <data name="Ange din e-postadress" xml:space="preserve"><value>Enter your email address.</value></data>
-  <data name="Du har inte angivit en korrekt e-postadress" xml:space="preserve"><value>Enter a valid email address.</value></data>
-  <data name="Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt" xml:space="preserve"><value>Enter a valid email address or leave it blank.</value></data>
-  <data name="Du har angivit en för lång epost-adress. Max 150 tecken" xml:space="preserve"><value>Email address is too long (maximum 150 characters).</value></data>
-  <data name="Ange ditt namn" xml:space="preserve"><value>Enter your name.</value></data>
-  <data name="För långt namn (max 50 tecken)" xml:space="preserve"><value>Name is too long (maximum 50 characters).</value></data>
-  <data name="Ange en rubrik" xml:space="preserve"><value>Enter a subject.</value></data>
-  <data name="För lång rubrik (max 50 tecken)" xml:space="preserve"><value>Subject is too long (maximum 50 characters).</value></data>
-  <data name="För lång rubrik (max 250 tecken)" xml:space="preserve"><value>Website address is too long (maximum 250 characters).</value></data>
-  <data name="Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt" xml:space="preserve"><value>Enter a valid URL or leave it blank.</value></data>
-  <data name="Ange ett meddelande" xml:space="preserve"><value>Enter a message.</value></data>
-  <data name="För långt meddelande (max 2000 tecken)" xml:space="preserve"><value>Message is too long (maximum 2000 characters).</value></data>
+  <data name="Navigation.Latest" xml:space="preserve"><value>Latest</value></data>
+  <data name="Navigation.Photographed" xml:space="preserve"><value>Photographed</value></data>
+  <data name="Navigation.Uploaded" xml:space="preserve"><value>Uploaded</value></data>
+  <data name="Navigation.ByCategory" xml:space="preserve"><value>By category</value></data>
+  <data name="Navigation.Guestbook" xml:space="preserve"><value>Guestbook</value></data>
+  <data name="Navigation.Contact" xml:space="preserve"><value>Contact information</value></data>
+  <data name="Navigation.About" xml:space="preserve"><value>About me, Torbjörn Arvidson</value></data>
+  <data name="Navigation.Sitemap" xml:space="preserve"><value>Sitemap</value></data>
+  <data name="Navigation.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Navigation.BuyPhotos" xml:space="preserve"><value>Buy photos</value></data>
+  <data name="Form.Label.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Form.Label.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Form.Label.Homepage" xml:space="preserve"><value>Website</value></data>
+  <data name="Form.Label.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Form.Label.Subject" xml:space="preserve"><value>Subject</value></data>
+  <data name="Navigation.Photos" xml:space="preserve"><value>Photos</value></data>
+  <data name="Navigation.ToggleMenu" xml:space="preserve"><value>Toggle menu visibility</value></data>
 </root>

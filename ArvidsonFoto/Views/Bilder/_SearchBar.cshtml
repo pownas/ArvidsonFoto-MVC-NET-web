@@ -1,12 +1,13 @@
-﻿@using ArvidsonFoto.Core
+﻿@inject IStringLocalizer<SearchResource> S
+@using ArvidsonFoto.Core
 @using ArvidsonFoto.Core.Extensions
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> T
 <form action="@LocalizedRoutes.Search" method="get" class="d-flex gap-2" role="search">
     <div class="flex-grow-1">
-        <input name="s" class="form-control form-control-lg" type="search" placeholder="@T["SearchPlaceholder"]" aria-label="@T["Search"]" value="@ViewBag.SearchQuery" autofocus>
+        <input name="s" class="form-control form-control-lg" type="search" placeholder="@S["Search.Form.Placeholder"]" aria-label="@T["Navigation.Search"]" value="@ViewBag.SearchQuery" autofocus>
     </div>
     <button class="btn btn-primary btn-lg" type="submit">
-        <i class="bi bi-search"></i> @T["Search"]
+        <i class="bi bi-search"></i> @T["Navigation.Search"]
     </button>
 </form>

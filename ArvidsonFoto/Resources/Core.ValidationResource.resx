@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Form.Validation.CodeRequired" xml:space="preserve"><value>Vänligen fyll i en kod</value></data>
+  <data name="Form.Validation.CodeInvalid" xml:space="preserve"><value>Fel kod angiven</value></data>
+  <data name="Contact.Form.Validation.EmailRequired" xml:space="preserve"><value>Ange din e-postadress</value></data>
+  <data name="Contact.Form.Validation.EmailInvalid" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress</value></data>
+  <data name="Guestbook.Form.Validation.EmailInvalid" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt</value></data>
+  <data name="Form.Validation.EmailTooLong" xml:space="preserve"><value>Du har angivit en för lång epost-adress. Max 150 tecken</value></data>
+  <data name="Contact.Form.Validation.NameRequired" xml:space="preserve"><value>Ange ditt namn</value></data>
+  <data name="Form.Validation.NameTooLong" xml:space="preserve"><value>För långt namn (max 50 tecken)</value></data>
+  <data name="Contact.Form.Validation.SubjectRequired" xml:space="preserve"><value>Ange en rubrik</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteInvalid" xml:space="preserve"><value>Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt</value></data>
+  <data name="Form.Validation.MessageRequired" xml:space="preserve"><value>Ange ett meddelande</value></data>
+  <data name="Form.Validation.MessageTooLong" xml:space="preserve"><value>För långt meddelande (max 2000 tecken)</value></data>
+  <data name="Contact.Form.Validation.SubjectTooLong" xml:space="preserve"><value>För lång rubrik (max 50 tecken)</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteTooLong" xml:space="preserve"><value>För lång rubrik (max 250 tecken)</value></data>
+</root>
