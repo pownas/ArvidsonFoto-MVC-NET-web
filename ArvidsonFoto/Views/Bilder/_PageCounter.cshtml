@@ -1,4 +1,5 @@
-﻿@model GalleryViewModel
+﻿@inject IStringLocalizer<GalleryResource> G
+@model GalleryViewModel
 @using ArvidsonFoto.Core
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> T
@@ -10,35 +11,35 @@
 {
   <p class="text-center">
       @(Model.SelectedCategory?.NameSv == "Per kategori"
-        ? T["CategoryCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]
-        : T["ImageCount", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages])
+        ? G["Gallery.Counter.Categories", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages]
+        : G["Gallery.Counter.Images", Model.TotalImageCount, Model.CurrentPage, Model.TotalPages])
   </p>
 }
 
 @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
 {
-  <nav id="page-counter@(idSuffix)" aria-label="@T["PageNavigation"]">
+  <nav id="page-counter@(idSuffix)" aria-label="@G["Gallery.Pagination.Label"]">
     <ul class="pagination justify-content-center">
     @if (Model.CurrentPage > 1)
     {
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">@T["First"]</a></li>
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="@T["Previous"]"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">@G["Gallery.Pagination.First"]</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="@G["Gallery.Pagination.Previous"]"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
     }
     else
     {
-      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@T["First"]</a></li>
+      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@G["Gallery.Pagination.First"]</a></li>
       <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
     }
-      <li class="page-item active"><a class="page-link" aria-label="@T["Current"]">@(Model.CurrentPage)<span class="sr-only"> (@T["Current"])</span></a></li>
+      <li class="page-item active"><a class="page-link" aria-label="@G["Gallery.Pagination.Current"]">@(Model.CurrentPage)<span class="sr-only"> (@G["Gallery.Pagination.Current"])</span></a></li>
     @if (Model.CurrentPage == Model.TotalPages)
     {
       <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
-      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@T["Last"]</a></li>
+      <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@G["Gallery.Pagination.Last"]</a></li>
     }
     else
     {
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="@T["Next"]">@(Model.CurrentPage + 1) »</a></li>
-      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">@T["Last"]</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="@G["Gallery.Pagination.Next"]">@(Model.CurrentPage + 1) »</a></li>
+      <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">@G["Gallery.Pagination.Last"]</a></li>
     }
     </ul>
   </nav>

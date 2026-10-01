@@ -1,4 +1,7 @@
-﻿@model GalleryViewModel
+﻿@inject IStringLocalizer<SearchResource> S
+@inject IStringLocalizer<HomeResource> H
+@inject IStringLocalizer<GalleryResource> G
+@model GalleryViewModel
 @using ArvidsonFoto.Core
 @using ArvidsonFoto.Core.Extensions
 @inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
@@ -6,23 +9,23 @@
 @inject IStringLocalizer<SharedResource> T
 @{
     ViewData["Title"] = string.IsNullOrWhiteSpace(ViewBag.SearchQuery)
-        ? T["SearchCategories"].Value
-        : $"{T["SearchingFor"].Value} {ViewBag.SearchQuery}";
+        ? G["Gallery.Empty.SearchCategories"].Value
+        : $"{S["Search.Header.SearchingFor"].Value} {ViewBag.SearchQuery}";
 }
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="@T["SearchMeta"]" />
+    <meta name="description" content="@S["Search.Metadata.Description"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se/Search" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@T["SearchTitle"]">
-    <meta name="twitter:description" content="@T["SearchMeta"]">
+    <meta name="twitter:title" content="@S["Search.Metadata.Title"]">
+    <meta name="twitter:description" content="@S["Search.Metadata.Description"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="@T["SearchTitle"]" />
-    <meta property="og:description" content="@T["SearchMeta"]" />
+    <meta property="og:title" content="@S["Search.Metadata.Title"]" />
+    <meta property="og:description" content="@S["Search.Metadata.Description"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
     <meta property="og:url" content="https://ArvidsonFoto.se/Search" />
 }
@@ -30,7 +33,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a rel="nofollow" href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@T["Search"]<i class="bi bi-search mx-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.Search"]<i class="bi bi-search mx-1"></i></li>
     </ol>
 </nav>
 
@@ -40,13 +43,13 @@
             @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
             {
                 <h1 class="mb-4">
-                    <i class="bi bi-search"></i> @T["SearchingFor"] <span class="text-primary">"@ViewBag.SearchQuery"</span>
+                    <i class="bi bi-search"></i> @S["Search.Header.SearchingFor"] <span class="text-primary">"@ViewBag.SearchQuery"</span>
                 </h1>
             }
             else
             {
                 <h1 class="mb-4">
-                    <i class="bi bi-search"></i> @T["SearchCategories"]
+                    <i class="bi bi-search"></i> @G["Gallery.Empty.SearchCategories"]
                 </h1>
             }
 
@@ -55,7 +58,7 @@
                 <div class="card-body">
                     <partial name="_SearchBar" />
                     <small class="form-text text-muted d-block mt-2">
-                        <i class="bi bi-info-circle"></i> @T["SearchHint"]
+                        <i class="bi bi-info-circle"></i> @S["Search.Form.Hint"]
                     </small>
                 </div>
             </div>
@@ -66,9 +69,9 @@
                 <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
                     <i class="bi bi-check-circle-fill me-2 fs-5"></i>
                     <div>
-                        <strong>@T["SearchSuccess"]</strong> @(Model.DisplayImagesList.Count == 1
-                            ? T["FoundCategory", Model.DisplayImagesList.Count]
-                            : T["FoundCategories", Model.DisplayImagesList.Count])
+                        <strong>@S["Search.Result.Success"]</strong> @(Model.DisplayImagesList.Count == 1
+                            ? S["Search.FoundCategory", Model.DisplayImagesList.Count]
+                            : S["Search.FoundCategories", Model.DisplayImagesList.Count])
                     </div>
                 </div>
             }
@@ -78,20 +81,20 @@
                 <div class="alert alert-warning d-flex align-items-start" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
                     <div>
-                        <h4 class="alert-heading">@T["NoResults"]</h4>
-                        <p class="mb-2">@T["NoSearchMatches", ViewBag.SearchQuery]</p>
+                        <h4 class="alert-heading">@S["Search.Result.Empty"]</h4>
+                        <p class="mb-2">@S["Search.Result.NoMatches", ViewBag.SearchQuery]</p>
                         <hr>
                         <p class="mb-0">
-                            <i class="bi bi-lightbulb"></i> <strong>@T["Tip"]</strong> @T["TrySearchingFor"]
+                            <i class="bi bi-lightbulb"></i> <strong>@S["Search.Tip"]</strong> @S["Search.TrySearchingFor"]
                         </p>
                         <ul class="mb-2">
-                            <li>@T["SearchExampleAnimal"]</li>
-                            <li>@T["SearchExampleCategory"]</li>
-                            <li>@T["SearchExampleGeneral"]</li>
+                            <li>@S["Search.SearchExampleAnimal"]</li>
+                            <li>@S["Search.SearchExampleCategory"]</li>
+                            <li>@S["Search.SearchExampleGeneral"]</li>
                         </ul>
                         <p class="mb-0">
-                            @T["SearchBug"]
-                            <a href="@LocalizedRoutes.Page("/Info/Kontakta")" class="alert-link">@T["ContactMe"]</a>.
+                            @S["Search.SearchBug"]
+                            <a href="@LocalizedRoutes.Page("/Info/Kontakta")" class="alert-link">@S["Search.ContactMe"]</a>.
                         </p>
                     </div>
                 </div>
@@ -102,10 +105,10 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <i class="bi bi-diagram-3 fs-1 text-primary mb-3"></i>
-                                <h5 class="card-title">@T["Sitemap"]</h5>
-                                <p class="card-text">@T["ViewAvailableCategories"]</p>
+                                <h5 class="card-title">@T["Navigation.Sitemap"]</h5>
+                                <p class="card-text">@S["Search.ViewAvailableCategories"]</p>
                                 <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="btn btn-outline-primary">
-                                    <i class="bi bi-diagram-3"></i> @T["GoToSitemap"]
+                                    <i class="bi bi-diagram-3"></i> @S["Search.GoToSitemap"]
                                 </a>
                             </div>
                         </div>
@@ -114,10 +117,10 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body text-center">
                                 <i class="bi bi-calendar-week fs-1 text-success mb-3"></i>
-                                <h5 class="card-title">@T["LatestPhotos"]</h5>
-                                <p class="card-text">@T["SeeNewestPhotos"]</p>
+                                <h5 class="card-title">@H["Home.LatestPhotos"]</h5>
+                                <p class="card-text">@S["Search.SeeNewestPhotos"]</p>
                                 <a href="@LocalizedRoutes.Page("/Senast/Uppladdad")" class="btn btn-outline-success">
-                                    <i class="bi bi-camera"></i> @T["RecentlyUploaded"]
+                                    <i class="bi bi-camera"></i> @S["Search.RecentlyUploaded"]
                                 </a>
                             </div>
                         </div>
@@ -132,15 +135,15 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-info-circle text-info"></i> @T["HowToSearch"]
+                                    <i class="bi bi-info-circle text-info"></i> @S["Search.HowToSearch"]
                                 </h5>
-                                <p class="card-text">@T["SearchInstructions"]</p>
-                                <p class="mb-0"><strong>@T["ExampleKeywords"]</strong></p>
+                                <p class="card-text">@S["Search.SearchInstructions"]</p>
+                                <p class="mb-0"><strong>@S["Search.ExampleKeywords"]</strong></p>
                                 <div class="d-flex flex-wrap gap-2 mt-2">
-                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleButterfly"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleButterfly"]</a>
-                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleEagle"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleEagle"]</a>
-                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleFox"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleFox"]</a>
-                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(T["ExampleLandscape"].Value)" class="badge bg-secondary text-decoration-none">@T["ExampleLandscape"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(S["Search.ExampleButterfly"].Value)" class="badge bg-secondary text-decoration-none">@S["Search.ExampleButterfly"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(S["Search.ExampleEagle"].Value)" class="badge bg-secondary text-decoration-none">@S["Search.ExampleEagle"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(S["Search.ExampleFox"].Value)" class="badge bg-secondary text-decoration-none">@S["Search.ExampleFox"]</a>
+                                    <a href="@LocalizedRoutes.Search?s=@Uri.EscapeDataString(S["Search.ExampleLandscape"].Value)" class="badge bg-secondary text-decoration-none">@S["Search.ExampleLandscape"]</a>
                                 </div>
                             </div>
                         </div>
@@ -149,22 +152,22 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-lightning text-warning"></i> @T["QuickLinks"]
+                                    <i class="bi bi-lightning text-warning"></i> @S["Search.QuickLinks"]
                                 </h5>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="text-decoration-none">
-                                            <i class="bi bi-diagram-3 text-primary"></i> @T["SeeCategoriesInSitemap"]
+                                            <i class="bi bi-diagram-3 text-primary"></i> @S["Search.SeeCategoriesInSitemap"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="@LocalizedRoutes.Page("/Senast/Per kategori")" class="text-decoration-none">
-                                            <i class="bi bi-grid-3x3-gap text-success"></i> @T["RecentByCategory"]
+                                            <i class="bi bi-grid-3x3-gap text-success"></i> @S["Search.RecentByCategory"]
                                         </a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="@LocalizedRoutes.CategoryForId(1, CategoryService.GetAll())" class="text-decoration-none">
-                                            <i class="bi bi-camera text-info"></i> @T["BrowseBirdPhotos"]
+                                            <i class="bi bi-camera text-info"></i> @S["Search.BrowseBirdPhotos"]
                                         </a>
                                     </li>
                                 </ul>
@@ -191,23 +194,23 @@
                 <div class="card shadow-sm mt-4 mb-4">
                     <div class="card-body text-center">
                         <h3 class="mb-3">
-                            <i class="bi bi-check-circle text-success"></i> @T["SearchResults"]
+                            <i class="bi bi-check-circle text-success"></i> @S["Search.Result.Title"]
                         </h3>
                         <p class="text-muted mb-2">
-                            @T["YourSearchFor"] <strong class="text-primary">"@ViewBag.SearchQuery"</strong> @T["Returned"]
+                            @S["Search.YourSearchFor"] <strong class="text-primary">"@ViewBag.SearchQuery"</strong> @S["Search.Returned"]
                         </p>
                         <p class="fs-4 mb-0">
                             <i class="bi bi-images"></i> @(Model.DisplayImagesList.Count == 1
-                                ? T["FoundCategory", Model.DisplayImagesList.Count]
-                                : T["FoundCategories", Model.DisplayImagesList.Count])
+                                ? S["Search.FoundCategory", Model.DisplayImagesList.Count]
+                                : S["Search.FoundCategories", Model.DisplayImagesList.Count])
                         </p>
                         <hr class="my-3">
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
                             <a href="@LocalizedRoutes.Search" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-arrow-clockwise"></i> @T["NewSearch"]
+                                <i class="bi bi-arrow-clockwise"></i> @S["Search.NewSearch"]
                             </a>
                             <a href="@LocalizedRoutes.Page("/Info/Sidkarta")" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-diagram-3"></i> @T["ViewCategories"]
+                                <i class="bi bi-diagram-3"></i> @H["Home.ViewCategories"]
                             </a>
                         </div>
                     </div>

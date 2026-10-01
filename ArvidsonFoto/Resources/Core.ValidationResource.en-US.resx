@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Form.Validation.CodeRequired" xml:space="preserve"><value>Please enter the code.</value></data>
+  <data name="Form.Validation.CodeInvalid" xml:space="preserve"><value>Incorrect code.</value></data>
+  <data name="Contact.Form.Validation.EmailRequired" xml:space="preserve"><value>Enter your email address.</value></data>
+  <data name="Contact.Form.Validation.EmailInvalid" xml:space="preserve"><value>Enter a valid email address.</value></data>
+  <data name="Guestbook.Form.Validation.EmailInvalid" xml:space="preserve"><value>Enter a valid email address or leave it blank.</value></data>
+  <data name="Form.Validation.EmailTooLong" xml:space="preserve"><value>Email address is too long (maximum 150 characters).</value></data>
+  <data name="Contact.Form.Validation.NameRequired" xml:space="preserve"><value>Enter your name.</value></data>
+  <data name="Form.Validation.NameTooLong" xml:space="preserve"><value>Name is too long (maximum 50 characters).</value></data>
+  <data name="Contact.Form.Validation.SubjectRequired" xml:space="preserve"><value>Enter a subject.</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteInvalid" xml:space="preserve"><value>Enter a valid URL or leave it blank.</value></data>
+  <data name="Form.Validation.MessageRequired" xml:space="preserve"><value>Enter a message.</value></data>
+  <data name="Form.Validation.MessageTooLong" xml:space="preserve"><value>Message is too long (maximum 2000 characters).</value></data>
+  <data name="Contact.Form.Validation.SubjectTooLong" xml:space="preserve"><value>Subject is too long (maximum 50 characters).</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteTooLong" xml:space="preserve"><value>Website address is too long (maximum 250 characters).</value></data>
+</root>

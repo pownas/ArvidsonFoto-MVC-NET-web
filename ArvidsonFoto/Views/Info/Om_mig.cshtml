@@ -1,21 +1,22 @@
-﻿@using ArvidsonFoto.Core.Extensions
+﻿@inject IStringLocalizer<InfoResource> I
+@using ArvidsonFoto.Core.Extensions
 @using ArvidsonFoto.Core
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> T
 @section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="@T["AboutMeta"]" />
+    <meta name="description" content="@I["About.Metadata.Description"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Om_mig"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@T["About"] - ArvidsonFoto.se">
-    <meta name="twitter:description" content="@T["AboutMeta"]">
+    <meta name="twitter:title" content="@T["Navigation.About"] - ArvidsonFoto.se">
+    <meta name="twitter:description" content="@I["About.Metadata.Description"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="@T["About"] - ArvidsonFoto.se" />
-    <meta property="og:description" content="@T["AboutMeta"]" />
+    <meta property="og:title" content="@T["Navigation.About"] - ArvidsonFoto.se" />
+    <meta property="og:description" content="@I["About.Metadata.Description"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
     <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Om_mig"))" />
 }
@@ -24,7 +25,7 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="@ArvidsonFoto.Core.Extensions.LocalizedRoutes.Page("/Info")">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@T["About"]<i class="bi bi-question-circle mx-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.About"]<i class="bi bi-question-circle mx-1"></i></li>
     </ol>
 </nav>
 
@@ -35,19 +36,19 @@
         <div class="col-lg-8">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-person-badge"></i> @T["AboutPassion"]</h3>
+                    <h3 class="mb-0"><i class="bi bi-person-badge"></i> @I["About.Header.Passion"]</h3>
                 </div>
                 <div class="card-body">
-                    <p>@T["AboutBirds"]</p>
-                    <p>@T["AboutTravel"]</p>
+                    <p>@I["About.Content.Birds"]</p>
+                    <p>@I["About.Content.Travel"]</p>
                     
                     <div class="mt-4">
-                        <h4><i class="bi bi-camera"></i> @T["MyPhotography"]</h4>
+                        <h4><i class="bi bi-camera"></i> @I["About.Header.Photography"]</h4>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-primary"></i> @T["AboutEarly"]</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> @T["AboutBirdSpecialist"]</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> @T["AboutWorldTravel"]</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> @T["AboutSpeaker"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.Early"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.BirdSpecialist"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.WorldTravel"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.Speaker"]</li>
                         </ul>
                     </div>
                 </div>
@@ -61,10 +62,10 @@
                 </div>
                 <div class="card-body text-center">
                     <figure class="figure mb-0">
-                        <img class="figure-img img-fluid rounded shadow-sm" src="/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson @T["AboutCaption"]" style="max-width: 100%;">
+                        <img class="figure-img img-fluid rounded shadow-sm" src="/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson @I["About.Photo.Caption"]" style="max-width: 100%;">
                         <figcaption class="figure-caption mt-3">
                             <strong>Torbjörn Arvidson</strong><br>
-                            @T["AboutCaption"]
+                            @I["About.Photo.Caption"]
                         </figcaption>
                     </figure>
                 </div>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Home.Metadata.Description" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv. Bilder på djur och natur.</value></data>
+  <data name="Home.Metadata.Title" xml:space="preserve"><value>Torbjörn Arvidson Foto - Välkommen till mitt bildarkiv</value></data>
+  <data name="Home.Welcome" xml:space="preserve"><value>Välkommen till mitt bildarkiv</value></data>
+  <data name="Home.Intro" xml:space="preserve"><value>Här finner du ett urval av mina bilder.</value></data>
+  <data name="Home.BuyIntro" xml:space="preserve"><value>Är du intresserad av att köpa högupplösta bilder?</value></data>
+  <data name="Home.EmailIntro" xml:space="preserve"><value>Kontakta mig på</value></data>
+  <data name="Home.ReadAbout" xml:space="preserve"><value>Läs mer om mig</value></data>
+  <data name="Home.RandomPhotos" xml:space="preserve"><value>Slumpmässigt utvalda bilder</value></data>
+  <data name="Home.Explore" xml:space="preserve"><value>Utforska mer</value></data>
+  <data name="Home.LatestPhotos" xml:space="preserve"><value>Senast fotograferade</value></data>
+  <data name="Home.LatestPhotosDetail" xml:space="preserve"><value>Upptäck de nyaste bilderna i samlingen. Se vad som har fotograferats senast och utforska de färskaste tillskotten.</value></data>
+  <data name="Home.ViewLatest" xml:space="preserve"><value>Se senaste bilderna</value></data>
+  <data name="Home.AllCategories" xml:space="preserve"><value>Alla kategorier</value></data>
+  <data name="Home.AllCategoriesDetail" xml:space="preserve"><value>Bläddra bland bildkategorier och se de senaste bilderna per kategori. Hitta snabbt det du letar efter.</value></data>
+  <data name="Home.ViewCategories" xml:space="preserve"><value>Visa alla kategorier</value></data>
+  <data name="Home.BuyPhotosDetail" xml:space="preserve"><value>Intresserad av att köpa högupplösta bilder? Ta kontakt för mer information om priser och användningsområden.</value></data>
+  <data name="Home.ReadBuyPhotos" xml:space="preserve"><value>Läs mer om bildköp</value></data>
+  <data name="Home.SitemapDetail" xml:space="preserve"><value>Hitta snabbt till alla bildkategorier och sidor på webbplatsen. En komplett översikt över allt innehåll.</value></data>
+  <data name="Home.ViewSitemap" xml:space="preserve"><value>Visa sidkarta</value></data>
+</root>

@@ -1,3 +1,5 @@
+﻿@inject IStringLocalizer<InfoResource> I
+@inject IStringLocalizer<HomeResource> H
 @using ArvidsonFoto.Core
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Extensions
@@ -7,19 +9,19 @@
 @inject IStringLocalizer<SharedResource> T
 @{
     var categories = CategoryService.GetAll();
-    ViewData["Title"] = T["Sitemap"].Value;
+    ViewData["Title"] = T["Navigation.Sitemap"].Value;
     var byParent = categories.ToLookup(c => c.ParentCategoryId ?? 0);
 }
 @section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="@T["SitemapDetail"]" />
+    <meta name="description" content="@H["Home.SitemapDetail"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Sidkarta"))" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@T["Sitemap"] - Torbjörn Arvidson Foto" />
-    <meta name="twitter:description" content="@T["SitemapDetail"]" />
+    <meta name="twitter:title" content="@T["Navigation.Sitemap"] - Torbjörn Arvidson Foto" />
+    <meta name="twitter:description" content="@H["Home.SitemapDetail"]" />
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:title" content="@T["Sitemap"] - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="@T["SitemapDetail"]" />
+    <meta property="og:title" content="@T["Navigation.Sitemap"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@H["Home.SitemapDetail"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
     <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Sidkarta"))" />
 }
@@ -27,17 +29,17 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="@LocalizedRoutes.Page("/Info")">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@T["Sitemap"]</li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.Sitemap"]</li>
     </ol>
 </nav>
-<h2><i class="bi bi-diagram-3"></i> @T["Sitemap"]</h2>
-<p>@T["SitemapIntro"]</p>
+<h2><i class="bi bi-diagram-3"></i> @T["Navigation.Sitemap"]</h2>
+<p>@I["Sitemap.Intro"]</p>
 <ul class="sitemap headMenu">
-    <li><a href="@LocalizedRoutes.Page("/Senast")">@T["Latest"]</a>
+    <li><a href="@LocalizedRoutes.Page("/Senast")">@T["Navigation.Latest"]</a>
         <ul class="sitemap">
-            <li><a href="@LocalizedRoutes.Page("/Senast/Fotograferad")">@T["Photographed"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Senast/Uppladdad")">@T["Uploaded"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Senast/Per kategori")">@T["ByCategory"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Fotograferad")">@T["Navigation.Photographed"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Uppladdad")">@T["Navigation.Uploaded"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Per kategori")">@T["Navigation.ByCategory"]</a></li>
         </ul>
     </li>
     @foreach (var head in byParent[0].OrderBy(c => c.Name))
@@ -76,13 +78,13 @@
     }
     <li><a href="@LocalizedRoutes.Page("/Info")">Info</a>
         <ul class="sitemap">
-            <li><a href="@LocalizedRoutes.Page("/Info/Kop_av_bilder")">@T["BuyPhotos"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Info/Gastbok")">@T["Guestbook"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Info/Kontakta")">@T["Contact"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Info/Om_mig")">@T["About"]</a></li>
-            <li><a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Sitemap"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Kop_av_bilder")">@T["Navigation.BuyPhotos"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Gastbok")">@T["Navigation.Guestbook"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Kontakta")">@T["Navigation.Contact"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Om_mig")">@T["Navigation.About"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Navigation.Sitemap"]</a></li>
             <li><a href="@LocalizedRoutes.Page("/Info/Copyright")">© Copyright</a></li>
         </ul>
     </li>
-    <li><a href="@LocalizedRoutes.Search">@T["Search"]</a></li>
+    <li><a href="@LocalizedRoutes.Search">@T["Navigation.Search"]</a></li>
 </ul>

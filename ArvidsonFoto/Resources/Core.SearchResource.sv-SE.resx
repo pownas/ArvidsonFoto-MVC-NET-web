@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Search.Form.Placeholder" xml:space="preserve"><value>Sök efter kategori...</value></data>
+  <data name="Search.Metadata.Description" xml:space="preserve"><value>Torbjörn Arvidson Foto - Sök efter olika kategorier på min sida.</value></data>
+  <data name="Search.Metadata.Title" xml:space="preserve"><value>Sök - Torbjörn Arvidson Foto</value></data>
+  <data name="Search.Header.SearchingFor" xml:space="preserve"><value>Söker efter:</value></data>
+  <data name="Search.Form.Hint" xml:space="preserve"><value>Skriv in en kategori du söker efter. Till exempel: "Fjäril" eller en fågelart som "Havsörn".</value></data>
+  <data name="Search.Result.Success" xml:space="preserve"><value>Sökningen lyckades!</value></data>
+  <data name="Search.FoundCategories" xml:space="preserve"><value>Hittade {0} kategorier.</value></data>
+  <data name="Search.FoundCategory" xml:space="preserve"><value>Hittade {0} kategori.</value></data>
+  <data name="Search.Result.Empty" xml:space="preserve"><value>Inga resultat hittades</value></data>
+  <data name="Search.Result.NoMatches" xml:space="preserve"><value>Sökte efter "{0}", men hittade inget.</value></data>
+  <data name="Search.Tip" xml:space="preserve"><value>Tips:</value></data>
+  <data name="Search.TrySearchingFor" xml:space="preserve"><value>Prova att söka på:</value></data>
+  <data name="Search.SearchExampleAnimal" xml:space="preserve"><value>Ett djurnamn (t.ex. "Räv", "Örn", "Fjäril")</value></data>
+  <data name="Search.SearchExampleCategory" xml:space="preserve"><value>En kategori (t.ex. "Fåglar", "Däggdjur", "Landskap")</value></data>
+  <data name="Search.SearchExampleGeneral" xml:space="preserve"><value>Ett mer generellt sökord</value></data>
+  <data name="Search.SearchBug" xml:space="preserve"><value>Upplever du att det verkar vara en bugg med sökningen?</value></data>
+  <data name="Search.ContactMe" xml:space="preserve"><value>Kontakta mig gärna</value></data>
+  <data name="Search.ViewAvailableCategories" xml:space="preserve"><value>Visa alla tillgängliga kategorier</value></data>
+  <data name="Search.GoToSitemap" xml:space="preserve"><value>Till sidkartan</value></data>
+  <data name="Search.SeeNewestPhotos" xml:space="preserve"><value>Se de nyaste bilderna i arkivet</value></data>
+  <data name="Search.RecentlyUploaded" xml:space="preserve"><value>Senast uppladdade</value></data>
+  <data name="Search.HowToSearch" xml:space="preserve"><value>Hur söker jag?</value></data>
+  <data name="Search.SearchInstructions" xml:space="preserve"><value>Ange ett sökord i sökfältet ovan och tryck på "Sök" eller Enter.</value></data>
+  <data name="Search.ExampleKeywords" xml:space="preserve"><value>Exempel på sökord:</value></data>
+  <data name="Search.ExampleButterfly" xml:space="preserve"><value>Fjäril</value></data>
+  <data name="Search.ExampleEagle" xml:space="preserve"><value>Havsörn</value></data>
+  <data name="Search.ExampleFox" xml:space="preserve"><value>Räv</value></data>
+  <data name="Search.ExampleLandscape" xml:space="preserve"><value>Landskap</value></data>
+  <data name="Search.QuickLinks" xml:space="preserve"><value>Snabblänkar</value></data>
+  <data name="Search.SeeCategoriesInSitemap" xml:space="preserve"><value>Se alla kategorier i sidkartan</value></data>
+  <data name="Search.RecentByCategory" xml:space="preserve"><value>Senaste bilder per kategori</value></data>
+  <data name="Search.BrowseBirdPhotos" xml:space="preserve"><value>Bläddra bland fågelbilder</value></data>
+  <data name="Search.Result.Title" xml:space="preserve"><value>Sökresultat</value></data>
+  <data name="Search.YourSearchFor" xml:space="preserve"><value>Din sökning efter</value></data>
+  <data name="Search.Returned" xml:space="preserve"><value>gav:</value></data>
+  <data name="Search.NewSearch" xml:space="preserve"><value>Ny sökning</value></data>
+</root>

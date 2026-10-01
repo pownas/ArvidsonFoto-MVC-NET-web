@@ -21,6 +21,7 @@ public class InfoController : Controller
     private readonly IConfiguration _configuration;
     private readonly SmtpSettings _smtpSettings;
     private readonly IStringLocalizer<SharedResource> _text;
+    private readonly IStringLocalizer<InfoResource> _infoText;
     internal IApiCategoryService _categoryService;
     internal IApiImageService _imageService;
     internal IGuestBookService _guestbookService;
@@ -32,6 +33,7 @@ public class InfoController : Controller
         IConfiguration configuration,
         IOptions<SmtpSettings> smtpSettings,
         IStringLocalizer<SharedResource>? text = null,
+        IStringLocalizer<InfoResource>? infoText = null,
         ILogger<ApiImageService>? imageLogger = null,
         ILogger<ApiCategoryService>? categoryLogger = null,
         IMemoryCache? memoryCache = null)
@@ -40,6 +42,9 @@ public class InfoController : Controller
         _configuration = configuration;
         _smtpSettings = smtpSettings.Value;
         _text = text ?? new StringLocalizer<SharedResource>(new ResourceManagerStringLocalizerFactory(
+            Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }),
+            LoggerFactory.Create(b => b.AddConsole())));
+        _infoText = infoText ?? new StringLocalizer<InfoResource>(new ResourceManagerStringLocalizerFactory(
             Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }),
             LoggerFactory.Create(b => b.AddConsole())));
 
@@ -73,7 +78,7 @@ public class InfoController : Controller
 
     public IActionResult Gastbok(GuestbookFormInputDto inputModel)
     {
-        ViewData["Title"] = _text["Guestbook"].Value;
+        ViewData["Title"] = _text["Navigation.Guestbook"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Gästbok");
@@ -303,7 +308,7 @@ public class InfoController : Controller
 
     public IActionResult Kontakta(ContactFormInputDto contactFormModel)
     {
-        ViewData["Title"] = _text["Contact"].Value;
+        ViewData["Title"] = _text["Navigation.Contact"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Kontaktinformation");
@@ -331,7 +336,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = _text["ContactMessagePlaceholder"].Value,
+                MessagePlaceholder = _infoText["Contact.Form.Placeholder.Message"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kontakta"
@@ -347,7 +352,7 @@ public class InfoController : Controller
 
     public IActionResult Kop_av_bilder(ContactFormInputDto contactFormModel, string imgId)
     {
-        ViewData["Title"] = _text["BuyPhotos"].Value;
+        ViewData["Title"] = _text["Navigation.BuyPhotos"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Köp av bilder");
@@ -375,7 +380,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = _text["BuyMessagePlaceholder"].Value,
+                MessagePlaceholder = _infoText["Buy.Form.Placeholder.Message"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kop_av_bilder"
@@ -397,17 +402,17 @@ public class InfoController : Controller
                     var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
 
                     // Build the message with both image name and category
-                    var messageParts = new List<string> { _text["BuyMessageIntro"].Value };
+                    var messageParts = new List<string> { _infoText["Buy.Form.Prefill.Intro"].Value };
 
                     if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
                     {
-                        messageParts.Add($"  - {_text["BuyImageName"]} {imageFileName}");
-                        messageParts.Add($"  - {_text["BuyCategory"]} {categoryName}");
-                        contactFormModel.Subject = _text["BuySubject", categoryName].Value;
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.ImageName"]} {imageFileName}");
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.Category"]} {categoryName}");
+                        contactFormModel.Subject = _infoText["Buy.Form.Prefill.Subject", categoryName].Value;
                     }
                     else
                     {
-                        messageParts.Add($"  - {_text["BuyImageName"]} {imageFileName}");
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.ImageName"]} {imageFileName}");
                     }
                     messageParts.Add($" ");
 
@@ -429,7 +434,7 @@ public class InfoController : Controller
 
     public IActionResult Om_mig()
     {
-        ViewData["Title"] = _text["About"].Value;
+        ViewData["Title"] = _text["Navigation.About"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Om mig");
@@ -440,7 +445,7 @@ public class InfoController : Controller
 
     public IActionResult Sidkarta()
     {
-        ViewData["Title"] = _text["Sitemap"].Value;
+        ViewData["Title"] = _text["Navigation.Sitemap"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Sidkarta");

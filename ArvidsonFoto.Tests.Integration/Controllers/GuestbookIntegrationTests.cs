@@ -98,6 +98,29 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task BeaverGallery_UsesSelectedLanguageOnSwedishAndEnglishRoutes()
+    {
+        foreach (var path in new[] { "/Bilder/mammals/beaver", "/images/mammals/beaver" })
+        {
+            using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+            var englishResponse = await client.GetAsync($"{path}?culture=en-US");
+            var english = await HtmlHelpers.GetDocumentAsync(englishResponse);
+            Assert.AreEqual(HttpStatusCode.OK, englishResponse.StatusCode, path);
+            Assert.IsTrue(english.QuerySelectorAll("#gallery figcaption").Any(c => c.TextContent.Contains("Beaver")), path);
+            Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos") == true, path);
+            Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:") == true, path);
+            Assert.IsTrue(english.QuerySelector("meta[name='description']")?.GetAttribute("content")?.Contains("Beaver") == true, path);
+            Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/Bilder/Daggdjur/Baver']"), path);
+            Assert.IsTrue(english.QuerySelector(".main-nav")?.TextContent.Contains("Latest") == true, path);
+
+            var swedish = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"{path}?culture=sv-SE"));
+            Assert.IsTrue(swedish.QuerySelectorAll("#gallery figcaption").Any(c => c.TextContent.Contains("Bäver")), path);
+            Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:") == true, path);
+            Assert.IsTrue(swedish.QuerySelector(".main-nav")?.TextContent.Contains("Senast") == true, path);
+        }
+    }
+
+    [TestMethod]
     public async Task LegacyCategoryId_RedirectsWithoutCachingLanguage()
     {
         using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });

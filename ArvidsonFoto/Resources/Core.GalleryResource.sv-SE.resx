@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Gallery.Empty.Message" xml:space="preserve"><value>Det finns inga bilder i denna kategori.</value></data>
+  <data name="Gallery.Image.Date" xml:space="preserve"><value>Fotodatum</value></data>
+  <data name="Gallery.Image.FileName" xml:space="preserve"><value>Bildnamn</value></data>
+  <data name="Gallery.Metadata.Title" xml:space="preserve"><value>Bilder på: {0} - Torbjörn Arvidson Foto</value></data>
+  <data name="Gallery.Metadata.Description" xml:space="preserve"><value>Torbjörn Arvidson Foto - Bilder på: {0}. Antal bilder: {1}st.</value></data>
+  <data name="Gallery.Counter.Images" xml:space="preserve"><value>Antal bilder: {0}st, sida: {1} av {2}</value></data>
+  <data name="Gallery.Counter.Categories" xml:space="preserve"><value>Antal kategorier: {0}st, sida: {1} av {2}</value></data>
+  <data name="Gallery.Pagination.Label" xml:space="preserve"><value>Sid-navigering</value></data>
+  <data name="Gallery.Pagination.First" xml:space="preserve"><value>Första</value></data>
+  <data name="Gallery.Pagination.Previous" xml:space="preserve"><value>Föregående</value></data>
+  <data name="Gallery.Pagination.Current" xml:space="preserve"><value>Nuvarande</value></data>
+  <data name="Gallery.Pagination.Next" xml:space="preserve"><value>Nästa</value></data>
+  <data name="Gallery.Pagination.Last" xml:space="preserve"><value>Sista</value></data>
+  <data name="Gallery.Empty.ChooseBirdCategory" xml:space="preserve"><value>Välj en fågel-kategori här ovanför</value></data>
+  <data name="Gallery.Empty.SeeAllPhotos" xml:space="preserve"><value>Se istället alla bilder på sidan:</value></data>
+  <data name="Gallery.Empty.RabbitInstead" xml:space="preserve"><value>Här är en bild på en söt kanin istället:</value></data>
+  <data name="Gallery.Empty.Rabbit" xml:space="preserve"><value>Kanin</value></data>
+  <data name="Gallery.Empty.SearchCategories" xml:space="preserve"><value>Sök bland kategorier</value></data>
+  <data name="Gallery.Empty.SearchOrSitemap" xml:space="preserve"><value>Du kan även söka bland kategorierna här nedan eller se alla kategorier via:</value></data>
+  <data name="Gallery.Image.Missing" xml:space="preserve"><value>saknas</value></data>
+  <data name="Gallery.Image.ViewAllOf" xml:space="preserve"><value>Se alla bilder av {0}</value></data>
+  <data name="Gallery.Image.Enlarge" xml:space="preserve"><value>Tryck för att förstora</value></data>
+  <data name="Gallery.Image.Position" xml:space="preserve"><value>{0} av {1}</value></data>
+  <data name="Gallery.Image.BuyPrompt" xml:space="preserve"><value>Intresserad av bilden? Se:</value></data>
+  <data name="Gallery.Empty.Home" xml:space="preserve"><value>Det finns inga bilder att visa för tillfället.</value></data>
+  <data name="Gallery.Image.ViewCategory" xml:space="preserve"><value>Se alla bilder i kategorin {0}</value></data>
+</root>
