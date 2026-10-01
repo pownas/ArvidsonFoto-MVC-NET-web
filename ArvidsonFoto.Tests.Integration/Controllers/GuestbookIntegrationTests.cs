@@ -98,6 +98,19 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task LegacyCategoryId_RedirectsWithoutCachingLanguage()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var english = await client.GetAsync("/gallery.asp?ID=11&culture=en-US");
+        Assert.AreEqual(HttpStatusCode.Redirect, english.StatusCode);
+        Assert.AreEqual("/images/mammals/beaver", english.Headers.Location?.OriginalString);
+
+        var swedish = await client.GetAsync("/gallery.asp?ID=11&culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.Redirect, swedish.StatusCode);
+        Assert.AreEqual("/Bilder/Daggdjur/Baver", swedish.Headers.Location?.OriginalString);
+    }
+
+    [TestMethod]
     public async Task EnglishSearch_FindsEnglishAndSwedishCategoryNames()
     {
         foreach (var term in new[] { "Eurasian", "Tretåig" })
