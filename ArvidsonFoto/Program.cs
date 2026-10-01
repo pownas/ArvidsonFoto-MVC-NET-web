@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -164,7 +165,8 @@ public class Program
             });
         });
 
-        services.AddControllersWithViews();
+        services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
+            options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(SharedResource)));
         services.AddRazorPages();
         services.AddLocalization(options => options.ResourcesPath = "Resources");
         services.Configure<RequestLocalizationOptions>(options =>

@@ -108,4 +108,78 @@
   <data name="Returned" xml:space="preserve"><value>gav:</value></data>
   <data name="NewSearch" xml:space="preserve"><value>Ny sökning</value></data>
   <data name="SitemapIntro" xml:space="preserve"><value>En sidkarta över alla sidor och bildkategorier:</value></data>
+  <data name="InfoMeta" xml:space="preserve"><value>Informationssidor på ArvidsonFoto.se – hitta information om bildköp, kontaktuppgifter, gästbok och mer om naturfotograf Torbjörn Arvidson.</value></data>
+  <data name="AboutMeta" xml:space="preserve"><value>Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare.</value></data>
+  <data name="ContactMeta" xml:space="preserve"><value>Kontakta naturfotograf Torbjörn Arvidson via telefon, e-post eller kontaktformulär. Välkommen att höra av dig för frågor om bildköp eller föredrag.</value></data>
+  <data name="BuyMeta" xml:space="preserve"><value>Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden.</value></data>
+  <data name="GuestbookMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok.</value></data>
+  <data name="CopyrightMeta" xml:space="preserve"><value>Copyright och upphovsrätt för bilder på ArvidsonFoto.se. Alla bilder tillhör fotografen Torbjörn Arvidson och får inte användas utan tillstånd.</value></data>
+  <data name="AboutPassion" xml:space="preserve"><value>Passion för naturfotografi</value></data>
+  <data name="AboutBirds" xml:space="preserve"><value>Mitt intresse för fåglar började i unga år och med närheten till klassiska fågelmarker så som Oset, Kvismaren och Tysslingen så tilltog intresset alltmer.</value></data>
+  <data name="AboutTravel" xml:space="preserve"><value>Började tidigt att fotografera och dokumentera naturen runt om i Sverige. Med åren har det blivit många resor för fotografering runt om i världen. Jag är också en flitigt anlitad föredragshållare.</value></data>
+  <data name="MyPhotography" xml:space="preserve"><value>Min fotografering</value></data>
+  <data name="AboutEarly" xml:space="preserve"><value>Naturfotografi sedan tidiga år</value></data>
+  <data name="AboutBirdSpecialist" xml:space="preserve"><value>Specialiserad på fågelfotografi</value></data>
+  <data name="AboutWorldTravel" xml:space="preserve"><value>Resor runt om i världen</value></data>
+  <data name="AboutSpeaker" xml:space="preserve"><value>Föredragshållare</value></data>
+  <data name="AboutCaption" xml:space="preserve"><value>Född 1953 och bor i Örebro</value></data>
+  <data name="ContactHeading" xml:space="preserve"><value>Kontaktinformation</value></data>
+  <data name="ContactIntro" xml:space="preserve"><value>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon.</value></data>
+  <data name="Address" xml:space="preserve"><value>Adress</value></data>
+  <data name="Mobile" xml:space="preserve"><value>Mobil</value></data>
+  <data name="ReplyTime" xml:space="preserve"><value>Svarar vanligtvis inom 1-5 dagar</value></data>
+  <data name="ContactForm" xml:space="preserve"><value>Kontaktformulär</value></data>
+  <data name="BuyInfo" xml:space="preserve"><value>Information om bildköp</value></data>
+  <data name="BuyQuestion" xml:space="preserve"><value>Intresserad av att köpa bilder?</value></data>
+  <data name="BuyInstructions" xml:space="preserve"><value>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</value></data>
+  <data name="BuySeeContact" xml:space="preserve"><value>Se även mer information under sidan</value></data>
+  <data name="BuyHelp" xml:space="preserve"><value>Vad kan jag hjälpa till med?</value></data>
+  <data name="BuyPrint" xml:space="preserve"><value>Högupplösta bilder för tryck</value></data>
+  <data name="BuyDigital" xml:space="preserve"><value>Digitala bildfiler</value></data>
+  <data name="BuyEditorial" xml:space="preserve"><value>Redaktionellt bruk</value></data>
+  <data name="BuyCommercial" xml:space="preserve"><value>Kommersiellt bruk</value></data>
+  <data name="RightsReserved" xml:space="preserve"><value>Alla rättigheter förbehållna fotografen.</value></data>
+  <data name="CopyrightNotice" xml:space="preserve"><value>Alla bilder är skyddade av upphovsrätten och får inte laddas ner utan tillstånd.</value></data>
+  <data name="FormError" xml:space="preserve"><value>Ett fel uppstod!</value></data>
+  <data name="ContactBackup" xml:space="preserve"><value>Ditt meddelande har sparats som backup.</value></data>
+  <data name="Alternative" xml:space="preserve"><value>Alternativ:</value></data>
+  <data name="EmailDirectly" xml:space="preserve"><value>Skicka ett mail direkt till</value></data>
+  <data name="Close" xml:space="preserve"><value>Stäng</value></data>
+  <data name="YourName" xml:space="preserve"><value>Ditt namn</value></data>
+  <data name="EmailExample" xml:space="preserve"><value>din.epost@exempel.se</value></data>
+  <data name="SubjectPlaceholder" xml:space="preserve"><value>Rubrik på ditt meddelande</value></data>
+  <data name="ContactMessagePlaceholder" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna vad ni önskar kontakt om)</value></data>
+  <data name="BuyMessagePlaceholder" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna bildnamn på de bilderna ni är intresserade av)</value></data>
+  <data name="BuyMessageIntro" xml:space="preserve"><value>Hej! Jag är intresserad av att köpa bilden:</value></data>
+  <data name="BuyImageName" xml:space="preserve"><value>Bildnamn:</value></data>
+  <data name="BuyCategory" xml:space="preserve"><value>Från kategorin:</value></data>
+  <data name="BuySubject" xml:space="preserve"><value>Intresse att köpa en bild i kategorin: {0}</value></data>
+  <data name="CaptchaAlt" xml:space="preserve"><value>CAPTCHA bild med siffror</value></data>
+  <data name="CaptchaPrompt" xml:space="preserve"><value>Ange siffrorna från bilden</value></data>
+  <data name="CaptchaPlaceholder" xml:space="preserve"><value>Siffror från bilden</value></data>
+  <data name="GuestbookFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas...</value></data>
+  <data name="GuestbookNamePlaceholder" xml:space="preserve"><value>Namn (blank för anonym)</value></data>
+  <data name="GuestbookEmailPlaceholder" xml:space="preserve"><value>Epost (visas ej)</value></data>
+  <data name="GuestbookWebsitePlaceholder" xml:space="preserve"><value>Hemsida (om du vill)</value></data>
+  <data name="Digits" xml:space="preserve"><value>Siffror</value></data>
+  <data name="GuestbookMessagePlaceholder" xml:space="preserve"><value>Skriv ditt meddelande här...</value></data>
+  <data name="NoPhotosNow" xml:space="preserve"><value>Det finns inga bilder att visa för tillfället.</value></data>
+  <data name="ViewCategoryPhotos" xml:space="preserve"><value>Se alla bilder i kategorin {0}</value></data>
+  <data name="ToggleMenu" xml:space="preserve"><value>Växla menyns synlighet</value></data>
+  <data name="LatestMeta" xml:space="preserve"><value>Torbjörn Arvidson Foto - Senast {0}. Bilder på djur och natur.</value></data>
+  <data name="LatestMetaCount" xml:space="preserve"><value>Antal bilder: {0}st</value></data>
+  <data name="Vänligen fyll i en kod" xml:space="preserve"><value>Vänligen fyll i en kod</value></data>
+  <data name="Fel kod angiven" xml:space="preserve"><value>Fel kod angiven</value></data>
+  <data name="Ange din e-postadress" xml:space="preserve"><value>Ange din e-postadress</value></data>
+  <data name="Du har inte angivit en korrekt e-postadress" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress</value></data>
+  <data name="Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt" xml:space="preserve"><value>Du har inte angivit en korrekt e-postadress. Ange en korrekt eller skippa epost helt</value></data>
+  <data name="Du har angivit en för lång epost-adress. Max 150 tecken" xml:space="preserve"><value>Du har angivit en för lång epost-adress. Max 150 tecken</value></data>
+  <data name="Ange ditt namn" xml:space="preserve"><value>Ange ditt namn</value></data>
+  <data name="För långt namn (max 50 tecken)" xml:space="preserve"><value>För långt namn (max 50 tecken)</value></data>
+  <data name="Ange en rubrik" xml:space="preserve"><value>Ange en rubrik</value></data>
+  <data name="För lång rubrik (max 50 tecken)" xml:space="preserve"><value>För lång rubrik (max 50 tecken)</value></data>
+  <data name="För lång rubrik (max 250 tecken)" xml:space="preserve"><value>För lång rubrik (max 250 tecken)</value></data>
+  <data name="Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt" xml:space="preserve"><value>Du har inte angivit en korrekt URL. Ange korrekt eller skippa detta helt</value></data>
+  <data name="Ange ett meddelande" xml:space="preserve"><value>Ange ett meddelande</value></data>
+  <data name="För långt meddelande (max 2000 tecken)" xml:space="preserve"><value>För långt meddelande (max 2000 tecken)</value></data>
 </root>

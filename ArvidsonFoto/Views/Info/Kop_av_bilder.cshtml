@@ -1,30 +1,33 @@
 ﻿@using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @model ContactFormInputDto
 
 @section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden." />
+    <meta name="description" content="@T["BuyMeta"]" />
     <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Köp av bilder - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden.">
+    <meta name="twitter:title" content="@T["BuyPhotos"] - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="@T["BuyMeta"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Köp av bilder - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden." />
+    <meta property="og:title" content="@T["BuyPhotos"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@T["BuyMeta"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/Info/Kop_av_bilder" />
+    <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))" />
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="@ArvidsonFoto.Core.Extensions.LocalizedRoutes.Page("/Info")">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Köp av bilder<i class="bi bi-cart3 mx-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["BuyPhotos"]<i class="bi bi-cart3 mx-1"></i></li>
     </ol>
 </nav>
 
@@ -35,26 +38,26 @@
         <div class="col-lg-5">
             <div class="card shadow-sm h-100 d-flex flex-column">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> Information om bildköp</h3>
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> @T["BuyInfo"]</h3>
                 </div>
                 <div class="card-body flex-grow-1">
-                    <p><strong>Intresserad av att köpa bilder?</strong></p>
-                    <p>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</p>
-                    <p>Se även mer information under sidan <a href="@ArvidsonFoto.Core.Extensions.LocalizedRoutes.Page("/Info/Kontakta")">Kontaktinformation</a>.</p>
+                    <p><strong>@T["BuyQuestion"]</strong></p>
+                    <p>@T["BuyInstructions"]</p>
+                    <p>@T["BuySeeContact"] <a href="@LocalizedRoutes.Page("/Info/Kontakta")">@T["Contact"]</a>.</p>
                     
                     <div class="mt-4">
-                        <h4><i class="bi bi-check-circle"></i> Vad kan jag hjälpa till med?</h4>
+                        <h4><i class="bi bi-check-circle"></i> @T["BuyHelp"]</h4>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-image text-primary"></i> Högupplösta bilder för tryck</li>
-                            <li><i class="bi bi-file-earmark-image text-primary"></i> Digitala bildfiler</li>
-                            <li><i class="bi bi-newspaper text-primary"></i> Redaktionellt bruk</li>
-                            <li><i class="bi bi-megaphone text-primary"></i> Kommersiellt bruk</li>
+                            <li><i class="bi bi-image text-primary"></i> @T["BuyPrint"]</li>
+                            <li><i class="bi bi-file-earmark-image text-primary"></i> @T["BuyDigital"]</li>
+                            <li><i class="bi bi-newspaper text-primary"></i> @T["BuyEditorial"]</li>
+                            <li><i class="bi bi-megaphone text-primary"></i> @T["BuyCommercial"]</li>
                         </ul>
                     </div>
                 </div>
                 <div class="card-footer bg-light">
                     <small class="text-muted">
-                        <i class="bi bi-clock"></i> Svarar vanligtvis inom 1-5 dagar
+                        <i class="bi bi-clock"></i> @T["ReplyTime"]
                     </small>
                 </div>
             </div>
@@ -63,7 +66,7 @@
         <div class="col-lg-7">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> Kontaktformulär</h3>
+                    <h3 class="mb-0"><i class="bi bi-envelope-paper"></i> @T["ContactForm"]</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ContactForm" model="Model" />

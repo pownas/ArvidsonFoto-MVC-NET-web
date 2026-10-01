@@ -1,4 +1,7 @@
 ﻿@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
 @model ArvidsonFoto.Core.ViewModels.GalleryViewModel
 @{
@@ -11,7 +14,7 @@
 
 @if (imageList is null || imageList.Count == 0)
 {
-    <p>Det finns inga bilder att visa för tillfället.</p>
+    <p>@T["NoPhotosNow"]</p>
 }
 else
 {
@@ -31,29 +34,29 @@ else
             
             string imgSrc = $"{imgPath}.jpg";
             string imgThumbSrc = $"{imgPath}.thumb.jpg";
-            string imgTitle = !string.IsNullOrWhiteSpace(img.Name) ? img.Name : "Bild";
+            string imgTitle = !string.IsNullOrWhiteSpace(img.Name) ? img.Name : T["Photos"].Value;
             string imgDesc = !string.IsNullOrWhiteSpace(img.Description) ? $", {img.Description}." : "";
             string imgName = imgPath.Substring(imgPath.LastIndexOf('/') + 1) + ".jpg";
             DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
-            string imgDateDisplay = imgDate.Year == 1900 ? "saknas" : imgDate.ToString("yyyy-MM-dd");
+            string imgDateDisplay = imgDate.Year == 1900 ? T["Missing"].Value : imgDate.ToString("yyyy-MM-dd");
             string categoryHref = img.CategoryId > 0 ? LocalizedRoutes.CategoryForId(img.CategoryId, categories) : "";
             string categoryName = !string.IsNullOrWhiteSpace(img.CategoryName) ? img.CategoryName : imgTitle;
 
             <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
                 <a href="@imgSrc" rel="nofollow" class="glightbox rounded btn btn-light thumb-a-class" data-gallery="gallery1" data-glightbox="title: @imgTitle; description: .@customDesc" title="@imgTitle@imgDesc
-Tryck för att förstora">
+@T["Enlarge"]">
                     <img src="@imgThumbSrc" alt="@imgTitle@imgDesc" class="figure-img img-fluid rounded @imgCharWidth" width="120" height="120" loading="lazy" title="@imgTitle@imgDesc
-Tryck för att förstora">
+@T["Enlarge"]">
                     <figcaption class="figure-caption d-block text-truncate @figcaptionCharWidth">@imgTitle</figcaption>
                 </a>
             </figure>
 
             <div class="glightbox-desc row @customDesc">
-                <p>@index av @imageList.Count - @if (!string.IsNullOrWhiteSpace(categoryHref))
-                {<a href="@categoryHref" title="Se alla bilder i kategorin @categoryName">@imgTitle</a>}
+                <p>@T["ImagePosition", index, imageList.Count] - @if (!string.IsNullOrWhiteSpace(categoryHref))
+                {<a href="@categoryHref" title="@T["ViewCategoryPhotos", categoryName]">@imgTitle</a>}
                 else
-                {<strong>@imgTitle</strong>}@imgDesc Fotodatum: @imgDateDisplay</p>
-                <p>Bildnamn: @imgName <a rel="nofollow" href="@LocalizedRoutes.Page("/Info/Copyright")">© Torbjörn Arvidson</a>. Intresserad av bilden? Se: <a rel="nofollow" href="@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))?imgId=@img.ImageId">Köp av bilder</a></p>
+                {<strong>@imgTitle</strong>}@imgDesc @T["PhotoDate"]: @imgDateDisplay</p>
+                <p>@T["ImageName"]: @imgName <a rel="nofollow" href="@LocalizedRoutes.Page("/Info/Copyright")">© Torbjörn Arvidson</a>. @T["InterestedInPhoto"] <a rel="nofollow" href="@(LocalizedRoutes.Page("/Info/Kop_av_bilder"))?imgId=@img.ImageId">@T["BuyPhotos"]</a></p>
             </div>
 
             index++;

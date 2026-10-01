@@ -1,6 +1,8 @@
 ﻿using ArvidsonFoto.Core.Configuration;
+using ArvidsonFoto.Core;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
@@ -8,6 +10,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Localization;
 using MimeKit;
 
 namespace ArvidsonFoto.Controllers;
@@ -17,6 +20,7 @@ public class InfoController : Controller
     private readonly ArvidsonFotoCoreDbContext _coreContext;
     private readonly IConfiguration _configuration;
     private readonly SmtpSettings _smtpSettings;
+    private readonly IStringLocalizer<SharedResource> _text;
     internal IApiCategoryService _categoryService;
     internal IApiImageService _imageService;
     internal IGuestBookService _guestbookService;
@@ -27,6 +31,7 @@ public class InfoController : Controller
         ArvidsonFotoCoreDbContext coreContext,
         IConfiguration configuration,
         IOptions<SmtpSettings> smtpSettings,
+        IStringLocalizer<SharedResource>? text = null,
         ILogger<ApiImageService>? imageLogger = null,
         ILogger<ApiCategoryService>? categoryLogger = null,
         IMemoryCache? memoryCache = null)
@@ -34,6 +39,9 @@ public class InfoController : Controller
         _coreContext = coreContext;
         _configuration = configuration;
         _smtpSettings = smtpSettings.Value;
+        _text = text ?? new StringLocalizer<SharedResource>(new ResourceManagerStringLocalizerFactory(
+            Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }),
+            LoggerFactory.Create(b => b.AddConsole())));
 
         // Support both DI and manual instantiation (for tests)
         _categoryService = new ApiCategoryService(
@@ -65,7 +73,7 @@ public class InfoController : Controller
 
     public IActionResult Gastbok(GuestbookFormInputDto inputModel)
     {
-        ViewData["Title"] = "Gästbok";
+        ViewData["Title"] = _text["Guestbook"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Gästbok");
@@ -295,7 +303,7 @@ public class InfoController : Controller
 
     public IActionResult Kontakta(ContactFormInputDto contactFormModel)
     {
-        ViewData["Title"] = "Kontaktinformation";
+        ViewData["Title"] = _text["Contact"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Kontaktinformation");
@@ -323,7 +331,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = "Meddelande \n (Skriv gärna vad ni önskar kontakt om)", // \n = newLine
+                MessagePlaceholder = _text["ContactMessagePlaceholder"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kontakta"
@@ -339,7 +347,7 @@ public class InfoController : Controller
 
     public IActionResult Kop_av_bilder(ContactFormInputDto contactFormModel, string imgId)
     {
-        ViewData["Title"] = "Köp av bilder";
+        ViewData["Title"] = _text["BuyPhotos"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Köp av bilder");
@@ -367,7 +375,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
+                MessagePlaceholder = _text["BuyMessagePlaceholder"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kop_av_bilder"
@@ -389,17 +397,17 @@ public class InfoController : Controller
                     var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
 
                     // Build the message with both image name and category
-                    var messageParts = new List<string> { "Hej! Jag är intresserad av att köpa bilden: " };
+                    var messageParts = new List<string> { _text["BuyMessageIntro"].Value };
 
                     if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
                     {
-                        messageParts.Add($"  - Bildnamn: {imageFileName}");
-                        messageParts.Add($"  - Från kategorin: {categoryName}");
-                        contactFormModel.Subject = $"Intresse att köpa en bild i kategorin: {categoryName}";
+                        messageParts.Add($"  - {_text["BuyImageName"]} {imageFileName}");
+                        messageParts.Add($"  - {_text["BuyCategory"]} {categoryName}");
+                        contactFormModel.Subject = _text["BuySubject", categoryName].Value;
                     }
                     else
                     {
-                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                        messageParts.Add($"  - {_text["BuyImageName"]} {imageFileName}");
                     }
                     messageParts.Add($" ");
 
@@ -421,7 +429,7 @@ public class InfoController : Controller
 
     public IActionResult Om_mig()
     {
-        ViewData["Title"] = "Om mig, Torbjörn Arvidson";
+        ViewData["Title"] = _text["About"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Om mig");
@@ -432,7 +440,7 @@ public class InfoController : Controller
 
     public IActionResult Sidkarta()
     {
-        ViewData["Title"] = "Sidkarta";
+        ViewData["Title"] = _text["Sitemap"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Sidkarta");
