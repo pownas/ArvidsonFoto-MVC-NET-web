@@ -6,22 +6,27 @@
 // Dark mode toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkModeToggleText = document.getElementById('dark-mode-toggle-btn-text');
     
     if (darkModeToggle) {
         const icon = darkModeToggle.querySelector('i');
+        const lightModeLabel = darkModeToggle.dataset.labelLight;
+        const darkModeLabel = darkModeToggle.dataset.labelDark;
         
         // Function to update icon and tooltip based on theme
         function updateIcon(isDark) {
             if (isDark) {
                 // Dark mode: Show filled/lit bulb (yellow/white)
                 icon.className = 'bi bi-lightbulb-fill';
-                darkModeToggle.setAttribute('aria-label', 'Tänd ljuset');
-                darkModeToggle.setAttribute('title', 'Tänd ljuset');
+                darkModeToggle.setAttribute('aria-label', lightModeLabel);
+                darkModeToggle.setAttribute('title', lightModeLabel);
+                darkModeToggleText.innerText = lightModeLabel;
             } else {
                 // Light mode: Show empty/off bulb
                 icon.className = 'bi bi-lightbulb';
-                darkModeToggle.setAttribute('aria-label', 'Släck ljuset');
-                darkModeToggle.setAttribute('title', 'Släck ljuset');
+                darkModeToggle.setAttribute('aria-label', darkModeLabel);
+                darkModeToggle.setAttribute('title', darkModeLabel);
+                darkModeToggleText.innerText = darkModeLabel;
             }
         }
         

@@ -49,6 +49,21 @@
                 <span asp-validation-for="MenuText"></span>
             </div>
             <div class="form-group col-md-6">
+                <label asp-for="MenuTextEn">Engelskt namn</label>
+                <input asp-for="MenuTextEn" class="form-control" maxlength="50" />
+                <span asp-validation-for="MenuTextEn"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="MenuUrlSegment">Svenskt URL-segment</label>
+                <input asp-for="MenuUrlSegment" class="form-control" maxlength="50" />
+                <span asp-validation-for="MenuUrlSegment"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="MenuUrlSegmentEn">Engelskt URL-segment</label>
+                <input asp-for="MenuUrlSegmentEn" class="form-control" maxlength="50" />
+                <span asp-validation-for="MenuUrlSegmentEn"></span>
+            </div>
+            <div class="form-group col-md-6">
                 <button type="submit" class="btn btn-light btn-outline-primary text-dark">Skapa kategori</button>
             </div>
         </form>

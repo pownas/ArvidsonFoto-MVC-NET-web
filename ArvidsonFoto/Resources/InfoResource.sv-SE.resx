@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Guestbook.Posts" xml:space="preserve"><value>Inlägg i gästboken</value></data>
+  <data name="Guestbook.Form.Header" xml:space="preserve"><value>Skriv i gästboken</value></data>
+  <data name="Guestbook.Form.Button.Submit" xml:space="preserve"><value>Skicka inlägget</value></data>
+  <data name="Guestbook.Entry.Anonymous" xml:space="preserve"><value>Anonym användare</value></data>
+  <data name="Contact.Form.Button.Submit" xml:space="preserve"><value>Skicka meddelandet</value></data>
+  <data name="Contact.Form.Feedback.SendFailed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas.</value></data>
+  <data name="Guestbook.Form.Feedback.Published" xml:space="preserve"><value>Tack för ditt inlägg! Ditt meddelande har publicerats i gästboken.</value></data>
+  <data name="Contact.Form.Feedback.Sent" xml:space="preserve"><value>Tack för ditt mejl! Jag återkommer inom 1–5 dagar med svar.</value></data>
+  <data name="Sitemap.Intro" xml:space="preserve"><value>En sidkarta över alla sidor och bildkategorier:</value></data>
+  <data name="Info.Metadata.Description" xml:space="preserve"><value>Informationssidor på ArvidsonFoto.se – hitta information om bildköp, kontaktuppgifter, gästbok och mer om naturfotograf Torbjörn Arvidson.</value></data>
+  <data name="About.Metadata.Description" xml:space="preserve"><value>Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare.</value></data>
+  <data name="Contact.Metadata.Description" xml:space="preserve"><value>Kontakta naturfotograf Torbjörn Arvidson via telefon, e-post eller kontaktformulär. Välkommen att höra av dig för frågor om bildköp eller föredrag.</value></data>
+  <data name="Buy.Metadata.Description" xml:space="preserve"><value>Köp högupplösta naturbilder av Torbjörn Arvidson. Kontakta fotografen för mer information om priser och användningsområden.</value></data>
+  <data name="Guestbook.Metadata.Description" xml:space="preserve"><value>Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok.</value></data>
+  <data name="Copyright.Metadata.Description" xml:space="preserve"><value>Copyright och upphovsrätt för bilder på ArvidsonFoto.se. Alla bilder tillhör fotografen Torbjörn Arvidson och får inte användas utan tillstånd.</value></data>
+  <data name="About.Header.Passion" xml:space="preserve"><value>Passion för naturfotografi</value></data>
+  <data name="About.Content.Birds" xml:space="preserve"><value>Mitt intresse för fåglar började i unga år och med närheten till klassiska fågelmarker så som Oset, Kvismaren och Tysslingen så tilltog intresset alltmer.</value></data>
+  <data name="About.Content.Travel" xml:space="preserve"><value>Började tidigt att fotografera och dokumentera naturen runt om i Sverige. Med åren har det blivit många resor för fotografering runt om i världen. Jag är också en flitigt anlitad föredragshållare.</value></data>
+  <data name="About.Header.Photography" xml:space="preserve"><value>Min fotografering</value></data>
+  <data name="About.List.Early" xml:space="preserve"><value>Naturfotografi sedan tidiga år</value></data>
+  <data name="About.List.BirdSpecialist" xml:space="preserve"><value>Specialiserad på fågelfotografi</value></data>
+  <data name="About.List.WorldTravel" xml:space="preserve"><value>Resor runt om i världen</value></data>
+  <data name="About.List.Speaker" xml:space="preserve"><value>Föredragshållare</value></data>
+  <data name="About.Photo.Caption" xml:space="preserve"><value>Född 1953 och bor i Örebro</value></data>
+  <data name="Contact.Header.Details" xml:space="preserve"><value>Kontaktinformation</value></data>
+  <data name="Contact.Content.Intro" xml:space="preserve"><value>Om du vill kontakta mig kan du antingen höra av dig via mail eller telefon.</value></data>
+  <data name="Contact.Label.Address" xml:space="preserve"><value>Adress</value></data>
+  <data name="Contact.Label.Mobile" xml:space="preserve"><value>Mobil</value></data>
+  <data name="Contact.Content.ReplyTime" xml:space="preserve"><value>Svarar vanligtvis inom 1-5 dagar</value></data>
+  <data name="Contact.Form.Header" xml:space="preserve"><value>Kontaktformulär</value></data>
+  <data name="Buy.Header.Information" xml:space="preserve"><value>Information om bildköp</value></data>
+  <data name="Buy.Content.Question" xml:space="preserve"><value>Intresserad av att köpa bilder?</value></data>
+  <data name="Buy.Content.Instructions" xml:space="preserve"><value>Du kan ta kontakt med mig om du vill köpa bilder. Fyll i formuläret till höger så hör jag av mig.</value></data>
+  <data name="Buy.Content.SeeContact" xml:space="preserve"><value>Se även mer information under sidan</value></data>
+  <data name="Buy.Header.Services" xml:space="preserve"><value>Vad kan jag hjälpa till med?</value></data>
+  <data name="Buy.List.Print" xml:space="preserve"><value>Högupplösta bilder för tryck</value></data>
+  <data name="Buy.List.Digital" xml:space="preserve"><value>Digitala bildfiler</value></data>
+  <data name="Buy.List.Editorial" xml:space="preserve"><value>Redaktionellt bruk</value></data>
+  <data name="Buy.List.Commercial" xml:space="preserve"><value>Kommersiellt bruk</value></data>
+  <data name="Copyright.Content.RightsReserved" xml:space="preserve"><value>Alla rättigheter förbehållna fotografen.</value></data>
+  <data name="Copyright.Content.Notice" xml:space="preserve"><value>Alla bilder är skyddade av upphovsrätten och får inte laddas ner utan tillstånd.</value></data>
+  <data name="Form.Feedback.Error" xml:space="preserve"><value>Ett fel uppstod!</value></data>
+  <data name="Contact.Form.Feedback.Backup" xml:space="preserve"><value>Ditt meddelande har sparats som backup.</value></data>
+  <data name="Contact.Form.Feedback.Alternative" xml:space="preserve"><value>Alternativ:</value></data>
+  <data name="Contact.Form.Feedback.EmailDirectly" xml:space="preserve"><value>Skicka ett mail direkt till</value></data>
+  <data name="Form.Button.Close" xml:space="preserve"><value>Stäng</value></data>
+  <data name="Contact.Form.Placeholder.Name" xml:space="preserve"><value>Ditt namn</value></data>
+  <data name="Contact.Form.Placeholder.Email" xml:space="preserve"><value>din.epost@exempel.se</value></data>
+  <data name="Contact.Form.Placeholder.Subject" xml:space="preserve"><value>Rubrik på ditt meddelande</value></data>
+  <data name="Contact.Form.Placeholder.Message" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna vad ni önskar kontakt om)</value></data>
+  <data name="Buy.Form.Placeholder.Message" xml:space="preserve"><value>Meddelande&#10;(Skriv gärna bildnamn på de bilderna ni är intresserade av)</value></data>
+  <data name="Buy.Form.Prefill.Intro" xml:space="preserve"><value>Hej! Jag är intresserad av att köpa bilden:</value></data>
+  <data name="Buy.Form.Prefill.ImageName" xml:space="preserve"><value>Bildnamn:</value></data>
+  <data name="Buy.Form.Prefill.Category" xml:space="preserve"><value>Från kategorin:</value></data>
+  <data name="Buy.Form.Prefill.Subject" xml:space="preserve"><value>Intresse att köpa en bild i kategorin: {0}</value></data>
+  <data name="Form.Captcha.Alt" xml:space="preserve"><value>CAPTCHA bild med siffror</value></data>
+  <data name="Form.Captcha.Prompt" xml:space="preserve"><value>Ange siffrorna från bilden</value></data>
+  <data name="Form.Captcha.Placeholder" xml:space="preserve"><value>Siffror från bilden</value></data>
+  <data name="Guestbook.Form.Feedback.Failed" xml:space="preserve"><value>Något gick fel när meddelandet skulle skickas...</value></data>
+  <data name="Guestbook.Form.Placeholder.Name" xml:space="preserve"><value>Namn (blank för anonym)</value></data>
+  <data name="Guestbook.Form.Placeholder.Email" xml:space="preserve"><value>Epost (visas ej)</value></data>
+  <data name="Guestbook.Form.Placeholder.Website" xml:space="preserve"><value>Hemsida (om du vill)</value></data>
+  <data name="Guestbook.Form.Placeholder.Digits" xml:space="preserve"><value>Siffror</value></data>
+  <data name="Guestbook.Form.Placeholder.Message" xml:space="preserve"><value>Skriv ditt meddelande här...</value></data>
+</root>

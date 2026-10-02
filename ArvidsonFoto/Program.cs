@@ -1,11 +1,13 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Security;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
@@ -161,8 +163,21 @@ public class Program
             });
         });
 
-        services.AddControllersWithViews();
+        services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
+            options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(ValidationResource)));
         services.AddRazorPages();
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.SetDefaultCulture("sv-SE")
+                .AddSupportedCultures("sv-SE", "en-US")
+                .AddSupportedUICultures("sv-SE", "en-US");
+            options.RequestCultureProviders.Insert(1, new CustomRequestCultureProvider(context =>
+            {
+                return Task.FromResult<ProviderCultureResult?>(
+                    LocalizedRoutes.IsEnglishPath(context.Request.Path.Value) ? new ProviderCultureResult("en-US") : null);
+            }));
+        });
 
         // ===== ROUTING CONFIGURATION =====
         // Enable case-insensitive and URL-decoding routing
@@ -291,6 +306,29 @@ public class Program
 
         app.UseStaticFiles();
 
+        app.UseRequestLocalization();
+        app.Use(async (context, next) =>
+        {
+            var culture = context.Request.Query["culture"].ToString();
+            if (culture.Length == 0 && LocalizedRoutes.IsEnglishPath(context.Request.Path.Value))
+                culture = "en-US";
+            if (culture is "sv-SE" or "en-US")
+            {
+                context.Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = context.Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        IsEssential = true,
+                        Expires = DateTimeOffset.UtcNow.AddYears(1)
+                    });
+            }
+            await next();
+        });
+
         // Add input validation middleware to prevent SQL injection and malicious input
         app.UseMiddleware<InputValidationMiddleware>();
 
@@ -305,6 +343,21 @@ public class Program
         // Map Aspire default endpoints (health checks, alive checks)
         app.MapDefaultEndpoints();
 
+        foreach (var (path, controller, action, sortOrder) in new (string Path, string Controller, string Action, string? SortOrder)[]
+        {
+            ("information", "Info", "Index", null),
+            ("information/buy-photos", "Info", "Kop_av_bilder", null),
+            ("information/guestbook", "Info", "Gastbok", null),
+            ("information/contact", "Info", "Kontakta", null),
+            ("information/about", "Info", "Om_mig", null),
+            ("information/sitemap", "Info", "Sidkarta", null),
+            ("information/copyright", "Info", "Copyright", null)
+        })
+        {
+            app.MapControllerRoute($"english-{path}", path,
+                new { controller, action, sortOrder })
+                .Add(endpoint => endpoint.Metadata.Add(new SuppressLinkGenerationMetadata()));
+        }
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

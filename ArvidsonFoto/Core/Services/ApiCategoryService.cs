@@ -86,7 +86,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public CategoryDto GetByName(string categoryName)
     {
-        var category = _entityContext.TblMenus.Where(c => c.MenuDisplayName != null && c.MenuDisplayName.Equals(categoryName)).FirstOrDefault();
+        var category = _entityContext.TblMenus.FirstOrDefault(c =>
+            c.MenuDisplayName == categoryName || c.MenuDisplayNameEn == categoryName);
         if (category is null)
         {
             Log.Debug("Could not find category: '" + categoryName + "'");
@@ -203,7 +204,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         try
         {
             // Check cache first
-            if (_categoryNameCache.TryGetValue(id.Value, out var cachedName))
+            if (!LocalizedText.IsEnglish && _categoryNameCache.TryGetValue(id.Value, out var cachedName))
             {
                 return cachedName;
             }
@@ -215,10 +216,12 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return "Not found";
             }
 
-            var name = category.MenuDisplayName ?? "Not found";
+            var name = LocalizedText.Select(category.MenuDisplayName ?? "Not found", category.MenuDisplayNameEn);
 
-            // Cache the result
-            _categoryNameCache[id.Value] = name;
+            if (!LocalizedText.IsEnglish)
+            {
+                _categoryNameCache[id.Value] = name;
+            }
 
             return name;
         }
@@ -267,8 +270,12 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryToEdit = _entityContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == updatedCategory.CategoryId);
             if (categoryToEdit != null)
             {
-                categoryToEdit.MenuDisplayName = updatedCategory.Name;
+                categoryToEdit.MenuDisplayName = updatedCategory.NameSv;
+                if (updatedCategory.NameEn != null)
+                    categoryToEdit.MenuDisplayNameEn = updatedCategory.NameEn;
                 categoryToEdit.MenuUrlSegment = updatedCategory.UrlCategoryPath;
+                if (updatedCategory.UrlCategoryPathEn != null)
+                    categoryToEdit.MenuUrlSegmentEn = updatedCategory.UrlCategoryPathEn;
                 _entityContext.TblMenus.Update(categoryToEdit);
                 _entityContext.SaveChanges();
                 success = true;
@@ -426,6 +433,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 {
                     MenuUrl = GetCategoryUrl(categories[i].MenuCategoryId),
                     MenuDisplayName = categories[i].MenuDisplayName ?? string.Empty,
+                    MenuDisplayNameEn = categories[i].MenuDisplayNameEn,
+                    MenuUrlSegmentEn = categories[i].MenuUrlSegmentEn,
                     SubCategoryCount = subCategoryCounts.GetValueOrDefault(categoryId, 0),
                     SortingUrlWithAao = GetSortingUrl(categories[i].MenuCategoryId),
                 });
@@ -544,7 +553,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
+            var category = _entityContext.TblMenus.FirstOrDefault(c =>
+                c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant() ||
+                (c.MenuUrlSegmentEn != null && c.MenuUrlSegmentEn.ToLowerInvariant() == urlSegment.ToLowerInvariant()));
             if (category == null)
             {
                 Log.Information("Could not find category id for URL segment: {UrlSegment}", urlSegment);
@@ -569,7 +580,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
+            var category = _entityContext.TblMenus.FirstOrDefault(c =>
+                c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant() ||
+                (c.MenuUrlSegmentEn != null && c.MenuUrlSegmentEn.ToLowerInvariant() == urlSegment.ToLowerInvariant()));
             if (category != null)
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
@@ -851,6 +864,16 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
+            if (LocalizedText.IsEnglish)
+            {
+                var names = _entityContext.TblMenus
+                    .Where(c => c.MenuCategoryId.HasValue && categoryIds.Contains(c.MenuCategoryId.Value))
+                    .Select(c => new { Id = c.MenuCategoryId!.Value, c.MenuDisplayName, c.MenuDisplayNameEn })
+                    .AsEnumerable()
+                    .ToDictionary(c => c.Id, c => LocalizedText.Select(c.MenuDisplayName, c.MenuDisplayNameEn));
+                return categoryIds.Distinct().ToDictionary(id => id, id => names.GetValueOrDefault(id, "Not found"));
+            }
+
             // Get all unique category IDs that aren't already cached
             var uncachedIds = categoryIds.Where(id => !_categoryNameCache.ContainsKey(id)).Distinct().ToList();
 

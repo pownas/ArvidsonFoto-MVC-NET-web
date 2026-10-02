@@ -119,6 +119,7 @@ public class UploadAdminController(
                 ImageUpdate = DateTime.Now,
                 ImageDate = model.ImageDate,
                 ImageDescription = model.ImageDescription,
+                ImageDescriptionEn = model.ImageDescriptionEn,
                 ImageUrlName = model.ImageUrl
             };
 
@@ -168,6 +169,7 @@ public class UploadAdminController(
                     existingImage.ImageMainFamilyId = model.ImageHuvudfamilj;
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
+                    existingImage.ImageDescriptionEn = model.ImageDescriptionEn;
                     existingImage.ImageUpdate = DateTime.Now;
 
                     await coreContext.SaveChangesAsync();
@@ -196,23 +198,94 @@ public class UploadAdminController(
 
         if (ModelState.IsValid)
         {
+            var svSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegment)
+                ? SharedStaticFunctions.ToUrlSegment(inputModel.MenuText)
+                : inputModel.MenuUrlSegment.Trim();
+            var enSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegmentEn) ? null : inputModel.MenuUrlSegmentEn.Trim();
+            if (!ValidCategorySegments(svSegment, enSegment, null))
+            {
+                ModelState.AddModelError(nameof(inputModel.MenuUrlSegment), "URL-segmenten måste vara unika och giltiga.");
+                return View("NyKategori", inputModel);
+            }
             CategoryDto newCategory = new()
             {
                 Name = inputModel.MenuText,
+                NameEn = inputModel.MenuTextEn,
                 CategoryId = _categoryService.GetLastId() + 1,
                 ParentCategoryId = inputModel.MainMenuId,
-                UrlCategoryPath = SharedStaticFunctions.ToUrlSegment(inputModel.MenuText),
+                UrlCategoryPath = svSegment,
+                UrlCategoryPathEn = enSegment,
                 DateUpdated = DateTime.UtcNow
             };
 
             if (_categoryService.AddCategory(newCategory))
             {
+                _categoryService.ClearCache();
                 inputModel.CategoryCreated = true;
                 inputModel.MainMenuId = null;
             }
         }
 
-        return RedirectToAction("NyKategori", inputModel);
+        return View("NyKategori", inputModel);
+    }
+
+    public IActionResult RedigeraKategori(int? id, string? search)
+    {
+        ViewData["Title"] = "Redigera kategorier och arter";
+        ViewData["Search"] = search;
+        var categories = coreContext.TblMenus.AsEnumerable()
+            .Where(c => string.IsNullOrWhiteSpace(search) ||
+                (c.MenuDisplayName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (c.MenuDisplayNameEn?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+            .OrderBy(c => c.MenuDisplayName).Take(100).ToList();
+        ViewData["Categories"] = categories;
+        var selected = id.HasValue ? coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id) : null;
+        return View(new EditCategoryInputDto
+        {
+            CategoryId = selected?.MenuCategoryId ?? 0,
+            NameSv = selected?.MenuDisplayName ?? string.Empty,
+            NameEn = selected?.MenuDisplayNameEn,
+            UrlSegmentSv = selected?.MenuUrlSegment ?? string.Empty,
+            UrlSegmentEn = selected?.MenuUrlSegmentEn
+        });
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult SaveCategory(EditCategoryInputDto input)
+    {
+        ViewData["Title"] = "Redigera kategorier och arter";
+        var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
+        if (category == null)
+            return NotFound();
+        if (!ValidCategorySegments(input.UrlSegmentSv, input.UrlSegmentEn, input.CategoryId))
+            ModelState.AddModelError(nameof(input.UrlSegmentSv), "URL-segmenten måste vara unika och giltiga.");
+        if (!ModelState.IsValid)
+        {
+            ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
+            return View("RedigeraKategori", input);
+        }
+        category.MenuDisplayName = input.NameSv.Trim();
+        category.MenuDisplayNameEn = string.IsNullOrWhiteSpace(input.NameEn) ? null : input.NameEn.Trim();
+        category.MenuUrlSegment = input.UrlSegmentSv.Trim();
+        category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim();
+        category.MenuDateUpdated = DateTime.UtcNow;
+        coreContext.SaveChanges();
+        _categoryService.ClearCache();
+        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId });
+    }
+
+    private bool ValidCategorySegments(string? swedish, string? english, int? excludeId)
+    {
+        if (string.IsNullOrWhiteSpace(swedish) || swedish.Length > 50 ||
+            !System.Text.RegularExpressions.Regex.IsMatch(swedish, @"^[a-zA-Z0-9-]+$") ||
+            (!string.IsNullOrWhiteSpace(english) &&
+                (english.Length > 50 || !System.Text.RegularExpressions.Regex.IsMatch(english, @"^[a-zA-Z0-9-]+$"))) ||
+            (!string.IsNullOrWhiteSpace(english) && string.Equals(swedish, english, StringComparison.OrdinalIgnoreCase)))
+            return false;
+        return !coreContext.TblMenus.AsEnumerable().Any(c => c.MenuCategoryId != excludeId &&
+            new[] { c.MenuUrlSegment, c.MenuUrlSegmentEn }.Any(existing =>
+                string.Equals(existing, swedish, StringComparison.OrdinalIgnoreCase) ||
+                (!string.IsNullOrWhiteSpace(english) && string.Equals(existing, english, StringComparison.OrdinalIgnoreCase))));
     }
 
     public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
@@ -266,6 +339,7 @@ public class UploadAdminController(
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
 
             // Get category path using the service method
@@ -412,6 +486,7 @@ public class UploadAdminController(
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? string.Empty;
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? string.Empty;
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";

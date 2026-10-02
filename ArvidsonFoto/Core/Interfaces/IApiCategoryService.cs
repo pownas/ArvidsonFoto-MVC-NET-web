@@ -13,6 +13,7 @@ namespace ArvidsonFoto.Core.Interfaces;
 /// </remarks>
 public interface IApiCategoryService
 {
+    void ClearCache();
     /// <summary>Lägger till en ny kategori</summary>
     /// <param name="category">Kategorin som ska läggas till</param>
     /// <returns>True om kategorin lades till framgångsrikt</returns>

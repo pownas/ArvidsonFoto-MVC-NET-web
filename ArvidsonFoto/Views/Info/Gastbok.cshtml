@@ -1,24 +1,29 @@
-﻿@using System.Web
+﻿@inject IStringLocalizer<InfoResource> I
+@using System.Web
 @using ArvidsonFoto.Core.Models
 @using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
 @model GuestbookFormInputDto
 
 @section MetaData {
     <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Gastbok" />
+    <meta name="description" content="@I["Guestbook.Metadata.Description"]" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Gastbok"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Gästbok - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok.">
+    <meta name="twitter:title" content="@T["Navigation.Guestbook"] - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="@I["Guestbook.Metadata.Description"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Gästbok - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Torbjörn Arvidson Foto - Skriv gärna något trevligt i min Gästbok." />
+    <meta property="og:title" content="@T["Navigation.Guestbook"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@I["Guestbook.Metadata.Description"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/Info/Gastbok" />
+    <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Gastbok"))" />
 }
 
 @inject IGuestBookService _guestBookService
@@ -29,8 +34,8 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Info">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Gästbok<i class="bi bi-book mx-1"></i></li>
+        <li class="breadcrumb-item"><a href="@LocalizedRoutes.Page("/Info")">Info</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.Guestbook"]<i class="bi bi-book mx-1"></i></li>
     </ol>
 </nav>
 
@@ -40,7 +45,7 @@
     <!-- Guestbook Form Section -->
     <div class="card shadow-lg mb-5">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Skriv i gästboken</h3>
+            <h3 class="mb-0"><i class="bi bi-pencil-square"></i> @I["Guestbook.Form.Header"]</h3>
         </div>
         <div class="card-body">
             <form asp-action="@(nameof(InfoController.PostToGb))" method="post" class="needs-validation" novalidate>
@@ -48,47 +53,47 @@
                 @if (Model!.DisplayErrorPublish)
                 {
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Ett fel uppstod!</strong> Något gick fel när meddelandet skulle skickas...
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> @I["Form.Feedback.Error"]</strong> @I["Guestbook.Form.Feedback.Failed"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@I["Form.Button.Close"]"></button>
                     </div>
                 }
                 @if (Model.DisplayPublished)
                 {
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong><i class="bi bi-check-circle-fill"></i> Tack för ditt inlägg!</strong> Ditt meddelande har publicerats i gästboken.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Stäng"></button>
+                        <strong><i class="bi bi-check-circle-fill"></i> @I["Guestbook.Form.Feedback.Published"]</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@I["Form.Button.Close"]"></button>
                     </div>
                 }
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label asp-for="Name" class="form-label"><i class="bi bi-person"></i> Namn</label>
-                        <input asp-for="Name" type="text" class="form-control" placeholder="Namn (blank för anonym)" aria-describedby="validationName">
+                        <label asp-for="Name" class="form-label"><i class="bi bi-person"></i> @T["Form.Label.Name"]</label>
+                        <input asp-for="Name" type="text" class="form-control" placeholder="@I["Guestbook.Form.Placeholder.Name"]" aria-describedby="validationName">
                         <div id="validationName" class="invalid-feedback" asp-validation-for="Name"></div>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Epost</label>
-                        <input asp-for="Email" type="email" class="form-control" placeholder="Epost (visas ej)" aria-describedby="validationEmail">
+                        <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> @T["Form.Label.Email"]</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="@I["Guestbook.Form.Placeholder.Email"]" aria-describedby="validationEmail">
                         <div id="validationEmail" class="invalid-feedback" asp-validation-for="Email"></div>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Homepage" class="form-label"><i class="bi bi-globe"></i> Hemsida</label>
-                        <input asp-for="Homepage" type="url" class="form-control" placeholder="Hemsida (om du vill)" aria-describedby="validationHomepage">
+                        <label asp-for="Homepage" class="form-label"><i class="bi bi-globe"></i> @T["Form.Label.Homepage"]</label>
+                        <input asp-for="Homepage" type="url" class="form-control" placeholder="@I["Guestbook.Form.Placeholder.Website"]" aria-describedby="validationHomepage">
                         <div id="validationHomepage" class="invalid-feedback" asp-validation-for="Homepage"></div>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> Ange siffrorna från bilden <span class="text-danger">*</span></label>
-                        <input asp-for="Code" class="form-control" placeholder="Siffror" required aria-required="true" aria-describedby="validationCode">
+                        <label asp-for="Code" class="form-label"><i class="bi bi-shield-check"></i> @I["Form.Captcha.Prompt"] <span class="text-danger">*</span></label>
+                        <input asp-for="Code" class="form-control" placeholder="@I["Guestbook.Form.Placeholder.Digits"]" required aria-required="true" aria-describedby="validationCode">
                         <div id="validationCode" class="invalid-feedback" asp-validation-for="Code"></div>
-                        <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid mt-2 rounded" alt="CAPTCHA bild med siffror" style="max-width: 200px;">
+                        <img src="/img/a575grj5dgs575389aw.gif" class="img-fluid mt-2 rounded" alt="@I["Form.Captcha.Alt"]" style="max-width: 200px;">
                     </div>
                     <div class="col-12">
-                        <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> Meddelande <span class="text-danger">*</span></label>
-                        <textarea asp-for="Message" class="form-control" placeholder="Skriv ditt meddelande här..." rows="5" required aria-required="true" aria-describedby="validationMessage"></textarea>
+                        <label asp-for="Message" class="form-label"><i class="bi bi-chat-left-text"></i> @T["Form.Label.Message"] <span class="text-danger">*</span></label>
+                        <textarea asp-for="Message" class="form-control" placeholder="@I["Guestbook.Form.Placeholder.Message"]" rows="5" required aria-required="true" aria-describedby="validationMessage"></textarea>
                         <div id="validationMessage" class="invalid-feedback" asp-validation-for="Message"></div>
                     </div>
                     <div class="col-12">
                         <button id="SubmitButton" type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-send-fill"></i> Skicka inlägget
+                            <i class="bi bi-send-fill"></i> @I["Guestbook.Form.Button.Submit"]
                         </button>
                     </div>
                 </div>
@@ -97,7 +102,7 @@
     </div>
 
     <!-- Guestbook Posts Section -->
-    <h3 class="mt-5 mb-4"><i class="bi bi-chat-dots"></i> Inlägg i gästboken</h3>
+    <h3 class="mt-5 mb-4"><i class="bi bi-chat-dots"></i> @I["Guestbook.Posts"]</h3>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
         @if (_guestBookService is not null && gbListView is not null)
@@ -111,12 +116,12 @@
                         <div class="card-header">
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-person-circle me-2 fs-5"></i>
-                                <strong>@(gbPost.GbName ?? "Anonym användare")</strong>
+                                <strong>@(LocalizedText.Select(gbPost.GbName, gbPost.GbNameEn) is { Length: > 0 } name ? name : I["Guestbook.Entry.Anonymous"].Value)</strong>
                             </div>
                         </div>
                         <div class="card-body">
                             @* Decode HTML entities from database. Input is validated on submission. *@
-                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode((gbPost.GbText ?? string.Empty).Replace("<br>", "\n"))</p>
+                            <p class="card-text" style="white-space: pre-wrap;">@HttpUtility.HtmlDecode(LocalizedText.Select(gbPost.GbText, gbPost.GbTextEn).Replace("<br>", "\n"))</p>
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">

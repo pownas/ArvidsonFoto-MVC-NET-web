@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
@@ -15,10 +16,15 @@ public class BilderController(
     private readonly IPageCounterService _pageCounterService = pageCounterService;
 
     [Route("/[controller]/{subLevel1}")]
+    [Route("/images/{subLevel1}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}")]
+    [Route("/images/{subLevel1}/{subLevel2}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
     public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
         GalleryViewModel viewModel = new();
@@ -61,22 +67,22 @@ public class BilderController(
         if (subLevel4 is not null)
         {
             categoryName = subLevel4;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
         }
         else if (subLevel3 is not null)
         {
             categoryName = subLevel3;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
         }
         else if (subLevel2 is not null)
         {
             categoryName = subLevel2;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
+            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2;
         }
         else if (subLevel1 is not null)
         {
             categoryName = subLevel1;
-            currentUrl = "/Bilder/" + subLevel1;
+            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1;
         }
 
         if (categoryName != null)
@@ -138,6 +144,7 @@ public class BilderController(
     }
 
     [Route("/Bilder/")]
+    [Route("/images/")]
     [Route("/gallery.asp")]
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
@@ -147,11 +154,11 @@ public class BilderController(
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
-            string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
+            string redirectUrl = LocalizedRoutes.CategoryForId(ID.Value, _categoryService.GetAll());
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
-            return RedirectPermanent(redirectUrl);
+            return Redirect(redirectUrl);
         }
-        return Redirect("./Senast/Fotograferad");
+        return Redirect(LocalizedRoutes.Page("/Senast/Fotograferad"));
     }
 
     [Route("/search")]
@@ -181,7 +188,9 @@ public class BilderController(
             List<ImageDto> listOfFirstSearchedImages = new();
             foreach (var category in allCategories)
             {
-                if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)
+                if (category.CategoryId.HasValue &&
+                    ((category.NameSv?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+                     (category.NameEn?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false)))
                 {
                     var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
                     listOfFirstSearchedImages.Add(imageDto);

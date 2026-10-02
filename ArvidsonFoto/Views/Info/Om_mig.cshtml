@@ -1,26 +1,31 @@
-﻿@section MetaData {
+﻿@inject IStringLocalizer<InfoResource> I
+@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> T
+@section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Om_mig" />
+    <meta name="description" content="@I["About.Metadata.Description"]" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Om_mig"))" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Om mig, Torbjörn Arvidson - ArvidsonFoto.se">
-    <meta name="twitter:description" content="Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare.">
+    <meta name="twitter:title" content="@T["Navigation.About"] - ArvidsonFoto.se">
+    <meta name="twitter:description" content="@I["About.Metadata.Description"]">
     <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
 
     <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Om mig, Torbjörn Arvidson - ArvidsonFoto.se" />
-    <meta property="og:description" content="Läs mer om naturfotografen Torbjörn Arvidson från Örebro, med passion för fågel- och naturfotografi sedan tidiga år. Resor runt om i världen och föredragshållare." />
+    <meta property="og:title" content="@T["Navigation.About"] - ArvidsonFoto.se" />
+    <meta property="og:description" content="@I["About.Metadata.Description"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/Info/Om_mig" />
+    <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Om_mig"))" />
 }
 
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Info">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Om mig<i class="bi bi-question-circle mx-1"></i></li>
+        <li class="breadcrumb-item"><a href="@ArvidsonFoto.Core.Extensions.LocalizedRoutes.Page("/Info")">Info</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.About"]<i class="bi bi-question-circle mx-1"></i></li>
     </ol>
 </nav>
 
@@ -31,19 +36,19 @@
         <div class="col-lg-8">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-person-badge"></i> Passion för naturfotografi</h3>
+                    <h3 class="mb-0"><i class="bi bi-person-badge"></i> @I["About.Header.Passion"]</h3>
                 </div>
                 <div class="card-body">
-                    <p>Mitt intresse för fåglar började i unga år och med närheten till klassiska fågelmarker så som Oset, Kvismaren och Tysslingen så tilltog intresset alltmer.</p>
-                    <p>Började tidigt att fotografera och dokumentera naturen runt om i Sverige. Med åren har det blivit många resor för fotografering runt om i världen. Jag är också en flitigt anlitad föredragshållare.</p>
+                    <p>@I["About.Content.Birds"]</p>
+                    <p>@I["About.Content.Travel"]</p>
                     
                     <div class="mt-4">
-                        <h4><i class="bi bi-camera"></i> Min fotografering</h4>
+                        <h4><i class="bi bi-camera"></i> @I["About.Header.Photography"]</h4>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-primary"></i> Naturfotografi sedan tidiga år</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> Specialiserad på fågelfotografi</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> Resor runt om i världen</li>
-                            <li><i class="bi bi-check-circle text-primary"></i> Föredragshållare</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.Early"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.BirdSpecialist"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.WorldTravel"]</li>
+                            <li><i class="bi bi-check-circle text-primary"></i> @I["About.List.Speaker"]</li>
                         </ul>
                     </div>
                 </div>
@@ -57,10 +62,10 @@
                 </div>
                 <div class="card-body text-center">
                     <figure class="figure mb-0">
-                        <img class="figure-img img-fluid rounded shadow-sm" src="./img/Torbjorn2020.jpg" alt="Torbjörn Arvidson född 1953 och bor i Örebro" style="max-width: 100%;">
+                        <img class="figure-img img-fluid rounded shadow-sm" src="/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson @I["About.Photo.Caption"]" style="max-width: 100%;">
                         <figcaption class="figure-caption mt-3">
                             <strong>Torbjörn Arvidson</strong><br>
-                            Född 1953 och bor i Örebro
+                            @I["About.Photo.Caption"]
                         </figcaption>
                     </figure>
                 </div>

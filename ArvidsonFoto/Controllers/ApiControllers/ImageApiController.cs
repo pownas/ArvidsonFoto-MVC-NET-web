@@ -289,6 +289,8 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         existingImage.ImageMainFamilyId = image.ImageHuvudfamilj;
         existingImage.ImageFamilyId = image.ImageFamilj;
         existingImage.ImageDescription = image.ImageDescription;
+        if (image.ImageDescriptionEn != null)
+            existingImage.ImageDescriptionEn = image.ImageDescriptionEn;
         existingImage.ImageDate = image.ImageDate;
         existingImage.ImageCategoryId = image.ImageArt;
         existingImage.ImageUpdate = DateTime.Now;

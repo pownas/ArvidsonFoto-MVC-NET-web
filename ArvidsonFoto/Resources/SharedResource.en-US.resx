@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Navigation.Latest" xml:space="preserve"><value>Latest</value></data>
+  <data name="Navigation.Photographed" xml:space="preserve"><value>Photographed</value></data>
+  <data name="Navigation.Uploaded" xml:space="preserve"><value>Uploaded</value></data>
+  <data name="Navigation.ByCategory" xml:space="preserve"><value>By category</value></data>
+  <data name="Navigation.Guestbook" xml:space="preserve"><value>Guestbook</value></data>
+  <data name="Navigation.Contact" xml:space="preserve"><value>Contact information</value></data>
+  <data name="Navigation.About" xml:space="preserve"><value>About me, Torbjörn Arvidson</value></data>
+  <data name="Navigation.Sitemap" xml:space="preserve"><value>Sitemap</value></data>
+  <data name="Navigation.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Navigation.BuyPhotos" xml:space="preserve"><value>Buy photos</value></data>
+  <data name="Form.Label.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Form.Label.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Form.Label.Homepage" xml:space="preserve"><value>Website</value></data>
+  <data name="Form.Label.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Form.Label.Subject" xml:space="preserve"><value>Subject</value></data>
+  <data name="Navigation.Photos" xml:space="preserve"><value>Photos</value></data>
+  <data name="Navigation.ToggleMenu" xml:space="preserve"><value>Toggle menu visibility</value></data>
+  <data name="Footer.Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Footer.Mobile" xml:space="preserve"><value>Mobile</value></data>
+  <data name="Footer.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Footer.Webmaster" xml:space="preserve"><value>Webmaster</value></data>
+  <data name="Footer.PoweredBy" xml:space="preserve"><value>Powered by</value></data>
+  <data name="Footer.FacebookTitle" xml:space="preserve"><value>ArvidsonFoto on Facebook</value></data>
+</root>
