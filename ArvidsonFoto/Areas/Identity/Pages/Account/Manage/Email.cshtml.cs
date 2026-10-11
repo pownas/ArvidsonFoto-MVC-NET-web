@@ -36,7 +36,7 @@ public partial class EmailModel(
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "New email")]
+        [Display(Name = nameof(IdentityResource.NewEmail), ResourceType = typeof(IdentityResource))]
         public string NewEmail { get; set; } = null!;
     }
 
@@ -58,7 +58,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         await LoadAsync(user);
@@ -70,7 +70,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -92,14 +92,14 @@ public partial class EmailModel(
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.NewEmail,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+                IdentityResource.Get("Message.0d1fe19967e2"),
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-            StatusMessage = "Confirmation link to change email sent. Please check your email.";
+            StatusMessage = IdentityResource.Get("Message.646b05a0b1b1");
             return RedirectToPage();
         }
 
-        StatusMessage = "Your email is unchanged.";
+        StatusMessage = IdentityResource.Get("Message.94a9c4f2e5e4");
         return RedirectToPage();
     }
 
@@ -108,7 +108,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -118,7 +118,7 @@ public partial class EmailModel(
         }
 
         var userId = await _userManager.GetUserIdAsync(user);
-        var email = await _userManager.GetEmailAsync(user) ?? "Email - not found";
+        var email = await _userManager.GetEmailAsync(user) ?? IdentityResource.Get("Message.2bb2fdbbc3d5");
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Url.Page(
@@ -128,10 +128,10 @@ public partial class EmailModel(
             protocol: Request.Scheme);
         await _emailSender.SendEmailAsync(
             email: email,
-            subject: "Confirm your email",
-            htmlMessage: $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+            subject: IdentityResource.Get("Message.0d1fe19967e2"),
+            htmlMessage: string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-        StatusMessage = "Verification email sent. Please check your email.";
+        StatusMessage = IdentityResource.Get("Message.e70468364917");
         return RedirectToPage();
     }
 }

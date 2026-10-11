@@ -7,6 +7,7 @@ using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 
@@ -20,7 +21,8 @@ public class UploadAdminController(
     ILogger<ApiImageService> imageLogger,
     ILogger<ApiCategoryService> categoryLogger,
     IConfiguration configuration,
-    IMemoryCache memoryCache) : Controller
+    IMemoryCache memoryCache,
+    IStringLocalizer<UploadAdminResource> localizer) : Controller
 {
     internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
     internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
@@ -30,7 +32,7 @@ public class UploadAdminController(
 
     public IActionResult Index()
     {
-        ViewData["Title"] = "Upload Admin";
+        ViewData["Title"] = localizer["Text.e1ca68a82880"];
         return View();
     }
 
@@ -41,7 +43,7 @@ public class UploadAdminController(
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
     public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4)
     {
-        ViewData["Title"] = "Länka till ny bild";
+        ViewData["Title"] = localizer["Admin.ImageTitle"];
 
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
@@ -140,7 +142,7 @@ public class UploadAdminController(
             {
                 Log.Error(ex, "Fel vid skapande av bild");
                 TempData["ImageCreated"] = false;
-                TempData["ErrorMessage"] = "Ett fel uppstod vid skapande av bilden.";
+                TempData["ErrorMessage"] = localizer["Admin.ImageCreationError"].Value;
             }
         }
 
@@ -187,7 +189,7 @@ public class UploadAdminController(
 
     public IActionResult NyKategori(UploadNewCategoryInputDto inputModel)
     {
-        ViewData["Title"] = "Länka till ny kategori";
+        ViewData["Title"] = localizer["Admin.CategoryTitle"];
         return View(inputModel ?? UploadNewCategoryInputDto.CreateEmpty());
     }
 
@@ -204,7 +206,7 @@ public class UploadAdminController(
             var enSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegmentEn) ? null : inputModel.MenuUrlSegmentEn.Trim();
             if (!ValidCategorySegments(svSegment, enSegment, null))
             {
-                ModelState.AddModelError(nameof(inputModel.MenuUrlSegment), "URL-segmenten måste vara unika och giltiga.");
+                ModelState.AddModelError(nameof(inputModel.MenuUrlSegment), localizer["Admin.InvalidUrlSegments"]);
                 return View("NyKategori", inputModel);
             }
             CategoryDto newCategory = new()
@@ -231,7 +233,7 @@ public class UploadAdminController(
 
     public IActionResult RedigeraKategori(int? id, string? search)
     {
-        ViewData["Title"] = "Redigera kategorier och arter";
+        ViewData["Title"] = localizer["Admin.CategoriesTitle"];
         ViewData["Search"] = search;
         var categories = coreContext.TblMenus.AsEnumerable()
             .Where(c => string.IsNullOrWhiteSpace(search) ||
@@ -253,12 +255,12 @@ public class UploadAdminController(
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult SaveCategory(EditCategoryInputDto input)
     {
-        ViewData["Title"] = "Redigera kategorier och arter";
+        ViewData["Title"] = localizer["Admin.CategoriesTitle"];
         var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
         if (category == null)
             return NotFound();
         if (!ValidCategorySegments(input.UrlSegmentSv, input.UrlSegmentEn, input.CategoryId))
-            ModelState.AddModelError(nameof(input.UrlSegmentSv), "URL-segmenten måste vara unika och giltiga.");
+            ModelState.AddModelError(nameof(input.UrlSegmentSv), localizer["Admin.InvalidUrlSegments"]);
         if (!ModelState.IsValid)
         {
             ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
@@ -290,7 +292,7 @@ public class UploadAdminController(
 
     public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
     {
-        ViewData["Title"] = "Redigera bland bilderna";
+        ViewData["Title"] = localizer["Admin.EditImagesTitle"];
 
         int imagesPerPage = 25;
         if (sida is null or < 1)
@@ -338,9 +340,9 @@ public class UploadAdminController(
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
-            inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
+            inputModel.ImageDescription = item.ImageDescription ?? localizer["Admin.Missing"];
             inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
-            inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
+            inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
             // Get category path using the service method
             var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
@@ -356,7 +358,7 @@ public class UploadAdminController(
 
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
-        ViewData["Title"] = "Hantera gästboken";
+        ViewData["Title"] = localizer["Admin.GuestbookTitle"];
         UploadGbViewModel viewModel = new();
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
@@ -408,7 +410,7 @@ public class UploadAdminController(
 
     public IActionResult Statistik()
     {
-        ViewData["Title"] = "Hemsidans statistik";
+        ViewData["Title"] = localizer["Admin.StatisticsTitle"];
         return View();
     }
 
@@ -416,7 +418,7 @@ public class UploadAdminController(
     /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
     public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
     {
-        ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
+        ViewData["Title"] = localizer["Admin.LogTitle", datum];
 
         AppLogReaderService logReader = new();
         string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
@@ -457,7 +459,7 @@ public class UploadAdminController(
     /// </summary>
     public IActionResult FacebookUpload(string? DisplayMessage, string? FacebookPostUrl)
     {
-        ViewData["Title"] = "Dela bilder på Facebook";
+        ViewData["Title"] = localizer["Admin.FacebookTitle"];
 
         var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
         var recentImages = coreContext.TblImages

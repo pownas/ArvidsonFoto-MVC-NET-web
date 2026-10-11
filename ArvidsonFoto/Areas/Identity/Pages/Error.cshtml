@@ -1,23 +1,23 @@
-﻿@page
+@page
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = L["Text.54a0e8c17ebb"];
 }
 
-<h2 class="text-danger">Error.</h2>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h2 class="text-danger">@L["Text.6df751127f98"]</h2>
+<h2 class="text-danger">@L["Text.b80f19578e3d"]</h2>
 
 @if (Model.ShowRequestId)
 {
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        <strong>@L["Text.816d7f4ff525"]</strong> <code>@Model.RequestId</code>
     </p>
 }
 
-<h3>Development Mode</h3>
+<h3>@L["Text.cf175c1f6951"]</h3>
 <p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+    @L["Text.cbee7844d599"] <strong>@L["Text.21b6a798321a"]</strong> @L["Text.9a85f00d9477"]
 </p>
 <p>
-    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
+    <strong>@L["Text.414c21e80c22"]</strong>@L["Error.DevelopmentDetails"] <strong>@L["Text.8fc687295249"]</strong> @L["Error.EnvironmentVariable"] <strong>@L["Text.21b6a798321a"]</strong>@L["Error.Restart"]
 </p>

@@ -26,18 +26,18 @@ public class ChangePasswordModel(
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = nameof(IdentityResource.CurrentPassword), ResourceType = typeof(IdentityResource))]
         public string OldPassword { get; set; } = null!;
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessageResourceName = nameof(IdentityResource.PasswordLength), ErrorMessageResourceType = typeof(IdentityResource), MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = nameof(IdentityResource.NewPassword), ResourceType = typeof(IdentityResource))]
         public string NewPassword { get; set; } = null!;
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = nameof(IdentityResource.ConfirmNewPassword), ResourceType = typeof(IdentityResource))]
+        [Compare("NewPassword", ErrorMessageResourceName = nameof(IdentityResource.NewPasswordMismatch), ErrorMessageResourceType = typeof(IdentityResource))]
         public string ConfirmPassword { get; set; } = null!;
     }
 
@@ -46,7 +46,7 @@ public class ChangePasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -68,7 +68,7 @@ public class ChangePasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
@@ -83,7 +83,7 @@ public class ChangePasswordModel(
 
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("User changed their password successfully.");
-        StatusMessage = "Your password has been changed.";
+        StatusMessage = IdentityResource.Get("Message.00e34a98f659");
 
         return RedirectToPage();
     }

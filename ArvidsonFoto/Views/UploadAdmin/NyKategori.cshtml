@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Views.Shared
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Interfaces
 @model UploadNewCategoryInputDto
@@ -12,7 +13,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Text.e1ca68a82880"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-font ms-1"></i></li>
     </ol>
 </nav>
@@ -25,17 +26,17 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>Här kan du lägga till en ny kategori på hemsidan:</p>
+        <p>@L["Text.8ffa9b0e7ecf"]</p>
         @if (Model!.CategoryCreated)
         {
-            <h5 class="alert alert-success bg-success text-dark">Skapat nya kategorin: <span class="text-light">@Model.MenuText</span></h5>
+            <h5 class="alert alert-success bg-success text-dark">@L["Text.da4add6edabb"] <span class="text-light">@Model.MenuText</span></h5>
         }
         <form method="post" asp-action="@(nameof(UploadAdminController.CreateCategory))">
             @Html.AntiForgeryToken()
             <div class="form-group col-md-6">
-                <label asp-for="MainMenuId">Vart ska kategorin ligga under?</label>
+                <label asp-for="MainMenuId">@L["Text.c866a7f58a32"]</label>
                 <select asp-for="MainMenuId" class="form-control">
-                    <option selected disabled value="">Välj kategori...</option>
+                    <option selected disabled value="">@L["Text.5ea3c0b2c666"]</option>
                     @foreach (var category in _categoryService.GetAll().OrderBy(c => c.Name))
                     {
                         <option value="@category.CategoryId">@category.Name</option>
@@ -44,27 +45,27 @@
                 <span asp-validation-for="MainMenuId"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="MenuText">Nya kategorins namn</label>
+                <label asp-for="MenuText">@L["Text.e9349025558f"]</label>
                 <input asp-for="MenuText" type="text" class="form-control">
                 <span asp-validation-for="MenuText"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="MenuTextEn">Engelskt namn</label>
+                <label asp-for="MenuTextEn">@L["Text.707bc142df6d"]</label>
                 <input asp-for="MenuTextEn" class="form-control" maxlength="50" />
                 <span asp-validation-for="MenuTextEn"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="MenuUrlSegment">Svenskt URL-segment</label>
+                <label asp-for="MenuUrlSegment">@L["Text.4fc8f82b92c0"]</label>
                 <input asp-for="MenuUrlSegment" class="form-control" maxlength="50" />
                 <span asp-validation-for="MenuUrlSegment"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="MenuUrlSegmentEn">Engelskt URL-segment</label>
+                <label asp-for="MenuUrlSegmentEn">@L["Text.d2183e4ef2ee"]</label>
                 <input asp-for="MenuUrlSegmentEn" class="form-control" maxlength="50" />
                 <span asp-validation-for="MenuUrlSegmentEn"></span>
             </div>
             <div class="form-group col-md-6">
-                <button type="submit" class="btn btn-light btn-outline-primary text-dark">Skapa kategori</button>
+                <button type="submit" class="btn btn-light btn-outline-primary text-dark">@L["Text.09f610313b1c"]</button>
             </div>
         </form>
     </div>

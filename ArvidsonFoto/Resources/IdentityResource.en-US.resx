@@ -1,0 +1,660 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Text.00c0ad318d34" xml:space="preserve">
+    <value>Associate your @Model.ProviderDisplayName account.</value>
+  </data>
+  <data name="Text.038bf7e2e350" xml:space="preserve">
+    <value>Enter a new name for the "@name" passkey</value>
+  </data>
+  <data name="Text.08801a334d95" xml:space="preserve">
+    <value>You must</value>
+  </data>
+  <data name="Text.09a12ace273f" xml:space="preserve">
+    <value>Authenticator app</value>
+  </data>
+  <data name="Text.0a509539c3ba" xml:space="preserve">
+    <value>Add new passkey</value>
+  </data>
+  <data name="Text.0a5a4177daaa" xml:space="preserve">
+    <value>Reset recovery codes</value>
+  </data>
+  <data name="Text.0a8b53b24755" xml:space="preserve">
+    <value>log in with a recovery code</value>
+  </data>
+  <data name="Text.11a41e7406a7" xml:space="preserve">
+    <value>into your two factor authenticator app. Spaces and casing do not matter.</value>
+  </data>
+  <data name="Text.123b9c0af185" xml:space="preserve">
+    <value>Download a two-factor authenticator app like Microsoft Authenticator for</value>
+  </data>
+  <data name="Text.13b04a346ad8" xml:space="preserve">
+    <value>Put these codes in a safe place.</value>
+  </data>
+  <data name="Text.1509f561f241" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Text.16a41feb006b" xml:space="preserve">
+    <value>External logins</value>
+  </data>
+  <data name="Text.16f170b06689" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Text.1c3193f3a0b8" xml:space="preserve">
+    <value>Disable 2FA</value>
+  </data>
+  <data name="Text.20e868ce7fb6" xml:space="preserve">
+    <value>To use an authenticator app go through the following steps:</value>
+  </data>
+  <data name="Text.21330d0902f3" xml:space="preserve">
+    <value>these docs</value>
+  </data>
+  <data name="Text.21b6a798321a" xml:space="preserve">
+    <value>Development</value>
+  </data>
+  <data name="Text.22b75b375d49" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Text.22e214e37ac8" xml:space="preserve">
+    <value>(These pages are not finished...)</value>
+  </data>
+  <data name="Text.2339431674e7" xml:space="preserve">
+    <value>Reset password confirmation</value>
+  </data>
+  <data name="Text.29393a80733c" xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="Text.2aa86c4043df" xml:space="preserve">
+    <value>These links require contacting Jonas:</value>
+  </data>
+  <data name="Text.2ac5c9c2bb0c" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Text.2bf9d357395b" xml:space="preserve">
+    <value>Delete data and close my account</value>
+  </data>
+  <data name="Text.2cf7a09bdf2c" xml:space="preserve">
+    <value>You should</value>
+  </data>
+  <data name="Text.2e7fdf251c09" xml:space="preserve">
+    <value>You have 1 recovery code left.</value>
+  </data>
+  <data name="Text.2f2fca227714" xml:space="preserve">
+    <value>Add another service to log in.</value>
+  </data>
+  <data name="Text.3612d049c28b" xml:space="preserve">
+    <value>This action only disables 2FA.</value>
+  </data>
+  <data name="Text.36880d15c890" xml:space="preserve">
+    <value>Recovery codes</value>
+  </data>
+  <data name="Text.36d5e63f4a0d" xml:space="preserve">
+    <value>Set your password</value>
+  </data>
+  <data name="Text.37733ab7b6cb" xml:space="preserve">
+    <value>Disable two-factor authentication (2FA)</value>
+  </data>
+  <data name="Text.3dbfdcbc84fd" xml:space="preserve">
+    <value>My passkey</value>
+  </data>
+  <data name="Text.3e01e3010ce7" xml:space="preserve">
+    <value>Send verification email</value>
+  </data>
+  <data name="Text.3f9c991f63a9" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Text.40d779c41a35" xml:space="preserve">
+    <value>You have no recovery codes left.</value>
+  </data>
+  <data name="Text.414c21e80c22" xml:space="preserve">
+    <value>Development environment should not be enabled in deployed applications</value>
+  </data>
+  <data name="Text.434886e6b66b" xml:space="preserve">
+    <value>Personal data</value>
+  </data>
+  <data name="Text.4408373069b2" xml:space="preserve">
+    <value>This account has been locked out, please try again later.</value>
+  </data>
+  <data name="Text.4836bc293b83" xml:space="preserve">
+    <value>Learn how to</value>
+  </data>
+  <data name="Text.48af0fba5de9" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="Text.4c4d654b3a0d" xml:space="preserve">
+    <value>Reset authenticator key</value>
+  </data>
+  <data name="Text.4c71415f2039" xml:space="preserve">
+    <value>Verification Code</value>
+  </data>
+  <data name="Text.4e4116871bf1" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="Text.508b214dd7c5" xml:space="preserve">
+    <value>Reset authenticator app</value>
+  </data>
+  <data name="Text.54a0e8c17ebb" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Text.5f2d187dbbf8" xml:space="preserve">
+    <value>enable QR code generation</value>
+  </data>
+  <data name="Text.616a9731e22f" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Text.6201111b83a0" xml:space="preserve">
+    <value>and</value>
+  </data>
+  <data name="Text.637c1d7bfd24" xml:space="preserve">
+    <value>Generate Recovery Codes</value>
+  </data>
+  <data name="Text.6b7404c73e81" xml:space="preserve">
+    <value>Generate two-factor authentication (2FA) recovery codes</value>
+  </data>
+  <data name="Text.6df751127f98" xml:space="preserve">
+    <value>Error.</value>
+  </data>
+  <data name="Text.6e1cdc7c4dc6" xml:space="preserve">
+    <value>Forgot your password? 😣</value>
+  </data>
+  <data name="Text.6e5cad2c2c11" xml:space="preserve">
+    <value>Confirm email</value>
+  </data>
+  <data name="Text.730f01f27029" xml:space="preserve">
+    <value>Setup authenticator app</value>
+  </data>
+  <data name="Text.735d26373251" xml:space="preserve">
+    <value>Scan the QR Code or enter this key</value>
+  </data>
+  <data name="Text.74e20b0c10ea" xml:space="preserve">
+    <value>Personal Data</value>
+  </data>
+  <data name="Text.76e50b0fc3c5" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="Text.793eed65ef12" xml:space="preserve">
+    <value>Remove this @login.ProviderDisplayName login from your account</value>
+  </data>
+  <data name="Text.79aae52249ce" xml:space="preserve">
+    <value>Contact Jonas to resolve this...</value>
+  </data>
+  <data name="Text.7d9eb7acb13e" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Text.816d7f4ff525" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
+  <data name="Text.82e380c5a434" xml:space="preserve">
+    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
+  </data>
+  <data name="Text.84fea2cad8fd" xml:space="preserve">
+    <value>Registered Logins</value>
+  </data>
+  <data name="Text.871f595e65b1" xml:space="preserve">
+    <value>Register a new user...</value>
+  </data>
+  <data name="Text.882932e4ccb0" xml:space="preserve">
+    <value>Manage your external logins</value>
+  </data>
+  <data name="Text.8b5cfb67a735" xml:space="preserve">
+    <value>Reset your password.</value>
+  </data>
+  <data name="Text.8bd2f5db58af" xml:space="preserve">
+    <value>Click here to confirm your account</value>
+  </data>
+  <data name="Text.8d97d1895472" xml:space="preserve">
+    <value>Your login is protected with an authenticator app. Enter your authenticator code below.</value>
+  </data>
+  <data name="Text.8e18ef574291" xml:space="preserve">
+    <value>Forgot password confirmation</value>
+  </data>
+  <data name="Text.8fc687295249" xml:space="preserve">
+    <value>ASPNETCORE_ENVIRONMENT</value>
+  </data>
+  <data name="Text.903774d10371" xml:space="preserve">
+    <value>You have been logged out.</value>
+  </data>
+  <data name="Text.92583883a569" xml:space="preserve">
+    <value>Your password has been reset. Please</value>
+  </data>
+  <data name="Text.92a1f22bd67a" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Text.932c41a87f85" xml:space="preserve">
+    <value>You have reached the maximum number of allowed passkeys. Delete one before adding a new one.</value>
+  </data>
+  <data name="Text.94e93346de45" xml:space="preserve">
+    <value>Forget this browser</value>
+  </data>
+  <data name="Text.969ccbd3cf63" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Text.9a85f00d9477" xml:space="preserve">
+    <value>environment will display more detailed information about the error that occurred.</value>
+  </data>
+  <data name="Text.9aa4a2ab9ffc" xml:space="preserve">
+    <value>Enter your email.</value>
+  </data>
+  <data name="Text.9add836c641b" xml:space="preserve">
+    <value>reset your authenticator keys.</value>
+  </data>
+  <data name="Text.a84ce6682bca" xml:space="preserve">
+    <value>Please check your email to confirm your account.</value>
+  </data>
+  <data name="Text.abf30f9a3e05" xml:space="preserve">
+    <value>Add authenticator app</value>
+  </data>
+  <data name="Text.ac625fd3f79e" xml:space="preserve">
+    <value>If you lose your device and don't have the recovery codes you will lose access to your account.</value>
+  </data>
+  <data name="Text.acadcd288fc6" xml:space="preserve">
+    <value>Your account contains personal data that you have given us. This page allows you to download or delete that data.</value>
+  </data>
+  <data name="Text.ace29f74fed8" xml:space="preserve">
+    <value>Locked out</value>
+  </data>
+  <data name="Text.b1b4907bb5a4" xml:space="preserve">
+    <value>Don't have access to your authenticator device? You can</value>
+  </data>
+  <data name="Text.b378d8cac82f" xml:space="preserve">
+    <value>Download Your Data</value>
+  </data>
+  <data name="Text.b4ab213b9c0e" xml:space="preserve">
+    <value>Use an account to log in.</value>
+  </data>
+  <data name="Text.b65da89a4283" xml:space="preserve">
+    <value>Recovery code verification</value>
+  </data>
+  <data name="Text.b6824cc8a91e" xml:space="preserve">
+    <value>Two-factor authentication</value>
+  </data>
+  <data name="Text.b80f19578e3d" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="Text.b87dd06a67be" xml:space="preserve">
+    <value>This app does not currently have a real email sender registered, see</value>
+  </data>
+  <data name="Text.b99c03982452" xml:space="preserve">
+    <value>Click here to log out</value>
+  </data>
+  <data name="Text.baf4cd44c6f1" xml:space="preserve">
+    <value>Manage Email</value>
+  </data>
+  <data name="Text.bb7234ec1245" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Text.bc6fee40ef08" xml:space="preserve">
+    <value>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</value>
+  </data>
+  <data name="Text.bd5c4d03f407" xml:space="preserve">
+    <value>You can</value>
+  </data>
+  <data name="Text.c189840cf7e2" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Text.c18c69ce6d46" xml:space="preserve">
+    <value>Register a new user</value>
+  </data>
+  <data name="Text.c3812fc4acb8" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Text.c3c0d95f4b15" xml:space="preserve">
+    <value>before you can log in with a recovery code.</value>
+  </data>
+  <data name="Text.c87ccdb428e6" xml:space="preserve">
+    <value>Passkeys</value>
+  </data>
+  <data name="Text.cbee7844d599" xml:space="preserve">
+    <value>Swapping to</value>
+  </data>
+  <data name="Text.cc11d415d932" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="Text.cef044498a9c" xml:space="preserve">
+    <value>Register confirmation</value>
+  </data>
+  <data name="Text.cf175c1f6951" xml:space="preserve">
+    <value>Development Mode</value>
+  </data>
+  <data name="Text.d0adfaf9c892" xml:space="preserve">
+    <value>Confirm email change</value>
+  </data>
+  <data name="Text.d31bdc347d71" xml:space="preserve">
+    <value>Manage account</value>
+  </data>
+  <data name="Text.d4c87d705151" xml:space="preserve">
+    <value>Enter a name for your passkey</value>
+  </data>
+  <data name="Text.d696a35bdd18" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Text.d6eafe823591" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Text.da9d7e6c5146" xml:space="preserve">
+    <value>Contact Jonas to register...</value>
+  </data>
+  <data name="Text.db6086d50f35" xml:space="preserve">
+    <value>Resend email confirmation</value>
+  </data>
+  <data name="Text.de59bc5faaa3" xml:space="preserve">
+    <value>Delete Personal Data</value>
+  </data>
+  <data name="Text.dfb94da089ff" xml:space="preserve">
+    <value>Configure authenticator app</value>
+  </data>
+  <data name="Text.e0edfeb3a71a" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Text.e1ca68a82880" xml:space="preserve">
+    <value>Upload Admin</value>
+  </data>
+  <data name="Text.e2df34dd1d24" xml:space="preserve">
+    <value>You do not have access to this resource.</value>
+  </data>
+  <data name="Text.e663d420d6b5" xml:space="preserve">
+    <value>You have @Model.RecoveryCodesLeft recovery codes left.</value>
+  </data>
+  <data name="Text.e6f3d0d49a80" xml:space="preserve">
+    <value>Rename passkey</value>
+  </data>
+  <data name="Text.e77ff2abe078" xml:space="preserve">
+    <value>Two-factor authentication (2FA)</value>
+  </data>
+  <data name="Text.e7cf3ef4f17c" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Text.e8b43929d1c1" xml:space="preserve">
+    <value>No passkeys are registered.</value>
+  </data>
+  <data name="Text.ea3778d4cae0" xml:space="preserve">
+    <value>click here to log in</value>
+  </data>
+  <data name="Text.ea4208a7dc12" xml:space="preserve">
+    <value>Contact Jonas to change your password...</value>
+  </data>
+  <data name="Text.eea2745e2867" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="Text.ef3b5957e02c" xml:space="preserve">
+    <value>Change account settings:</value>
+  </data>
+  <data name="Text.f1d317516644" xml:space="preserve">
+    <value>Log in using your @provider.DisplayName account</value>
+  </data>
+  <data name="Text.f47cd8cc79df" xml:space="preserve">
+    <value>generate a new set of recovery codes</value>
+  </data>
+  <data name="Text.f9ae2d32c088" xml:space="preserve">
+    <value>Log in with a passkey</value>
+  </data>
+  <data name="Text.fc965dadc98c" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Text.fe45b4014135" xml:space="preserve">
+    <value>Update password</value>
+  </data>
+  <data name="Text.ff2ec2618b91" xml:space="preserve">
+    <value>Change email</value>
+  </data>
+  <data name="Message.b3f572259057" xml:space="preserve">
+    <value>Error from external provider: {0}</value>
+  </data>
+  <data name="Message.b5a05d04831a" xml:space="preserve">
+    <value>Error loading external login information.</value>
+  </data>
+  <data name="Message.96a10f010d05" xml:space="preserve">
+    <value>Error loading external login information during confirmation.</value>
+  </data>
+  <data name="Message.0c76d00ddc05" xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+  </data>
+  <data name="Message.bdd9dbdbe074" xml:space="preserve">
+    <value>Error confirming your email.</value>
+  </data>
+  <data name="Message.be87a275fdab" xml:space="preserve">
+    <value>Error changing email.</value>
+  </data>
+  <data name="Message.bd816d936d0d" xml:space="preserve">
+    <value>Error changing user name.</value>
+  </data>
+  <data name="Message.4fc076f324d9" xml:space="preserve">
+    <value>Thank you for confirming your email change.</value>
+  </data>
+  <data name="Message.e70468364917" xml:space="preserve">
+    <value>Verification email sent. Please check your email.</value>
+  </data>
+  <data name="Message.4ca3f4f301e1" xml:space="preserve">
+    <value>Invalid recovery code entered.</value>
+  </data>
+  <data name="Message.8e4823abe890" xml:space="preserve">
+    <value>Invalid authenticator code.</value>
+  </data>
+  <data name="Message.9ad95f47fa2b" xml:space="preserve">
+    <value>Passkey-fel: {0}</value>
+  </data>
+  <data name="Message.aad83968710c" xml:space="preserve">
+    <value>Ogiltig passkey-inloggning.</value>
+  </data>
+  <data name="Message.14b93e1fcb6a" xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+  <data name="Message.14c54c87ce5e" xml:space="preserve">
+    <value>A code must be supplied for password reset.</value>
+  </data>
+  <data name="Message.00e34a98f659" xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
+  <data name="Message.933540c3072d" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
+  <data name="Message.646b05a0b1b1" xml:space="preserve">
+    <value>Confirmation link to change email sent. Please check your email.</value>
+  </data>
+  <data name="Message.94a9c4f2e5e4" xml:space="preserve">
+    <value>Your email is unchanged.</value>
+  </data>
+  <data name="Message.18e7b00510e1" xml:space="preserve">
+    <value>You have generated new recovery codes.</value>
+  </data>
+  <data name="Message.733f37a8a58f" xml:space="preserve">
+    <value>The external login was not removed.</value>
+  </data>
+  <data name="Message.806d416d01a5" xml:space="preserve">
+    <value>The external login was removed.</value>
+  </data>
+  <data name="Message.037378f25df9" xml:space="preserve">
+    <value>The external login was not added. External logins can only be associated with one account.</value>
+  </data>
+  <data name="Message.e7ed04e79aaf" xml:space="preserve">
+    <value>The external login was added.</value>
+  </data>
+  <data name="Message.0df6de1a5671" xml:space="preserve">
+    <value>2fa has been disabled. You can reenable 2fa when you setup an authenticator app</value>
+  </data>
+  <data name="Message.d2be02bada77" xml:space="preserve">
+    <value>Unexpected error when trying to set phone number.</value>
+  </data>
+  <data name="Message.23c671441a90" xml:space="preserve">
+    <value>Your profile has been updated</value>
+  </data>
+  <data name="Message.f89f9480b8af" xml:space="preserve">
+    <value>Verification code is invalid.</value>
+  </data>
+  <data name="Message.2912a944d746" xml:space="preserve">
+    <value>Your authenticator app has been verified.</value>
+  </data>
+  <data name="Message.87a77e40b7f7" xml:space="preserve">
+    <value>The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.</value>
+  </data>
+  <data name="Message.30f89744a6f3" xml:space="preserve">
+    <value>Incorrect password.</value>
+  </data>
+  <data name="Message.2e33fa48b1d5" xml:space="preserve">
+    <value>Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.</value>
+  </data>
+  <data name="Message.43f78154e1d7" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Message.e6dc1288f905" xml:space="preserve">
+    <value>Error: The browser did not provide a passkey.</value>
+  </data>
+  <data name="Message.4d206b16b187" xml:space="preserve">
+    <value>Error: You have reached the maximum number of allowed passkeys.</value>
+  </data>
+  <data name="Message.b5a5968995d4" xml:space="preserve">
+    <value>Error: Could not add the passkey: {0}</value>
+  </data>
+  <data name="Message.b95a62d553a4" xml:space="preserve">
+    <value>Error: The passkey could not be added to your account.</value>
+  </data>
+  <data name="Message.ef1195449972" xml:space="preserve">
+    <value>Error: The specified passkey ID had an invalid format.</value>
+  </data>
+  <data name="Message.fdea71f69c12" xml:space="preserve">
+    <value>Error: The specified passkey could not be found.</value>
+  </data>
+  <data name="Message.aa925f0fbbbf" xml:space="preserve">
+    <value>Error: The passkey could not be updated.</value>
+  </data>
+  <data name="Message.93d2a80e5ecf" xml:space="preserve">
+    <value>Passkey updated successfully.</value>
+  </data>
+  <data name="Message.d95342f59e6b" xml:space="preserve">
+    <value>Error: The passkey could not be deleted.</value>
+  </data>
+  <data name="Message.3259cdf0ea26" xml:space="preserve">
+    <value>Passkey deleted successfully.</value>
+  </data>
+  <data name="Message.090286fde77f" xml:space="preserve">
+    <value>Unable to load user with ID '{0}'.</value>
+  </data>
+  <data name="Message.ac08752c809d" xml:space="preserve">
+    <value>Unable to load user with email '{0}'.</value>
+  </data>
+  <data name="Message.26600d41b377" xml:space="preserve">
+    <value>Unable to load user with ID 'user.Id'.</value>
+  </data>
+  <data name="Message.0d1fe19967e2" xml:space="preserve">
+    <value>Confirm your email</value>
+  </data>
+  <data name="Message.4e70f1fd24ba" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="Message.2b673777cb25" xml:space="preserve">
+    <value>Please confirm your account by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  </data>
+  <data name="Message.5c0abcae6161" xml:space="preserve">
+    <value>Please reset your password by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  </data>
+  <data name="Message.2bb2fdbbc3d5" xml:space="preserve">
+    <value>Email - not found</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember me?</value>
+  </data>
+  <data name="TwoFactorCode" xml:space="preserve">
+    <value>Authenticator code</value>
+  </data>
+  <data name="RememberMachine" xml:space="preserve">
+    <value>Remember this machine</value>
+  </data>
+  <data name="RecoveryCode" xml:space="preserve">
+    <value>Recovery Code</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>New email</value>
+  </data>
+  <data name="VerificationCode" xml:space="preserve">
+    <value>Verification Code</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="PasskeyName" xml:space="preserve">
+    <value>Passkey name</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>The {0} must be at least {2} and at max {1} characters long.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>The password and confirmation password do not match.</value>
+  </data>
+  <data name="NewPasswordMismatch" xml:space="preserve">
+    <value>The new password and confirmation password do not match.</value>
+  </data>
+  <data name="PasskeyNameLength" xml:space="preserve">
+    <value>Passkey name cannot be longer than {1} characters.</value>
+  </data>
+  <data name="Manage.Passkeys" xml:space="preserve">
+    <value>Manage passkeys</value>
+  </data>
+  <data name="Manage.UnnamedPasskey" xml:space="preserve">
+    <value>Unnamed passkey</value>
+  </data>
+  <data name="Manage.ConfirmDeletePasskey" xml:space="preserve">
+    <value>Are you sure you want to delete this passkey?</value>
+  </data>
+  <data name="Manage.RenameExistingPasskey" xml:space="preserve">
+    <value>Enter a new name for the "{0}" passkey</value>
+  </data>
+  <data name="Error.DevelopmentDetails" xml:space="preserve">
+    <value>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the</value>
+  </data>
+  <data name="Error.Restart" xml:space="preserve">
+    <value>, and restarting the application.</value>
+  </data>
+  <data name="Error.EnvironmentVariable" xml:space="preserve">
+    <value>environment variable to</value>
+  </data>
+  <data name="Manage.Disable2faWarning" xml:space="preserve">
+    <value>Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should</value>
+  </data>
+  <data name="Manage.GenerateCodesWarning" xml:space="preserve">
+    <value>Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should</value>
+  </data>
+  <data name="Manage.OrGoogleAuthenticator" xml:space="preserve">
+    <value>or Google Authenticator for</value>
+  </data>
+  <data name="Manage.AuthenticatorCodeInstructions" xml:space="preserve">
+    <value>Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below.</value>
+  </data>
+  <data name="Manage.ResetAuthenticatorWarning" xml:space="preserve">
+    <value>This process disables 2FA until you verify your authenticator app. If you do not complete your authenticator app configuration you may lose access to your account.</value>
+  </data>
+  <data name="Register.ConfigureEmailSender" xml:space="preserve">
+    <value>for how to configure a real email sender.</value>
+  </data>
+  <data name="Register.NormallyEmailed" xml:space="preserve">
+    <value>Normally this would be emailed:</value>
+  </data>
+  <data name="Account.AssociateProvider" xml:space="preserve">
+    <value>Associate your {0} account.</value>
+  </data>
+  <data name="Manage.RemoveProvider" xml:space="preserve">
+    <value>Remove this {0} login from your account</value>
+  </data>
+  <data name="Manage.LoginWithProvider" xml:space="preserve">
+    <value>Log in using your {0} account</value>
+  </data>
+  <data name="Manage.RecoveryCodesLeft" xml:space="preserve">
+    <value>You have {0} recovery codes left.</value>
+  </data>
+</root>

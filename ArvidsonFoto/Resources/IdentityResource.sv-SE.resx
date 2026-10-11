@@ -1,0 +1,660 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Text.00c0ad318d34" xml:space="preserve">
+    <value>Koppla ditt @Model.ProviderDisplayName-konto.</value>
+  </data>
+  <data name="Text.038bf7e2e350" xml:space="preserve">
+    <value>Ange ett nytt namn för "@name"-passkeyen</value>
+  </data>
+  <data name="Text.08801a334d95" xml:space="preserve">
+    <value>Du måste</value>
+  </data>
+  <data name="Text.09a12ace273f" xml:space="preserve">
+    <value>Autentiseringsapp</value>
+  </data>
+  <data name="Text.0a509539c3ba" xml:space="preserve">
+    <value>Lägg till ny passkey</value>
+  </data>
+  <data name="Text.0a5a4177daaa" xml:space="preserve">
+    <value>Återställ återställningskoder</value>
+  </data>
+  <data name="Text.0a8b53b24755" xml:space="preserve">
+    <value>logga in med en återställningskod</value>
+  </data>
+  <data name="Text.11a41e7406a7" xml:space="preserve">
+    <value>i din autentiseringsapp. Mellanslag och stora eller små bokstäver spelar ingen roll.</value>
+  </data>
+  <data name="Text.123b9c0af185" xml:space="preserve">
+    <value>Ladda ner en autentiseringsapp, till exempel Microsoft Authenticator för</value>
+  </data>
+  <data name="Text.13b04a346ad8" xml:space="preserve">
+    <value>Förvara koderna på en säker plats.</value>
+  </data>
+  <data name="Text.1509f561f241" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Text.16a41feb006b" xml:space="preserve">
+    <value>Externa inloggningar</value>
+  </data>
+  <data name="Text.16f170b06689" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Text.1c3193f3a0b8" xml:space="preserve">
+    <value>Inaktivera tvåfaktorsautentisering</value>
+  </data>
+  <data name="Text.20e868ce7fb6" xml:space="preserve">
+    <value>Följ dessa steg för att använda en autentiseringsapp:</value>
+  </data>
+  <data name="Text.21330d0902f3" xml:space="preserve">
+    <value>dokumentationen</value>
+  </data>
+  <data name="Text.21b6a798321a" xml:space="preserve">
+    <value>Utveckling</value>
+  </data>
+  <data name="Text.22b75b375d49" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="Text.22e214e37ac8" xml:space="preserve">
+    <value>(Dessa sidorna är inte klara...)</value>
+  </data>
+  <data name="Text.2339431674e7" xml:space="preserve">
+    <value>Bekräftelse på återställt lösenord</value>
+  </data>
+  <data name="Text.29393a80733c" xml:space="preserve">
+    <value>Kontrollera din e-post för att återställa lösenordet.</value>
+  </data>
+  <data name="Text.2aa86c4043df" xml:space="preserve">
+    <value>Dessa länkar kräver kontakt med Jonas:</value>
+  </data>
+  <data name="Text.2ac5c9c2bb0c" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Text.2bf9d357395b" xml:space="preserve">
+    <value>Radera uppgifter och stäng mitt konto</value>
+  </data>
+  <data name="Text.2cf7a09bdf2c" xml:space="preserve">
+    <value>Du bör</value>
+  </data>
+  <data name="Text.2e7fdf251c09" xml:space="preserve">
+    <value>Du har en återställningskod kvar.</value>
+  </data>
+  <data name="Text.2f2fca227714" xml:space="preserve">
+    <value>Lägg till en annan inloggningstjänst.</value>
+  </data>
+  <data name="Text.3612d049c28b" xml:space="preserve">
+    <value>Detta inaktiverar endast tvåfaktorsautentisering.</value>
+  </data>
+  <data name="Text.36880d15c890" xml:space="preserve">
+    <value>Återställningskoder</value>
+  </data>
+  <data name="Text.36d5e63f4a0d" xml:space="preserve">
+    <value>Ange ditt lösenord</value>
+  </data>
+  <data name="Text.37733ab7b6cb" xml:space="preserve">
+    <value>Inaktivera tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Text.3dbfdcbc84fd" xml:space="preserve">
+    <value>Min passkey</value>
+  </data>
+  <data name="Text.3e01e3010ce7" xml:space="preserve">
+    <value>Skicka verifieringsmeddelande</value>
+  </data>
+  <data name="Text.3f9c991f63a9" xml:space="preserve">
+    <value>Ändra lösenord</value>
+  </data>
+  <data name="Text.40d779c41a35" xml:space="preserve">
+    <value>Du har inga återställningskoder kvar.</value>
+  </data>
+  <data name="Text.414c21e80c22" xml:space="preserve">
+    <value>Utvecklingsläge bör inte vara aktiverat i produktionsmiljö</value>
+  </data>
+  <data name="Text.434886e6b66b" xml:space="preserve">
+    <value>Personuppgifter</value>
+  </data>
+  <data name="Text.4408373069b2" xml:space="preserve">
+    <value>Det här kontot är låst. Försök igen senare.</value>
+  </data>
+  <data name="Text.4836bc293b83" xml:space="preserve">
+    <value>Läs om hur du kan</value>
+  </data>
+  <data name="Text.48af0fba5de9" xml:space="preserve">
+    <value>Hantera ditt konto</value>
+  </data>
+  <data name="Text.4c4d654b3a0d" xml:space="preserve">
+    <value>Återställ autentiseringsnyckel</value>
+  </data>
+  <data name="Text.4c71415f2039" xml:space="preserve">
+    <value>Verifieringskod</value>
+  </data>
+  <data name="Text.4e4116871bf1" xml:space="preserve">
+    <value>Ange lösenord</value>
+  </data>
+  <data name="Text.508b214dd7c5" xml:space="preserve">
+    <value>Återställ autentiseringsapp</value>
+  </data>
+  <data name="Text.54a0e8c17ebb" xml:space="preserve">
+    <value>Fel</value>
+  </data>
+  <data name="Text.5f2d187dbbf8" xml:space="preserve">
+    <value>aktivera generering av QR-koder</value>
+  </data>
+  <data name="Text.616a9731e22f" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="Text.6201111b83a0" xml:space="preserve">
+    <value>och</value>
+  </data>
+  <data name="Text.637c1d7bfd24" xml:space="preserve">
+    <value>Skapa återställningskoder</value>
+  </data>
+  <data name="Text.6b7404c73e81" xml:space="preserve">
+    <value>Skapa återställningskoder för tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Text.6df751127f98" xml:space="preserve">
+    <value>Fel.</value>
+  </data>
+  <data name="Text.6e1cdc7c4dc6" xml:space="preserve">
+    <value>Glömt ditt lösenord? 😣</value>
+  </data>
+  <data name="Text.6e5cad2c2c11" xml:space="preserve">
+    <value>Bekräfta e-postadress</value>
+  </data>
+  <data name="Text.730f01f27029" xml:space="preserve">
+    <value>Konfigurera autentiseringsapp</value>
+  </data>
+  <data name="Text.735d26373251" xml:space="preserve">
+    <value>Skanna QR-koden eller ange den här nyckeln</value>
+  </data>
+  <data name="Text.74e20b0c10ea" xml:space="preserve">
+    <value>Personuppgifter</value>
+  </data>
+  <data name="Text.76e50b0fc3c5" xml:space="preserve">
+    <value>Glömt ditt lösenord?</value>
+  </data>
+  <data name="Text.793eed65ef12" xml:space="preserve">
+    <value>Ta bort inloggningen med @login.ProviderDisplayName från ditt konto</value>
+  </data>
+  <data name="Text.79aae52249ce" xml:space="preserve">
+    <value>Kontakta Jonas för att lösa detta...</value>
+  </data>
+  <data name="Text.7d9eb7acb13e" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Text.816d7f4ff525" xml:space="preserve">
+    <value>Begärans ID:</value>
+  </data>
+  <data name="Text.82e380c5a434" xml:space="preserve">
+    <value>Om du raderar dessa uppgifter tas kontot bort permanent och kan inte återställas.</value>
+  </data>
+  <data name="Text.84fea2cad8fd" xml:space="preserve">
+    <value>Registrerade inloggningar</value>
+  </data>
+  <data name="Text.871f595e65b1" xml:space="preserve">
+    <value>Registrera en ny användare...</value>
+  </data>
+  <data name="Text.882932e4ccb0" xml:space="preserve">
+    <value>Hantera externa inloggningar</value>
+  </data>
+  <data name="Text.8b5cfb67a735" xml:space="preserve">
+    <value>Återställ ditt lösenord.</value>
+  </data>
+  <data name="Text.8bd2f5db58af" xml:space="preserve">
+    <value>Klicka här för att bekräfta ditt konto</value>
+  </data>
+  <data name="Text.8d97d1895472" xml:space="preserve">
+    <value>Din inloggning skyddas av en autentiseringsapp. Ange koden nedan.</value>
+  </data>
+  <data name="Text.8e18ef574291" xml:space="preserve">
+    <value>Bekräftelse på glömt lösenord</value>
+  </data>
+  <data name="Text.8fc687295249" xml:space="preserve">
+    <value>ASPNETCORE_ENVIRONMENT</value>
+  </data>
+  <data name="Text.903774d10371" xml:space="preserve">
+    <value>Du har loggats ut.</value>
+  </data>
+  <data name="Text.92583883a569" xml:space="preserve">
+    <value>Ditt lösenord har återställts. Vänligen</value>
+  </data>
+  <data name="Text.92a1f22bd67a" xml:space="preserve">
+    <value>Byt namn</value>
+  </data>
+  <data name="Text.932c41a87f85" xml:space="preserve">
+    <value>Du har nått det maximala antalet tillåtna passkeys. Ta bort en innan du lägger till en ny.</value>
+  </data>
+  <data name="Text.94e93346de45" xml:space="preserve">
+    <value>Glöm den här webbläsaren</value>
+  </data>
+  <data name="Text.969ccbd3cf63" xml:space="preserve">
+    <value>E-postadress</value>
+  </data>
+  <data name="Text.9a85f00d9477" xml:space="preserve">
+    <value>visas mer information om felet.</value>
+  </data>
+  <data name="Text.9aa4a2ab9ffc" xml:space="preserve">
+    <value>Ange din e-postadress.</value>
+  </data>
+  <data name="Text.9add836c641b" xml:space="preserve">
+    <value>återställa dina autentiseringsnycklar.</value>
+  </data>
+  <data name="Text.a84ce6682bca" xml:space="preserve">
+    <value>Kontrollera din e-post för att bekräfta ditt konto.</value>
+  </data>
+  <data name="Text.abf30f9a3e05" xml:space="preserve">
+    <value>Lägg till autentiseringsapp</value>
+  </data>
+  <data name="Text.ac625fd3f79e" xml:space="preserve">
+    <value>Om du förlorar enheten och saknar återställningskoderna förlorar du tillgången till ditt konto.</value>
+  </data>
+  <data name="Text.acadcd288fc6" xml:space="preserve">
+    <value>Ditt konto innehåller personuppgifter som du har lämnat till oss. Här kan du ladda ner eller radera dem.</value>
+  </data>
+  <data name="Text.ace29f74fed8" xml:space="preserve">
+    <value>Kontot är låst</value>
+  </data>
+  <data name="Text.b1b4907bb5a4" xml:space="preserve">
+    <value>Har du inte tillgång till din autentiseringsenhet? Du kan</value>
+  </data>
+  <data name="Text.b378d8cac82f" xml:space="preserve">
+    <value>Ladda ner dina uppgifter</value>
+  </data>
+  <data name="Text.b4ab213b9c0e" xml:space="preserve">
+    <value>Använd ett konto för att logga in.</value>
+  </data>
+  <data name="Text.b65da89a4283" xml:space="preserve">
+    <value>Verifiera återställningskod</value>
+  </data>
+  <data name="Text.b6824cc8a91e" xml:space="preserve">
+    <value>Tvåfaktorsautentisering</value>
+  </data>
+  <data name="Text.b80f19578e3d" xml:space="preserve">
+    <value>Ett fel uppstod när din begäran behandlades.</value>
+  </data>
+  <data name="Text.b87dd06a67be" xml:space="preserve">
+    <value>Den här appen har ingen riktig e-posttjänst konfigurerad. Se</value>
+  </data>
+  <data name="Text.b99c03982452" xml:space="preserve">
+    <value>Klicka här för att logga ut</value>
+  </data>
+  <data name="Text.baf4cd44c6f1" xml:space="preserve">
+    <value>Hantera e-postadress</value>
+  </data>
+  <data name="Text.bb7234ec1245" xml:space="preserve">
+    <value>Registrera</value>
+  </data>
+  <data name="Text.bc6fee40ef08" xml:space="preserve">
+    <value>Om du återställer autentiseringsnyckeln fungerar appen inte förrän du konfigurerar den på nytt.</value>
+  </data>
+  <data name="Text.bd5c4d03f407" xml:space="preserve">
+    <value>Du kan</value>
+  </data>
+  <data name="Text.c189840cf7e2" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Text.c18c69ce6d46" xml:space="preserve">
+    <value>Registrera ny användare</value>
+  </data>
+  <data name="Text.c3812fc4acb8" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="Text.c3c0d95f4b15" xml:space="preserve">
+    <value>innan du kan logga in med en återställningskod.</value>
+  </data>
+  <data name="Text.c87ccdb428e6" xml:space="preserve">
+    <value>Passkeys</value>
+  </data>
+  <data name="Text.cbee7844d599" xml:space="preserve">
+    <value>Om du växlar till</value>
+  </data>
+  <data name="Text.cc11d415d932" xml:space="preserve">
+    <value>Åtkomst nekad</value>
+  </data>
+  <data name="Text.cef044498a9c" xml:space="preserve">
+    <value>Registreringsbekräftelse</value>
+  </data>
+  <data name="Text.cf175c1f6951" xml:space="preserve">
+    <value>Utvecklingsläge</value>
+  </data>
+  <data name="Text.d0adfaf9c892" xml:space="preserve">
+    <value>Bekräfta ändring av e-postadress</value>
+  </data>
+  <data name="Text.d31bdc347d71" xml:space="preserve">
+    <value>Hantera kontot</value>
+  </data>
+  <data name="Text.d4c87d705151" xml:space="preserve">
+    <value>Ange ett namn för din passkey</value>
+  </data>
+  <data name="Text.d696a35bdd18" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Text.d6eafe823591" xml:space="preserve">
+    <value>Ladda ner</value>
+  </data>
+  <data name="Text.da9d7e6c5146" xml:space="preserve">
+    <value>Kontakta Jonas för att registrera dig...</value>
+  </data>
+  <data name="Text.db6086d50f35" xml:space="preserve">
+    <value>Skicka bekräftelse igen</value>
+  </data>
+  <data name="Text.de59bc5faaa3" xml:space="preserve">
+    <value>Radera personuppgifter</value>
+  </data>
+  <data name="Text.dfb94da089ff" xml:space="preserve">
+    <value>Konfigurera autentiseringsapp</value>
+  </data>
+  <data name="Text.e0edfeb3a71a" xml:space="preserve">
+    <value>Återställ lösenord</value>
+  </data>
+  <data name="Text.e1ca68a82880" xml:space="preserve">
+    <value>Uppladdningsadministration</value>
+  </data>
+  <data name="Text.e2df34dd1d24" xml:space="preserve">
+    <value>Du har inte åtkomst till den här resursen.</value>
+  </data>
+  <data name="Text.e663d420d6b5" xml:space="preserve">
+    <value>Du har @Model.RecoveryCodesLeft återställningskoder kvar.</value>
+  </data>
+  <data name="Text.e6f3d0d49a80" xml:space="preserve">
+    <value>Byt namn på passkey</value>
+  </data>
+  <data name="Text.e77ff2abe078" xml:space="preserve">
+    <value>Tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Text.e7cf3ef4f17c" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="Text.e8b43929d1c1" xml:space="preserve">
+    <value>Inga passkeys är registrerade.</value>
+  </data>
+  <data name="Text.ea3778d4cae0" xml:space="preserve">
+    <value>klicka här för att logga in</value>
+  </data>
+  <data name="Text.ea4208a7dc12" xml:space="preserve">
+    <value>Kontakta Jonas för att ändra ditt lösenord...</value>
+  </data>
+  <data name="Text.eea2745e2867" xml:space="preserve">
+    <value>Verifiera</value>
+  </data>
+  <data name="Text.ef3b5957e02c" xml:space="preserve">
+    <value>Ändra konto-inställningar:</value>
+  </data>
+  <data name="Text.f1d317516644" xml:space="preserve">
+    <value>Logga in med ditt @provider.DisplayName-konto</value>
+  </data>
+  <data name="Text.f47cd8cc79df" xml:space="preserve">
+    <value>skapa nya återställningskoder</value>
+  </data>
+  <data name="Text.f9ae2d32c088" xml:space="preserve">
+    <value>Logga in med passkey</value>
+  </data>
+  <data name="Text.fc965dadc98c" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="Text.fe45b4014135" xml:space="preserve">
+    <value>Uppdatera lösenord</value>
+  </data>
+  <data name="Text.ff2ec2618b91" xml:space="preserve">
+    <value>Ändra e-postadress</value>
+  </data>
+  <data name="Message.b3f572259057" xml:space="preserve">
+    <value>Fel från extern leverantör: {0}</value>
+  </data>
+  <data name="Message.b5a05d04831a" xml:space="preserve">
+    <value>Det gick inte att läsa den externa inloggningsinformationen.</value>
+  </data>
+  <data name="Message.96a10f010d05" xml:space="preserve">
+    <value>Det gick inte att läsa den externa inloggningsinformationen vid bekräftelsen.</value>
+  </data>
+  <data name="Message.0c76d00ddc05" xml:space="preserve">
+    <value>Tack för att du bekräftade din e-postadress.</value>
+  </data>
+  <data name="Message.bdd9dbdbe074" xml:space="preserve">
+    <value>Fel: E-postadressen kunde inte bekräftas.</value>
+  </data>
+  <data name="Message.be87a275fdab" xml:space="preserve">
+    <value>Fel: E-postadressen kunde inte ändras.</value>
+  </data>
+  <data name="Message.bd816d936d0d" xml:space="preserve">
+    <value>Fel: Användarnamnet kunde inte ändras.</value>
+  </data>
+  <data name="Message.4fc076f324d9" xml:space="preserve">
+    <value>Tack för att du bekräftade ändringen av din e-postadress.</value>
+  </data>
+  <data name="Message.e70468364917" xml:space="preserve">
+    <value>Verifieringsmeddelandet har skickats. Kontrollera din e-post.</value>
+  </data>
+  <data name="Message.4ca3f4f301e1" xml:space="preserve">
+    <value>Ogiltig återställningskod.</value>
+  </data>
+  <data name="Message.8e4823abe890" xml:space="preserve">
+    <value>Ogiltig autentiseringskod.</value>
+  </data>
+  <data name="Message.9ad95f47fa2b" xml:space="preserve">
+    <value>Passkey error: {0}</value>
+  </data>
+  <data name="Message.aad83968710c" xml:space="preserve">
+    <value>Invalid passkey sign-in.</value>
+  </data>
+  <data name="Message.14b93e1fcb6a" xml:space="preserve">
+    <value>Ogiltigt inloggningsförsök.</value>
+  </data>
+  <data name="Message.14c54c87ce5e" xml:space="preserve">
+    <value>Du måste ange en kod för att återställa lösenordet.</value>
+  </data>
+  <data name="Message.00e34a98f659" xml:space="preserve">
+    <value>Ditt lösenord har ändrats.</value>
+  </data>
+  <data name="Message.933540c3072d" xml:space="preserve">
+    <value>Ditt lösenord har angetts.</value>
+  </data>
+  <data name="Message.646b05a0b1b1" xml:space="preserve">
+    <value>Bekräftelselänken för ändring av e-postadress har skickats. Kontrollera din e-post.</value>
+  </data>
+  <data name="Message.94a9c4f2e5e4" xml:space="preserve">
+    <value>Din e-postadress är oförändrad.</value>
+  </data>
+  <data name="Message.18e7b00510e1" xml:space="preserve">
+    <value>Du har skapat nya återställningskoder.</value>
+  </data>
+  <data name="Message.733f37a8a58f" xml:space="preserve">
+    <value>Den externa inloggningen kunde inte tas bort.</value>
+  </data>
+  <data name="Message.806d416d01a5" xml:space="preserve">
+    <value>Den externa inloggningen har tagits bort.</value>
+  </data>
+  <data name="Message.037378f25df9" xml:space="preserve">
+    <value>Den externa inloggningen kunde inte läggas till. Den kan bara kopplas till ett konto.</value>
+  </data>
+  <data name="Message.e7ed04e79aaf" xml:space="preserve">
+    <value>Den externa inloggningen har lagts till.</value>
+  </data>
+  <data name="Message.0df6de1a5671" xml:space="preserve">
+    <value>Tvåfaktorsautentisering har inaktiverats. Du kan aktivera den igen när du konfigurerar en autentiseringsapp.</value>
+  </data>
+  <data name="Message.d2be02bada77" xml:space="preserve">
+    <value>Fel: Telefonnummer kunde inte sparas.</value>
+  </data>
+  <data name="Message.23c671441a90" xml:space="preserve">
+    <value>Din profil har uppdaterats.</value>
+  </data>
+  <data name="Message.f89f9480b8af" xml:space="preserve">
+    <value>Verifieringskoden är ogiltig.</value>
+  </data>
+  <data name="Message.2912a944d746" xml:space="preserve">
+    <value>Din autentiseringsapp har verifierats.</value>
+  </data>
+  <data name="Message.87a77e40b7f7" xml:space="preserve">
+    <value>Den här webbläsaren har glömts bort. Vid nästa inloggning får du ange din tvåfaktorskod.</value>
+  </data>
+  <data name="Message.30f89744a6f3" xml:space="preserve">
+    <value>Fel lösenord.</value>
+  </data>
+  <data name="Message.2e33fa48b1d5" xml:space="preserve">
+    <value>Autentiseringsnyckeln har återställts. Konfigurera appen med den nya nyckeln.</value>
+  </data>
+  <data name="Message.43f78154e1d7" xml:space="preserve">
+    <value>Fel: {0}</value>
+  </data>
+  <data name="Message.e6dc1288f905" xml:space="preserve">
+    <value>Fel: Webbläsaren skickade ingen passkey.</value>
+  </data>
+  <data name="Message.4d206b16b187" xml:space="preserve">
+    <value>Fel: Du har nått maximalt antal tillåtna passkeys.</value>
+  </data>
+  <data name="Message.b5a5968995d4" xml:space="preserve">
+    <value>Fel: Det gick inte att lägga till passkey: {0}</value>
+  </data>
+  <data name="Message.b95a62d553a4" xml:space="preserve">
+    <value>Fel: Passkey kunde inte läggas till på ditt konto.</value>
+  </data>
+  <data name="Message.ef1195449972" xml:space="preserve">
+    <value>Fel: Passkey-ID har ett ogiltigt format.</value>
+  </data>
+  <data name="Message.fdea71f69c12" xml:space="preserve">
+    <value>Fel: Den angivna passkey kunde inte hittas.</value>
+  </data>
+  <data name="Message.aa925f0fbbbf" xml:space="preserve">
+    <value>Fel: Passkey kunde inte uppdateras.</value>
+  </data>
+  <data name="Message.93d2a80e5ecf" xml:space="preserve">
+    <value>Passkey uppdaterades.</value>
+  </data>
+  <data name="Message.d95342f59e6b" xml:space="preserve">
+    <value>Fel: Passkey kunde inte tas bort.</value>
+  </data>
+  <data name="Message.3259cdf0ea26" xml:space="preserve">
+    <value>Passkey togs bort.</value>
+  </data>
+  <data name="Message.090286fde77f" xml:space="preserve">
+    <value>Kunde inte läsa in användaren med ID '{0}'.</value>
+  </data>
+  <data name="Message.ac08752c809d" xml:space="preserve">
+    <value>Kunde inte läsa in användaren med e-postadressen '{0}'.</value>
+  </data>
+  <data name="Message.26600d41b377" xml:space="preserve">
+    <value>Kunde inte läsa in användaren med ID 'user.Id'.</value>
+  </data>
+  <data name="Message.0d1fe19967e2" xml:space="preserve">
+    <value>Bekräfta din e-postadress</value>
+  </data>
+  <data name="Message.4e70f1fd24ba" xml:space="preserve">
+    <value>Återställ lösenord</value>
+  </data>
+  <data name="Message.2b673777cb25" xml:space="preserve">
+    <value>Bekräfta ditt konto genom att &lt;a href='{0}'&gt;klicka här&lt;/a&gt;.</value>
+  </data>
+  <data name="Message.5c0abcae6161" xml:space="preserve">
+    <value>Återställ ditt lösenord genom att &lt;a href='{0}'&gt;klicka här&lt;/a&gt;.</value>
+  </data>
+  <data name="Message.2bb2fdbbc3d5" xml:space="preserve">
+    <value>E-postadress saknas</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-postadress</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Bekräfta lösenord</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Kom ihåg inloggningen?</value>
+  </data>
+  <data name="TwoFactorCode" xml:space="preserve">
+    <value>Autentiseringskod</value>
+  </data>
+  <data name="RememberMachine" xml:space="preserve">
+    <value>Kom ihåg den här enheten</value>
+  </data>
+  <data name="RecoveryCode" xml:space="preserve">
+    <value>Återställningskod</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Nuvarande lösenord</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nytt lösenord</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Bekräfta nytt lösenord</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Ny e-postadress</value>
+  </data>
+  <data name="VerificationCode" xml:space="preserve">
+    <value>Verifieringskod</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Telefonnummer</value>
+  </data>
+  <data name="PasskeyName" xml:space="preserve">
+    <value>Passkey-namn</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>{0} måste innehålla minst {2} och högst {1} tecken.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Lösenordet och bekräftelsen stämmer inte överens.</value>
+  </data>
+  <data name="NewPasswordMismatch" xml:space="preserve">
+    <value>Det nya lösenordet och bekräftelsen stämmer inte överens.</value>
+  </data>
+  <data name="PasskeyNameLength" xml:space="preserve">
+    <value>Passkey-namn får inte vara längre än {1} tecken.</value>
+  </data>
+  <data name="Manage.Passkeys" xml:space="preserve">
+    <value>Hantera passkeys</value>
+  </data>
+  <data name="Manage.UnnamedPasskey" xml:space="preserve">
+    <value>Namnlös passkey</value>
+  </data>
+  <data name="Manage.ConfirmDeletePasskey" xml:space="preserve">
+    <value>Är du säker på att du vill ta bort den här passkeyn?</value>
+  </data>
+  <data name="Manage.RenameExistingPasskey" xml:space="preserve">
+    <value>Ange ett nytt namn för "{0}"-passkeyen</value>
+  </data>
+  <data name="Error.DevelopmentDetails" xml:space="preserve">
+    <value>, eftersom känsliga uppgifter från felmeddelanden då kan visas för användare. Vid lokal felsökning kan utvecklingsläge aktiveras genom att ange</value>
+  </data>
+  <data name="Error.Restart" xml:space="preserve">
+    <value>, och starta om applikationen.</value>
+  </data>
+  <data name="Error.EnvironmentVariable" xml:space="preserve">
+    <value>som miljövariabel med värdet</value>
+  </data>
+  <data name="Manage.Disable2faWarning" xml:space="preserve">
+    <value>Att inaktivera tvåfaktorsautentisering ändrar inte nycklarna i autentiseringsappar. Om du vill ändra nyckeln bör du</value>
+  </data>
+  <data name="Manage.GenerateCodesWarning" xml:space="preserve">
+    <value>Att skapa nya återställningskoder ändrar inte nycklarna i autentiseringsappar. Om du vill ändra nyckeln bör du</value>
+  </data>
+  <data name="Manage.OrGoogleAuthenticator" xml:space="preserve">
+    <value>eller Google Authenticator för</value>
+  </data>
+  <data name="Manage.AuthenticatorCodeInstructions" xml:space="preserve">
+    <value>När du har skannat QR-koden eller angett nyckeln visas en unik kod i appen. Ange koden nedan.</value>
+  </data>
+  <data name="Manage.ResetAuthenticatorWarning" xml:space="preserve">
+    <value>Tvåfaktorsautentisering inaktiveras tills du verifierar appen. Om du inte slutför konfigurationen kan du förlora tillgången till kontot.</value>
+  </data>
+  <data name="Register.ConfigureEmailSender" xml:space="preserve">
+    <value>om hur du konfigurerar en riktig e-posttjänst.</value>
+  </data>
+  <data name="Register.NormallyEmailed" xml:space="preserve">
+    <value>Normalt skulle följande skickas via e-post:</value>
+  </data>
+  <data name="Account.AssociateProvider" xml:space="preserve">
+    <value>Koppla ditt {0}-konto.</value>
+  </data>
+  <data name="Manage.RemoveProvider" xml:space="preserve">
+    <value>Ta bort inloggningen med {0} från ditt konto</value>
+  </data>
+  <data name="Manage.LoginWithProvider" xml:space="preserve">
+    <value>Logga in med ditt {0}-konto</value>
+  </data>
+  <data name="Manage.RecoveryCodesLeft" xml:space="preserve">
+    <value>Du har {0} återställningskoder kvar.</value>
+  </data>
+</root>

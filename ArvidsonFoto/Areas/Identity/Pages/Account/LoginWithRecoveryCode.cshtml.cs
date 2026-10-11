@@ -22,7 +22,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
         [BindProperty]
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Recovery Code")]
+        [Display(Name = nameof(IdentityResource.RecoveryCode), ResourceType = typeof(IdentityResource))]
         public string RecoveryCode { get; set; } = null!;
     }
 
@@ -70,7 +70,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
         else
         {
             _logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", user.Id);
-            ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Message.4ca3f4f301e1"));
             return Page();
         }
     }

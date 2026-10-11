@@ -1,0 +1,462 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Text.03984a6a0ad1" xml:space="preserve">
+    <value>Fotodatum</value>
+  </data>
+  <data name="Text.073d9986bb3a" xml:space="preserve">
+    <value>Redigera</value>
+  </data>
+  <data name="Text.07659ea7a0f9" xml:space="preserve">
+    <value>Alla sidvisningar genom tiderna</value>
+  </data>
+  <data name="Text.09f610313b1c" xml:space="preserve">
+    <value>Skapa kategori</value>
+  </data>
+  <data name="Text.0ca9268a24fa" xml:space="preserve">
+    <value>Svara</value>
+  </data>
+  <data name="Text.0e0fe438cfe9" xml:space="preserve">
+    <value>Senast besökt</value>
+  </data>
+  <data name="Text.107f94008ed3" xml:space="preserve">
+    <value>Välkommen till Upload Admin!</value>
+  </data>
+  <data name="Text.13424e415e73" xml:space="preserve">
+    <value>Ändra</value>
+  </data>
+  <data name="Text.14efc33da617" xml:space="preserve">
+    <value>Föregående</value>
+  </data>
+  <data name="Text.16629462dc8a" xml:space="preserve">
+    <value>Dela bilder på Facebook</value>
+  </data>
+  <data name="Text.1828f566ea14" xml:space="preserve">
+    <value>Senaste loggen (Igår)</value>
+  </data>
+  <data name="Text.189d2c93c318" xml:space="preserve">
+    <value>Något gick fel vid redigering av bilden med nummer:</value>
+  </data>
+  <data name="Text.192b58652659" xml:space="preserve">
+    <value>Klicka på bilderna för att välja/avvälja dem. Du kan välja mellan 1 och 10 bilder.</value>
+  </data>
+  <data name="Text.1bcc53e13ea5" xml:space="preserve">
+    <value>Dela på Facebook</value>
+  </data>
+  <data name="Text.1eee64a48561" xml:space="preserve">
+    <value>Publicera på Facebook</value>
+  </data>
+  <data name="Text.22b75b375d49" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="Text.27f942aa231d" xml:space="preserve">
+    <value>Här nedan visas loggboken från hemsidan:</value>
+  </data>
+  <data name="Text.2955966a790e" xml:space="preserve">
+    <value>Har nu raderat GB-inlägget med nummer:</value>
+  </data>
+  <data name="Text.2d22ed5e5817" xml:space="preserve">
+    <value>Länka till ny bild på hemsidan</value>
+  </data>
+  <data name="Text.2da62e956b26" xml:space="preserve">
+    <value>Kontrollera att du fyllt i alla obligatoriska fält korrekt.</value>
+  </data>
+  <data name="Text.308c6b51c1ba" xml:space="preserve">
+    <value>Redigera kategorier och arter</value>
+  </data>
+  <data name="Text.335237e7c9b9" xml:space="preserve">
+    <value>Sök</value>
+  </data>
+  <data name="Text.364afc3486a0" xml:space="preserve">
+    <value>Valideringsfel</value>
+  </data>
+  <data name="Text.375e84034b8f" xml:space="preserve">
+    <value>Bild</value>
+  </data>
+  <data name="Text.3d414d654bd6" xml:space="preserve">
+    <value>Skriv en text som ska följa med bilderna på Facebook...</value>
+  </data>
+  <data name="Text.409250e64441" xml:space="preserve">
+    <value>Redigera bland bilder</value>
+  </data>
+  <data name="Text.42e6d67b07be" xml:space="preserve">
+    <value>Föregående månad</value>
+  </data>
+  <data name="Text.452e1f9713a4" xml:space="preserve">
+    <value>Art:</value>
+  </data>
+  <data name="Text.48af0fba5de9" xml:space="preserve">
+    <value>Hantera ditt konto</value>
+  </data>
+  <data name="Text.499dd14d9e60" xml:space="preserve">
+    <value>Ny kategori</value>
+  </data>
+  <data name="Text.49d08b10855b" xml:space="preserve">
+    <value>Välj 1-10 bilder från de senast uppladdade bilderna och skapa ett Facebook-inlägg:</value>
+  </data>
+  <data name="Text.4fc8f82b92c0" xml:space="preserve">
+    <value>Svenskt URL-segment</value>
+  </data>
+  <data name="Text.55e139b837ac" xml:space="preserve">
+    <value>Vald kategori: @Model.SelectedCategory.Name</value>
+  </data>
+  <data name="Text.5b0094c70473" xml:space="preserve">
+    <value>ÅÅÅÅ-MM-DD</value>
+  </data>
+  <data name="Text.5d3a78d6e128" xml:space="preserve">
+    <value>Ett oväntat fel inträffade. Försök igen senare.</value>
+  </data>
+  <data name="Text.5ea3c0b2c666" xml:space="preserve">
+    <value>Välj kategori...</value>
+  </data>
+  <data name="Text.60017c51f2c9" xml:space="preserve">
+    <value>Bildnamn</value>
+  </data>
+  <data name="Text.6504e07b613e" xml:space="preserve">
+    <value>Filnamnet UTAN .jpg, t.ex: 'TA1_1234'</value>
+  </data>
+  <data name="Text.66ea53859832" xml:space="preserve">
+    <value>Länkningen genomfördes för:</value>
+  </data>
+  <data name="Text.68871116d6e8" xml:space="preserve">
+    <value>Filnamn:</value>
+  </data>
+  <data name="Text.6aa7c3aa35a9" xml:space="preserve">
+    <value>Nästa</value>
+  </data>
+  <data name="Text.6bebd1f3c44f" xml:space="preserve">
+    <value>Du måste välja minst en bild att dela.</value>
+  </data>
+  <data name="Text.6fb86c40ae16" xml:space="preserve">
+    <value>Här nedanför kan du redigera bland de senaste bilderna:</value>
+  </data>
+  <data name="Text.707bc142df6d" xml:space="preserve">
+    <value>Engelskt namn</value>
+  </data>
+  <data name="Text.74110372ed51" xml:space="preserve">
+    <value>Här visas lite statistik för hemsidan:</value>
+  </data>
+  <data name="Text.75df3579c730" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Text.76dcf19420c9" xml:space="preserve">
+    <value>Något gick fel vid läsmarkering av GB-inlägget med nummer:</value>
+  </data>
+  <data name="Text.77ba84f91109" xml:space="preserve">
+    <value>Läs i loggboken och fel-loggar</value>
+  </data>
+  <data name="Text.7d9eb7acb13e" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Text.83121aed9a01" xml:space="preserve">
+    <value>Har nu läsmarkerat GB-inlägget med nummer:</value>
+  </data>
+  <data name="Text.838509f61b0f" xml:space="preserve">
+    <value>Familj</value>
+  </data>
+  <data name="Text.8e73c13f3cd8" xml:space="preserve">
+    <value>Nuvarande</value>
+  </data>
+  <data name="Text.8f5c142d9c46" xml:space="preserve">
+    <value>Max 5000 tecken</value>
+  </data>
+  <data name="Text.8f7fa524033b" xml:space="preserve">
+    <value>Spara kategori</value>
+  </data>
+  <data name="Text.8ffa9b0e7ecf" xml:space="preserve">
+    <value>Här kan du lägga till en ny kategori på hemsidan:</value>
+  </data>
+  <data name="Text.949266bee384" xml:space="preserve">
+    <value>Välj</value>
+  </data>
+  <data name="Text.9708c46b1d11" xml:space="preserve">
+    <value>Sidvisningar senaste 6 månaderna</value>
+  </data>
+  <data name="Text.9863ace60efa" xml:space="preserve">
+    <value>Här kan du se statistik från hemsidan:</value>
+  </data>
+  <data name="Text.98de849bc36d" xml:space="preserve">
+    <value>Är det fel art?</value>
+  </data>
+  <data name="Text.9948f1ff3320" xml:space="preserve">
+    <value>Inlägget har publicerats på Facebook!</value>
+  </data>
+  <data name="Text.9bb265aceac0" xml:space="preserve">
+    <value>HuvudFamilj</value>
+  </data>
+  <data name="Text.9c00b3633447" xml:space="preserve">
+    <value>Sök efter kategori eller art</value>
+  </data>
+  <data name="Text.a0237cc6ef17" xml:space="preserve">
+    <value>Lägg till en ny kategori på hemsidan</value>
+  </data>
+  <data name="Text.a46e0af77e77" xml:space="preserve">
+    <value>Mottaget:</value>
+  </data>
+  <data name="Text.a56f5e5a2535" xml:space="preserve">
+    <value>0 valda</value>
+  </data>
+  <data name="Text.a666aea488f4" xml:space="preserve">
+    <value>Dölj filtrerade loggar</value>
+  </data>
+  <data name="Text.ab6482ebbf0f" xml:space="preserve">
+    <value>Facebook är inte konfigurerat</value>
+  </data>
+  <data name="Text.ad8349c15767" xml:space="preserve">
+    <value>Välj en dag att visa:</value>
+  </data>
+  <data name="Text.aecaa693bde3" xml:space="preserve">
+    <value>Läs loggboken</value>
+  </data>
+  <data name="Text.af342fe70d43" xml:space="preserve">
+    <value>Hemsidans statistik</value>
+  </data>
+  <data name="Text.b13c2365f0e2" xml:space="preserve">
+    <value>Meddelande till inlägget</value>
+  </data>
+  <data name="Text.b1f9e0b31533" xml:space="preserve">
+    <value>Har nu sparat ändringar för bilden:</value>
+  </data>
+  <data name="Text.b604774554f4" xml:space="preserve">
+    <value>Något gick fel vid kommunikationen med Facebook. Kontrollera inställningarna och försök igen.</value>
+  </data>
+  <data name="Text.b7b346e9a7e1" xml:space="preserve">
+    <value>Visa alla loggar</value>
+  </data>
+  <data name="Text.b9a041fe710f" xml:space="preserve">
+    <value>Bildnummer:</value>
+  </data>
+  <data name="Text.b9c84bd9053d" xml:space="preserve">
+    <value>Spara ändring</value>
+  </data>
+  <data name="Text.ba99416dd704" xml:space="preserve">
+    <value>Visa statistik på hemsidan</value>
+  </data>
+  <data name="Text.bb2afe28128c" xml:space="preserve">
+    <value>idag</value>
+  </data>
+  <data name="Text.bb50faeb0b9c" xml:space="preserve">
+    <value>Inga alvarliga fel har inträffat idag.</value>
+  </data>
+  <data name="Text.bbc7f9c20369" xml:space="preserve">
+    <value>Inga bilder valda</value>
+  </data>
+  <data name="Text.bd4b3758c4d5" xml:space="preserve">
+    <value>Sista</value>
+  </data>
+  <data name="Text.bd59464a5601" xml:space="preserve">
+    <value>(nuvarande)</value>
+  </data>
+  <data name="Text.bd7039fc9a8e" xml:space="preserve">
+    <value>Hittade inga bilder</value>
+  </data>
+  <data name="Text.bd89b93a0c41" xml:space="preserve">
+    <value>Första</value>
+  </data>
+  <data name="Text.c04ec440c260" xml:space="preserve">
+    <value>Något gick fel vid raderade av GB-inlägget med nummer:</value>
+  </data>
+  <data name="Text.c147863c3f3a" xml:space="preserve">
+    <value>Hantera gästbokens inlägg</value>
+  </data>
+  <data name="Text.c28abe5fb303" xml:space="preserve">
+    <value>Här kan du länka till en ny bild på hemsidan:</value>
+  </data>
+  <data name="Text.c4063a295a33" xml:space="preserve">
+    <value>(du kan scrolla i sidled på telefonen)</value>
+  </data>
+  <data name="Text.c7e27a968480" xml:space="preserve">
+    <value>Beskrivning</value>
+  </data>
+  <data name="Text.c866a7f58a32" xml:space="preserve">
+    <value>Vart ska kategorin ligga under?</value>
+  </data>
+  <data name="Text.cc5a5519685c" xml:space="preserve">
+    <value>Facebook-integreringen är inte konfigurerad. Kontakta administratören.</value>
+  </data>
+  <data name="Text.cd613d82a1a6" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="Text.d2183e4ef2ee" xml:space="preserve">
+    <value>Engelskt URL-segment</value>
+  </data>
+  <data name="Text.d3c84be8961b" xml:space="preserve">
+    <value>Uppladdad:</value>
+  </data>
+  <data name="Text.d4ceeddff3d3" xml:space="preserve">
+    <value>Meddelande text:</value>
+  </data>
+  <data name="Text.d566a603150c" xml:space="preserve">
+    <value>Länka bilden</value>
+  </data>
+  <data name="Text.d823d43f53f0" xml:space="preserve">
+    <value>Visa inlägget på Facebook</value>
+  </data>
+  <data name="Text.d86ae643e788" xml:space="preserve">
+    <value>Här kan du redigera bland Gästboks-inläggen:</value>
+  </data>
+  <data name="Text.d927cd6fecf2" xml:space="preserve">
+    <value>Ett fel inträffade</value>
+  </data>
+  <data name="Text.da4add6edabb" xml:space="preserve">
+    <value>Skapat nya kategorin:</value>
+  </data>
+  <data name="Text.dc972865ca97" xml:space="preserve">
+    <value>Fel vid publicering</value>
+  </data>
+  <data name="Text.e1ca68a82880" xml:space="preserve">
+    <value>Uppladdningsadministration</value>
+  </data>
+  <data name="Text.e3b2a06f0d6d" xml:space="preserve">
+    <value>Visningar</value>
+  </data>
+  <data name="Text.e41eec0ed8b5" xml:space="preserve">
+    <value>Läsmarkera</value>
+  </data>
+  <data name="Text.e439fafb951d" xml:space="preserve">
+    <value>Då behöver du</value>
+  </data>
+  <data name="Text.e4b526bca27e" xml:space="preserve">
+    <value>Har nu raderat länkningen för bilden med nummer:</value>
+  </data>
+  <data name="Text.e52253720c2d" xml:space="preserve">
+    <value>Radera</value>
+  </data>
+  <data name="Text.e5b825e0baea" xml:space="preserve">
+    <value>och göra en ny länkning.</value>
+  </data>
+  <data name="Text.e9349025558f" xml:space="preserve">
+    <value>Nya kategorins namn</value>
+  </data>
+  <data name="Text.ee15387584ab" xml:space="preserve">
+    <value>Välj bilder (1-10 st)</value>
+  </data>
+  <data name="Text.f41e2963db8e" xml:space="preserve">
+    <value>Svenskt namn</value>
+  </data>
+  <data name="Text.faf377257611" xml:space="preserve">
+    <value>Ny bild</value>
+  </data>
+  <data name="Text.fc965dadc98c" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="Text.fe19077c46c7" xml:space="preserve">
+    <value>Redigera bland de senast uppladdade bilderna på sidan</value>
+  </data>
+  <data name="Admin.ImageTitle" xml:space="preserve">
+    <value>Länka till ny bild</value>
+  </data>
+  <data name="Admin.CategoryTitle" xml:space="preserve">
+    <value>Länka till ny kategori</value>
+  </data>
+  <data name="Admin.CategoriesTitle" xml:space="preserve">
+    <value>Redigera kategorier och arter</value>
+  </data>
+  <data name="Admin.EditImagesTitle" xml:space="preserve">
+    <value>Redigera bland bilderna</value>
+  </data>
+  <data name="Admin.GuestbookTitle" xml:space="preserve">
+    <value>Hantera gästboken</value>
+  </data>
+  <data name="Admin.StatisticsTitle" xml:space="preserve">
+    <value>Hemsidans statistik</value>
+  </data>
+  <data name="Admin.FacebookTitle" xml:space="preserve">
+    <value>Dela bilder på Facebook</value>
+  </data>
+  <data name="Admin.LogTitle" xml:space="preserve">
+    <value>Läser loggboken för: {0:yyyy-MM-dd dddd}</value>
+  </data>
+  <data name="Admin.ImageCreationError" xml:space="preserve">
+    <value>Ett fel uppstod vid skapande av bilden.</value>
+  </data>
+  <data name="Admin.InvalidUrlSegments" xml:space="preserve">
+    <value>URL-segmenten måste vara unika och giltiga.</value>
+  </data>
+  <data name="Admin.Missing" xml:space="preserve">
+    <value>Saknas</value>
+  </data>
+  <data name="Admin.SelectedCount" xml:space="preserve">
+    <value>{0} valda</value>
+  </data>
+  <data name="Admin.MaxImages" xml:space="preserve">
+    <value>Du kan välja max {0} bilder!</value>
+  </data>
+  <data name="Admin.SelectOne" xml:space="preserve">
+    <value>Du måste välja minst en bild!</value>
+  </data>
+  <data name="Admin.MessageRequired" xml:space="preserve">
+    <value>Du måste skriva ett meddelande!</value>
+  </data>
+  <data name="Admin.Publishing" xml:space="preserve">
+    <value>Publicerar...</value>
+  </data>
+  <data name="Admin.ImageCount" xml:space="preserve">
+    <value>Antal bilder: {0}st, sida: {1} av {2}</value>
+  </data>
+  <data name="Admin.EditImage" xml:space="preserve">
+    <value>Ändra bilden: {0} på {1}</value>
+  </data>
+  <data name="Admin.DeleteImage" xml:space="preserve">
+    <value>Radera bilden: {0} på {1}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteImage" xml:space="preserve">
+    <value>Vill du ta bort denna bilden på {0}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteGuestbook" xml:space="preserve">
+    <value>Radera meddelandet från {0}?</value>
+  </data>
+  <data name="Admin.Unread" xml:space="preserve">
+    <value>{0} olästa</value>
+  </data>
+  <data name="Admin.Account" xml:space="preserve">
+    <value>Hantera kontot: {0}</value>
+  </data>
+  <data name="Admin.ThisMonthPageViews" xml:space="preserve">
+    <value>Sidvisningar per sida, denna månaden ({0})</value>
+  </data>
+  <data name="Admin.ThisMonthCategories" xml:space="preserve">
+    <value>10 mest visade kategorierna, denna månaden ({0})</value>
+  </data>
+  <data name="Admin.ChartFallback" xml:space="preserve">
+    <value>Månadsvis statistik (Chart.js kunde inte laddas)</value>
+  </data>
+  <data name="Admin.ChartTitle" xml:space="preserve">
+    <value>Sidvisningar per månad (senaste 6 månaderna)</value>
+  </data>
+  <data name="Admin.Views" xml:space="preserve">
+    <value>Sidvisningar</value>
+  </data>
+  <data name="Admin.CategoryViews" xml:space="preserve">
+    <value>Kategorivisningar</value>
+  </data>
+  <data name="Admin.Week" xml:space="preserve">
+    <value>V.</value>
+  </data>
+  <data name="Admin.Mon" xml:space="preserve">
+    <value>Må</value>
+  </data>
+  <data name="Admin.Tue" xml:space="preserve">
+    <value>Ti</value>
+  </data>
+  <data name="Admin.Wed" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Admin.Thu" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Admin.Fri" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Admin.Sat" xml:space="preserve">
+    <value>Lö</value>
+  </data>
+  <data name="Admin.Sun" xml:space="preserve">
+    <value>Sö</value>
+  </data>
+  <data name="Admin.Month" xml:space="preserve">
+    <value>Månad</value>
+  </data>
+  <data name="Admin.SelectedCategory" xml:space="preserve">
+    <value>Vald kategori: {0}</value>
+  </data>
+</root>
