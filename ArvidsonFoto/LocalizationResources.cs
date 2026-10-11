@@ -9,6 +9,7 @@ public class SearchResource;
 public class InfoResource;
 public class LatestResource;
 public class SharedResource;
+public class SiteResource;
 
 public class ValidationResource
 {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Privacy.Header.Title" xml:space="preserve"><value>Privacy policy</value></data>
+  <data name="Privacy.Body.Placeholder" xml:space="preserve"><value>Information about the site's privacy policy will appear here.</value></data>
+  <data name="Error.Header.Title" xml:space="preserve"><value>Error</value></data>
+  <data name="Error.Header.OldImage" xml:space="preserve"><value>Error 301 – old image URL</value></data>
+  <data name="Error.Header.NotFound" xml:space="preserve"><value>Error 404 – page not found</value></data>
+  <data name="Error.Body.Message" xml:space="preserve"><value>An error occurred while processing your request.</value></data>
+  <data name="Error.Detail.RequestedUrl" xml:space="preserve"><value>Requested URL</value></data>
+  <data name="Error.Detail.RequestTime" xml:space="preserve"><value>Request time</value></data>
+  <data name="Error.Detail.RequestId" xml:space="preserve"><value>Request ID</value></data>
+  <data name="Error.Body.Contact" xml:space="preserve"><value>If this error keeps occurring, please contact me so I can fix it.</value></data>
+  <data name="Error.Body.ContactLink" xml:space="preserve"><value>Contact me</value></data>
+  <data name="Error.Body.BackHome" xml:space="preserve"><value>Back to the home page</value></data>
+  <data name="Error.OldImage.Title" xml:space="preserve"><value>Error 301 – you are using an old image URL</value></data>
+  <data name="Error.OldImage.Message" xml:space="preserve"><value>The image has moved to another URL.</value></data>
+  <data name="Error.OldImage.Requested" xml:space="preserve"><value>This is the image you requested:</value></data>
+  <data name="Error.OldImage.Image" xml:space="preserve"><value>Requested image</value></data>
+  <data name="Error.Rabbit.Message" xml:space="preserve"><value>I hope this rabbit cheers you up a bit 🙂</value></data>
+  <data name="Error.Rabbit.Image" xml:space="preserve"><value>Rabbit 🐇</value></data>
+  <data name="Layout.Settings.Label" xml:space="preserve"><value>Language and appearance settings</value></data>
+  <data name="Layout.Theme.Description" xml:space="preserve"><value>Switch between dark mode and light mode</value></data>
+  <data name="Layout.Theme.ToLight" xml:space="preserve"><value>Switch to light mode</value></data>
+  <data name="Layout.Theme.ToDark" xml:space="preserve"><value>Switch to dark mode</value></data>
+</root>

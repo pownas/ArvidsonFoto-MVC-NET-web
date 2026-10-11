@@ -118,6 +118,35 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:") == true, path);
             Assert.IsTrue(swedish.QuerySelector(".main-nav")?.TextContent.Contains("Senast") == true, path);
         }
+
+        [TestMethod]
+        public async Task GalleryApi_ResolvesEnglishSegmentsAndProvidesLocalizedCaptions()
+        {
+            foreach (var (culture, expectedName) in new[] { ("en-US", "Beaver"), ("sv-SE", "Bäver") })
+            {
+                var response = await _client!.GetAsync($"/api/Bilder/mammals/beaver?page=1&culture={culture}");
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                var json = await response.Content.ReadAsStringAsync();
+                StringAssert.Contains(json, expectedName);
+            }
+        }
+
+        [TestMethod]
+        public async Task PublicUtilityPages_UseSelectedCulture()
+        {
+            foreach (var (culture, privacy, error, theme) in new[] {
+                ("sv-SE", "Integritetspolicy", "Ett fel uppstod", "Växla mellan mörkt och ljust läge"),
+                ("en-US", "Privacy policy", "An error occurred", "Switch between dark mode and light mode")
+            })
+            {
+                using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+                var privacyPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/Home/Privacy?culture={culture}"));
+                Assert.IsTrue(privacyPage.Body!.TextContent.Contains(privacy));
+                Assert.IsTrue(privacyPage.QuerySelector("#theme-switcher-description")?.TextContent.Contains(theme) == true);
+                var errorPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/Home/Error?culture={culture}"));
+                Assert.IsTrue(errorPage.Body!.TextContent.Contains(error));
+            }
+        }
     }
 
     [TestMethod]
