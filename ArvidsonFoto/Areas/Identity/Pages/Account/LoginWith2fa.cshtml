@@ -2,12 +2,12 @@
 @section MetaData { <meta name="robots" content="noindex" /> }
 @model LoginWith2faModel
 @{
-    ViewData["Title"] = L["Text.b6824cc8a91e"];
+    ViewData["Title"] = L["Identity.LoginWith2fa.TwoFactorAuthentication"];
 }
 
 <h2>@ViewData["Title"]</h2>
 <hr />
-<p>@L["Text.8d97d1895472"]</p>
+<p>@L["Identity.LoginWith2fa.YourLoginIsProtectedWithAnCodeBelow"]</p>
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
@@ -27,14 +27,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">@L["Text.c189840cf7e2"]</button>
+                <button type="submit" class="btn btn-primary">@L["Identity.LoginWith2fa.LogIn"]</button>
             </div>
         </form>
     </div>
 </div>
 <p>
-    @L["Text.b1b4907bb5a4"]
-    <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">@L["Text.0a8b53b24755"]</a>.
+    @L["Identity.LoginWith2fa.DonTHaveAccessToYourYouCan"]
+    <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">@L["Identity.LoginWith2fa.LogInWithARecoveryCode"]</a>.
 </p>
 
 @section Scripts {

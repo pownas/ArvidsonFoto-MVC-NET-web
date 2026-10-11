@@ -47,7 +47,7 @@ public class EnableAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await LoadSharedKeyAndQrCodeUriAsync(user);
@@ -60,7 +60,7 @@ public class EnableAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -77,7 +77,7 @@ public class EnableAuthenticatorModel(
 
         if (!is2faTokenValid)
         {
-            ModelState.AddModelError("Input.Code", IdentityResource.Get("Message.f89f9480b8af"));
+            ModelState.AddModelError("Input.Code", IdentityResource.Get("Identity.Manage.EnableAuthenticator.VerificationCodeIsInvalid"));
             await LoadSharedKeyAndQrCodeUriAsync(user);
             return Page();
         }
@@ -86,7 +86,7 @@ public class EnableAuthenticatorModel(
         var userId = await _userManager.GetUserIdAsync(user);
         _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-        StatusMessage = IdentityResource.Get("Message.2912a944d746");
+        StatusMessage = IdentityResource.Get("Identity.Manage.EnableAuthenticator.YourAuthenticatorAppHasBeenVerified");
 
         if (await _userManager.CountRecoveryCodesAsync(user) == 0)
         {

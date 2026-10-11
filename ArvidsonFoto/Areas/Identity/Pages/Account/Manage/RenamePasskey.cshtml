@@ -2,7 +2,7 @@
 @using ArvidsonFoto.Views.Shared
 @model RenamePasskeyModel
 @{
-    ViewData["Title"] = L["Text.e6f3d0d49a80"];
+    ViewData["Title"] = L["Identity.Manage.RenamePasskey.RenamePasskey"];
     ViewData["ActivePage"] = ManageNavPages.Passkeys;
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
 }
@@ -13,7 +13,7 @@
 }
 else
 {
-    <h4>@L["Text.d4c87d705151"]</h4>
+    <h4>@L["Identity.Manage.RenamePasskey.EnterANameForYourPasskey"]</h4>
 }
 <hr />
 
@@ -23,12 +23,12 @@ else
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.Name"></label>
-                <input asp-for="Input.Name" class="form-control" placeholder="@L["Text.3dbfdcbc84fd"]" />
+                <input asp-for="Input.Name" class="form-control" placeholder="@L["Identity.Manage.RenamePasskey.MyPasskey"]" />
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">@L["Text.2ac5c9c2bb0c"]</button>
-                <a asp-page="./Passkeys" class="btn btn-secondary ms-2">@L["Text.fc965dadc98c"]</a>
+                <button type="submit" class="btn btn-primary">@L["Identity.Manage.RenamePasskey.Save"]</button>
+                <a asp-page="./Passkeys" class="btn btn-secondary ms-2">@L["Identity.Manage.RenamePasskey.Cancel"]</a>
             </div>
         </form>
     </div>

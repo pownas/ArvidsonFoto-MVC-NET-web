@@ -3,13 +3,13 @@
 @model LogoutModel
 @section MetaData { <meta name="robots" content="noindex" /> }
 @{
-    ViewData["Title"] = L["Text.22b75b375d49"];
+    ViewData["Title"] = L["Identity.Logout.LogOut"];
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.LoggaUt;
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Text.e1ca68a82880"]</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Identity.Logout.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-lock ml-1"></i></li>
     </ol>
 </nav>
@@ -27,12 +27,12 @@
             if (User?.Identity?.IsAuthenticated is true)
             {
                 <form class="form-inline mt-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
-                    <button type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-lock"></i> @L["Text.b99c03982452"]</button>
+                    <button type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-lock"></i> @L["Identity.Logout.ClickHereToLogOut"]</button>
                 </form>
             }
             else
             {
-                <p>@L["Text.903774d10371"]</p>
+                <p>@L["Identity.Logout.YouHaveBeenLoggedOut"]</p>
             }
         }
     </div>

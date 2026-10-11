@@ -1,27 +1,27 @@
 @page
 @model EnableAuthenticatorModel
 @{
-    ViewData["Title"] = L["Text.dfb94da089ff"];
+    ViewData["Title"] = L["Identity.Manage.EnableAuthenticator.ConfigureAuthenticatorApp"];
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
 <h4>@ViewData["Title"]</h4>
 <div>
-    <p>@L["Text.20e868ce7fb6"]</p>
+    <p>@L["Identity.Manage.EnableAuthenticator.ToUseAnAuthenticatorAppGoFollowingSteps"]</p>
     <ol class="list">
         <li>
             <p>
-                @L["Text.123b9c0af185"]
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> @L["Text.6201111b83a0"]
+                @L["Identity.Manage.EnableAuthenticator.DownloadATwoFactorAuthenticatorAppAuthenticatorFor"]
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> @L["Identity.Manage.EnableAuthenticator.And"]
                 <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> @L["Manage.OrGoogleAuthenticator"]
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> @L["Text.6201111b83a0"]
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> @L["Identity.Manage.EnableAuthenticator.And"]
                 <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
             </p>
         </li>
         <li>
-            <p>@L["Text.735d26373251"] <kbd>@Model.SharedKey</kbd> @L["Text.11a41e7406a7"]</p>
-            <div class="alert alert-info">@L["Text.4836bc293b83"] <a href="https://go.microsoft.com/fwlink/?Linkid=852423">@L["Text.5f2d187dbbf8"]</a>.</div>
+            <p>@L["Identity.Manage.EnableAuthenticator.ScanTheQRCodeOrEnterThisKey"] <kbd>@Model.SharedKey</kbd> @L["Identity.Manage.EnableAuthenticator.IntoYourTwoFactorAuthenticatorAppNotMatter"]</p>
+            <div class="alert alert-info">@L["Identity.Manage.EnableAuthenticator.LearnHowTo"] <a href="https://go.microsoft.com/fwlink/?Linkid=852423">@L["Identity.Manage.EnableAuthenticator.EnableQRCodeGeneration"]</a>.</div>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
         </li>
@@ -33,11 +33,11 @@
                 <div class="col-md-6">
                     <form id="send-code" method="post">
                         <div class="form-group">
-                            <label asp-for="Input.Code" class="control-label">@L["Text.4c71415f2039"]</label>
+                            <label asp-for="Input.Code" class="control-label">@L["Identity.Manage.EnableAuthenticator.VerificationCode"]</label>
                             <input asp-for="Input.Code" class="form-control" autocomplete="off" />
                             <span asp-validation-for="Input.Code" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">@L["Text.eea2745e2867"]</button>
+                        <button type="submit" class="btn btn-primary">@L["Identity.Manage.EnableAuthenticator.Verify"]</button>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     </form>
                 </div>

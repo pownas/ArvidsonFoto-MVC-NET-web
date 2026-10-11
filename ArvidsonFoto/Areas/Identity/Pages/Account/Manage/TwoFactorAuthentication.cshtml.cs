@@ -34,7 +34,7 @@ public class TwoFactorAuthenticationModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
@@ -50,11 +50,11 @@ public class TwoFactorAuthenticationModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await _signInManager.ForgetTwoFactorClientAsync();
-        StatusMessage = IdentityResource.Get("Message.87a77e40b7f7");
+        StatusMessage = IdentityResource.Get("Identity.Manage.TwoFactorAuthentication.TheCurrentBrowserHasBeenForgotten2faCode");
         return RedirectToPage();
     }
 }

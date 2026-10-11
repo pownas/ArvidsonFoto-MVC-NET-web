@@ -9,14 +9,14 @@
     <div class="form-group">
         <label asp-for="ImageUrl" class="control-label"></label>
         <div>
-            <input asp-for="ImageUrl" placeholder="@L["Text.6504e07b613e"]" class="form-control" />
+            <input asp-for="ImageUrl" placeholder="@L["UploadAdmin.EditImageInputForm.FileNameWITHOUTJpgEGTA11234"]" class="form-control" />
             <span asp-validation-for="ImageUrl"></span>
         </div>
     </div>
     <div class="form-group">
         <label asp-for="ImageDate" class="control-label"></label>
         <div>
-            <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="@L["Text.5b0094c70473"]" class="form-control" />
+            <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="@L["UploadAdmin.EditImageInputForm.YYYYMMDD"]" class="form-control" />
             <span asp-validation-for="ImageDate"></span>
         </div>
     </div>
@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
         <div class="m-3 p-2">
-            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> @L["Text.d566a603150c"]</button>
+            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> @L["UploadAdmin.ImageInputForm.LinkImage"]</button>
         </div>
     </div>
 </form>

@@ -1,7 +1,7 @@
 @page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = L["Text.cef044498a9c"];
+    ViewData["Title"] = L["Identity.RegisterConfirmation.RegisterConfirmation"];
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,14 +9,14 @@
     if (@Model.DisplayConfirmAccountLink)
     {
 <p>
-    @L["Text.b87dd06a67be"] <a href="https://aka.ms/aspaccountconf">@L["Text.21330d0902f3"]</a> @L["Register.ConfigureEmailSender"]
-    @L["Register.NormallyEmailed"] <a id="confirm-link" href="@Model.EmailConfirmationUrl">@L["Text.8bd2f5db58af"]</a>
+    @L["Identity.RegisterConfirmation.ThisAppDoesNotCurrentlyHaveRegisteredSee"] <a href="https://aka.ms/aspaccountconf">@L["Identity.RegisterConfirmation.TheseDocs"]</a> @L["Register.ConfigureEmailSender"]
+    @L["Register.NormallyEmailed"] <a id="confirm-link" href="@Model.EmailConfirmationUrl">@L["Identity.RegisterConfirmation.ClickHereToConfirmYourAccount"]</a>
 </p>
     }
     else
     {
 <p>
-        @L["Text.a84ce6682bca"]
+        @L["Identity.RegisterConfirmation.PleaseCheckYourEmailToConfirmYourAccount"]
 </p>
     }
 }

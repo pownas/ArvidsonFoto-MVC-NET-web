@@ -26,14 +26,14 @@ public class ConfirmEmailChangeModel(UserManager<ArvidsonFotoUser> userManager, 
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), userId));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), userId));
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
         var result = await _userManager.ChangeEmailAsync(user, email, code);
         if (!result.Succeeded)
         {
-            StatusMessage = IdentityResource.Get("Message.be87a275fdab");
+            StatusMessage = IdentityResource.Get("Identity.ConfirmEmailChange.ErrorChangingEmail");
             return Page();
         }
 
@@ -42,12 +42,12 @@ public class ConfirmEmailChangeModel(UserManager<ArvidsonFotoUser> userManager, 
         var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
         if (!setUserNameResult.Succeeded)
         {
-            StatusMessage = IdentityResource.Get("Message.bd816d936d0d");
+            StatusMessage = IdentityResource.Get("Identity.ConfirmEmailChange.ErrorChangingUserName");
             return Page();
         }
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = IdentityResource.Get("Message.4fc076f324d9");
+        StatusMessage = IdentityResource.Get("Identity.ConfirmEmailChange.ThankYouForConfirmingYourEmailChange");
         return Page();
     }
 }

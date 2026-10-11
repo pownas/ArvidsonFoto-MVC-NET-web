@@ -1,7 +1,7 @@
 @page
 @model DeletePersonalDataModel
 @{
-    ViewData["Title"] = L["Text.de59bc5faaa3"];
+    ViewData["Title"] = L["Identity.Manage.DeletePersonalData.DeletePersonalData"];
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
@@ -9,7 +9,7 @@
 
 <div class="alert alert-warning" role="alert">
     <p>
-        <strong>@L["Text.82e380c5a434"]</strong>
+        <strong>@L["Identity.Manage.DeletePersonalData.DeletingThisDataWillPermanentlyRemoveBeRecovered"]</strong>
     </p>
 </div>
 
@@ -24,7 +24,7 @@
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
         }
-        <button class="btn btn-danger" type="submit">@L["Text.2bf9d357395b"]</button>
+        <button class="btn btn-danger" type="submit">@L["Identity.Manage.DeletePersonalData.DeleteDataAndCloseMyAccount"]</button>
     </form>
 </div>
 

@@ -58,13 +58,13 @@ public class ExternalLoginModel(
         returnUrl ??= Url.Content("~/");
         if (remoteError != null)
         {
-            ErrorMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.b3f572259057"), remoteError);
+            ErrorMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.ErrorFromExternalProvider0"), remoteError);
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = IdentityResource.Get("Message.b5a05d04831a");
+            ErrorMessage = IdentityResource.Get("Identity.ExternalLogin.ErrorLoadingExternalLoginInformation");
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
@@ -102,7 +102,7 @@ public class ExternalLoginModel(
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = IdentityResource.Get("Message.96a10f010d05");
+            ErrorMessage = IdentityResource.Get("Identity.ExternalLogin.ErrorLoadingExternalLoginInformationDuringConfirmation");
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
@@ -127,8 +127,8 @@ public class ExternalLoginModel(
                         values: new { area = "Identity", userId, code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Message.0d1fe19967e2"),
-                        string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
+                    await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)

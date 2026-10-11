@@ -58,7 +58,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await LoadAsync(user);
@@ -70,7 +70,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -92,14 +92,14 @@ public partial class EmailModel(
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.NewEmail,
-                IdentityResource.Get("Message.0d1fe19967e2"),
-                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
+                IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-            StatusMessage = IdentityResource.Get("Message.646b05a0b1b1");
+            StatusMessage = IdentityResource.Get("Identity.Manage.Email.ConfirmationLinkToChangeEmailSentYourEmail");
             return RedirectToPage();
         }
 
-        StatusMessage = IdentityResource.Get("Message.94a9c4f2e5e4");
+        StatusMessage = IdentityResource.Get("Identity.Manage.Email.YourEmailIsUnchanged");
         return RedirectToPage();
     }
 
@@ -108,7 +108,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -118,7 +118,7 @@ public partial class EmailModel(
         }
 
         var userId = await _userManager.GetUserIdAsync(user);
-        var email = await _userManager.GetEmailAsync(user) ?? IdentityResource.Get("Message.2bb2fdbbc3d5");
+        var email = await _userManager.GetEmailAsync(user) ?? IdentityResource.Get("Identity.Manage.Email.EmailNotFound");
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Url.Page(
@@ -128,10 +128,10 @@ public partial class EmailModel(
             protocol: Request.Scheme);
         await _emailSender.SendEmailAsync(
             email: email,
-            subject: IdentityResource.Get("Message.0d1fe19967e2"),
-            htmlMessage: string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
+            subject: IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+            htmlMessage: string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-        StatusMessage = IdentityResource.Get("Message.e70468364917");
+        StatusMessage = IdentityResource.Get("Identity.Manage.Email.VerificationEmailSentPleaseCheckYourEmail");
         return RedirectToPage();
     }
 }

@@ -11,7 +11,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Text.e1ca68a82880"]</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-facebook ms-1"></i></li>
     </ol>
 </nav>
@@ -26,10 +26,10 @@
         @if (Model!.DisplayMessage == "Success" && !string.IsNullOrEmpty(Model.FacebookPostUrl))
         {
             <div class="alert alert-success bg-success text-dark">
-                <h5><i class="bi bi-check-circle me-2"></i>@L["Text.9948f1ff3320"]</h5>
+                <h5><i class="bi bi-check-circle me-2"></i>@L["UploadAdmin.FacebookUpload.ThePostWasPublishedOnFacebook"]</h5>
                 <p class="mb-0">
                     <a href="@Model.FacebookPostUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
-                        <i class="bi bi-box-arrow-up-right me-1"></i>@L["Text.d823d43f53f0"]
+                        <i class="bi bi-box-arrow-up-right me-1"></i>@L["UploadAdmin.FacebookUpload.ViewPostOnFacebook"]
                     </a>
                 </p>
             </div>
@@ -37,55 +37,55 @@
         else if (Model.DisplayMessage == "FacebookError")
         {
             <div class="alert alert-danger bg-danger text-light">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["Text.dc972865ca97"]</h5>
-                <p class="mb-0">@L["Text.b604774554f4"]</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.PublishingFailed"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.CommunicationWithFacebookFailedCheckTheTryAgain"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "NotConfigured")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["Text.ab6482ebbf0f"]</h5>
-                <p class="mb-0">@L["Text.cc5a5519685c"]</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.FacebookIsNotConfigured"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.FacebookIntegrationIsNotConfiguredContactTheAdministrator"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "NoImagesSelected")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["Text.bbc7f9c20369"]</h5>
-                <p class="mb-0">@L["Text.6bebd1f3c44f"]</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.NoImagesSelected"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.YouMustSelectAtLeastOneToShare"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "ValidationError")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["Text.364afc3486a0"]</h5>
-                <p class="mb-0">@L["Text.2da62e956b26"]</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.ValidationError"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.CheckThatAllRequiredFieldsAreInCorrectly"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "Error")
         {
             <div class="alert alert-danger bg-danger text-light">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["Text.d927cd6fecf2"]</h5>
-                <p class="mb-0">@L["Text.5d3a78d6e128"]</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.AnErrorOccurred"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.AnUnexpectedErrorOccurredTryAgainLater"]</p>
             </div>
         }
 
-        <p>@L["Text.49d08b10855b"]</p>
+        <p>@L["UploadAdmin.FacebookUpload.Select110RecentlyUploadedImagesToFacebookPost"]</p>
         
         <form method="post" asp-action="CreateFacebookPost" asp-controller="UploadAdmin" id="facebookUploadForm">
             @Html.AntiForgeryToken()
             
             <div class="mb-3">
-                <label for="message" class="form-label">@L["Text.b13c2365f0e2"] <span class="text-danger">*</span></label>
+                <label for="message" class="form-label">@L["UploadAdmin.FacebookUpload.PostMessage"] <span class="text-danger">*</span></label>
                 <textarea class="form-control" id="message" name="Message" rows="4" maxlength="5000" required 
-                          placeholder="@L["Text.3d414d654bd6"]"></textarea>
-                <div class="form-text">@L["Text.8f5c142d9c46"]</div>
+                          placeholder="@L["UploadAdmin.FacebookUpload.WriteAMessageToAccompanyTheOnFacebook"]"></textarea>
+                <div class="form-text">@L["UploadAdmin.FacebookUpload.Maximum5000Characters"]</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">@L["Text.ee15387584ab"] <span class="text-danger">*</span></label>
-                <div id="selectedCount" class="badge bg-secondary mb-2">@L["Text.a56f5e5a2535"]</div>
-                <p class="text-muted small">@L["Text.192b58652659"]</p>
+                <label class="form-label">@L["UploadAdmin.FacebookUpload.SelectImages110"] <span class="text-danger">*</span></label>
+                <div id="selectedCount" class="badge bg-secondary mb-2">@L["UploadAdmin.FacebookUpload.Number0Selected"]</div>
+                <p class="text-muted small">@L["UploadAdmin.FacebookUpload.ClickImagesToSelectOrDeselect10Images"]</p>
             </div>
 
             <div class="row" id="imageGrid">
@@ -104,7 +104,7 @@
                                            name="SelectedImageIds" value="@image.ImageId" 
                                            id="img-@image.ImageId">
                                     <label class="form-check-label small" for="img-@image.ImageId">
-                                        @L["Text.949266bee384"]
+                                        @L["UploadAdmin.FacebookUpload.Select"]
                                     </label>
                                 </div>
                             </div>
@@ -115,10 +115,10 @@
 
             <div class="mt-4 mb-4">
                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                    <i class="bi bi-facebook me-2"></i>@L["Text.1eee64a48561"]
+                    <i class="bi bi-facebook me-2"></i>@L["UploadAdmin.FacebookUpload.PublishOnFacebook"]
                 </button>
                 <a href="/UploadAdmin" class="btn btn-secondary btn-lg">
-                    <i class="bi bi-x-circle me-2"></i>@L["Text.fc965dadc98c"]
+                    <i class="bi bi-x-circle me-2"></i>@L["UploadAdmin.FacebookUpload.Cancel"]
                 </a>
             </div>
         </form>

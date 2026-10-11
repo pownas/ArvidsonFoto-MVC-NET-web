@@ -23,10 +23,10 @@
                 <tr>
                     <td>@(passkey.Name ?? L["Manage.UnnamedPasskey"].Value)</td>
                     <td>
-                        <a asp-page="./RenamePasskey" asp-route-id="@credentialId" class="btn btn-sm btn-primary">@L["Text.92a1f22bd67a"]</a>
+                        <a asp-page="./RenamePasskey" asp-route-id="@credentialId" class="btn btn-sm btn-primary">@L["Identity.Manage.Passkeys.Rename"]</a>
                         <form method="post" asp-page-handler="DeletePasskey" asp-route-credentialId="@credentialId" style="display:inline">
                             <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm(@System.Text.Json.JsonSerializer.Serialize(L["Manage.ConfirmDeletePasskey"].Value))">@L["Text.616a9731e22f"]</button>
+                                    onclick="return confirm(@System.Text.Json.JsonSerializer.Serialize(L["Manage.ConfirmDeletePasskey"].Value))">@L["Identity.Manage.Passkeys.Delete"]</button>
                         </form>
                     </td>
                 </tr>
@@ -36,12 +36,12 @@
 }
 else
 {
-    <p>@L["Text.e8b43929d1c1"]</p>
+    <p>@L["Identity.Manage.Passkeys.NoPasskeysAreRegistered"]</p>
 }
 
 @if (Model.CurrentPasskeys.Count >= 100)
 {
-    <p class="text-danger">@L["Text.932c41a87f85"]</p>
+    <p class="text-danger">@L["Identity.Manage.Passkeys.YouHaveReachedTheMaximumNumberNewOne"]</p>
 }
 else
 {
@@ -52,7 +52,7 @@ else
             request-token-name="@antiforgeryTokens.HeaderName"
             request-token-value="@antiforgeryTokens.RequestToken">
         </passkey-submit>
-        <button type="submit" name="__passkeySubmit" class="btn btn-primary">@L["Text.0a509539c3ba"]</button>
+        <button type="submit" name="__passkeySubmit" class="btn btn-primary">@L["Identity.Manage.Passkeys.AddNewPasskey"]</button>
     </form>
 }
 

@@ -30,7 +30,7 @@ namespace ArvidsonFoto.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.ac08752c809d"), email));
+                return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.RegisterConfirmation.UnableToLoadUserWithEmail0"), email));
             }
 
             Email = email;

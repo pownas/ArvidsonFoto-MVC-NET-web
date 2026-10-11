@@ -75,8 +75,8 @@ public class RegisterModel(
                     values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Message.0d1fe19967e2"),
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.2b673777cb25"), HtmlEncoder.Default.Encode(callbackUrl!)));
+                await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {

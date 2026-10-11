@@ -1,23 +1,23 @@
 @page
 @model ErrorModel
 @{
-    ViewData["Title"] = L["Text.54a0e8c17ebb"];
+    ViewData["Title"] = L["Identity.Error.Error"];
 }
 
-<h2 class="text-danger">@L["Text.6df751127f98"]</h2>
-<h2 class="text-danger">@L["Text.b80f19578e3d"]</h2>
+<h2 class="text-danger">@L["Identity.Error.Error2"]</h2>
+<h2 class="text-danger">@L["Identity.Error.AnErrorOccurredWhileProcessingYourRequest"]</h2>
 
 @if (Model.ShowRequestId)
 {
     <p>
-        <strong>@L["Text.816d7f4ff525"]</strong> <code>@Model.RequestId</code>
+        <strong>@L["Identity.Error.RequestID"]</strong> <code>@Model.RequestId</code>
     </p>
 }
 
-<h3>@L["Text.cf175c1f6951"]</h3>
+<h3>@L["Identity.Error.DevelopmentMode"]</h3>
 <p>
-    @L["Text.cbee7844d599"] <strong>@L["Text.21b6a798321a"]</strong> @L["Text.9a85f00d9477"]
+    @L["Identity.Error.SwappingTo"] <strong>@L["Identity.Error.Development"]</strong> @L["Identity.Error.EnvironmentWillDisplayMoreDetailedInformationThatOccurred"]
 </p>
 <p>
-    <strong>@L["Text.414c21e80c22"]</strong>@L["Error.DevelopmentDetails"] <strong>@L["Text.8fc687295249"]</strong> @L["Error.EnvironmentVariable"] <strong>@L["Text.21b6a798321a"]</strong>@L["Error.Restart"]
+    <strong>@L["Identity.Error.DevelopmentEnvironmentShouldNotBeEnabledDeployedApplications"]</strong>@L["Error.DevelopmentDetails"] <strong>@L["Identity.Error.ASPNETCOREENVIRONMENT"]</strong> @L["Error.EnvironmentVariable"] <strong>@L["Identity.Error.Development"]</strong>@L["Error.Restart"]
 </p>

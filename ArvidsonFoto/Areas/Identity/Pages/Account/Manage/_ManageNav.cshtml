@@ -3,14 +3,14 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">@L["Text.d696a35bdd18"]</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">@L["Text.969ccbd3cf63"]</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">@L["Text.e7cf3ef4f17c"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">@L["Identity.Manage.Index.Profile"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">@L["Identity.Manage.ManageNav.Email"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">@L["Identity.Manage.ManageNav.Password"]</a></li>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">@L["Text.16a41feb006b"]</a></li>
+        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">@L["Identity.Manage.ManageNav.ExternalLogins"]</a></li>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">@L["Text.b6824cc8a91e"]</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PasskeysNavClass(ViewContext)" id="passkeys" asp-page="./Passkeys">@L["Text.c87ccdb428e6"]</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">@L["Text.434886e6b66b"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">@L["Identity.LoginWith2fa.TwoFactorAuthentication"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.PasskeysNavClass(ViewContext)" id="passkeys" asp-page="./Passkeys">@L["Identity.Manage.ManageNav.Passkeys"]</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">@L["Identity.Manage.ManageNav.PersonalData"]</a></li>
 </ul>
