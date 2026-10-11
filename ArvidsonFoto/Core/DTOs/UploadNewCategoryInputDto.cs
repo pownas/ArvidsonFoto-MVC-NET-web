@@ -12,7 +12,7 @@ namespace ArvidsonFoto.Core.DTOs;
 public class UploadNewCategoryInputDto
 {
     /// <summary>Kategorinamn som ska visas i menyn</summary>
-    [Required(ErrorMessage = "Ange ett kategorinamn")]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminCategoryNameRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     [MaxLength(50)]
     public required string MenuText { get; set; }
 
@@ -26,7 +26,7 @@ public class UploadNewCategoryInputDto
     public string? MenuUrlSegmentEn { get; set; }
 
     /// <summary>Huvudmeny ID som den nya kategorin ska kopplas till</summary>
-    [Required(ErrorMessage = "Välj en kategori att koppla den nya till")]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminCategoryParentRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     public int? MainMenuId { get; set; }
 
     /// <summary>Indikerar om kategorin har skapats framgångsrikt</summary>

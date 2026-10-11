@@ -21,6 +21,10 @@
   <data name="Form.Label.Subject" xml:space="preserve"><value>Subject</value></data>
   <data name="Navigation.Photos" xml:space="preserve"><value>Photos</value></data>
   <data name="Navigation.ToggleMenu" xml:space="preserve"><value>Toggle menu visibility</value></data>
+  <data name="Navigation.Admin" xml:space="preserve"><value>Administration</value></data>
+  <data name="Navigation.ManageAccount" xml:space="preserve"><value>Manage account: {0}</value></data>
+  <data name="Navigation.ManageAccountTitle" xml:space="preserve"><value>Manage account</value></data>
+  <data name="Navigation.LogOut" xml:space="preserve"><value>Log out</value></data>
   <data name="Footer.Address" xml:space="preserve"><value>Address</value></data>
   <data name="Footer.Mobile" xml:space="preserve"><value>Mobile</value></data>
   <data name="Footer.Email" xml:space="preserve"><value>Email</value></data>

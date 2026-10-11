@@ -53,7 +53,7 @@
                 @foreach (var gbPost in gbListView)
                 {
                     DateTime gbDate = gbPost.GbDate ?? new DateTime(1900, 01, 01);
-                    string gbName = (gbPost.GbName is not null) ? gbPost.GbName : "Anonym användare";
+                    string gbName = gbPost.GbName ?? L["UploadAdmin.Guestbook.Anonymous"].Value;
 
                     <div class="col mb-4">
                         <div class="card text-left text-dark">
@@ -70,7 +70,7 @@
                                     }
                                     @if (gbPost.GbEmail is not null && gbPost.GbEmail.Contains("@"))
                                     {
-                                        <a title="Svara via Outlook" class="btn btn-sm btn-primary my-1" href="mailto:@gbPost.GbEmail?subject=Svar%20på%20gästboks-inlägget%20du%20skrev%20på%20min%20hemsida:%20ArvidsonFoto.se" target="_blank" rel="noopener noreferrer">
+                                        <a title="@L["UploadAdmin.Guestbook.ReplyOutlook"]" class="btn btn-sm btn-primary my-1" href="mailto:@gbPost.GbEmail?subject=@Uri.EscapeDataString(L["UploadAdmin.Guestbook.ReplySubject"].Value)" target="_blank" rel="noopener noreferrer">
                                             <i class="bi bi-pencil-square me-2"></i>@L["UploadAdmin.HanteraGB.Reply"]
                                         </a>
                                     }
