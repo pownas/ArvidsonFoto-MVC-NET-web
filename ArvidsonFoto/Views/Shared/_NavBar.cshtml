@@ -4,6 +4,7 @@
 @using ArvidsonFoto.Core
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> T
+@inject IStringLocalizer<GalleryResource> G
 @inject IApiCategoryService CategoryService
 
 @{
@@ -11,7 +12,9 @@
   var gallery = LocalizedRoutes.Gallery;
 }
 
-<nav class="main-nav">
+<nav class="main-nav" data-tooltip-no-image="@G["Gallery.Tooltip.NoImage"]"
+     data-tooltip-loading="@G["Gallery.Tooltip.Loading"]"
+     data-tooltip-date="@G["Gallery.Image.Date"]">
   <input id="main-menu-state" type="checkbox" />
   <label class="main-menu-btn" for="main-menu-state">
     <span class="main-menu-btn-icon"></span> @T["Navigation.ToggleMenu"]

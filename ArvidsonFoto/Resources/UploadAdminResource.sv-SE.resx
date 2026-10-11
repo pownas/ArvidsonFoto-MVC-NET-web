@@ -456,4 +456,10 @@
   <data name="Admin.SelectedCategory" xml:space="preserve">
     <value>Vald kategori: {0}</value>
   </data>
+  <data name="UploadAdmin.Guestbook.Anonymous" xml:space="preserve"><value>Anonym användare</value></data>
+  <data name="UploadAdmin.Guestbook.ReplyOutlook" xml:space="preserve"><value>Svara via Outlook</value></data>
+  <data name="UploadAdmin.Guestbook.ReplySubject" xml:space="preserve"><value>Svar på gästboksinlägget du skrev på ArvidsonFoto.se</value></data>
+  <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Ändra {0}</value></data>
+  <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Radera {0}</value></data>
+  <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Sidnavigering</value></data>
 </root>

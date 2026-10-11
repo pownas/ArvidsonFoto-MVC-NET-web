@@ -30,4 +30,6 @@
   <data name="Gallery.Image.BuyPrompt" xml:space="preserve"><value>Interested in this photo? See:</value></data>
   <data name="Gallery.Empty.Home" xml:space="preserve"><value>There are no photos to display right now.</value></data>
   <data name="Gallery.Image.ViewCategory" xml:space="preserve"><value>View all photos in the {0} category</value></data>
+  <data name="Gallery.Tooltip.NoImage" xml:space="preserve"><value>No photo available</value></data>
+  <data name="Gallery.Tooltip.Loading" xml:space="preserve"><value>Loading...</value></data>
 </root>

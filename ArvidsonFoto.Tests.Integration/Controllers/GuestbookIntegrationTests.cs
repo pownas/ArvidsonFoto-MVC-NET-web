@@ -121,6 +121,24 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task CategoryTooltip_UsesSelectedLanguage()
+    {
+        foreach (var (culture, noImage, loading, date) in new[] {
+            ("sv-SE", "Ingen bild tillgänglig", "Laddar...", "Fotodatum"),
+            ("en-US", "No photo available", "Loading...", "Date photographed")
+        })
+        {
+            using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+            var document = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/?culture={culture}"));
+            var nav = document.QuerySelector(".main-nav");
+            Assert.IsNotNull(nav);
+            Assert.AreEqual(noImage, nav.GetAttribute("data-tooltip-no-image"));
+            Assert.AreEqual(loading, nav.GetAttribute("data-tooltip-loading"));
+            Assert.AreEqual(date, nav.GetAttribute("data-tooltip-date"));
+        }
+    }
+
+    [TestMethod]
     public async Task GalleryApi_ResolvesEnglishSegmentsAndProvidesLocalizedCaptions()
     {
         foreach (var (culture, expectedName) in new[] { ("en-US", "Beaver"), ("sv-SE", "Bäver") })

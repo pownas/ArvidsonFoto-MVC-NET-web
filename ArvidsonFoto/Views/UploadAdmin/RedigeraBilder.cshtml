@@ -73,12 +73,12 @@
                             <td>@image.ImageDescription</td>
                             <td>
                                 <p class="m-0 mb-3">
-                                    <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
+                                    <button title="@L["UploadAdmin.Images.EditTitle", image.ImageUrl]" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
                                         <i class="bi bi-pencil-square me-2"></i> @L["UploadAdmin.RedigeraBilder.Change"]
                                     </button>
                                 </p>
                                 <p class="m-0">
-                                    <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
+                                    <button title="@L["UploadAdmin.Images.DeleteTitle", image.ImageUrl]" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
                                         <i class="bi bi-trash me-2"></i> @L["UploadAdmin.HanteraGB.Delete"]
                                     </button>
                                 </p>
@@ -152,7 +152,7 @@
     <p id="page-image-counter-bottom" class="text-center">@L["Admin.ImageCount", Model.DisplayImagesList.Count, Model.CurrentPage, Model.TotalPages]</p>
     @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
     {
-        <nav id="page-paging-bottom" aria-label="Page navigation example">
+        <nav id="page-paging-bottom" aria-label="@L["UploadAdmin.Images.PaginationLabel"]">
             <ul class="pagination justify-content-center">
                 @if (Model.CurrentPage > 1)
                 {

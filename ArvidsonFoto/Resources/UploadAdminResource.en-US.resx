@@ -456,4 +456,10 @@
   <data name="Admin.SelectedCategory" xml:space="preserve">
     <value>Selected category: {0}</value>
   </data>
+  <data name="UploadAdmin.Guestbook.Anonymous" xml:space="preserve"><value>Anonymous user</value></data>
+  <data name="UploadAdmin.Guestbook.ReplyOutlook" xml:space="preserve"><value>Reply via Outlook</value></data>
+  <data name="UploadAdmin.Guestbook.ReplySubject" xml:space="preserve"><value>Reply to your guestbook entry on ArvidsonFoto.se</value></data>
+  <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Edit {0}</value></data>
+  <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Delete {0}</value></data>
+  <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Page navigation</value></data>
 </root>

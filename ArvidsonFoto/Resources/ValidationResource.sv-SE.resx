@@ -18,4 +18,19 @@
   <data name="Form.Validation.MessageTooLong" xml:space="preserve"><value>För långt meddelande (max 2000 tecken)</value></data>
   <data name="Contact.Form.Validation.SubjectTooLong" xml:space="preserve"><value>För lång rubrik (max 50 tecken)</value></data>
   <data name="Guestbook.Form.Validation.WebsiteTooLong" xml:space="preserve"><value>För lång rubrik (max 250 tecken)</value></data>
+  <data name="Admin.Image.Validation.FilenameRequired" xml:space="preserve"><value>Ange filnamn</value></data>
+  <data name="Admin.Image.Validation.FilenameTooShort" xml:space="preserve"><value>Filnamn måste vara minst 2 tecken...</value></data>
+  <data name="Admin.Image.Validation.DateRequired" xml:space="preserve"><value>Ange fotodatum</value></data>
+  <data name="Admin.Image.Validation.DescriptionTooLong" xml:space="preserve"><value>Du får max ange 150-tecken i detta fältet</value></data>
+  <data name="Admin.Facebook.Validation.ImageRequired" xml:space="preserve"><value>Välj minst en bild</value></data>
+  <data name="Admin.Facebook.Validation.ImagesTooMany" xml:space="preserve"><value>Du kan välja max 10 bilder</value></data>
+  <data name="Admin.Facebook.Validation.MessageRequired" xml:space="preserve"><value>Skriv ett meddelande</value></data>
+  <data name="Admin.Facebook.Validation.MessageTooLong" xml:space="preserve"><value>Meddelandet får max vara 5000 tecken</value></data>
+  <data name="Admin.Category.Validation.NameRequired" xml:space="preserve"><value>Ange ett kategorinamn</value></data>
+  <data name="Admin.Category.Validation.ParentRequired" xml:space="preserve"><value>Välj en kategori att koppla den nya till</value></data>
+  <data name="Admin.Image.Form.Label.Filename" xml:space="preserve"><value>Filnamn</value></data>
+  <data name="Admin.Image.Form.Label.Date" xml:space="preserve"><value>Fotodatum</value></data>
+  <data name="Admin.Image.Form.Label.Description" xml:space="preserve"><value>Beskrivning</value></data>
+  <data name="Admin.Image.Form.Label.DescriptionEn" xml:space="preserve"><value>Description (English)</value></data>
+  <data name="Admin.Facebook.Form.Label.Message" xml:space="preserve"><value>Meddelande</value></data>
 </root>

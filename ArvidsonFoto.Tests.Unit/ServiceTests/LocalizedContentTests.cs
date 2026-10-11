@@ -22,6 +22,10 @@ public class LocalizedContentTests
     [InlineData("SearchResource")]
     [InlineData("InfoResource")]
     [InlineData("LatestResource")]
+    [InlineData("SiteResource")]
+    [InlineData("IdentityResource")]
+    [InlineData("UploadAdminResource")]
+    [InlineData("DevResource")]
     [InlineData("ValidationResource")]
     public void Resources_HaveMatchingNonEmptySwedishAndEnglishKeys(string resourceName)
     {
