@@ -23,7 +23,7 @@ public class ResetAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         return Page();
@@ -34,7 +34,7 @@ public class ResetAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
         }
 
         await _userManager.SetTwoFactorEnabledAsync(user, false);
@@ -42,7 +42,7 @@ public class ResetAuthenticatorModel(
         _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";
+        StatusMessage = IdentityResource.Get("Message.2e33fa48b1d5");
 
         return RedirectToPage("./EnableAuthenticator");
     }

@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
 @using ArvidsonFoto.Core.Models
 @{
@@ -6,9 +7,9 @@
 <h1>@ViewData["Title"]</h1>
 <partial name="_NavUploadAdmin" />
 <form method="get" asp-action="RedigeraKategori">
-    <label for="search">Sök efter kategori eller art</label>
+    <label for="search">@L["Text.9c00b3633447"]</label>
     <input id="search" name="search" value="@ViewData["Search"]" />
-    <button type="submit">Sök</button>
+    <button type="submit">@L["Text.335237e7c9b9"]</button>
 </form>
 <ul>
 @foreach (var category in categories)
@@ -22,14 +23,14 @@
         @Html.AntiForgeryToken()
         <input asp-for="CategoryId" type="hidden" />
         <div asp-validation-summary="All" class="text-danger"></div>
-        <label asp-for="NameSv">Svenskt namn</label>
+        <label asp-for="NameSv">@L["Text.f41e2963db8e"]</label>
         <input asp-for="NameSv" maxlength="50" />
-        <label asp-for="NameEn">Engelskt namn</label>
+        <label asp-for="NameEn">@L["Text.707bc142df6d"]</label>
         <input asp-for="NameEn" maxlength="50" />
-        <label asp-for="UrlSegmentSv">Svenskt URL-segment</label>
+        <label asp-for="UrlSegmentSv">@L["Text.4fc8f82b92c0"]</label>
         <input asp-for="UrlSegmentSv" maxlength="50" />
-        <label asp-for="UrlSegmentEn">Engelskt URL-segment</label>
+        <label asp-for="UrlSegmentEn">@L["Text.d2183e4ef2ee"]</label>
         <input asp-for="UrlSegmentEn" maxlength="50" />
-        <button type="submit">Spara kategori</button>
+        <button type="submit">@L["Text.8f7fa524033b"]</button>
     </form>
 }

@@ -23,13 +23,13 @@ public class ResetPasswordModel(UserManager<ArvidsonFotoUser> userManager) : Pag
         public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessageResourceName = nameof(IdentityResource.PasswordLength), ErrorMessageResourceType = typeof(IdentityResource), MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = nameof(IdentityResource.ConfirmPassword), ResourceType = typeof(IdentityResource))]
+        [Compare("Password", ErrorMessageResourceName = nameof(IdentityResource.PasswordMismatch), ErrorMessageResourceType = typeof(IdentityResource))]
         public string ConfirmPassword { get; set; } = null!;
 
         public string Code { get; set; } = null!;
@@ -39,7 +39,7 @@ public class ResetPasswordModel(UserManager<ArvidsonFotoUser> userManager) : Pag
     {
         if (code == null)
         {
-            return BadRequest("A code must be supplied for password reset.");
+            return BadRequest(IdentityResource.Get("Message.14c54c87ce5e"));
         }
         else
         {

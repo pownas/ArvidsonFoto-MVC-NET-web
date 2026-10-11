@@ -1,12 +1,12 @@
-﻿@page
+@page
 @model ExternalLoginModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = L["Text.bb7234ec1245"];
 }
 
 <h2>@ViewData["Title"]</h2>
-<h4 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h4>
-<p>Kontakta Jonas för att lösa detta...</p>
+<h4 id="external-login-title">@L["Account.AssociateProvider", Model.ProviderDisplayName]</h4>
+<p>@L["Text.79aae52249ce"]</p>
 @*<hr />
 
 <p id="external-login-description" class="text-info">

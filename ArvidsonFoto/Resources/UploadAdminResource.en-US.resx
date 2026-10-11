@@ -1,0 +1,462 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Text.03984a6a0ad1" xml:space="preserve">
+    <value>Photo date</value>
+  </data>
+  <data name="Text.073d9986bb3a" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Text.07659ea7a0f9" xml:space="preserve">
+    <value>All-time page views</value>
+  </data>
+  <data name="Text.09f610313b1c" xml:space="preserve">
+    <value>Create category</value>
+  </data>
+  <data name="Text.0ca9268a24fa" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="Text.0e0fe438cfe9" xml:space="preserve">
+    <value>Last visited</value>
+  </data>
+  <data name="Text.107f94008ed3" xml:space="preserve">
+    <value>Welcome to Upload Admin!</value>
+  </data>
+  <data name="Text.13424e415e73" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Text.14efc33da617" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Text.16629462dc8a" xml:space="preserve">
+    <value>Share images on Facebook</value>
+  </data>
+  <data name="Text.1828f566ea14" xml:space="preserve">
+    <value>Latest log (yesterday)</value>
+  </data>
+  <data name="Text.189d2c93c318" xml:space="preserve">
+    <value>Failed to edit image number:</value>
+  </data>
+  <data name="Text.192b58652659" xml:space="preserve">
+    <value>Click images to select or deselect them. You can choose 1 to 10 images.</value>
+  </data>
+  <data name="Text.1bcc53e13ea5" xml:space="preserve">
+    <value>Share on Facebook</value>
+  </data>
+  <data name="Text.1eee64a48561" xml:space="preserve">
+    <value>Publish on Facebook</value>
+  </data>
+  <data name="Text.22b75b375d49" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Text.27f942aa231d" xml:space="preserve">
+    <value>The site's logs are shown below:</value>
+  </data>
+  <data name="Text.2955966a790e" xml:space="preserve">
+    <value>Deleted guestbook entry number:</value>
+  </data>
+  <data name="Text.2d22ed5e5817" xml:space="preserve">
+    <value>Link a new image on the site</value>
+  </data>
+  <data name="Text.2da62e956b26" xml:space="preserve">
+    <value>Check that all required fields are filled in correctly.</value>
+  </data>
+  <data name="Text.308c6b51c1ba" xml:space="preserve">
+    <value>Edit categories and species</value>
+  </data>
+  <data name="Text.335237e7c9b9" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Text.364afc3486a0" xml:space="preserve">
+    <value>Validation error</value>
+  </data>
+  <data name="Text.375e84034b8f" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Text.3d414d654bd6" xml:space="preserve">
+    <value>Write a message to accompany the images on Facebook...</value>
+  </data>
+  <data name="Text.409250e64441" xml:space="preserve">
+    <value>Edit images</value>
+  </data>
+  <data name="Text.42e6d67b07be" xml:space="preserve">
+    <value>Previous month</value>
+  </data>
+  <data name="Text.452e1f9713a4" xml:space="preserve">
+    <value>Species:</value>
+  </data>
+  <data name="Text.48af0fba5de9" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="Text.499dd14d9e60" xml:space="preserve">
+    <value>New category</value>
+  </data>
+  <data name="Text.49d08b10855b" xml:space="preserve">
+    <value>Select 1–10 recently uploaded images to create a Facebook post:</value>
+  </data>
+  <data name="Text.4fc8f82b92c0" xml:space="preserve">
+    <value>Swedish URL segment</value>
+  </data>
+  <data name="Text.55e139b837ac" xml:space="preserve">
+    <value>Selected category: @Model.SelectedCategory.Name</value>
+  </data>
+  <data name="Text.5b0094c70473" xml:space="preserve">
+    <value>YYYY-MM-DD</value>
+  </data>
+  <data name="Text.5d3a78d6e128" xml:space="preserve">
+    <value>An unexpected error occurred. Try again later.</value>
+  </data>
+  <data name="Text.5ea3c0b2c666" xml:space="preserve">
+    <value>Choose a category...</value>
+  </data>
+  <data name="Text.60017c51f2c9" xml:space="preserve">
+    <value>Image name</value>
+  </data>
+  <data name="Text.6504e07b613e" xml:space="preserve">
+    <value>File name WITHOUT .jpg, e.g. 'TA1_1234'</value>
+  </data>
+  <data name="Text.66ea53859832" xml:space="preserve">
+    <value>The image was linked:</value>
+  </data>
+  <data name="Text.68871116d6e8" xml:space="preserve">
+    <value>File name:</value>
+  </data>
+  <data name="Text.6aa7c3aa35a9" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Text.6bebd1f3c44f" xml:space="preserve">
+    <value>You must select at least one image to share.</value>
+  </data>
+  <data name="Text.6fb86c40ae16" xml:space="preserve">
+    <value>Edit the latest images below:</value>
+  </data>
+  <data name="Text.707bc142df6d" xml:space="preserve">
+    <value>English name</value>
+  </data>
+  <data name="Text.74110372ed51" xml:space="preserve">
+    <value>Here are some site statistics:</value>
+  </data>
+  <data name="Text.75df3579c730" xml:space="preserve">
+    <value>Species</value>
+  </data>
+  <data name="Text.76dcf19420c9" xml:space="preserve">
+    <value>Failed to mark guestbook entry number as read:</value>
+  </data>
+  <data name="Text.77ba84f91109" xml:space="preserve">
+    <value>Read the logbook and error logs</value>
+  </data>
+  <data name="Text.7d9eb7acb13e" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Text.83121aed9a01" xml:space="preserve">
+    <value>Marked guestbook entry number as read:</value>
+  </data>
+  <data name="Text.838509f61b0f" xml:space="preserve">
+    <value>Family</value>
+  </data>
+  <data name="Text.8e73c13f3cd8" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Text.8f5c142d9c46" xml:space="preserve">
+    <value>Maximum 5000 characters</value>
+  </data>
+  <data name="Text.8f7fa524033b" xml:space="preserve">
+    <value>Save category</value>
+  </data>
+  <data name="Text.8ffa9b0e7ecf" xml:space="preserve">
+    <value>Here you can add a new category to the site:</value>
+  </data>
+  <data name="Text.949266bee384" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Text.9708c46b1d11" xml:space="preserve">
+    <value>Page views in the last 6 months</value>
+  </data>
+  <data name="Text.9863ace60efa" xml:space="preserve">
+    <value>Here you can see site statistics:</value>
+  </data>
+  <data name="Text.98de849bc36d" xml:space="preserve">
+    <value>Wrong species?</value>
+  </data>
+  <data name="Text.9948f1ff3320" xml:space="preserve">
+    <value>The post was published on Facebook!</value>
+  </data>
+  <data name="Text.9bb265aceac0" xml:space="preserve">
+    <value>Main family</value>
+  </data>
+  <data name="Text.9c00b3633447" xml:space="preserve">
+    <value>Search for a category or species</value>
+  </data>
+  <data name="Text.a0237cc6ef17" xml:space="preserve">
+    <value>Add a new category on the site</value>
+  </data>
+  <data name="Text.a46e0af77e77" xml:space="preserve">
+    <value>Received:</value>
+  </data>
+  <data name="Text.a56f5e5a2535" xml:space="preserve">
+    <value>0 selected</value>
+  </data>
+  <data name="Text.a666aea488f4" xml:space="preserve">
+    <value>Hide filtered logs</value>
+  </data>
+  <data name="Text.ab6482ebbf0f" xml:space="preserve">
+    <value>Facebook is not configured</value>
+  </data>
+  <data name="Text.ad8349c15767" xml:space="preserve">
+    <value>Choose a day to view:</value>
+  </data>
+  <data name="Text.aecaa693bde3" xml:space="preserve">
+    <value>Read logs</value>
+  </data>
+  <data name="Text.af342fe70d43" xml:space="preserve">
+    <value>Site statistics</value>
+  </data>
+  <data name="Text.b13c2365f0e2" xml:space="preserve">
+    <value>Post message</value>
+  </data>
+  <data name="Text.b1f9e0b31533" xml:space="preserve">
+    <value>Saved changes for image:</value>
+  </data>
+  <data name="Text.b604774554f4" xml:space="preserve">
+    <value>Communication with Facebook failed. Check the settings and try again.</value>
+  </data>
+  <data name="Text.b7b346e9a7e1" xml:space="preserve">
+    <value>Show all logs</value>
+  </data>
+  <data name="Text.b9a041fe710f" xml:space="preserve">
+    <value>Image number:</value>
+  </data>
+  <data name="Text.b9c84bd9053d" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="Text.ba99416dd704" xml:space="preserve">
+    <value>View site statistics</value>
+  </data>
+  <data name="Text.bb2afe28128c" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="Text.bb50faeb0b9c" xml:space="preserve">
+    <value>No serious errors have occurred today.</value>
+  </data>
+  <data name="Text.bbc7f9c20369" xml:space="preserve">
+    <value>No images selected</value>
+  </data>
+  <data name="Text.bd4b3758c4d5" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="Text.bd59464a5601" xml:space="preserve">
+    <value>(current)</value>
+  </data>
+  <data name="Text.bd7039fc9a8e" xml:space="preserve">
+    <value>No images found</value>
+  </data>
+  <data name="Text.bd89b93a0c41" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="Text.c04ec440c260" xml:space="preserve">
+    <value>Failed to delete guestbook entry number:</value>
+  </data>
+  <data name="Text.c147863c3f3a" xml:space="preserve">
+    <value>Manage guestbook entries</value>
+  </data>
+  <data name="Text.c28abe5fb303" xml:space="preserve">
+    <value>Here you can link a new image on the site:</value>
+  </data>
+  <data name="Text.c4063a295a33" xml:space="preserve">
+    <value>(you can scroll horizontally on your phone)</value>
+  </data>
+  <data name="Text.c7e27a968480" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Text.c866a7f58a32" xml:space="preserve">
+    <value>Which category should it belong to?</value>
+  </data>
+  <data name="Text.cc5a5519685c" xml:space="preserve">
+    <value>Facebook integration is not configured. Contact the administrator.</value>
+  </data>
+  <data name="Text.cd613d82a1a6" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Text.d2183e4ef2ee" xml:space="preserve">
+    <value>English URL segment</value>
+  </data>
+  <data name="Text.d3c84be8961b" xml:space="preserve">
+    <value>Uploaded:</value>
+  </data>
+  <data name="Text.d4ceeddff3d3" xml:space="preserve">
+    <value>Message text:</value>
+  </data>
+  <data name="Text.d566a603150c" xml:space="preserve">
+    <value>Link image</value>
+  </data>
+  <data name="Text.d823d43f53f0" xml:space="preserve">
+    <value>View post on Facebook</value>
+  </data>
+  <data name="Text.d86ae643e788" xml:space="preserve">
+    <value>Manage guestbook entries here:</value>
+  </data>
+  <data name="Text.d927cd6fecf2" xml:space="preserve">
+    <value>An error occurred</value>
+  </data>
+  <data name="Text.da4add6edabb" xml:space="preserve">
+    <value>Created the new category:</value>
+  </data>
+  <data name="Text.dc972865ca97" xml:space="preserve">
+    <value>Publishing failed</value>
+  </data>
+  <data name="Text.e1ca68a82880" xml:space="preserve">
+    <value>Upload Admin</value>
+  </data>
+  <data name="Text.e3b2a06f0d6d" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="Text.e41eec0ed8b5" xml:space="preserve">
+    <value>Mark as read</value>
+  </data>
+  <data name="Text.e439fafb951d" xml:space="preserve">
+    <value>Then you need to</value>
+  </data>
+  <data name="Text.e4b526bca27e" xml:space="preserve">
+    <value>Deleted the link for image number:</value>
+  </data>
+  <data name="Text.e52253720c2d" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Text.e5b825e0baea" xml:space="preserve">
+    <value>and create a new link.</value>
+  </data>
+  <data name="Text.e9349025558f" xml:space="preserve">
+    <value>New category name</value>
+  </data>
+  <data name="Text.ee15387584ab" xml:space="preserve">
+    <value>Select images (1–10)</value>
+  </data>
+  <data name="Text.f41e2963db8e" xml:space="preserve">
+    <value>Swedish name</value>
+  </data>
+  <data name="Text.faf377257611" xml:space="preserve">
+    <value>New image</value>
+  </data>
+  <data name="Text.fc965dadc98c" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Text.fe19077c46c7" xml:space="preserve">
+    <value>Edit recently uploaded images</value>
+  </data>
+  <data name="Admin.ImageTitle" xml:space="preserve">
+    <value>Link a new image</value>
+  </data>
+  <data name="Admin.CategoryTitle" xml:space="preserve">
+    <value>Link a new category</value>
+  </data>
+  <data name="Admin.CategoriesTitle" xml:space="preserve">
+    <value>Edit categories and species</value>
+  </data>
+  <data name="Admin.EditImagesTitle" xml:space="preserve">
+    <value>Edit images</value>
+  </data>
+  <data name="Admin.GuestbookTitle" xml:space="preserve">
+    <value>Manage guestbook</value>
+  </data>
+  <data name="Admin.StatisticsTitle" xml:space="preserve">
+    <value>Site statistics</value>
+  </data>
+  <data name="Admin.FacebookTitle" xml:space="preserve">
+    <value>Share images on Facebook</value>
+  </data>
+  <data name="Admin.LogTitle" xml:space="preserve">
+    <value>Reading logs for: {0:yyyy-MM-dd dddd}</value>
+  </data>
+  <data name="Admin.ImageCreationError" xml:space="preserve">
+    <value>An error occurred while creating the image.</value>
+  </data>
+  <data name="Admin.InvalidUrlSegments" xml:space="preserve">
+    <value>URL segments must be unique and valid.</value>
+  </data>
+  <data name="Admin.Missing" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+  <data name="Admin.SelectedCount" xml:space="preserve">
+    <value>{0} selected</value>
+  </data>
+  <data name="Admin.MaxImages" xml:space="preserve">
+    <value>You can select at most {0} images!</value>
+  </data>
+  <data name="Admin.SelectOne" xml:space="preserve">
+    <value>You must select at least one image!</value>
+  </data>
+  <data name="Admin.MessageRequired" xml:space="preserve">
+    <value>You must write a message!</value>
+  </data>
+  <data name="Admin.Publishing" xml:space="preserve">
+    <value>Publishing...</value>
+  </data>
+  <data name="Admin.ImageCount" xml:space="preserve">
+    <value>Number of images: {0}, page {1} of {2}</value>
+  </data>
+  <data name="Admin.EditImage" xml:space="preserve">
+    <value>Edit image: {0} in {1}</value>
+  </data>
+  <data name="Admin.DeleteImage" xml:space="preserve">
+    <value>Delete image: {0} in {1}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteImage" xml:space="preserve">
+    <value>Do you want to remove this image in {0}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteGuestbook" xml:space="preserve">
+    <value>Delete the message from {0}?</value>
+  </data>
+  <data name="Admin.Unread" xml:space="preserve">
+    <value>{0} unread</value>
+  </data>
+  <data name="Admin.Account" xml:space="preserve">
+    <value>Manage account: {0}</value>
+  </data>
+  <data name="Admin.ThisMonthPageViews" xml:space="preserve">
+    <value>Page views per page this month ({0})</value>
+  </data>
+  <data name="Admin.ThisMonthCategories" xml:space="preserve">
+    <value>Top 10 categories this month ({0})</value>
+  </data>
+  <data name="Admin.ChartFallback" xml:space="preserve">
+    <value>Monthly statistics (Chart.js could not be loaded)</value>
+  </data>
+  <data name="Admin.ChartTitle" xml:space="preserve">
+    <value>Page views per month (last 6 months)</value>
+  </data>
+  <data name="Admin.Views" xml:space="preserve">
+    <value>Page views</value>
+  </data>
+  <data name="Admin.CategoryViews" xml:space="preserve">
+    <value>Category views</value>
+  </data>
+  <data name="Admin.Week" xml:space="preserve">
+    <value>Wk</value>
+  </data>
+  <data name="Admin.Mon" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="Admin.Tue" xml:space="preserve">
+    <value>Tu</value>
+  </data>
+  <data name="Admin.Wed" xml:space="preserve">
+    <value>We</value>
+  </data>
+  <data name="Admin.Thu" xml:space="preserve">
+    <value>Th</value>
+  </data>
+  <data name="Admin.Fri" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Admin.Sat" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Admin.Sun" xml:space="preserve">
+    <value>Su</value>
+  </data>
+  <data name="Admin.Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Admin.SelectedCategory" xml:space="preserve">
+    <value>Selected category: {0}</value>
+  </data>
+</root>
