@@ -7,9 +7,9 @@
 <h1>@ViewData["Title"]</h1>
 <partial name="_NavUploadAdmin" />
 <form method="get" asp-action="RedigeraKategori">
-    <label for="search">@L["Text.9c00b3633447"]</label>
+    <label for="search">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
     <input id="search" name="search" value="@ViewData["Search"]" />
-    <button type="submit">@L["Text.335237e7c9b9"]</button>
+    <button type="submit">@L["UploadAdmin.RedigeraKategori.Search"]</button>
 </form>
 <ul>
 @foreach (var category in categories)
@@ -23,14 +23,14 @@
         @Html.AntiForgeryToken()
         <input asp-for="CategoryId" type="hidden" />
         <div asp-validation-summary="All" class="text-danger"></div>
-        <label asp-for="NameSv">@L["Text.f41e2963db8e"]</label>
+        <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
         <input asp-for="NameSv" maxlength="50" />
-        <label asp-for="NameEn">@L["Text.707bc142df6d"]</label>
+        <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
         <input asp-for="NameEn" maxlength="50" />
-        <label asp-for="UrlSegmentSv">@L["Text.4fc8f82b92c0"]</label>
+        <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
         <input asp-for="UrlSegmentSv" maxlength="50" />
-        <label asp-for="UrlSegmentEn">@L["Text.d2183e4ef2ee"]</label>
+        <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
         <input asp-for="UrlSegmentEn" maxlength="50" />
-        <button type="submit">@L["Text.8f7fa524033b"]</button>
+        <button type="submit">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
     </form>
 }

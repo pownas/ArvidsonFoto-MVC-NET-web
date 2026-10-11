@@ -1,6 +1,6 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.DevResource> L
 @{
-    ViewData["Title"] = L["Text.bc0dfc99ab5d"];
+    ViewData["Title"] = L["Dev.Portal.DevelopmentAdminPortal"];
 }
 
 <div class="container mt-5">
@@ -10,25 +10,25 @@
                 <h1 class="display-4">
                     <i class="bi bi-tools"></i> ArvidsonFoto
                 </h1>
-                <h2>@L["Text.bc0dfc99ab5d"]</h2>
-                <p class="text-muted">@L["Text.ab7859115ac2"]</p>
+                <h2>@L["Dev.Portal.DevelopmentAdminPortal"]</h2>
+                <p class="text-muted">@L["Dev.Portal.QuickAccessToDevelopmentToolsAndAdminFeatures"]</p>
             </div>
 
             <!-- API Documentation Card -->
             <div class="card mb-4 shadow hover-shadow-lg">
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">
-                        <i class="bi bi-file-code"></i> @L["Text.1cc77e60fcee"]
+                        <i class="bi bi-file-code"></i> @L["Dev.Portal.APIDocumentation"]
                     </h3>
                 </div>
                 <div class="card-body">
                     <p class="card-text">@L["Dev.Intro"]</p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                         <a href="/scalar/v1" class="btn btn-primary btn-lg" target="_blank">
-                            <i class="bi bi-rocket-takeoff"></i> @L["Text.211c93c84b63"]
+                            <i class="bi bi-rocket-takeoff"></i> @L["Dev.Portal.OpenScalarAPIDocs"]
                         </a>
                         <a href="/openapi/v1.json" class="btn btn-outline-secondary" target="_blank">
-                            <i class="bi bi-file-earmark-code"></i> @L["Text.3156db65d971"]
+                            <i class="bi bi-file-earmark-code"></i> @L["Dev.Portal.ViewOpenAPIJSON"]
                         </a>
                     </div>
                 </div>
@@ -38,23 +38,23 @@
             <div class="card mb-4 shadow hover-shadow-lg">
                 <div class="card-header bg-success text-white">
                     <h3 class="mb-0">
-                        <i class="bi bi-shield-lock"></i> @L["Text.8c2dedc00103"]
+                        <i class="bi bi-shield-lock"></i> @L["Dev.Portal.AdminPanel"]
                     </h3>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
-                        @L["Text.168be69f76cf"]
-                        <strong>@L["Text.1150f05446e4"]</strong> @L["Text.45cceda8377a"]
+                        @L["Dev.Portal.ManageImagesCategoriesAndViewStatistics"]
+                        <strong>@L["Dev.Portal.Note"]</strong> @L["Dev.Portal.AuthenticationRequired"]
                     </p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                         <a href="/UploadAdmin" class="btn btn-success btn-lg">
-                            <i class="bi bi-gear"></i> @L["Text.e896d50e16e1"]
+                            <i class="bi bi-gear"></i> @L["Dev.Portal.OpenAdminPanel"]
                         </a>
                         <a href="/UploadAdmin/RedigeraBilder" class="btn btn-outline-success">
-                            <i class="bi bi-pencil-square"></i> @L["Text.b076446433f5"]
+                            <i class="bi bi-pencil-square"></i> @L["Dev.Portal.EditImages"]
                         </a>
                         <a href="/UploadAdmin/HanteraGB" class="btn btn-outline-success">
-                            <i class="bi bi-book"></i> @L["Text.1e8622861fe7"]
+                            <i class="bi bi-book"></i> @L["Dev.Portal.ManageGuestbook"]
                         </a>
                     </div>
                 </div>
@@ -64,13 +64,13 @@
             <div class="card mb-4 shadow hover-shadow-lg">
                 <div class="card-header bg-info text-white">
                     <h3 class="mb-0">
-                        <i class="bi bi-database"></i> @L["Text.8f3774c38718"]
+                        <i class="bi bi-database"></i> @L["Dev.Portal.DevelopmentTools"]
                     </h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <h5><i class="bi bi-check-circle"></i> @L["Text.9e471951a1b4"]</h5>
+                            <h5><i class="bi bi-check-circle"></i> @L["Dev.Portal.Environment"]</h5>
                             <ul class="list-unstyled">
                                 <li>✅ @L["Dev.InMemoryDatabase"]</li>
                                 <li>✅ @L["Dev.DevelopmentMode"]</li>
@@ -79,11 +79,11 @@
                             </ul>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <h5><i class="bi bi-link-45deg"></i> @L["Text.62b34994944f"]</h5>
+                            <h5><i class="bi bi-link-45deg"></i> @L["Dev.Portal.QuickLinks"]</h5>
                             <ul class="list-unstyled">
-                                <li><a href="/"><i class="bi bi-house"></i> @L["Text.39fa507a3db8"]</a></li>
-                                <li><a href="/Info/Sidkarta"><i class="bi bi-diagram-3"></i> @L["Text.4db550cd9840"]</a></li>
-                                <li><a href="/Identity/Account/Login"><i class="bi bi-box-arrow-in-right"></i> @L["Text.9d6322c1f4d9"]</a></li>
+                                <li><a href="/"><i class="bi bi-house"></i> @L["Dev.Portal.MainWebsite"]</a></li>
+                                <li><a href="/Info/Sidkarta"><i class="bi bi-diagram-3"></i> @L["Dev.Portal.Sitemap"]</a></li>
+                                <li><a href="/Identity/Account/Login"><i class="bi bi-box-arrow-in-right"></i> @L["Dev.Portal.Login"]</a></li>
                             </ul>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
 
             <!-- Aspire Dashboard Info -->
             <div class="alert alert-light border" role="alert">
-                <h5 class="alert-heading"><i class="bi bi-info-circle"></i> @L["Text.62962ba50ea9"]</h5>
+                <h5 class="alert-heading"><i class="bi bi-info-circle"></i> @L["Dev.Portal.RunningViaNETAspire"]</h5>
                 <p class="mb-0">@L["Dev.Aspire"]</p>
             </div>
 
@@ -100,7 +100,7 @@
                 <p class="text-muted">
                     <small>
                         <i class="bi bi-exclamation-triangle"></i> 
-                        @L["Text.6545fe7e8490"]
+                        @L["Dev.Portal.ThisPageIsOnlyAccessibleInDevelopmentMode"]
                     </small>
                 </p>
             </div>

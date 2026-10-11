@@ -76,7 +76,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
         // Handle passkey sign-in
         if (!string.IsNullOrEmpty(PasskeyInput?.Error))
         {
-            ModelState.AddModelError(string.Empty, string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.9ad95f47fa2b"), PasskeyInput.Error));
+            ModelState.AddModelError(string.Empty, string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.Login.PasskeyFel0"), PasskeyInput.Error));
             return Page();
         }
 
@@ -94,7 +94,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
                 return RedirectToPage("./Lockout");
             }
 
-            ModelState.AddModelError(string.Empty, IdentityResource.Get("Message.aad83968710c"));
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Login.OgiltigPasskeyInloggning"));
             return Page();
         }
 
@@ -120,7 +120,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
             }
             else
             {
-                ModelState.AddModelError(string.Empty, IdentityResource.Get("Message.14b93e1fcb6a"));
+                ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Login.InvalidLoginAttempt"));
                 return Page();
             }
         }

@@ -25,7 +25,7 @@ public class LocalizedContentTests
     [InlineData("ValidationResource")]
     public void Resources_HaveMatchingNonEmptySwedishAndEnglishKeys(string resourceName)
     {
-        var resources = new ResourceManager("ArvidsonFoto.Resources.Core." + resourceName, typeof(SharedResource).Assembly);
+        var resources = new ResourceManager("ArvidsonFoto.Resources." + resourceName, typeof(SharedResource).Assembly);
         static Dictionary<string, string> Read(ResourceManager manager, string culture)
         {
             var set = manager.GetResourceSet(CultureInfo.GetCultureInfo(culture), true, false);

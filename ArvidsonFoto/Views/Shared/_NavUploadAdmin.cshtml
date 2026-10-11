@@ -13,20 +13,20 @@
     string[] splittedUser = username!.Split("@");
     username = splittedUser[0];
 
-    <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)"><i class="bi bi-cloud-upload"></i> @L["Text.e1ca68a82880"]</a>
+    <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)"><i class="bi bi-cloud-upload"></i> @L["UploadAdmin.Controller.UploadAdmin"]</a>
     <ul class="p-0 sitemap">
-        <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" title="@L["Text.2d22ed5e5817"]"><i class="bi bi-file-image"></i> @L["Text.faf377257611"]</a></li>
-        <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" title="@L["Text.a0237cc6ef17"]"><i class="bi bi-file-font"></i> @L["Text.499dd14d9e60"]</a></li>
-        <li><a asp-controller="UploadAdmin" asp-action="RedigeraKategori" class="nav-link"><i class="bi bi-translate"></i> @L["Text.308c6b51c1ba"]</a></li>
+        <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.LinkANewImageOnTheSite"]"><i class="bi bi-file-image"></i> @L["UploadAdmin.Navigation.NewImage"]</a></li>
+        <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.AddANewCategoryOnTheSite"]"><i class="bi bi-file-font"></i> @L["UploadAdmin.Navigation.NewCategory"]</a></li>
+        <li><a asp-controller="UploadAdmin" asp-action="RedigeraKategori" class="nav-link"><i class="bi bi-translate"></i> @L["UploadAdmin.Navigation.EditCategoriesAndSpecies"]</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="@L["Text.fe19077c46c7"]"><i class="bi bi-pencil-square"></i> @L["Text.409250e64441"]</a>
+            <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.EditRecentlyUploadedImages"]"><i class="bi bi-pencil-square"></i> @L["UploadAdmin.Navigation.EditImages"]</a>
         </li>
         <li>
-            <a href="./UploadAdmin/FacebookUpload" class="nav-link @UploadAdminNavPages.FacebookUploadNavClass(ViewContext)" title="@L["Text.16629462dc8a"]"><i class="bi bi-facebook"></i> @L["Text.1bcc53e13ea5"]</a>
+            <a href="./UploadAdmin/FacebookUpload" class="nav-link @UploadAdminNavPages.FacebookUploadNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ShareImagesOnFacebook"]"><i class="bi bi-facebook"></i> @L["UploadAdmin.Navigation.ShareOnFacebook"]</a>
         </li>
         <li>
-            <a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="@L["Text.c147863c3f3a"]">
+            <a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ManageGuestbookEntries"]">
                 <i class="bi bi-book-half"></i> Hantera gästboken
                 @if (countOfUnreadGbPosts > 0)
                 {
@@ -36,13 +36,13 @@
         </li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" title="@L["Text.ba99416dd704"]"><i class="bi bi-speedometer2"></i> @L["Text.af342fe70d43"]</a>
+            <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ViewSiteStatistics"]"><i class="bi bi-speedometer2"></i> @L["UploadAdmin.Navigation.SiteStatistics"]</a>
         </li>
-        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link @UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext)" title="@L["Text.77ba84f91109"]"><i class="bi bi-journal-code"></i> @L["Text.aecaa693bde3"]</a></li>
+        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link @UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ReadTheLogbookAndErrorLogs"]"><i class="bi bi-journal-code"></i> @L["UploadAdmin.Navigation.ReadLogs"]</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="@L["Text.48af0fba5de9"]" class="nav-link @UploadAdminNavPages.HanteraKontotNavClass(ViewContext)"><i class="bi bi-file-person"></i> @L["Admin.Account", username]</a>
+            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="@L["UploadAdmin.Navigation.ManageYourAccount"]" class="nav-link @UploadAdminNavPages.HanteraKontotNavClass(ViewContext)"><i class="bi bi-file-person"></i> @L["Admin.Account", username]</a>
         </li>
-        <li><a asp-area="Identity" asp-page="/Account/Logout" class="nav-link @UploadAdminNavPages.LoggaUtNavClass(ViewContext)" title="@L["Text.22b75b375d49"]"><i class="bi bi-lock"></i> @L["Text.22b75b375d49"]</a></li>
+        <li><a asp-area="Identity" asp-page="/Account/Logout" class="nav-link @UploadAdminNavPages.LoggaUtNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.LogOut"]"><i class="bi bi-lock"></i> @L["UploadAdmin.Navigation.LogOut"]</a></li>
     </ul>
 }

@@ -28,7 +28,7 @@ public class RenamePasskeyModel(
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         byte[] credentialId;
@@ -38,14 +38,14 @@ public class RenamePasskeyModel(
         }
         catch (FormatException)
         {
-            TempData["StatusMessage"] = IdentityResource.Get("Message.ef1195449972");
+            TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.Passkeys.ErrorTheSpecifiedPasskeyIDHadInvalidFormat");
             return RedirectToPage("./Passkeys");
         }
 
         Passkey = await _userManager.GetPasskeyAsync(user, credentialId);
         if (Passkey is null)
         {
-            TempData["StatusMessage"] = IdentityResource.Get("Message.fdea71f69c12");
+            TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.RenamePasskey.ErrorTheSpecifiedPasskeyCouldNotBeFound");
             return RedirectToPage("./Passkeys");
         }
 
@@ -63,7 +63,7 @@ public class RenamePasskeyModel(
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         byte[] credentialId;
@@ -73,14 +73,14 @@ public class RenamePasskeyModel(
         }
         catch (FormatException)
         {
-            TempData["StatusMessage"] = IdentityResource.Get("Message.ef1195449972");
+            TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.Passkeys.ErrorTheSpecifiedPasskeyIDHadInvalidFormat");
             return RedirectToPage("./Passkeys");
         }
 
         var passkey = await _userManager.GetPasskeyAsync(user, credentialId);
         if (passkey is null)
         {
-            TempData["StatusMessage"] = IdentityResource.Get("Message.fdea71f69c12");
+            TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.RenamePasskey.ErrorTheSpecifiedPasskeyCouldNotBeFound");
             return RedirectToPage("./Passkeys");
         }
 
@@ -88,12 +88,12 @@ public class RenamePasskeyModel(
         var result = await _userManager.AddOrUpdatePasskeyAsync(user, passkey);
         if (!result.Succeeded)
         {
-            TempData["StatusMessage"] = IdentityResource.Get("Message.aa925f0fbbbf");
+            TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.RenamePasskey.ErrorThePasskeyCouldNotBeUpdated");
             return RedirectToPage("./Passkeys");
         }
 
         _logger.LogInformation("User '{UserId}' renamed a passkey.", _userManager.GetUserId(User));
-        TempData["StatusMessage"] = IdentityResource.Get("Message.93d2a80e5ecf");
+        TempData["StatusMessage"] = IdentityResource.Get("Identity.Manage.RenamePasskey.PasskeyUpdatedSuccessfully");
         return RedirectToPage("./Passkeys");
     }
 

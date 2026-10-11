@@ -49,8 +49,8 @@ public class ForgotPasswordModel(UserManager<ArvidsonFotoUser> userManager, IEma
 
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                IdentityResource.Get("Message.4e70f1fd24ba"),
-                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.5c0abcae6161"), HtmlEncoder.Default.Encode(callbackUrl!)));
+                IdentityResource.Get("Identity.ForgotPassword.ResetPassword"),
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ForgotPassword.PleaseResetYourPasswordByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
             return RedirectToPage("./ForgotPasswordConfirmation");
         }

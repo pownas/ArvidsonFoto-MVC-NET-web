@@ -32,7 +32,7 @@ public class UploadAdminController(
 
     public IActionResult Index()
     {
-        ViewData["Title"] = localizer["Text.e1ca68a82880"];
+        ViewData["Title"] = localizer["UploadAdmin.Controller.UploadAdmin"];
         return View();
     }
 

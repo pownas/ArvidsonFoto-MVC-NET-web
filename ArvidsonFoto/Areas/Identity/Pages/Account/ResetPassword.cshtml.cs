@@ -39,7 +39,7 @@ public class ResetPasswordModel(UserManager<ArvidsonFotoUser> userManager) : Pag
     {
         if (code == null)
         {
-            return BadRequest(IdentityResource.Get("Message.14c54c87ce5e"));
+            return BadRequest(IdentityResource.Get("Identity.ResetPassword.ACodeMustBeSuppliedForPasswordReset"));
         }
         else
         {

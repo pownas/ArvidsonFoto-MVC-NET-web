@@ -79,7 +79,7 @@ public class LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, IL
         else
         {
             _logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", user.Id);
-            ModelState.AddModelError(string.Empty, IdentityResource.Get("Message.8e4823abe890"));
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.LoginWith2fa.InvalidAuthenticatorCode"));
             return Page();
         }
     }

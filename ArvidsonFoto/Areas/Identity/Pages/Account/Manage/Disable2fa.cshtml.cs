@@ -21,7 +21,7 @@ public class Disable2faModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!await _userManager.GetTwoFactorEnabledAsync(user))
@@ -37,7 +37,7 @@ public class Disable2faModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
@@ -47,7 +47,7 @@ public class Disable2faModel(
         }
 
         _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
-        StatusMessage = IdentityResource.Get("Message.0df6de1a5671");
+        StatusMessage = IdentityResource.Get("Identity.Manage.Disable2fa.Number2faHasBeenDisabledYouCanAuthenticatorApp");
         return RedirectToPage("./TwoFactorAuthentication");
     }
 }

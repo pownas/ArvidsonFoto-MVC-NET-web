@@ -1,63 +1,63 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
-  <data name="Text.1150f05446e4" xml:space="preserve">
+  <data name="Dev.Portal.Note" xml:space="preserve">
     <value>Obs:</value>
   </data>
-  <data name="Text.168be69f76cf" xml:space="preserve">
+  <data name="Dev.Portal.ManageImagesCategoriesAndViewStatistics" xml:space="preserve">
     <value>Hantera bilder och kategorier och visa statistik.</value>
   </data>
-  <data name="Text.1cc77e60fcee" xml:space="preserve">
+  <data name="Dev.Portal.APIDocumentation" xml:space="preserve">
     <value>API-dokumentation</value>
   </data>
-  <data name="Text.1e8622861fe7" xml:space="preserve">
+  <data name="Dev.Portal.ManageGuestbook" xml:space="preserve">
     <value>Hantera gästboken</value>
   </data>
-  <data name="Text.211c93c84b63" xml:space="preserve">
+  <data name="Dev.Portal.OpenScalarAPIDocs" xml:space="preserve">
     <value>Öppna Scalar API-dokumentation</value>
   </data>
-  <data name="Text.3156db65d971" xml:space="preserve">
+  <data name="Dev.Portal.ViewOpenAPIJSON" xml:space="preserve">
     <value>Visa OpenAPI-JSON</value>
   </data>
-  <data name="Text.39fa507a3db8" xml:space="preserve">
+  <data name="Dev.Portal.MainWebsite" xml:space="preserve">
     <value>Webbplatsen</value>
   </data>
-  <data name="Text.45cceda8377a" xml:space="preserve">
+  <data name="Dev.Portal.AuthenticationRequired" xml:space="preserve">
     <value>Inloggning krävs.</value>
   </data>
-  <data name="Text.4db550cd9840" xml:space="preserve">
+  <data name="Dev.Portal.Sitemap" xml:space="preserve">
     <value>Webbplatskarta</value>
   </data>
-  <data name="Text.62962ba50ea9" xml:space="preserve">
+  <data name="Dev.Portal.RunningViaNETAspire" xml:space="preserve">
     <value>Körs med .NET Aspire</value>
   </data>
-  <data name="Text.62b34994944f" xml:space="preserve">
+  <data name="Dev.Portal.QuickLinks" xml:space="preserve">
     <value>Snabblänkar</value>
   </data>
-  <data name="Text.6545fe7e8490" xml:space="preserve">
+  <data name="Dev.Portal.ThisPageIsOnlyAccessibleInDevelopmentMode" xml:space="preserve">
     <value>Den här sidan är bara tillgänglig i utvecklingsläge</value>
   </data>
-  <data name="Text.8c2dedc00103" xml:space="preserve">
+  <data name="Dev.Portal.AdminPanel" xml:space="preserve">
     <value>Administrationspanel</value>
   </data>
-  <data name="Text.8f3774c38718" xml:space="preserve">
+  <data name="Dev.Portal.DevelopmentTools" xml:space="preserve">
     <value>Utvecklingsverktyg</value>
   </data>
-  <data name="Text.9d6322c1f4d9" xml:space="preserve">
+  <data name="Dev.Portal.Login" xml:space="preserve">
     <value>Logga in</value>
   </data>
-  <data name="Text.9e471951a1b4" xml:space="preserve">
+  <data name="Dev.Portal.Environment" xml:space="preserve">
     <value>Miljö</value>
   </data>
-  <data name="Text.ab7859115ac2" xml:space="preserve">
+  <data name="Dev.Portal.QuickAccessToDevelopmentToolsAndAdminFeatures" xml:space="preserve">
     <value>Snabb åtkomst till utvecklingsverktyg och administrationsfunktioner</value>
   </data>
-  <data name="Text.b076446433f5" xml:space="preserve">
+  <data name="Dev.Portal.EditImages" xml:space="preserve">
     <value>Redigera bilder</value>
   </data>
-  <data name="Text.bc0dfc99ab5d" xml:space="preserve">
+  <data name="Dev.Portal.DevelopmentAdminPortal" xml:space="preserve">
     <value>Utvecklings- och administrationsportal</value>
   </data>
-  <data name="Text.e896d50e16e1" xml:space="preserve">
+  <data name="Dev.Portal.OpenAdminPanel" xml:space="preserve">
     <value>Öppna administrationspanelen</value>
   </data>
   <data name="Dev.Intro" xml:space="preserve">

@@ -39,7 +39,7 @@ public class SetPasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -62,7 +62,7 @@ public class SetPasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var addPasswordResult = await _userManager.AddPasswordAsync(user, Input.NewPassword);
@@ -76,7 +76,7 @@ public class SetPasswordModel(
         }
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = IdentityResource.Get("Message.933540c3072d");
+        StatusMessage = IdentityResource.Get("Identity.Manage.SetPassword.YourPasswordHasBeenSet");
 
         return RedirectToPage();
     }

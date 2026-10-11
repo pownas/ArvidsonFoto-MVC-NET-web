@@ -1,14 +1,14 @@
 @page
 @model ExternalLoginsModel
 @{
-    ViewData["Title"] = L["Text.882932e4ccb0"];
+    ViewData["Title"] = L["Identity.Manage.ExternalLogins.ManageYourExternalLogins"];
     ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
 @if (Model.CurrentLogins?.Count > 0)
 {
-    <h4>@L["Text.84fea2cad8fd"]</h4>
+    <h4>@L["Identity.Manage.ExternalLogins.RegisteredLogins"]</h4>
     <table class="table">
         <tbody>
             @foreach (var login in Model.CurrentLogins)
@@ -22,7 +22,7 @@
                                 <div>
                                     <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
                                     <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                    <button type="submit" class="btn btn-primary" title="@L["Manage.RemoveProvider", login.ProviderDisplayName]">@L["Text.c3812fc4acb8"]</button>
+                                    <button type="submit" class="btn btn-primary" title="@L["Manage.RemoveProvider", login.ProviderDisplayName]">@L["Identity.Manage.ExternalLogins.Remove"]</button>
                                 </div>
                             </form>
                         }
@@ -38,7 +38,7 @@
 }
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h4>@L["Text.2f2fca227714"]</h4>
+    <h4>@L["Identity.Manage.ExternalLogins.AddAnotherServiceToLogIn"]</h4>
     <hr />
     <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
         <div id="socialLoginList">

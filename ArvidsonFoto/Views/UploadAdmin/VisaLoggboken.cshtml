@@ -15,7 +15,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Text.e1ca68a82880"]</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-journal-code ms-1"></i></li>
     </ol>
 </nav>
@@ -28,7 +28,7 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>@L["Text.ad8349c15767"]</p>
+        <p>@L["UploadAdmin.VisaLoggboken.ChooseADayToView"]</p>
         <p>
             @{ //Start på kalender-vy
                 var getDate = Model!.DateShown;
@@ -43,7 +43,7 @@
                 var yesterDay = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             }
 
-            <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">@L["Text.42e6d67b07be"]</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">@L["Text.1828f566ea14"]</a>
+            <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">@L["UploadAdmin.VisaLoggboken.PreviousMonth"]</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">@L["UploadAdmin.VisaLoggboken.LatestLogYesterday"]</a>
             <table class="table table-striped table-bordered table-dark text-center" style="width: 23rem;">
                 <thead>
                     <tr>
@@ -82,7 +82,7 @@
                             }
                             else if (DateTime.Now.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
                             {
-                                <td class="bg-secondary">@L["Text.bb2afe28128c"]</td>
+                                <td class="bg-secondary">@L["UploadAdmin.VisaLoggboken.Today"]</td>
                             }
                             else
                             {
@@ -111,17 +111,17 @@
             @if (Model.ShowAllLogs)
             {
                 <a class="btn btn-outline-danger" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
-                    @L["Text.a666aea488f4"]
+                    @L["UploadAdmin.VisaLoggboken.HideFilteredLogs"]
                 </a>
             }
             else
             {
                 <a class="btn btn-success" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
-                    @L["Text.b7b346e9a7e1"]
+                    @L["UploadAdmin.VisaLoggboken.ShowAllLogs"]
                 </a>
             }
         </p>
-        <p>@L["Text.27f942aa231d"]</p>
+        <p>@L["UploadAdmin.VisaLoggboken.TheSiteSLogsAreShownBelow"]</p>
         @{
             int lineCounter = 0;
             foreach (var line in Model.LogBook)
@@ -139,7 +139,7 @@
 
             if (lineCounter is 0)
             {
-                <p class="text-break mb-1">@L["Text.bb50faeb0b9c"]</p>
+                <p class="text-break mb-1">@L["UploadAdmin.VisaLoggboken.NoSeriousErrorsHaveOccurredToday"]</p>
             }
         }
     </div>

@@ -2,7 +2,7 @@
 @using ArvidsonFoto.Views.Shared
 @model TwoFactorAuthenticationModel
 @{
-    ViewData["Title"] = L["Text.e77ff2abe078"];
+    ViewData["Title"] = L["Identity.Manage.TwoFactorAuthentication.TwoFactorAuthentication2FA"];
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
 }
@@ -14,44 +14,44 @@
     if (Model.RecoveryCodesLeft == 0)
     {
         <div class="alert alert-danger">
-            <strong>@L["Text.40d779c41a35"]</strong>
-            <p>@L["Text.08801a334d95"] <a asp-page="./GenerateRecoveryCodes">@L["Text.f47cd8cc79df"]</a> @L["Text.c3c0d95f4b15"]</p>
+            <strong>@L["Identity.Manage.TwoFactorAuthentication.YouHaveNoRecoveryCodesLeft"]</strong>
+            <p>@L["Identity.Manage.TwoFactorAuthentication.YouMust"] <a asp-page="./GenerateRecoveryCodes">@L["Identity.Manage.TwoFactorAuthentication.GenerateANewSetOfRecoveryCodes"]</a> @L["Identity.Manage.TwoFactorAuthentication.BeforeYouCanLogInWithRecoveryCode"]</p>
         </div>
     }
     else if (Model.RecoveryCodesLeft == 1)
     {
         <div class="alert alert-danger">
-            <strong>@L["Text.2e7fdf251c09"]</strong>
-            <p>@L["Text.bd5c4d03f407"] <a asp-page="./GenerateRecoveryCodes">@L["Text.f47cd8cc79df"]</a>.</p>
+            <strong>@L["Identity.Manage.TwoFactorAuthentication.YouHave1RecoveryCodeLeft"]</strong>
+            <p>@L["Identity.Manage.TwoFactorAuthentication.YouCan"] <a asp-page="./GenerateRecoveryCodes">@L["Identity.Manage.TwoFactorAuthentication.GenerateANewSetOfRecoveryCodes"]</a>.</p>
         </div>
     }
     else if (Model.RecoveryCodesLeft <= 3)
     {
         <div class="alert alert-warning">
             <strong>@L["Manage.RecoveryCodesLeft", Model.RecoveryCodesLeft]</strong>
-            <p>@L["Text.2cf7a09bdf2c"] <a asp-page="./GenerateRecoveryCodes">@L["Text.f47cd8cc79df"]</a>.</p>
+            <p>@L["Identity.Manage.TwoFactorAuthentication.YouShould"] <a asp-page="./GenerateRecoveryCodes">@L["Identity.Manage.TwoFactorAuthentication.GenerateANewSetOfRecoveryCodes"]</a>.</p>
         </div>
     }
 
     if (Model.IsMachineRemembered)
     {
         <form method="post" style="display: inline-block">
-            <button type="submit" class="btn btn-primary">@L["Text.94e93346de45"]</button>
+            <button type="submit" class="btn btn-primary">@L["Identity.Manage.TwoFactorAuthentication.ForgetThisBrowser"]</button>
         </form>
     }
-    <a asp-page="./Disable2fa" class="btn btn-primary">@L["Text.1c3193f3a0b8"]</a>
-    <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">@L["Text.0a5a4177daaa"]</a>
+    <a asp-page="./Disable2fa" class="btn btn-primary">@L["Identity.Manage.Disable2fa.Disable2FA"]</a>
+    <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">@L["Identity.Manage.TwoFactorAuthentication.ResetRecoveryCodes"]</a>
 }
 
-<h5>@L["Text.09a12ace273f"]</h5>
+<h5>@L["Identity.Manage.TwoFactorAuthentication.AuthenticatorApp"]</h5>
 @if (!Model.HasAuthenticator)
 {
-    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">@L["Text.abf30f9a3e05"]</a>
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">@L["Identity.Manage.TwoFactorAuthentication.AddAuthenticatorApp"]</a>
 }
 else
 {
-    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">@L["Text.730f01f27029"]</a>
-    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">@L["Text.508b214dd7c5"]</a>
+    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">@L["Identity.Manage.TwoFactorAuthentication.SetupAuthenticatorApp"]</a>
+    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">@L["Identity.Manage.TwoFactorAuthentication.ResetAuthenticatorApp"]</a>
 }
 
 @section Scripts {

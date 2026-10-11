@@ -46,7 +46,7 @@ public class ChangePasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -68,7 +68,7 @@ public class ChangePasswordModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Message.090286fde77f"), _userManager.GetUserId(User)));
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
@@ -83,7 +83,7 @@ public class ChangePasswordModel(
 
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("User changed their password successfully.");
-        StatusMessage = IdentityResource.Get("Message.00e34a98f659");
+        StatusMessage = IdentityResource.Get("Identity.Manage.ChangePassword.YourPasswordHasBeenChanged");
 
         return RedirectToPage();
     }

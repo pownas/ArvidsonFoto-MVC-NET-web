@@ -4,7 +4,7 @@
 {
     var statusMessageClass = Model.StartsWith("Error") || Model.StartsWith("Fel") ? "danger" : "success";
     <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@L["Text.7d9eb7acb13e"]"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="@L["Identity.Manage.StatusMessage.Close"]"></button>
         @Model
     </div>
 }

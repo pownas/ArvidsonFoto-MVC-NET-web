@@ -13,7 +13,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Text.e1ca68a82880"]</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-image ms-1"></i></li>
     </ol>
 </nav>
@@ -26,7 +26,7 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>@L["Text.c28abe5fb303"]</p>
+        <p>@L["UploadAdmin.NyBild.HereYouCanLinkANewTheSite"]</p>
         
         @* Visa framgångsmeddelande från TempData *@
         @if (TempData["ImageCreated"] as bool? == true)
@@ -34,7 +34,7 @@
             var categoryId = TempData["ImageCategoryId"] as int? ?? 0;
             var imageUrl = TempData["ImageUrl"] as string ?? "";
             <h5 class="alert alert-success bg-success text-dark">
-                @L["Text.66ea53859832"] <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
+                @L["UploadAdmin.NyBild.TheImageWasLinked"] <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
             </h5>
         }
         else if (TempData["ImageCreated"] as bool? == false)
