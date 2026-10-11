@@ -70,7 +70,16 @@ else
        data-total-pages="@Model.TotalPages"
        data-page-size="@Model.PageSize"
        data-total-images="@Model.TotalImageCount"
-       data-gallery-url="@Model.CurrentUrl">
+       data-gallery-url="@Model.CurrentUrl"
+       data-image-position="@G["Gallery.Image.Position", "{0}", "{1}"]"
+       data-image-view-all="@G["Gallery.Image.ViewAllOf", "{0}"]"
+       data-image-date="@G["Gallery.Image.Date"]"
+       data-image-missing="@G["Gallery.Image.Missing"]"
+       data-image-filename="@G["Gallery.Image.FileName"]"
+       data-image-buy-prompt="@G["Gallery.Image.BuyPrompt"]"
+       data-image-buy-label="@T["Navigation.BuyPhotos"]"
+       data-image-buy-url="@LocalizedRoutes.Page("/Info/Kop_av_bilder")"
+       data-image-copyright-url="@LocalizedRoutes.Page("/Info/Copyright")">
     @{ var index = 1; }
     @foreach (var img in imageList)
     {
