@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -23,7 +23,7 @@
   <data name="Error.Rabbit.Message" xml:space="preserve"><value>I hope this rabbit cheers you up a bit 🙂</value></data>
   <data name="Error.Rabbit.Image" xml:space="preserve"><value>Rabbit 🐇</value></data>
   <data name="Layout.Settings.Label" xml:space="preserve"><value>Language and appearance settings</value></data>
-  <data name="Layout.Theme.Description" xml:space="preserve"><value>Switch between dark mode and light mode</value></data>
+  <data name="Layout.Theme.Description" xml:space="preserve"><value>Switch between dark and light mode</value></data>
   <data name="Layout.Theme.ToLight" xml:space="preserve"><value>Switch to light mode</value></data>
   <data name="Layout.Theme.ToDark" xml:space="preserve"><value>Switch to dark mode</value></data>
 </root>

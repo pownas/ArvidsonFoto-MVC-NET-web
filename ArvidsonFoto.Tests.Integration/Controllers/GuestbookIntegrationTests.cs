@@ -155,7 +155,7 @@ public class GuestbookIntegrationTests
     {
         foreach (var (culture, privacy, error, theme) in new[] {
             ("sv-SE", "Integritetspolicy", "Ett fel uppstod", "Växla mellan mörkt och ljust läge"),
-            ("en-US", "Privacy policy", "An error occurred", "Switch between dark mode and light mode")
+            ("en-US", "Privacy policy", "An error occurred", "Switch between dark and light mode")
         })
         {
             using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
