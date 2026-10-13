@@ -48,7 +48,7 @@ public class BilderControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/Fåglar", model.CurrentUrl);
+        Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Fåglar", model.SelectedCategory.Name);
     }

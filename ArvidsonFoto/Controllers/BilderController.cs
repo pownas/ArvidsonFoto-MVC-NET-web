@@ -103,7 +103,8 @@ public class BilderController(
             }
 
             viewModel.SelectedCategory = selectedCategory;
-            viewModel.CurrentUrl = currentUrl ?? string.Empty;
+            viewModel.CurrentUrl = LocalizedRoutes.Switch(
+                currentUrl ?? string.Empty, LocalizedText.IsEnglish, _categoryService.GetAll());
 
             // OPTIMIZED: Use count method instead of loading all images into memory
             var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);

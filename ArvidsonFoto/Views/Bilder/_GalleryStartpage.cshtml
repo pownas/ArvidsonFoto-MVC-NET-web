@@ -35,7 +35,8 @@ else
             
             string imgSrc = $"{imgPath}.jpg";
             string imgThumbSrc = $"{imgPath}.thumb.jpg";
-            string imgTitle = !string.IsNullOrWhiteSpace(img.Name) ? img.Name : T["Navigation.Photos"].Value;
+            string imgTitle = !string.IsNullOrWhiteSpace(img.CategoryName) ? img.CategoryName
+                : !string.IsNullOrWhiteSpace(img.Name) ? img.Name : T["Navigation.Photos"].Value;
             string imgDesc = !string.IsNullOrWhiteSpace(img.Description) ? $", {img.Description}." : "";
             string imgName = imgPath.Substring(imgPath.LastIndexOf('/') + 1) + ".jpg";
             DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
