@@ -112,12 +112,48 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(english.QuerySelector("meta[name='description']")?.GetAttribute("content")?.Contains("Beaver") == true, path);
             Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/Bilder/Daggdjur/Baver']"), path);
             Assert.IsTrue(english.QuerySelector(".main-nav")?.TextContent.Contains("Latest") == true, path);
+            Assert.AreEqual("https://ArvidsonFoto.se/images/mammals/beaver",
+                english.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
+            Assert.IsNotNull(english.QuerySelector("#page-breadcrumbs a[href='/images/mammals']"), path);
 
             var swedish = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"{path}?culture=sv-SE"));
             Assert.IsTrue(swedish.QuerySelectorAll("#gallery figcaption").Any(c => c.TextContent.Contains("Bäver")), path);
             Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:") == true, path);
             Assert.IsTrue(swedish.QuerySelector(".main-nav")?.TextContent.Contains("Senast") == true, path);
+            Assert.AreEqual("https://ArvidsonFoto.se/Bilder/Daggdjur/Baver",
+                swedish.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
         }
+    }
+
+    [TestMethod]
+    public async Task HomePage_TranslatesTitleAndPortraitDescription()
+    {
+        var english = await HtmlHelpers.GetDocumentAsync(await _client!.GetAsync("/?culture=en-US"));
+        Assert.IsTrue(english.Title?.Contains("Welcome to my photo archive") == true);
+        Assert.AreEqual("Portrait of Torbjörn Arvidson",
+            english.QuerySelector("img[src='./img/Torbjorn2020.jpg']")?.GetAttribute("alt"));
+
+        var swedish = await HtmlHelpers.GetDocumentAsync(await _client.GetAsync("/?culture=sv-SE"));
+        Assert.IsTrue(swedish.Title?.Contains("Välkommen till mitt bildarkiv") == true);
+        Assert.AreEqual("Porträtt av Torbjörn Arvidson",
+            swedish.QuerySelector("img[src='./img/Torbjorn2020.jpg']")?.GetAttribute("alt"));
+    }
+
+    [TestMethod]
+    public async Task EnglishCookie_TranslatesGalleryOnSwedishBasePath()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+            HandleCookies = true
+        });
+        await client.GetAsync("/Bilder/mammals/beaver?culture=en-US");
+        var english = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/Bilder/mammals/beaver"));
+
+        Assert.IsTrue(english.QuerySelector("#gallery figcaption")?.TextContent.Contains("Beaver") == true);
+        Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos") == true);
+        Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:") == true);
+        Assert.IsNotNull(english.QuerySelector("#page-breadcrumbs a[href='/images/mammals']"));
     }
 
     [TestMethod]
