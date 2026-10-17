@@ -1,4 +1,5 @@
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class TranslationReviewController(ArvidsonFotoCoreDbContext db) : Controller
+public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCategoryService? categoryService = null) : Controller
 {
     private const int PageSize = 20;
 
@@ -183,8 +184,37 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db) : Control
             return BadRequest();
         }
 
-        update(value, reviewed && value is not null && value == originalEn);
-        db.SaveChanges();
+        var reviewStatus = reviewed && value is not null && value == originalEn;
+        if (db.Database.IsRelational())
+        {
+            // Villkoren kontrolleras i samma UPDATE som granskningsmarkeringen.
+            var updated = (table, field) switch
+            {
+                ("menu", "name") => db.TblMenus.Where(m => m.MenuCategoryId == id && m.MenuDisplayName == originalSv && m.MenuDisplayNameEn == originalEn)
+                    .ExecuteUpdate(s => s.SetProperty(m => m.MenuDisplayNameEn, value).SetProperty(m => m.MenuDisplayNameEnReviewed, reviewStatus)),
+                ("menu", "url") => db.TblMenus.Where(m => m.MenuCategoryId == id && m.MenuUrlSegment == originalSv && m.MenuUrlSegmentEn == originalEn)
+                    .ExecuteUpdate(s => s.SetProperty(m => m.MenuUrlSegmentEn, value).SetProperty(m => m.MenuUrlSegmentEnReviewed, reviewStatus)),
+                ("images", "description") => db.TblImages.Where(i => i.ImageId == id && i.ImageDescription == originalSv && i.ImageDescriptionEn == originalEn)
+                    .ExecuteUpdate(s => s.SetProperty(i => i.ImageDescriptionEn, value).SetProperty(i => i.ImageDescriptionEnReviewed, reviewStatus)),
+                ("guestbook", "name") => db.TblGbs.Where(g => g.Id == id && g.GbName == originalSv && g.GbNameEn == originalEn)
+                    .ExecuteUpdate(s => s.SetProperty(g => g.GbNameEn, value).SetProperty(g => g.GbNameEnReviewed, reviewStatus)),
+                _ => db.TblGbs.Where(g => g.Id == id && g.GbText == originalSv && g.GbTextEn == originalEn)
+                    .ExecuteUpdate(s => s.SetProperty(g => g.GbTextEn, value).SetProperty(g => g.GbTextEnReviewed, reviewStatus))
+            };
+            if (updated != 1)
+            {
+                return Conflict();
+            }
+        }
+        else
+        {
+            update(value, reviewStatus);
+            db.SaveChanges();
+        }
+        if (table == "menu" && value != originalEn)
+        {
+            categoryService?.ClearCache();
+        }
         return RedirectToAction(nameof(Index), new { table, pendingOnly, page });
     }
 }
