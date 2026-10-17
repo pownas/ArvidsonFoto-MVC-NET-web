@@ -16,7 +16,7 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20260926105909_AddEnglishColumns";
+    public override string LastMigrationId => "20261017162636_AddTranslationReviewStatus";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -70,6 +70,10 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasColumnType("nvarchar(100)")
                     .HasColumnName("GB_name_en");
 
+                b.Property<bool>("GbNameEnReviewed")
+                    .HasColumnType("bit")
+                    .HasColumnName("GB_name_en_reviewed");
+
                 b.Property<bool?>("GbReadPost")
                     .HasColumnType("bit")
                     .HasColumnName("GB_ReadPost");
@@ -81,6 +85,10 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                 b.Property<string>("GbTextEn")
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("GB_text_en");
+
+                b.Property<bool>("GbTextEnReviewed")
+                    .HasColumnType("bit")
+                    .HasColumnName("GB_text_en_reviewed");
 
                 b.HasKey("Id");
 
@@ -113,6 +121,10 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasMaxLength(150)
                     .HasColumnType("nvarchar(150)")
                     .HasColumnName("image_description_en");
+
+                b.Property<bool>("ImageDescriptionEnReviewed")
+                    .HasColumnType("bit")
+                    .HasColumnName("image_description_en_reviewed");
 
                 b.Property<int?>("ImageFamilyId")
                     .HasColumnType("int")
@@ -224,6 +236,10 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasColumnType("nvarchar(50)")
                     .HasColumnName("menu_text_en");
 
+                b.Property<bool>("MenuDisplayNameEnReviewed")
+                    .HasColumnType("bit")
+                    .HasColumnName("menu_text_en_reviewed");
+
                 b.Property<int?>("MenuParentCategoryId")
                     .HasColumnType("int")
                     .HasColumnName("menu_mainID");
@@ -237,6 +253,10 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasMaxLength(50)
                     .HasColumnType("nvarchar(50)")
                     .HasColumnName("menu_URLtext_en");
+
+                b.Property<bool>("MenuUrlSegmentEnReviewed")
+                    .HasColumnType("bit")
+                    .HasColumnName("menu_URLtext_en_reviewed");
 
                 b.HasKey("Id");
 

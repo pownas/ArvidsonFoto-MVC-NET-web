@@ -157,6 +157,19 @@ public class GuestbookIntegrationTests
     }
 
     [TestMethod]
+    public async Task TranslationReview_RequiresAuthentication()
+    {
+        var get = await _client!.GetAsync("/TranslationReview?culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.Redirect, get.StatusCode);
+        StringAssert.Contains(get.Headers.Location?.OriginalString ?? "", "/Identity/Account/Login");
+
+        var post = await _client.PostAsync("/TranslationReview/Save", new FormUrlEncodedContent(
+            new Dictionary<string, string> { ["table"] = "menu", ["id"] = "1", ["field"] = "name", ["reviewed"] = "true" }));
+        Assert.AreEqual(HttpStatusCode.Redirect, post.StatusCode);
+        StringAssert.Contains(post.Headers.Location?.OriginalString ?? "", "/Identity/Account/Login");
+    }
+
+    [TestMethod]
     public async Task CategoryTooltip_UsesSelectedLanguage()
     {
         foreach (var (culture, noImage, loading, date) in new[] {

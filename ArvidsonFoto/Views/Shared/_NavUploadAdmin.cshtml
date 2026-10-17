@@ -18,6 +18,7 @@
         <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.LinkANewImageOnTheSite"]"><i class="bi bi-file-image"></i> @L["UploadAdmin.Navigation.NewImage"]</a></li>
         <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.AddANewCategoryOnTheSite"]"><i class="bi bi-file-font"></i> @L["UploadAdmin.Navigation.NewCategory"]</a></li>
         <li><a asp-controller="UploadAdmin" asp-action="RedigeraKategori" class="nav-link"><i class="bi bi-translate"></i> @L["UploadAdmin.Navigation.EditCategoriesAndSpecies"]</a></li>
+        <li><a asp-controller="TranslationReview" asp-action="Index" class="nav-link"><i class="bi bi-check2-square"></i> @L["UploadAdmin.Review.Title"]</a></li>
         <li>
             <div class="dropdown-divider"></div>
             <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.EditRecentlyUploadedImages"]"><i class="bi bi-pencil-square"></i> @L["UploadAdmin.Navigation.EditImages"]</a>

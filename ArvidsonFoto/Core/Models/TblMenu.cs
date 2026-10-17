@@ -27,6 +27,7 @@ public partial class TblMenu()
     public string? MenuDisplayName { get; set; } = string.Empty;
 
     public string? MenuDisplayNameEn { get; set; }
+    public bool MenuDisplayNameEnReviewed { get; set; }
 
     /// <summary> URL text för menyn, används för att skapa sökvänliga URL:er. </summary>
     /// <remarks> Kallas även för "Slug" eller "UrlSlug", när det är enbart ett segment av en URL. Exempel: "blames" </remarks>
@@ -35,6 +36,7 @@ public partial class TblMenu()
     public string? MenuUrlSegment { get; set; } = string.Empty;
 
     public string? MenuUrlSegmentEn { get; set; }
+    public bool MenuUrlSegmentEnReviewed { get; set; }
 
     /// <summary> Datumen då menyn uppdaterades senast. </summary>
     //[JsonPropertyName("menu_dateUpdated")] // ColumnName in database

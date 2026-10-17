@@ -19,6 +19,7 @@ public partial class TblGb()
     public string? GbName { get; set; }
 
     public string? GbNameEn { get; set; }
+    public bool GbNameEnReviewed { get; set; }
 
     /// <summary>E-postadress för personen som skrev inlägget</summary>
     public string? GbEmail { get; set; }
@@ -30,6 +31,7 @@ public partial class TblGb()
     public string? GbText { get; set; }
 
     public string? GbTextEn { get; set; }
+    public bool GbTextEnReviewed { get; set; }
 
     /// <summary>Datum när inlägget skapades</summary>
     public DateTime? GbDate { get; set; } = DateTime.Now;
