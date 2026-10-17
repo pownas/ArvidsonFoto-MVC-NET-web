@@ -1,9 +1,12 @@
 ﻿using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
+using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ArvidsonFoto.Tests.Unit.ServiceTests;
 
@@ -59,6 +62,21 @@ public class TranslationReviewTests
         Assert.False(row.MenuDisplayNameEnReviewed);
         Assert.IsType<ConflictResult>(controller.Save("menu", 10, "name", "Beaver", "Bäver", "Beaver", true));
         Assert.False(row.MenuDisplayNameEnReviewed);
+    }
+
+    [Fact]
+    public void SavingMenuTranslationClearsCategoryCache()
+    {
+        using var db = CreateContext();
+        using var cache = new MemoryCache(new MemoryCacheOptions());
+        var categories = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, db, cache);
+        db.TblMenus.Add(new TblMenu { Id = 1, MenuCategoryId = 10, MenuDisplayName = "Bäver" });
+        db.SaveChanges();
+        cache.Set("Api_AllCategories", new object());
+
+        var controller = new TranslationReviewController(db, categories);
+        Assert.IsType<RedirectToActionResult>(controller.Save("menu", 10, "name", "Beaver", "Bäver", null, false));
+        Assert.False(cache.TryGetValue("Api_AllCategories", out _));
     }
 
     [Fact]
