@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Views.Shared
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Interfaces
 @model UploadImageViewModel
@@ -12,7 +13,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-image ms-1"></i></li>
     </ol>
 </nav>
@@ -25,7 +26,7 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>Här kan du länka till en ny bild på hemsidan:</p>
+        <p>@L["UploadAdmin.NyBild.HereYouCanLinkANewTheSite"]</p>
         
         @* Visa framgångsmeddelande från TempData *@
         @if (TempData["ImageCreated"] as bool? == true)
@@ -33,19 +34,19 @@
             var categoryId = TempData["ImageCategoryId"] as int? ?? 0;
             var imageUrl = TempData["ImageUrl"] as string ?? "";
             <h5 class="alert alert-success bg-success text-dark">
-                Länkningen genomfördes för: <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
+                @L["UploadAdmin.NyBild.TheImageWasLinked"] <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
             </h5>
         }
         else if (TempData["ImageCreated"] as bool? == false)
         {
             <div class="alert alert-danger">
-                @(TempData["ErrorMessage"] ?? "Ett fel uppstod vid skapande av bilden.")
+                @(TempData["ErrorMessage"] ?? L["Admin.ImageCreationError"].Value)
             </div>
         }
         
         @if (Model!.ImageInputModel is not null && Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
-            <h3>Vald kategori: @Model.SelectedCategory.Name</h3>
+            <h3>@L["Admin.SelectedCategory", Model.SelectedCategory.Name]</h3>
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {

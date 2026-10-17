@@ -34,18 +34,18 @@ public class RegisterModel(
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = nameof(IdentityResource.Email), ResourceType = typeof(IdentityResource))]
         public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessageResourceName = nameof(IdentityResource.PasswordLength), ErrorMessageResourceType = typeof(IdentityResource), MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = nameof(IdentityResource.Password), ResourceType = typeof(IdentityResource))]
         public string Password { get; set; } = null!;
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = nameof(IdentityResource.ConfirmPassword), ResourceType = typeof(IdentityResource))]
+        [Compare("Password", ErrorMessageResourceName = nameof(IdentityResource.PasswordMismatch), ErrorMessageResourceType = typeof(IdentityResource))]
         public string ConfirmPassword { get; set; } = null!;
     }
 
@@ -75,8 +75,8 @@ public class RegisterModel(
                     values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+                await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {

@@ -36,9 +36,9 @@ public class EnableAuthenticatorModel(
     public class InputModel
     {
         [Required]
-        [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(7, ErrorMessageResourceName = nameof(IdentityResource.PasswordLength), ErrorMessageResourceType = typeof(IdentityResource), MinimumLength = 6)]
         [DataType(DataType.Text)]
-        [Display(Name = "Verification Code")]
+        [Display(Name = nameof(IdentityResource.VerificationCode), ResourceType = typeof(IdentityResource))]
         public string Code { get; set; } = null!;
     }
 
@@ -47,7 +47,7 @@ public class EnableAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await LoadSharedKeyAndQrCodeUriAsync(user);
@@ -60,7 +60,7 @@ public class EnableAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -77,7 +77,7 @@ public class EnableAuthenticatorModel(
 
         if (!is2faTokenValid)
         {
-            ModelState.AddModelError("Input.Code", "Verification code is invalid.");
+            ModelState.AddModelError("Input.Code", IdentityResource.Get("Identity.Manage.EnableAuthenticator.VerificationCodeIsInvalid"));
             await LoadSharedKeyAndQrCodeUriAsync(user);
             return Page();
         }
@@ -86,7 +86,7 @@ public class EnableAuthenticatorModel(
         var userId = await _userManager.GetUserIdAsync(user);
         _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-        StatusMessage = "Your authenticator app has been verified.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.EnableAuthenticator.YourAuthenticatorAppHasBeenVerified");
 
         if (await _userManager.CountRecoveryCodesAsync(user) == 0)
         {

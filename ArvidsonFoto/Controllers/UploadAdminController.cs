@@ -7,6 +7,7 @@ using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 
@@ -20,7 +21,8 @@ public class UploadAdminController(
     ILogger<ApiImageService> imageLogger,
     ILogger<ApiCategoryService> categoryLogger,
     IConfiguration configuration,
-    IMemoryCache memoryCache) : Controller
+    IMemoryCache memoryCache,
+    IStringLocalizer<UploadAdminResource> localizer) : Controller
 {
     internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
     internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
@@ -30,7 +32,7 @@ public class UploadAdminController(
 
     public IActionResult Index()
     {
-        ViewData["Title"] = "Upload Admin";
+        ViewData["Title"] = localizer["UploadAdmin.Controller.UploadAdmin"];
         return View();
     }
 
@@ -41,7 +43,7 @@ public class UploadAdminController(
     [Route("/[controller]/NyBild/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
     public IActionResult NyBild(string subLevel1, string? subLevel2, string? subLevel3, string? subLevel4)
     {
-        ViewData["Title"] = "Länka till ny bild";
+        ViewData["Title"] = localizer["Admin.ImageTitle"];
 
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
@@ -119,6 +121,7 @@ public class UploadAdminController(
                 ImageUpdate = DateTime.Now,
                 ImageDate = model.ImageDate,
                 ImageDescription = model.ImageDescription,
+                ImageDescriptionEn = model.ImageDescriptionEn,
                 ImageUrlName = model.ImageUrl
             };
 
@@ -139,7 +142,7 @@ public class UploadAdminController(
             {
                 Log.Error(ex, "Fel vid skapande av bild");
                 TempData["ImageCreated"] = false;
-                TempData["ErrorMessage"] = "Ett fel uppstod vid skapande av bilden.";
+                TempData["ErrorMessage"] = localizer["Admin.ImageCreationError"].Value;
             }
         }
 
@@ -168,6 +171,7 @@ public class UploadAdminController(
                     existingImage.ImageMainFamilyId = model.ImageHuvudfamilj;
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
+                    existingImage.ImageDescriptionEn = model.ImageDescriptionEn;
                     existingImage.ImageUpdate = DateTime.Now;
 
                     await coreContext.SaveChangesAsync();
@@ -185,7 +189,7 @@ public class UploadAdminController(
 
     public IActionResult NyKategori(UploadNewCategoryInputDto inputModel)
     {
-        ViewData["Title"] = "Länka till ny kategori";
+        ViewData["Title"] = localizer["Admin.CategoryTitle"];
         return View(inputModel ?? UploadNewCategoryInputDto.CreateEmpty());
     }
 
@@ -196,28 +200,99 @@ public class UploadAdminController(
 
         if (ModelState.IsValid)
         {
+            var svSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegment)
+                ? SharedStaticFunctions.ToUrlSegment(inputModel.MenuText)
+                : inputModel.MenuUrlSegment.Trim();
+            var enSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegmentEn) ? null : inputModel.MenuUrlSegmentEn.Trim();
+            if (!ValidCategorySegments(svSegment, enSegment, null))
+            {
+                ModelState.AddModelError(nameof(inputModel.MenuUrlSegment), localizer["Admin.InvalidUrlSegments"]);
+                return View("NyKategori", inputModel);
+            }
             CategoryDto newCategory = new()
             {
                 Name = inputModel.MenuText,
+                NameEn = inputModel.MenuTextEn,
                 CategoryId = _categoryService.GetLastId() + 1,
                 ParentCategoryId = inputModel.MainMenuId,
-                UrlCategoryPath = SharedStaticFunctions.ToUrlSegment(inputModel.MenuText),
+                UrlCategoryPath = svSegment,
+                UrlCategoryPathEn = enSegment,
                 DateUpdated = DateTime.UtcNow
             };
 
             if (_categoryService.AddCategory(newCategory))
             {
+                _categoryService.ClearCache();
                 inputModel.CategoryCreated = true;
                 inputModel.MainMenuId = null;
             }
         }
 
-        return RedirectToAction("NyKategori", inputModel);
+        return View("NyKategori", inputModel);
+    }
+
+    public IActionResult RedigeraKategori(int? id, string? search)
+    {
+        ViewData["Title"] = localizer["Admin.CategoriesTitle"];
+        ViewData["Search"] = search;
+        var categories = coreContext.TblMenus.AsEnumerable()
+            .Where(c => string.IsNullOrWhiteSpace(search) ||
+                (c.MenuDisplayName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (c.MenuDisplayNameEn?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+            .OrderBy(c => c.MenuDisplayName).Take(100).ToList();
+        ViewData["Categories"] = categories;
+        var selected = id.HasValue ? coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id) : null;
+        return View(new EditCategoryInputDto
+        {
+            CategoryId = selected?.MenuCategoryId ?? 0,
+            NameSv = selected?.MenuDisplayName ?? string.Empty,
+            NameEn = selected?.MenuDisplayNameEn,
+            UrlSegmentSv = selected?.MenuUrlSegment ?? string.Empty,
+            UrlSegmentEn = selected?.MenuUrlSegmentEn
+        });
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult SaveCategory(EditCategoryInputDto input)
+    {
+        ViewData["Title"] = localizer["Admin.CategoriesTitle"];
+        var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
+        if (category == null)
+            return NotFound();
+        if (!ValidCategorySegments(input.UrlSegmentSv, input.UrlSegmentEn, input.CategoryId))
+            ModelState.AddModelError(nameof(input.UrlSegmentSv), localizer["Admin.InvalidUrlSegments"]);
+        if (!ModelState.IsValid)
+        {
+            ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
+            return View("RedigeraKategori", input);
+        }
+        category.MenuDisplayName = input.NameSv.Trim();
+        category.MenuDisplayNameEn = string.IsNullOrWhiteSpace(input.NameEn) ? null : input.NameEn.Trim();
+        category.MenuUrlSegment = input.UrlSegmentSv.Trim();
+        category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim();
+        category.MenuDateUpdated = DateTime.UtcNow;
+        coreContext.SaveChanges();
+        _categoryService.ClearCache();
+        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId });
+    }
+
+    private bool ValidCategorySegments(string? swedish, string? english, int? excludeId)
+    {
+        if (string.IsNullOrWhiteSpace(swedish) || swedish.Length > 50 ||
+            !System.Text.RegularExpressions.Regex.IsMatch(swedish, @"^[a-zA-Z0-9-]+$") ||
+            (!string.IsNullOrWhiteSpace(english) &&
+                (english.Length > 50 || !System.Text.RegularExpressions.Regex.IsMatch(english, @"^[a-zA-Z0-9-]+$"))) ||
+            (!string.IsNullOrWhiteSpace(english) && string.Equals(swedish, english, StringComparison.OrdinalIgnoreCase)))
+            return false;
+        return !coreContext.TblMenus.AsEnumerable().Any(c => c.MenuCategoryId != excludeId &&
+            new[] { c.MenuUrlSegment, c.MenuUrlSegmentEn }.Any(existing =>
+                string.Equals(existing, swedish, StringComparison.OrdinalIgnoreCase) ||
+                (!string.IsNullOrWhiteSpace(english) && string.Equals(existing, english, StringComparison.OrdinalIgnoreCase))));
     }
 
     public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
     {
-        ViewData["Title"] = "Redigera bland bilderna";
+        ViewData["Title"] = localizer["Admin.EditImagesTitle"];
 
         int imagesPerPage = 25;
         if (sida is null or < 1)
@@ -265,8 +340,9 @@ public class UploadAdminController(
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
-            inputModel.ImageDescription = item.ImageDescription ?? "Saknas";
-            inputModel.ImageUrl = item.ImageUrlName ?? "Saknas";
+            inputModel.ImageDescription = item.ImageDescription ?? localizer["Admin.Missing"];
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
+            inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
             // Get category path using the service method
             var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
@@ -282,7 +358,7 @@ public class UploadAdminController(
 
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
-        ViewData["Title"] = "Hantera gästboken";
+        ViewData["Title"] = localizer["Admin.GuestbookTitle"];
         UploadGbViewModel viewModel = new();
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
@@ -334,7 +410,7 @@ public class UploadAdminController(
 
     public IActionResult Statistik()
     {
-        ViewData["Title"] = "Hemsidans statistik";
+        ViewData["Title"] = localizer["Admin.StatisticsTitle"];
         return View();
     }
 
@@ -342,7 +418,7 @@ public class UploadAdminController(
     /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
     public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
     {
-        ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
+        ViewData["Title"] = localizer["Admin.LogTitle", datum];
 
         AppLogReaderService logReader = new();
         string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
@@ -383,7 +459,7 @@ public class UploadAdminController(
     /// </summary>
     public IActionResult FacebookUpload(string? DisplayMessage, string? FacebookPostUrl)
     {
-        ViewData["Title"] = "Dela bilder på Facebook";
+        ViewData["Title"] = localizer["Admin.FacebookTitle"];
 
         var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
         var recentImages = coreContext.TblImages
@@ -412,6 +488,7 @@ public class UploadAdminController(
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? string.Empty;
+            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? string.Empty;
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";

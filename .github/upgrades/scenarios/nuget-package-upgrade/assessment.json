@@ -1,0 +1,1490 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": ""
+  },
+  "analysisStartTime": "2026-09-28T20:03:17.2033005Z",
+  "analysisEndTime": "2026-09-28T20:03:22.8909089Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 8,
+      "issues": 1,
+      "incidents": 50,
+      "effort": 0
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 0,
+        "Optional": 0,
+        "Potential": 0,
+        "Information": 50
+      },
+      "category": {
+        "Pkg": 50
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": ".SolutionItems.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": ".SolutionItems",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": false,
+        "numberOfFiles": 2,
+        "numberOfCodeFiles": 0,
+        "linesTotal": 104,
+        "linesOfCode": 0,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "1c80b6ec-31fb-4b9f-b1d6-d90e4d074198",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.NET.ILLink.Tasks\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": ".SolutionItems.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.NET.ILLink.Tasks, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.NET.ILLink.Tasks, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": ".SolutionItems.csproj",
+            "snippet": "Microsoft.NET.ILLink.Tasks, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.NET.ILLink.Tasks, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.NET.ILLink.Tasks 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.NET.ILLink.Tasks",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto.AppHost",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": false,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 67,
+        "linesOfCode": 67,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "6c814f79-48ea-4351-a7fb-9f2985405d2a",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Aspire.Hosting.SqlServer\u0027 13.5.4 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.SqlServer, 13.5.4",
+              "protected": "Aspire.Hosting.SqlServer, 13.5.4"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+            "snippet": "Aspire.Hosting.SqlServer, 13.5.4",
+            "protectedSnippet": "Aspire.Hosting.SqlServer, 13.5.4",
+            "label": "Aspire.Hosting.SqlServer 13.5.4",
+            "properties": {
+              "PackageId": "Aspire.Hosting.SqlServer",
+              "PackageVersion": "13.5.4",
+              "PackageNewVersion": "13.5.4",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "3035cbc5-a3cb-440a-8cb3-b98604fb9273",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MessagePack\u0027 3.1.8; proposed upgrade to 3.1.10.",
+          "projectPath": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MessagePack, 3.1.8",
+              "protected": "MessagePack, 3.1.8"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+            "snippet": "MessagePack, 3.1.8",
+            "protectedSnippet": "MessagePack, 3.1.8",
+            "label": "MessagePack 3.1.8",
+            "properties": {
+              "PackageId": "MessagePack",
+              "PackageVersion": "3.1.8",
+              "PackageNewVersion": "3.1.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9a1d6701-f80a-45ce-be28-cdd7bba99d53",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Aspire.Hosting.AppHost\u0027 13.5.4 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.AppHost, 13.5.4",
+              "protected": "Aspire.Hosting.AppHost, 13.5.4"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.AppHost\\ArvidsonFoto.AppHost.csproj",
+            "snippet": "Aspire.Hosting.AppHost, 13.5.4",
+            "protectedSnippet": "Aspire.Hosting.AppHost, 13.5.4",
+            "label": "Aspire.Hosting.AppHost 13.5.4",
+            "properties": {
+              "PackageId": "Aspire.Hosting.AppHost",
+              "PackageVersion": "13.5.4",
+              "PackageNewVersion": "13.5.4",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": false,
+        "numberOfFiles": 314,
+        "numberOfCodeFiles": 289,
+        "linesTotal": 27931,
+        "linesOfCode": 22943,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "51f5ca3d-9204-4b7b-b40e-29cab0e43950",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.EntityFrameworkCore.Design\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Design, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.EntityFrameworkCore.Design, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Design, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Design, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.EntityFrameworkCore.Design 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Design",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "bd8f6e52-fb16-4bea-81e8-41f64794452d",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Azure.Identity\u0027 1.21.0 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Azure.Identity, 1.21.0",
+              "protected": "Azure.Identity, 1.21.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Azure.Identity, 1.21.0",
+            "protectedSnippet": "Azure.Identity, 1.21.0",
+            "label": "Azure.Identity 1.21.0",
+            "properties": {
+              "PackageId": "Azure.Identity",
+              "PackageVersion": "1.21.0",
+              "PackageNewVersion": "1.21.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a58b29ce-1309-4b02-8891-0e95178d962d",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MailKit\u0027 4.17.0; proposed upgrade to 4.18.1.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MailKit, 4.17.0",
+              "protected": "MailKit, 4.17.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "MailKit, 4.17.0",
+            "protectedSnippet": "MailKit, 4.17.0",
+            "label": "MailKit 4.17.0",
+            "properties": {
+              "PackageId": "MailKit",
+              "PackageVersion": "4.17.0",
+              "PackageNewVersion": "4.18.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "3d14e70f-1310-4211-be7e-722b2fb29060",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MimeKit\u0027 4.17.0; proposed upgrade to 4.18.1.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MimeKit, 4.17.0",
+              "protected": "MimeKit, 4.17.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "MimeKit, 4.17.0",
+            "protectedSnippet": "MimeKit, 4.17.0",
+            "label": "MimeKit 4.17.0",
+            "properties": {
+              "PackageId": "MimeKit",
+              "PackageVersion": "4.17.0",
+              "PackageNewVersion": "4.18.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "e4684e8d-d942-4d9a-ad43-bc525abc548b",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "58904a63-58dd-451b-90a8-73071c965a11",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.Identity.EntityFrameworkCore\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Identity.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.Identity.EntityFrameworkCore, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.AspNetCore.Identity.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.Identity.EntityFrameworkCore, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.Identity.EntityFrameworkCore 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Identity.EntityFrameworkCore",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a5f1dc0f-d65e-414e-aaa3-ff46d770ff11",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.Identity.UI\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Identity.UI, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.Identity.UI, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.AspNetCore.Identity.UI, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.Identity.UI, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.Identity.UI 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Identity.UI",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "54fe1580-a914-4a67-8f7f-9938e219f376",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.EntityFrameworkCore.SqlServer\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.SqlServer, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.EntityFrameworkCore.SqlServer, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.SqlServer, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.SqlServer, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.EntityFrameworkCore.SqlServer 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.SqlServer",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b256f29b-b596-4030-bafb-7b6b9a2826a7",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.EntityFrameworkCore.InMemory\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.InMemory, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.EntityFrameworkCore.InMemory, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.InMemory, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.InMemory, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.EntityFrameworkCore.InMemory 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.InMemory",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "fa0d9ac0-23a1-461a-bb21-0713fde86d5c",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.EntityFrameworkCore.Tools\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Tools, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.EntityFrameworkCore.Tools, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Tools, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Tools, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.EntityFrameworkCore.Tools 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Tools",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "df59b0e8-399e-445c-970f-8119f600bd02",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Serilog\u0027 4.3.1; proposed upgrade to 4.4.0.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Serilog, 4.3.1",
+              "protected": "Serilog, 4.3.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Serilog, 4.3.1",
+            "protectedSnippet": "Serilog, 4.3.1",
+            "label": "Serilog 4.3.1",
+            "properties": {
+              "PackageId": "Serilog",
+              "PackageVersion": "4.3.1",
+              "PackageNewVersion": "4.4.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "caf77fc9-40bc-4b4b-b761-9cfc007c8827",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Serilog.Settings.Configuration\u0027 10.0.1 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Serilog.Settings.Configuration, 10.0.1",
+              "protected": "Serilog.Settings.Configuration, 10.0.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Serilog.Settings.Configuration, 10.0.1",
+            "protectedSnippet": "Serilog.Settings.Configuration, 10.0.1",
+            "label": "Serilog.Settings.Configuration 10.0.1",
+            "properties": {
+              "PackageId": "Serilog.Settings.Configuration",
+              "PackageVersion": "10.0.1",
+              "PackageNewVersion": "10.0.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ae264945-2359-43a0-ac82-61bd087fcdee",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Serilog.Sinks.File\u0027 7.0.0 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Serilog.Sinks.File, 7.0.0",
+              "protected": "Serilog.Sinks.File, 7.0.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Serilog.Sinks.File, 7.0.0",
+            "protectedSnippet": "Serilog.Sinks.File, 7.0.0",
+            "label": "Serilog.Sinks.File 7.0.0",
+            "properties": {
+              "PackageId": "Serilog.Sinks.File",
+              "PackageVersion": "7.0.0",
+              "PackageNewVersion": "7.0.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1db7c5aa-5afa-49ce-be17-3b8065502d88",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Serilog.Sinks.Console\u0027 6.1.1 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Serilog.Sinks.Console, 6.1.1",
+              "protected": "Serilog.Sinks.Console, 6.1.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Serilog.Sinks.Console, 6.1.1",
+            "protectedSnippet": "Serilog.Sinks.Console, 6.1.1",
+            "label": "Serilog.Sinks.Console 6.1.1",
+            "properties": {
+              "PackageId": "Serilog.Sinks.Console",
+              "PackageVersion": "6.1.1",
+              "PackageNewVersion": "6.1.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "8067f85a-5b3d-4050-8fcf-ecf1987c92d1",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027LigerShark.WebOptimizer.Core\u0027 3.0.477 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "LigerShark.WebOptimizer.Core, 3.0.477",
+              "protected": "LigerShark.WebOptimizer.Core, 3.0.477"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "LigerShark.WebOptimizer.Core, 3.0.477",
+            "protectedSnippet": "LigerShark.WebOptimizer.Core, 3.0.477",
+            "label": "LigerShark.WebOptimizer.Core 3.0.477",
+            "properties": {
+              "PackageId": "LigerShark.WebOptimizer.Core",
+              "PackageVersion": "3.0.477",
+              "PackageNewVersion": "3.0.477",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "f6565329-745c-4cd4-a3a8-012823d214ee",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027LigerShark.WebOptimizer.Sass\u0027 3.0.147 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "LigerShark.WebOptimizer.Sass, 3.0.147",
+              "protected": "LigerShark.WebOptimizer.Sass, 3.0.147"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "LigerShark.WebOptimizer.Sass, 3.0.147",
+            "protectedSnippet": "LigerShark.WebOptimizer.Sass, 3.0.147",
+            "label": "LigerShark.WebOptimizer.Sass 3.0.147",
+            "properties": {
+              "PackageId": "LigerShark.WebOptimizer.Sass",
+              "PackageVersion": "3.0.147",
+              "PackageNewVersion": "3.0.147",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "3e5369eb-feca-4a46-9459-caf20407cd14",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027JavaScriptEngineSwitcher.V8\u0027 3.34.1; proposed upgrade to 3.35.2.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "JavaScriptEngineSwitcher.V8, 3.34.1",
+              "protected": "JavaScriptEngineSwitcher.V8, 3.34.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "JavaScriptEngineSwitcher.V8, 3.34.1",
+            "protectedSnippet": "JavaScriptEngineSwitcher.V8, 3.34.1",
+            "label": "JavaScriptEngineSwitcher.V8 3.34.1",
+            "properties": {
+              "PackageId": "JavaScriptEngineSwitcher.V8",
+              "PackageVersion": "3.34.1",
+              "PackageNewVersion": "3.35.2",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "bf110119-3f72-4291-a194-6d460241fc38",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027JavaScriptEngineSwitcher.Extensions.MsDependencyInjection\u0027 3.31.0 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection, 3.31.0",
+              "protected": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection, 3.31.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection, 3.31.0",
+            "protectedSnippet": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection, 3.31.0",
+            "label": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection 3.31.0",
+            "properties": {
+              "PackageId": "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection",
+              "PackageVersion": "3.31.0",
+              "PackageNewVersion": "3.31.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6d1246de-ffa8-4f6f-8117-60b20e7938b4",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.OpenApi\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.OpenApi, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.OpenApi 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "85f6baa6-a493-4361-90f2-be299ec884fd",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Scalar.AspNetCore\u0027 2.17.1; proposed upgrade to 2.17.10.",
+          "projectPath": "ArvidsonFoto\\ArvidsonFoto.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Scalar.AspNetCore, 2.17.1",
+              "protected": "Scalar.AspNetCore, 2.17.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto\\ArvidsonFoto.csproj",
+            "snippet": "Scalar.AspNetCore, 2.17.1",
+            "protectedSnippet": "Scalar.AspNetCore, 2.17.1",
+            "label": "Scalar.AspNetCore 2.17.1",
+            "properties": {
+              "PackageId": "Scalar.AspNetCore",
+              "PackageVersion": "2.17.1",
+              "PackageNewVersion": "2.17.10",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto.ServiceDefaults",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": false,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 128,
+        "linesOfCode": 128,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "75c6286b-cb17-4452-b03d-15a2dd124bde",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.Extensions.Http.Resilience\u0027 10.9.0; proposed upgrade to 10.10.0.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Http.Resilience, 10.9.0",
+              "protected": "Microsoft.Extensions.Http.Resilience, 10.9.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "Microsoft.Extensions.Http.Resilience, 10.9.0",
+            "protectedSnippet": "Microsoft.Extensions.Http.Resilience, 10.9.0",
+            "label": "Microsoft.Extensions.Http.Resilience 10.9.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Http.Resilience",
+              "PackageVersion": "10.9.0",
+              "PackageNewVersion": "10.10.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "490be897-55d2-4bf6-b3bf-63de8f695412",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.Extensions.ServiceDiscovery\u0027 10.9.0; proposed upgrade to 10.10.0.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.ServiceDiscovery, 10.9.0",
+              "protected": "Microsoft.Extensions.ServiceDiscovery, 10.9.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "Microsoft.Extensions.ServiceDiscovery, 10.9.0",
+            "protectedSnippet": "Microsoft.Extensions.ServiceDiscovery, 10.9.0",
+            "label": "Microsoft.Extensions.ServiceDiscovery 10.9.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.ServiceDiscovery",
+              "PackageVersion": "10.9.0",
+              "PackageNewVersion": "10.10.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9657bcda-df0d-4571-84b0-360b43af6b7e",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027OpenTelemetry.Exporter.OpenTelemetryProtocol\u0027 1.18.0; proposed upgrade to 1.19.1.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Exporter.OpenTelemetryProtocol, 1.18.0",
+              "protected": "OpenTelemetry.Exporter.OpenTelemetryProtocol, 1.18.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Exporter.OpenTelemetryProtocol, 1.18.0",
+            "protectedSnippet": "OpenTelemetry.Exporter.OpenTelemetryProtocol, 1.18.0",
+            "label": "OpenTelemetry.Exporter.OpenTelemetryProtocol 1.18.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+              "PackageVersion": "1.18.0",
+              "PackageNewVersion": "1.19.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "16acc503-3c98-49c5-a5c7-9b1a4ac4f130",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027OpenTelemetry.Extensions.Hosting\u0027 1.18.0; proposed upgrade to 1.19.1.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Extensions.Hosting, 1.18.0",
+              "protected": "OpenTelemetry.Extensions.Hosting, 1.18.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Extensions.Hosting, 1.18.0",
+            "protectedSnippet": "OpenTelemetry.Extensions.Hosting, 1.18.0",
+            "label": "OpenTelemetry.Extensions.Hosting 1.18.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Extensions.Hosting",
+              "PackageVersion": "1.18.0",
+              "PackageNewVersion": "1.19.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "55d8b50e-dd19-45aa-a213-2f73abe89ea5",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027OpenTelemetry.Instrumentation.AspNetCore\u0027 1.18.0; proposed upgrade to 1.19.0.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Instrumentation.AspNetCore, 1.18.0",
+              "protected": "OpenTelemetry.Instrumentation.AspNetCore, 1.18.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Instrumentation.AspNetCore, 1.18.0",
+            "protectedSnippet": "OpenTelemetry.Instrumentation.AspNetCore, 1.18.0",
+            "label": "OpenTelemetry.Instrumentation.AspNetCore 1.18.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Instrumentation.AspNetCore",
+              "PackageVersion": "1.18.0",
+              "PackageNewVersion": "1.19.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "fd8dda0a-7e42-42a8-aac4-972132517b8d",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027OpenTelemetry.Instrumentation.Http\u0027 1.18.0; proposed upgrade to 1.19.0.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Instrumentation.Http, 1.18.0",
+              "protected": "OpenTelemetry.Instrumentation.Http, 1.18.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Instrumentation.Http, 1.18.0",
+            "protectedSnippet": "OpenTelemetry.Instrumentation.Http, 1.18.0",
+            "label": "OpenTelemetry.Instrumentation.Http 1.18.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Instrumentation.Http",
+              "PackageVersion": "1.18.0",
+              "PackageNewVersion": "1.19.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ede2638b-a390-4e60-940a-2b40956e56ab",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027OpenTelemetry.Instrumentation.Runtime\u0027 1.18.0; proposed upgrade to 1.19.0.",
+          "projectPath": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Instrumentation.Runtime, 1.18.0",
+              "protected": "OpenTelemetry.Instrumentation.Runtime, 1.18.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.ServiceDefaults\\ArvidsonFoto.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Instrumentation.Runtime, 1.18.0",
+            "protectedSnippet": "OpenTelemetry.Instrumentation.Runtime, 1.18.0",
+            "label": "OpenTelemetry.Instrumentation.Runtime 1.18.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Instrumentation.Runtime",
+              "PackageVersion": "1.18.0",
+              "PackageNewVersion": "1.19.0",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto.Tests.E2E",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 3064,
+        "linesOfCode": 418,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "a3c10929-c80a-45dc-b8ff-2bed7deb5019",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.Mvc.Testing\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.Mvc.Testing 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Mvc.Testing",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "4db80d86-a253-4f50-8471-bf1dbe4be205",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.Playwright.NUnit\u0027 1.62.0; proposed upgrade to 1.63.0.",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Playwright.NUnit, 1.62.0",
+              "protected": "Microsoft.Playwright.NUnit, 1.62.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "Microsoft.Playwright.NUnit, 1.62.0",
+            "protectedSnippet": "Microsoft.Playwright.NUnit, 1.62.0",
+            "label": "Microsoft.Playwright.NUnit 1.62.0",
+            "properties": {
+              "PackageId": "Microsoft.Playwright.NUnit",
+              "PackageVersion": "1.62.0",
+              "PackageNewVersion": "1.63.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6ae80c05-7534-4522-b5db-aa0b734e0958",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027xunit.runner.visualstudio\u0027 4.0.0 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit.runner.visualstudio, 4.0.0",
+              "protected": "xunit.runner.visualstudio, 4.0.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "xunit.runner.visualstudio, 4.0.0",
+            "protectedSnippet": "xunit.runner.visualstudio, 4.0.0",
+            "label": "xunit.runner.visualstudio 4.0.0",
+            "properties": {
+              "PackageId": "xunit.runner.visualstudio",
+              "PackageVersion": "4.0.0",
+              "PackageNewVersion": "4.0.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "2e9cd442-835c-4c2a-b5e2-86c4a43c9052",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027coverlet.collector\u0027 10.0.1; proposed upgrade to 10.1.0.",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "coverlet.collector, 10.0.1",
+              "protected": "coverlet.collector, 10.0.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "coverlet.collector, 10.0.1",
+            "protectedSnippet": "coverlet.collector, 10.0.1",
+            "label": "coverlet.collector 10.0.1",
+            "properties": {
+              "PackageId": "coverlet.collector",
+              "PackageVersion": "10.0.1",
+              "PackageNewVersion": "10.1.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "da25a7ac-d321-4745-9a39-18f13a529e84",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.NET.Test.Sdk\u0027 18.9.0; proposed upgrade to 18.10.1.",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.NET.Test.Sdk, 18.9.0",
+              "protected": "Microsoft.NET.Test.Sdk, 18.9.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "protectedSnippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "label": "Microsoft.NET.Test.Sdk 18.9.0",
+            "properties": {
+              "PackageId": "Microsoft.NET.Test.Sdk",
+              "PackageVersion": "18.9.0",
+              "PackageNewVersion": "18.10.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "e1faceea-82b0-470c-87b5-85d2fce2ba9f",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027xunit.v3\u0027 4.0.0; proposed upgrade to 4.0.1.",
+          "projectPath": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit.v3, 4.0.0",
+              "protected": "xunit.v3, 4.0.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.E2E\\ArvidsonFoto.Tests.E2E.csproj",
+            "snippet": "xunit.v3, 4.0.0",
+            "protectedSnippet": "xunit.v3, 4.0.0",
+            "label": "xunit.v3 4.0.0",
+            "properties": {
+              "PackageId": "xunit.v3",
+              "PackageVersion": "4.0.0",
+              "PackageNewVersion": "4.0.1",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto.Tests.Integration",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 3238,
+        "linesOfCode": 592,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "dd2dd6d6-d17c-4b1b-8604-8246a8320b83",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.AspNetCore.Mvc.Testing\u0027 11.0.0-rc.1.26425.128; proposed upgrade to 10.0.12.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+              "protected": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+            "protectedSnippet": "Microsoft.AspNetCore.Mvc.Testing, 11.0.0-rc.1.26425.128",
+            "label": "Microsoft.AspNetCore.Mvc.Testing 11.0.0-rc.1.26425.128",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Mvc.Testing",
+              "PackageVersion": "11.0.0-rc.1.26425.128",
+              "PackageNewVersion": "10.0.12",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "deeddc35-dcb7-4ad0-995d-9dd5644477a1",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MSTest.TestAdapter\u0027 4.3.3; proposed upgrade to 4.4.1.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MSTest.TestAdapter, 4.3.3",
+              "protected": "MSTest.TestAdapter, 4.3.3"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "MSTest.TestAdapter, 4.3.3",
+            "protectedSnippet": "MSTest.TestAdapter, 4.3.3",
+            "label": "MSTest.TestAdapter 4.3.3",
+            "properties": {
+              "PackageId": "MSTest.TestAdapter",
+              "PackageVersion": "4.3.3",
+              "PackageNewVersion": "4.4.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "c0b773fc-4224-409f-90cb-ec02e32adafc",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MSTest.TestFramework\u0027 4.3.3; proposed upgrade to 4.4.1.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MSTest.TestFramework, 4.3.3",
+              "protected": "MSTest.TestFramework, 4.3.3"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "MSTest.TestFramework, 4.3.3",
+            "protectedSnippet": "MSTest.TestFramework, 4.3.3",
+            "label": "MSTest.TestFramework 4.3.3",
+            "properties": {
+              "PackageId": "MSTest.TestFramework",
+              "PackageVersion": "4.3.3",
+              "PackageNewVersion": "4.4.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "086f617c-ecd7-4963-b0f3-e18496da4763",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027AngleSharp\u0027 1.5.1; proposed upgrade to 1.8.2.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "AngleSharp, 1.5.1",
+              "protected": "AngleSharp, 1.5.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "AngleSharp, 1.5.1",
+            "protectedSnippet": "AngleSharp, 1.5.1",
+            "label": "AngleSharp 1.5.1",
+            "properties": {
+              "PackageId": "AngleSharp",
+              "PackageVersion": "1.5.1",
+              "PackageNewVersion": "1.8.2",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "85af80e3-16cf-4714-a2f2-f907d79e70b6",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027coverlet.collector\u0027 10.0.1; proposed upgrade to 10.1.0.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "coverlet.collector, 10.0.1",
+              "protected": "coverlet.collector, 10.0.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "coverlet.collector, 10.0.1",
+            "protectedSnippet": "coverlet.collector, 10.0.1",
+            "label": "coverlet.collector 10.0.1",
+            "properties": {
+              "PackageId": "coverlet.collector",
+              "PackageVersion": "10.0.1",
+              "PackageNewVersion": "10.1.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0af1b40a-1fac-485e-8305-a1b63212663b",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.NET.Test.Sdk\u0027 18.9.0; proposed upgrade to 18.10.1.",
+          "projectPath": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.NET.Test.Sdk, 18.9.0",
+              "protected": "Microsoft.NET.Test.Sdk, 18.9.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Integration\\ArvidsonFoto.Tests.Integration.csproj",
+            "snippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "protectedSnippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "label": "Microsoft.NET.Test.Sdk 18.9.0",
+            "properties": {
+              "PackageId": "Microsoft.NET.Test.Sdk",
+              "PackageVersion": "18.9.0",
+              "PackageNewVersion": "18.10.1",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "ArvidsonFoto.Tests.Unit",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": true,
+        "numberOfFiles": 20,
+        "numberOfCodeFiles": 18,
+        "linesTotal": 6417,
+        "linesOfCode": 3771,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "cb3d23ab-d8d6-4fa9-8fa5-94437a4937e7",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027MessagePack\u0027 3.1.8; proposed upgrade to 3.1.10.",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "MessagePack, 3.1.8",
+              "protected": "MessagePack, 3.1.8"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "MessagePack, 3.1.8",
+            "protectedSnippet": "MessagePack, 3.1.8",
+            "label": "MessagePack 3.1.8",
+            "properties": {
+              "PackageId": "MessagePack",
+              "PackageVersion": "3.1.8",
+              "PackageNewVersion": "3.1.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "33020808-fce9-466d-9bbd-a12218d1d6f8",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Aspire.Hosting.Testing\u0027 13.5.4 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.Testing, 13.5.4",
+              "protected": "Aspire.Hosting.Testing, 13.5.4"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "Aspire.Hosting.Testing, 13.5.4",
+            "protectedSnippet": "Aspire.Hosting.Testing, 13.5.4",
+            "label": "Aspire.Hosting.Testing 13.5.4",
+            "properties": {
+              "PackageId": "Aspire.Hosting.Testing",
+              "PackageVersion": "13.5.4",
+              "PackageNewVersion": "13.5.4",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a8d99c21-cda0-4239-ba23-4372ca0e7a47",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027KubernetesClient\u0027 19.0.2 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "KubernetesClient, 19.0.2",
+              "protected": "KubernetesClient, 19.0.2"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "KubernetesClient, 19.0.2",
+            "protectedSnippet": "KubernetesClient, 19.0.2",
+            "label": "KubernetesClient 19.0.2",
+            "properties": {
+              "PackageId": "KubernetesClient",
+              "PackageVersion": "19.0.2",
+              "PackageNewVersion": "19.0.2",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "3b7b1c76-8e8d-4d9e-abc2-eb96260fee04",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027xunit.runner.visualstudio\u0027 4.0.0 (included in this upgrade).",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit.runner.visualstudio, 4.0.0",
+              "protected": "xunit.runner.visualstudio, 4.0.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "xunit.runner.visualstudio, 4.0.0",
+            "protectedSnippet": "xunit.runner.visualstudio, 4.0.0",
+            "label": "xunit.runner.visualstudio 4.0.0",
+            "properties": {
+              "PackageId": "xunit.runner.visualstudio",
+              "PackageVersion": "4.0.0",
+              "PackageNewVersion": "4.0.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "61224922-bac8-472d-ac0b-ca011c5970be",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027coverlet.collector\u0027 10.0.1; proposed upgrade to 10.1.0.",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "coverlet.collector, 10.0.1",
+              "protected": "coverlet.collector, 10.0.1"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "coverlet.collector, 10.0.1",
+            "protectedSnippet": "coverlet.collector, 10.0.1",
+            "label": "coverlet.collector 10.0.1",
+            "properties": {
+              "PackageId": "coverlet.collector",
+              "PackageVersion": "10.0.1",
+              "PackageNewVersion": "10.1.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6be3d8f5-802a-49f1-b2c1-9b6c9bbef069",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027Microsoft.NET.Test.Sdk\u0027 18.9.0; proposed upgrade to 18.10.1.",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.NET.Test.Sdk, 18.9.0",
+              "protected": "Microsoft.NET.Test.Sdk, 18.9.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "protectedSnippet": "Microsoft.NET.Test.Sdk, 18.9.0",
+            "label": "Microsoft.NET.Test.Sdk 18.9.0",
+            "properties": {
+              "PackageId": "Microsoft.NET.Test.Sdk",
+              "PackageVersion": "18.9.0",
+              "PackageNewVersion": "18.10.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "087602be-3d44-4c04-bf72-4c35930fc43f",
+          "ruleId": "Pkg.0001",
+          "description": "Project references \u0027xunit.v3\u0027 4.0.0; proposed upgrade to 4.0.1.",
+          "projectPath": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit.v3, 4.0.0",
+              "protected": "xunit.v3, 4.0.0"
+            },
+            "kind": "File",
+            "path": "ArvidsonFoto.Tests.Unit\\ArvidsonFoto.Tests.Unit.csproj",
+            "snippet": "xunit.v3, 4.0.0",
+            "protectedSnippet": "xunit.v3, 4.0.0",
+            "label": "xunit.v3 4.0.0",
+            "properties": {
+              "PackageId": "xunit.v3",
+              "PackageVersion": "4.0.0",
+              "PackageNewVersion": "4.0.1",
+              "PackageReplacements": null
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SbomScanner\\SbomScanner.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "SbomScanner",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net11.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "isTestProject": false,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 776,
+        "linesOfCode": 776,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Pkg.0001": {
+      "id": "Pkg.0001",
+      "isFeature": false,
+      "description": "Project references a package included in this upgrade.\n\nThe project references one of the packages being upgraded. This finding records the reference (current and proposed version) so the assessment lists every affected project even when no breaking API changes were detected.",
+      "label": "Project references an upgraded package",
+      "severity": "Information",
+      "effort": 0
+    }
+  }
+}

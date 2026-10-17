@@ -87,8 +87,17 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("GB_name");
 
+            entity.Property(e => e.GbNameEn)
+                .HasMaxLength(100)
+                .HasColumnName("GB_name_en");
+            entity.Property(e => e.GbNameEnReviewed).HasColumnName("GB_name_en_reviewed");
+
             entity.Property(e => e.GbText)
                 .HasColumnName("GB_text");
+
+            entity.Property(e => e.GbTextEn)
+                .HasColumnName("GB_text_en");
+            entity.Property(e => e.GbTextEnReviewed).HasColumnName("GB_text_en_reviewed");
 
             entity.HasKey(e => e.Id);
         });
@@ -123,6 +132,11 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(150)
                 .HasColumnName("image_description");
 
+            entity.Property(e => e.ImageDescriptionEn)
+                .HasMaxLength(150)
+                .HasColumnName("image_description_en");
+            entity.Property(e => e.ImageDescriptionEnReviewed).HasColumnName("image_description_en_reviewed");
+
             entity.Property(e => e.ImageUpdate)
                 .HasColumnType("datetime")
                 .HasColumnName("image_update");
@@ -149,9 +163,19 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("menu_text");
 
+            entity.Property(e => e.MenuDisplayNameEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_text_en");
+            entity.Property(e => e.MenuDisplayNameEnReviewed).HasColumnName("menu_text_en_reviewed");
+
             entity.Property(e => e.MenuUrlSegment)
                 .HasMaxLength(50)
                 .HasColumnName("menu_URLtext");
+
+            entity.Property(e => e.MenuUrlSegmentEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_URLtext_en");
+            entity.Property(e => e.MenuUrlSegmentEnReviewed).HasColumnName("menu_URLtext_en_reviewed");
 
             entity.Property(e => e.MenuDateUpdated)
                 .HasColumnType("datetime")
@@ -243,4 +267,60 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public override int SaveChanges()
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void ResetChangedTranslationReviews()
+    {
+        ChangeTracker.DetectChanges();
+        foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Modified))
+        {
+            if (entry.Entity is TblMenu)
+            {
+                Reset(entry, nameof(TblMenu.MenuDisplayName), nameof(TblMenu.MenuDisplayNameEn), nameof(TblMenu.MenuDisplayNameEnReviewed));
+                Reset(entry, nameof(TblMenu.MenuUrlSegment), nameof(TblMenu.MenuUrlSegmentEn), nameof(TblMenu.MenuUrlSegmentEnReviewed));
+            }
+            else if (entry.Entity is TblImage)
+            {
+                Reset(entry, nameof(TblImage.ImageDescription), nameof(TblImage.ImageDescriptionEn), nameof(TblImage.ImageDescriptionEnReviewed));
+            }
+            else if (entry.Entity is TblGb)
+            {
+                Reset(entry, nameof(TblGb.GbName), nameof(TblGb.GbNameEn), nameof(TblGb.GbNameEnReviewed));
+                Reset(entry, nameof(TblGb.GbText), nameof(TblGb.GbTextEn), nameof(TblGb.GbTextEnReviewed));
+            }
+        }
+    }
+
+    private static void Reset(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, string swedish, string english, string reviewed)
+    {
+        if (!Equals(entry.Property(swedish).OriginalValue, entry.Property(swedish).CurrentValue) ||
+            !Equals(entry.Property(english).OriginalValue, entry.Property(english).CurrentValue) ||
+            string.IsNullOrWhiteSpace(entry.Property(english).CurrentValue as string))
+        {
+            entry.Property(reviewed).CurrentValue = false;
+        }
+    }
 }

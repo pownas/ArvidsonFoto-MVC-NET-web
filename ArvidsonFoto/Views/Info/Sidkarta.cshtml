@@ -1,194 +1,90 @@
-﻿@using ArvidsonFoto.Core.Interfaces
+﻿@inject IStringLocalizer<InfoResource> I
+@inject IStringLocalizer<HomeResource> H
+@using ArvidsonFoto.Core
 @using ArvidsonFoto.Core.DTOs
+@using ArvidsonFoto.Core.Extensions
+@using ArvidsonFoto.Core.Interfaces
+@using Microsoft.Extensions.Localization
+@inject IApiCategoryService CategoryService
+@inject IStringLocalizer<SharedResource> T
+@{
+    var categories = CategoryService.GetAll();
+    ViewData["Title"] = T["Navigation.Sitemap"].Value;
+    var byParent = categories.ToLookup(c => c.ParentCategoryId ?? 0);
+}
 @section MetaData {
     <meta name="robots" content="noimageindex" />
-    <meta name="description" content="Sidkarta för ArvidsonFoto.se – en komplett översikt över alla sidor och bildkategorier på naturfotograf Torbjörn Arvidssons webbplats." />
-    <link rel="canonical" href="https://ArvidsonFoto.se/Info/Sidkarta" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sidkarta - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Sidkarta för ArvidsonFoto.se – en komplett översikt över alla sidor och bildkategorier på naturfotograf Torbjörn Arvidssons webbplats.">
-    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
-
-    <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Sidkarta - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Sidkarta för ArvidsonFoto.se – en komplett översikt över alla sidor och bildkategorier på naturfotograf Torbjörn Arvidssons webbplats." />
+    <meta name="description" content="@H["Home.SitemapDetail"]" />
+    <link rel="canonical" href="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Sidkarta"))" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@T["Navigation.Sitemap"] - Torbjörn Arvidson Foto" />
+    <meta name="twitter:description" content="@H["Home.SitemapDetail"]" />
+    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
+    <meta property="og:title" content="@T["Navigation.Sitemap"] - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@H["Home.SitemapDetail"]" />
     <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/Info/Sidkarta" />
+    <meta property="og:url" content="https://ArvidsonFoto.se@(LocalizedRoutes.Page("/Info/Sidkarta"))" />
 }
-
-@inject IApiCategoryService _categoryService
-@{
-    var categories = _categoryService.GetAll();
-}
-
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Info">Info</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Sidkarta<i class="bi bi-diagram-3 mx-1"></i></li>
+        <li class="breadcrumb-item"><a href="@LocalizedRoutes.Page("/Info")">Info</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@T["Navigation.Sitemap"]</li>
     </ol>
 </nav>
-
-<h2><i class="bi bi-diagram-3"></i> @ViewData["Title"]</h2>
-
-<p>En sidkarta över alla sidor på denna hemsidan:</p>
-
-<a href="./">ArvidsonFoto.se</a>
+<h2><i class="bi bi-diagram-3"></i> @T["Navigation.Sitemap"]</h2>
+<p>@I["Sitemap.Intro"]</p>
 <ul class="sitemap headMenu">
-    @* Den synliga menyn börjar här *@
-    <li>
-        <i class="bi bi-arrow-bar-right"></i> <a href="./Senast">Senast</a>
+    <li><a href="@LocalizedRoutes.Page("/Senast")">@T["Navigation.Latest"]</a>
         <ul class="sitemap">
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Senast/Fotograferad"><i class="fa fa-camera-retro" aria-hidden="true"></i> Fotograferad</a></li>
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Senast/Uppladdad"><i class="fa fa-upload" aria-hidden="true"></i> Uppladdad</a></li>
-            <li><i class="bi bi-arrow-return-right"></i> <a href="./Senast/Per kategori"><i class="fa fa-plus-square-o" aria-hidden="true"></i> Per kategori</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Fotograferad")">@T["Navigation.Photographed"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Uppladdad")">@T["Navigation.Uploaded"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Senast/Per kategori")">@T["Navigation.ByCategory"]</a></li>
         </ul>
     </li>
-    @if (_categoryService == null || categories == null)
+    @foreach (var head in byParent[0].OrderBy(c => c.Name))
     {
-        <li><a href="./Bilder/Däggdjur">Däggdjur</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Fåglar">Fåglar</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-        <li><a href="./Bilder/Insekter">Insekter</a><ul class="sitemap"><li><a href="#">Dummy Item</a></li></ul></li>
-    }
-    else
-    {
-        var headMenu = categories.Where(m => m.ParentCategoryId == 0 || m.ParentCategoryId == null).ToList();
-        if (headMenu != null && headMenu.Count > 0)
-        {
-            var lastHeadMenuItem = headMenu.Last();
-            foreach (var headItem in headMenu)
+        <li><a href="@LocalizedRoutes.Category(head)">@head.Name</a>
+            @if (byParent[head.CategoryId.GetValueOrDefault()].Any())
             {
-                <li>
-                    @{
-                        var sub1Menu = categories.Where(m => m.ParentCategoryId == headItem.CategoryId).OrderBy(m => m.Name).ToList();
-                        if (sub1Menu != null && sub1Menu.Count > 0)
+                <ul class="sitemap">
+                @foreach (var child in byParent[head.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
+                {
+                    <li><a href="@LocalizedRoutes.Category(head, child)">@child.Name</a>
+                        @if (byParent[child.CategoryId.GetValueOrDefault()].Any())
                         {
-                            var lastSub1MenuItem = sub1Menu.Last();
-                            if (headItem.Name == "Fåglar")
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/Fåglar" title="@headItem.Name">@headItem.Name</a> }
-                            else
-                            { <i class="bi bi-arrow-bar-right"></i> <a href="./Bilder/@headItem.Name" title="@headItem.Name">@headItem.Name</a> }
-                    <ul class="sitemap sub1Menu">
-                        @foreach (var sub1Item in sub1Menu)
-                        {
-                        <li>
-                            @{
-                                var sub2Menu = categories.Where(m => m.ParentCategoryId == sub1Item.CategoryId).OrderBy(m => m.Name).ToList();
-                                if (sub2Menu != null && sub2Menu.Count > 0)
-                                {
-                                    var lastSub2MenuItem = sub2Menu.Last();
-                                    if (sub1Item.Equals(lastSub1MenuItem))
+                            <ul class="sitemap">
+                            @foreach (var grandchild in byParent[child.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
+                            {
+                                <li><a href="@LocalizedRoutes.Category(head, child, grandchild)">@grandchild.Name</a>
+                                    @if (byParent[grandchild.CategoryId.GetValueOrDefault()].Any())
                                     {
-                                        <i class="bi bi-arrow-return-right"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="bi bi-arrow-bar-right"></i>
-                                    } <a href="./Bilder/@headItem.Name/@sub1Item.Name" title="@sub1Item.Name">@sub1Item.Name</a>
-                                    <ul class="sitemap sub2Menu">
-                                        @foreach (var sub2Item in sub2Menu)
+                                        <ul class="sitemap">
+                                        @foreach (var leaf in byParent[grandchild.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
                                         {
-                                            <li>
-                                                @{
-                                                    var sub3Menu = categories.Where(m => m.ParentCategoryId == sub2Item.CategoryId).OrderBy(m => m.Name).ToList();
-                                                    if (sub3Menu != null && sub3Menu.Count > 0)
-                                                    {
-                                                        var lastSub3MenuItem = sub3Menu.Last();
-                                                        if (sub2Item.Equals(lastSub3MenuItem))
-                                                        {
-                                                            <i class="bi bi-arrow-return-right"></i>
-                                                        }
-                                                        else
-                                                        {
-                                                            <i class="bi bi-arrow-bar-right"></i>
-                                                        } <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name" title="@sub2Item.Name">@sub2Item.Name</a>
-                                                        <ul class="sitemap sub3Menu">
-                                                            @foreach (var sub3Item in sub3Menu)
-                                                            {
-                                                                <li>
-                                                                    @if (sub3Item.Equals(lastSub3MenuItem))
-                                                                    {
-                                                                        <i class="bi bi-arrow-return-right"></i>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <i class="bi bi-arrow-bar-right"></i>
-                                                                    }
-                                                                    <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name/@sub3Item.Name" title="@sub3Item.Name">@sub3Item.Name</a>
-                                                                </li>
-                                                            }
-                                                        </ul>
-                                                    }
-                                                    else
-                                                    {
-                                                        if (sub2Item.Equals(lastSub2MenuItem))
-                                                        {
-                                                            <i class="bi bi-arrow-return-right"></i>
-                                                        }
-                                                        else
-                                                        {
-                                                            <i class="bi bi-arrow-bar-right"></i>
-                                                        }
-                                                        <a href="./Bilder/@headItem.Name/@sub1Item.Name/@sub2Item.Name" title="@sub2Item.Name">@sub2Item.Name</a>
-                                                    }
-                                                }
-                                            </li>
+                                            <li><a href="@LocalizedRoutes.Category(head, child, grandchild, leaf)">@leaf.Name</a></li>
                                         }
-                                    </ul>
-                                }
-                                else
-                                {
-                                    if (sub1Item.Equals(lastSub1MenuItem))
-                                    {
-                                        <i class="bi bi-arrow-return-right"></i>
+                                        </ul>
                                     }
-                                    else
-                                    {
-                                        <i class="bi bi-arrow-bar-right"></i>
-                                    }
-                                    <a href="./Bilder/@headItem.Name/@sub1Item.Name" title="@sub1Item.Name">@sub1Item.Name</a>
-                                }
+                                </li>
                             }
-                        </li>
+                            </ul>
                         }
-                    </ul>
+                    </li>
                 }
-                else
-                { 
-                    if (headItem.Equals(lastHeadMenuItem))
-                    {
-                        <i class="bi bi-arrow-return-right"></i>
-                    }
-                    else
-                    {
-                        <i class="bi bi-arrow-bar-right"></i>
-                    }
-                    <a href="./Bilder/@headItem.Name" title="@headItem.Name">@headItem.Name</a> 
-                }
-                }
-                </li>
+                </ul>
             }
-        }
+        </li>
     }
-    <li>
-        <i class="bi bi-arrow-bar-right"></i> <a href="./Info"><i class="bi bi-info-circle"></i> Info </a>
+    <li><a href="@LocalizedRoutes.Page("/Info")">Info</a>
         <ul class="sitemap">
-            @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Upload_Admin.asp"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Admin (Dold)</a></li> <!-- Kräver inloggning --> *@
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Kop_av_bilder"><i class="bi bi-cart3"></i> Köp av bilder</a></li>
-            @*<li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Portfolio"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Portfolio (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Gastbok"><i class="bi bi-book"></i> Gästbok</a></li>
-            @*<li class="disabled"><i class="bi bi-arrow-bar-right"></i> <a class="disabled" href="#"><i class="fa fa-calendar" aria-hidden="true"></i> Bildvisningar (Dold - Utvecklas)</a></li>  <!-- Kräver inloggning --> *@
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Kontakta"><i class="bi bi-mailbox"></i> Kontaktinformation</a></li>
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Om_mig"><i class="bi bi-question-circle"></i> Om mig, Torbjörn Arvidson</a></li>
-            <li><i class="bi bi-arrow-bar-right"></i> <a href="./Info/Sidkarta"><i class="bi bi-diagram-3"></i> Sidkarta</a></li>
-            <li><i class="bi bi-arrow-return-right"></i> <a href="./Info/Copyright">&copy; Copyright</a></li>
-            @*<partial name="_LoginPartial" />*@
+            <li><a href="@LocalizedRoutes.Page("/Info/Kop_av_bilder")">@T["Navigation.BuyPhotos"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Gastbok")">@T["Navigation.Guestbook"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Kontakta")">@T["Navigation.Contact"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Om_mig")">@T["Navigation.About"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Navigation.Sitemap"]</a></li>
+            <li><a href="@LocalizedRoutes.Page("/Info/Copyright")">© Copyright</a></li>
         </ul>
     </li>
-    <li><i class="bi bi-arrow-return-right"></i> <a href="./Search" aria-label="Sök på sidan"><i class="bi bi-search"></i> Sök</a></li>
-    @*<li><a href="./?log=out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logga ut</a></li> <!-- Kräver inloggning --> *@
+    <li><a href="@LocalizedRoutes.Search">@T["Navigation.Search"]</a></li>
 </ul>
-
-<p class="text-center">(Tips: Tryck [CTRL] + [F] för att söka bland alla bild-kategorier på denna sidan)</p>

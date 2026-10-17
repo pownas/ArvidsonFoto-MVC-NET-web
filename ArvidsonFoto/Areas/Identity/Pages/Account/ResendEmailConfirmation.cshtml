@@ -1,12 +1,12 @@
-﻿@page
+@page
 @model ResendEmailConfirmationModel
 @{
-    ViewData["Title"] = "Resend email confirmation";
+    ViewData["Title"] = L["Identity.ResendEmailConfirmation.ResendEmailConfirmation"];
 }
 
 <h2>@ViewData["Title"]</h2>
-<h4>Enter your email.</h4>
-<p>Kontakta Jonas för att lösa detta...</p>
+<h4>@L["Identity.ResendEmailConfirmation.EnterYourEmail"]</h4>
+<p>@L["Identity.ExternalLogin.ContactJonasToResolveThis"]</p>
 @*<hr />
 <div class="row">
     <div class="col-md-4">

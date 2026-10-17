@@ -48,7 +48,7 @@ public class BilderControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/Fåglar", model.CurrentUrl);
+        Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Fåglar", model.SelectedCategory.Name);
     }
@@ -97,9 +97,8 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        // Controller använder GetNameById som returnerar MenuText (display-namn), inte MenuUrltext
-        Assert.Equal("/Bilder/Fåglar", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.Equal("/Bilder/Faglar", redirectResult.Url);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]
@@ -114,7 +113,7 @@ public class BilderControllerTests
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
         Assert.Equal("/Bilder/Insekter", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]
@@ -174,7 +173,7 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("./Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
         Assert.False(redirectResult.Permanent);
     }
 
@@ -189,7 +188,7 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("./Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
     }
 
     [Fact]

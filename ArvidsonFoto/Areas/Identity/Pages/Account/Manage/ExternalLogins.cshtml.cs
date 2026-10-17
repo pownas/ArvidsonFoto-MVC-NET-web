@@ -28,7 +28,7 @@ public class ExternalLoginsModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID 'user.Id'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         CurrentLogins = await _userManager.GetLoginsAsync(user);
@@ -44,18 +44,18 @@ public class ExternalLoginsModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID 'user.Id'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
         if (!result.Succeeded)
         {
-            StatusMessage = "The external login was not removed.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.ExternalLogins.TheExternalLoginWasNotRemoved");
             return RedirectToPage();
         }
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = "The external login was removed.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.ExternalLogins.TheExternalLoginWasRemoved");
         return RedirectToPage();
     }
 
@@ -75,7 +75,7 @@ public class ExternalLoginsModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID 'user.Id'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
@@ -87,14 +87,14 @@ public class ExternalLoginsModel(
         var result = await _userManager.AddLoginAsync(user, info);
         if (!result.Succeeded)
         {
-            StatusMessage = "The external login was not added. External logins can only be associated with one account.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.ExternalLogins.TheExternalLoginWasNotAddedOneAccount");
             return RedirectToPage();
         }
 
         // Clear the existing external cookie to ensure a clean login process
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-        StatusMessage = "The external login was added.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.ExternalLogins.TheExternalLoginWasAdded");
         return RedirectToPage();
     }
 }

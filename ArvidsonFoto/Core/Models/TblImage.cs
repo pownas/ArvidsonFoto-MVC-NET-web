@@ -43,6 +43,9 @@ public partial class TblImage()
     /// <example>Hane, beskrivning av blåmes...</example>
     public string? ImageDescription { get; set; } = string.Empty;
 
+    public string? ImageDescriptionEn { get; set; }
+    public bool ImageDescriptionEnReviewed { get; set; }
+
     /// <summary> Datum och tid när bilden laddades upp/uppdaterades senast </summary>
     /// <example>2021-12-03T19:23:42</example>
     public DateTime? ImageUpdate { get; set; } = DateTime.Now;

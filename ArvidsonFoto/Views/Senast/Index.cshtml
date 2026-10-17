@@ -1,47 +1,56 @@
-﻿@*<!-- Senast-index -->*@
+﻿@inject IStringLocalizer<LatestResource> L
+@inject IStringLocalizer<GalleryResource> G
+@*<!-- Senast-index -->*@
+@inject IStringLocalizer<SharedResource> T
 @model GalleryViewModel
-
-@section MetaData {
-    <meta name="robots" content="noimageindex, nofollow" />
-    <meta name="description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur. Antal bilder: @if (Model.AllImagesList is not null) {@Model.AllImagesList.Count} else {@("0")}st" />
-    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto">
-    <meta name="twitter:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur.">
-    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
-
-    <!-- Open Graph for social media sharing -->
-    <meta property="og:title" content="Senast @ViewData["Title"] - Torbjörn Arvidson Foto" />
-    <meta property="og:description" content="Torbjörn Arvidson Foto - Senast @ViewData["Title"]. Bilder på djur och natur." />
-    <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
-    <meta property="og:url" content="https://ArvidsonFoto.se/@Model.CurrentUrl" />
-}
 
 @{
     string classIcon = "bi-camera";
     classIcon = ViewData["Title"]!.Equals("Uppladdad") ? "bi-calendar-week" : classIcon;
     classIcon = ViewData["Title"]!.Equals("Per kategori") ? "bi-grid-3x3-gap" : classIcon;
+    var sortLabel = ViewData["Title"]!.ToString() switch
+    {
+        "Uppladdad" => T["Navigation.Uploaded"].Value,
+        "Per kategori" => T["Navigation.ByCategory"].Value,
+        _ => T["Navigation.Photographed"].Value
+    };
 }
+@section MetaData {
+    <meta name="robots" content="noimageindex, nofollow" />
+    <meta name="description" content="@L["Latest.Metadata.Description", sortLabel] @L["Latest.Metadata.ImageCount", Model.AllImagesList?.Count ?? 0]" />
+    <link rel="canonical" href="https://ArvidsonFoto.se/@Model.CurrentUrl" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@T["Navigation.Latest"] @sortLabel - Torbjörn Arvidson Foto">
+    <meta name="twitter:description" content="@L["Latest.Metadata.Description", sortLabel]">
+    <meta name="twitter:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg">
+
+    <!-- Open Graph for social media sharing -->
+    <meta property="og:title" content="@T["Navigation.Latest"] @sortLabel - Torbjörn Arvidson Foto" />
+    <meta property="og:description" content="@L["Latest.Metadata.Description", sortLabel]" />
+    <meta property="og:image" content="https://ArvidsonFoto.se/img/Torbjorn2020.jpg" />
+    <meta property="og:url" content="https://ArvidsonFoto.se/@Model.CurrentUrl" />
+}
+
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/Senast">Senast</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi @classIcon mx-1"></i></li>
+        <li class="breadcrumb-item"><a href="@LocalizedRoutes.Page("/Senast")">@T["Navigation.Latest"]</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@sortLabel<i class="bi @classIcon mx-1"></i></li>
     </ol>
 </nav>
 
-<h2>Senast - @ViewData["Title"] <i class="bi @classIcon"></i></h2>
+<h2>@T["Navigation.Latest"] - @sortLabel <i class="bi @classIcon"></i></h2>
 
 @if (ViewData["Title"]!.Equals("Per kategori"))
 {
     <div class="row justify-content-center mt-4">
         <div class="col-12 text-center">
-            <h3>Sök bland kategorierna</h3>
+            <h3>@G["Gallery.Empty.SearchCategories"]</h3>
             <p>
-                Du kan även söka bland kategorierna här nedan eller se alla kategorier via:
-                <a href="/Info/Sidkarta" title="ArvidsonFoto.se/Info/Sidkartan">Sidkartan <i class="bi bi-diagram-3"></i></a>
+                @G["Gallery.Empty.SearchOrSitemap"]
+                <a href="@LocalizedRoutes.Page("/Info/Sidkarta")">@T["Navigation.Sitemap"] <i class="bi bi-diagram-3"></i></a>
             </p>
         </div>
         <div class="mb-4">

@@ -40,7 +40,7 @@ public class ResendEmailConfirmationModel(UserManager<ArvidsonFotoUser> userMana
         var user = await _userManager.FindByEmailAsync(Input.Email);
         if (user == null)
         {
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Manage.Email.VerificationEmailSentPleaseCheckYourEmail"));
             return Page();
         }
 
@@ -54,10 +54,10 @@ public class ResendEmailConfirmationModel(UserManager<ArvidsonFotoUser> userMana
             protocol: Request.Scheme);
         await _emailSender.SendEmailAsync(
             Input.Email,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+            IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+            string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-        ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+        ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Manage.Email.VerificationEmailSentPleaseCheckYourEmail"));
         return Page();
     }
 }

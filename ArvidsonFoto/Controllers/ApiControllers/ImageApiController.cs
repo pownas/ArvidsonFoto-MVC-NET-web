@@ -289,6 +289,8 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         existingImage.ImageMainFamilyId = image.ImageHuvudfamilj;
         existingImage.ImageFamilyId = image.ImageFamilj;
         existingImage.ImageDescription = image.ImageDescription;
+        if (image.ImageDescriptionEn != null)
+            existingImage.ImageDescriptionEn = image.ImageDescriptionEn;
         existingImage.ImageDate = image.ImageDate;
         existingImage.ImageCategoryId = image.ImageArt;
         existingImage.ImageUpdate = DateTime.Now;
@@ -367,7 +369,11 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 // If this is the first segment, find the main category
                 if (currentCategoryId == null)
                 {
-                    currentCategoryId = categoryService.GetIdByName(segment);
+                    currentCategoryId = categoryService.GetByUrlSegmentWithFallback(segment).CategoryId;
+                    if (currentCategoryId <= 0)
+                    {
+                        currentCategoryId = categoryService.GetIdByName(segment);
+                    }
                     if (currentCategoryId <= 0)
                     {
                         return NotFound($"Category '{segment}' not found");
@@ -378,8 +384,10 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                     // Find the child category under the current parent
                     var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
                     matchingChildCategory = children.FirstOrDefault(c =>
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
-                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
+                        string.Equals(c.UrlCategoryPath, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.UrlCategoryPathEn, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.NameSv, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.NameEn, segment, StringComparison.OrdinalIgnoreCase));
 
                     if (matchingChildCategory == null)
                     {

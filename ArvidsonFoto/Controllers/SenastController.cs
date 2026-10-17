@@ -19,6 +19,8 @@ public class SenastController(
     internal IPageCounterService _pageCounterService = new PageCounterService(coreContext);
 
     [Route("[controller]/{sortOrder}")]
+    [Route("/latest")]
+    [Route("/latest/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
     {
         GalleryViewModel viewModel = new();
@@ -29,6 +31,13 @@ public class SenastController(
             sida = 1;
         }
 
+        sortOrder = sortOrder?.ToLowerInvariant() switch
+        {
+            "photographed" => "Fotograferad",
+            "uploaded" => "Uppladdad",
+            "by-category" => "Per kategori",
+            _ => sortOrder
+        };
         if (sortOrder is null)
         {
             sortOrder = "Fotograferad";
@@ -258,7 +267,8 @@ public class SenastController(
         }
 
         viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
-        viewModel.CurrentUrl = "/Senast/" + sortOrder;
+        viewModel.CurrentUrl = HttpContext?.Request.Path.Value ??
+            "/Senast/" + sortOrder;
 
         return View(viewModel);
     }

@@ -33,9 +33,9 @@ public class UploadImageInputDto
     public string? ImageArtNamn { get; set; } = "";
 
     /// <summary>Filnamn för bilden</summary>
-    [Display(Name = "Filnamn")]
-    [Required(ErrorMessage = "Ange filnamn")]
-    [MinLength(2, ErrorMessage = "Filnamn måste vara minst 2 tecken...")]
+    [Display(Name = nameof(ValidationResource.AdminImageFilenameLabel), ResourceType = typeof(ValidationResource))]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminImageFilenameRequired), ErrorMessageResourceType = typeof(ValidationResource))]
+    [MinLength(2, ErrorMessageResourceName = nameof(ValidationResource.AdminImageFilenameTooShort), ErrorMessageResourceType = typeof(ValidationResource))]
     [DataType(DataType.Text)]
     public string? ImageUrl { get; set; } = "";
 
@@ -48,16 +48,20 @@ public class UploadImageInputDto
     public string ImageUrlFullSrc { get; set; } = "";
 
     /// <summary>Datum då bilden togs</summary>
-    [Display(Name = "Fotodatum")]
-    [Required(ErrorMessage = "Ange fotodatum")]
+    [Display(Name = nameof(ValidationResource.AdminImageDateLabel), ResourceType = typeof(ValidationResource))]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminImageDateRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     [DataType(DataType.Date)]
     public DateTime ImageDate { get; set; }
 
     /// <summary>Beskrivning av bilden</summary>
-    [Display(Name = "Beskrivning")]
+    [Display(Name = nameof(ValidationResource.AdminImageDescriptionLabel), ResourceType = typeof(ValidationResource))]
     [DataType(DataType.Text)]
-    [MaxLength(150, ErrorMessage = "Du får max ange 150-tecken i detta fältet")]
+    [MaxLength(150, ErrorMessageResourceName = nameof(ValidationResource.AdminImageDescriptionTooLong), ErrorMessageResourceType = typeof(ValidationResource))]
     public string? ImageDescription { get; set; } = "";
+
+    [Display(Name = nameof(ValidationResource.AdminImageDescriptionEnLabel), ResourceType = typeof(ValidationResource))]
+    [MaxLength(150)]
+    public string? ImageDescriptionEn { get; set; }
 
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
