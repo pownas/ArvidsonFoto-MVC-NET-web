@@ -462,4 +462,29 @@
   <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Edit {0}</value></data>
   <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Delete {0}</value></data>
   <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Page navigation</value></data>
+  <data name="UploadAdmin.Review.Title" xml:space="preserve"><value>Review translations</value></data>
+  <data name="UploadAdmin.Review.Tables" xml:space="preserve"><value>Tables</value></data>
+  <data name="UploadAdmin.Review.Categories" xml:space="preserve"><value>Categories</value></data>
+  <data name="UploadAdmin.Review.Images" xml:space="preserve"><value>Images</value></data>
+  <data name="UploadAdmin.Review.Guestbook" xml:space="preserve"><value>Guestbook</value></data>
+  <data name="UploadAdmin.Review.Remaining" xml:space="preserve"><value>Unreviewed fields: {0} of {1}</value></data>
+  <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Total unreviewed fields: {0} of {1}</value></data>
+  <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Save changed text first. Then mark existing, non-empty translations as reviewed.</value></data>
+  <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Show unreviewed only</value></data>
+  <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Show all</value></data>
+  <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Entry {0}</value></data>
+  <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Category name</value></data>
+  <data name="UploadAdmin.Review.Field.menu.url" xml:space="preserve"><value>URL segment</value></data>
+  <data name="UploadAdmin.Review.Field.images.description" xml:space="preserve"><value>Photo description</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.name" xml:space="preserve"><value>Guestbook name</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.text" xml:space="preserve"><value>Guestbook text</value></data>
+  <data name="UploadAdmin.Review.Swedish" xml:space="preserve"><value>Swedish original</value></data>
+  <data name="UploadAdmin.Review.English" xml:space="preserve"><value>English translation</value></data>
+  <data name="UploadAdmin.Review.Reviewed" xml:space="preserve"><value>Reviewed</value></data>
+  <data name="UploadAdmin.Review.NotReviewed" xml:space="preserve"><value>Not reviewed</value></data>
+  <data name="UploadAdmin.Review.Save" xml:space="preserve"><value>Save (not reviewed)</value></data>
+  <data name="UploadAdmin.Review.MarkReviewed" xml:space="preserve"><value>Mark as reviewed</value></data>
+  <data name="UploadAdmin.Review.Pages" xml:space="preserve"><value>Pages</value></data>
+  <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Next</value></data>
 </root>

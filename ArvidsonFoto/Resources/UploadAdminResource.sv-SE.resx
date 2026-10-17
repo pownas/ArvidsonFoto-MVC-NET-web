@@ -462,4 +462,29 @@
   <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Ändra {0}</value></data>
   <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Radera {0}</value></data>
   <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Sidnavigering</value></data>
+  <data name="UploadAdmin.Review.Title" xml:space="preserve"><value>Granska översättningar</value></data>
+  <data name="UploadAdmin.Review.Tables" xml:space="preserve"><value>Tabeller</value></data>
+  <data name="UploadAdmin.Review.Categories" xml:space="preserve"><value>Kategorier</value></data>
+  <data name="UploadAdmin.Review.Images" xml:space="preserve"><value>Bilder</value></data>
+  <data name="UploadAdmin.Review.Guestbook" xml:space="preserve"><value>Gästbok</value></data>
+  <data name="UploadAdmin.Review.Remaining" xml:space="preserve"><value>Ogranskade fält: {0} av {1}</value></data>
+  <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Totalt ogranskade fält: {0} av {1}</value></data>
+  <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Spara först ändrade texter. Markera sedan befintliga, ifyllda översättningar som granskade.</value></data>
+  <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Visa bara ogranskade</value></data>
+  <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Visa alla</value></data>
+  <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Post {0}</value></data>
+  <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Kategorinamn</value></data>
+  <data name="UploadAdmin.Review.Field.menu.url" xml:space="preserve"><value>URL-segment</value></data>
+  <data name="UploadAdmin.Review.Field.images.description" xml:space="preserve"><value>Bildbeskrivning</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.name" xml:space="preserve"><value>Gästboksnamn</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.text" xml:space="preserve"><value>Gästbokstext</value></data>
+  <data name="UploadAdmin.Review.Swedish" xml:space="preserve"><value>Svenskt original</value></data>
+  <data name="UploadAdmin.Review.English" xml:space="preserve"><value>Engelsk översättning</value></data>
+  <data name="UploadAdmin.Review.Reviewed" xml:space="preserve"><value>Granskad</value></data>
+  <data name="UploadAdmin.Review.NotReviewed" xml:space="preserve"><value>Ej granskad</value></data>
+  <data name="UploadAdmin.Review.Save" xml:space="preserve"><value>Spara (ej granskad)</value></data>
+  <data name="UploadAdmin.Review.MarkReviewed" xml:space="preserve"><value>Markera som granskad</value></data>
+  <data name="UploadAdmin.Review.Pages" xml:space="preserve"><value>Sidor</value></data>
+  <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Föregående</value></data>
+  <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Nästa</value></data>
 </root>

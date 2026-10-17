@@ -1,0 +1,64 @@
+@model ArvidsonFoto.Core.ViewModels.TranslationReviewViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@{
+    ViewData["Title"] = L["UploadAdmin.Review.Title"];
+}
+<h1>@ViewData["Title"]</h1>
+<partial name="_NavUploadAdmin" />
+<nav aria-label="@L["UploadAdmin.Review.Tables"]">
+    <a asp-action="Index" asp-route-table="menu" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Categories"]</a> |
+    <a asp-action="Index" asp-route-table="images" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Images"]</a> |
+    <a asp-action="Index" asp-route-table="guestbook" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Guestbook"]</a>
+</nav>
+<p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
+<p>@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
+<p>@L["UploadAdmin.Review.Instructions"]</p>
+<p>
+    <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="true">@L["UploadAdmin.Review.PendingOnly"]</a> |
+    <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="false">@L["UploadAdmin.Review.All"]</a>
+</p>
+@foreach (var item in Model.Items)
+{
+    <form asp-action="Save" method="post" class="card p-3 mb-3">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="table" value="@Model.Table" />
+        <input type="hidden" name="id" value="@item.Id" />
+        <input type="hidden" name="field" value="@item.Field" />
+        <input type="hidden" name="swedish" value="@item.Swedish" />
+        <input type="hidden" name="previousEnglish" value="@item.English" />
+        <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
+        <input type="hidden" name="page" value="@Model.Page" />
+        <h2 class="h5">@L["UploadAdmin.Review.Record", item.Id] – @L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h2>
+        <label>@L["UploadAdmin.Review.Swedish"]</label>
+        <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
+        <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
+        @if (Model.Table == "guestbook" && item.Field == "text")
+        {
+            <textarea id="translation-@Model.Table-@item.Id-@item.Field" name="english" class="form-control">@item.English</textarea>
+        }
+        else
+        {
+            <input id="translation-@Model.Table-@item.Id-@item.Field" name="english" value="@item.English" class="form-control"
+                   maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
+        }
+        <p>@(item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])</p>
+        <div>
+            <button type="submit" name="reviewed" value="false" class="btn btn-outline-primary">@L["UploadAdmin.Review.Save"]</button>
+            <button type="submit" name="reviewed" value="true" class="btn btn-primary">@L["UploadAdmin.Review.MarkReviewed"]</button>
+        </div>
+    </form>
+}
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="@L["UploadAdmin.Review.Pages"]">
+        @if (Model.Page > 1)
+        {
+            <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-page="@(Model.Page - 1)">@L["UploadAdmin.Review.Previous"]</a>
+        }
+        @Model.Page / @Model.TotalPages
+        @if (Model.Page < Model.TotalPages)
+        {
+            <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.Next"]</a>
+        }
+    </nav>
+}
