@@ -41,7 +41,7 @@ public static class UploadAdminNavPages
     private static string? UploadPageNavClass(ViewContext viewContext, string page)
     {
         var activePage = viewContext.ViewData["ActiveUploadPage"] as string
-            ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
+            ?? Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
         return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
     }
 }

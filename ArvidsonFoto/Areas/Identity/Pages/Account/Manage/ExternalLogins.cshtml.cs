@@ -32,9 +32,7 @@ public class ExternalLoginsModel(
         }
 
         CurrentLogins = await _userManager.GetLoginsAsync(user);
-        OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
-            .Where(auth => CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
-            .ToList();
+        OtherLogins = [.. (await _signInManager.GetExternalAuthenticationSchemesAsync()).Where(auth => CurrentLogins.All(ul => auth.Name != ul.LoginProvider))];
         ShowRemoveButton = user.PasswordHash != null || CurrentLogins.Count > 1;
         return Page();
     }
@@ -78,12 +76,7 @@ public class ExternalLoginsModel(
             return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
-        var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
-        if (info == null)
-        {
-            throw new InvalidOperationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
-        }
-
+        var info = await _signInManager.GetExternalLoginInfoAsync(user.Id) ?? throw new InvalidOperationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
         var result = await _userManager.AddLoginAsync(user, info);
         if (!result.Succeeded)
         {

@@ -1,7 +1,6 @@
 ﻿using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
-using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
@@ -117,7 +116,7 @@ public class InfoController : Controller
 
                 TblGb postToPublish = new()
                 {
-                    GbId = (_guestbookService.GetLastGbId() + 1),
+                    GbId = _guestbookService.GetLastGbId() + 1,
                     GbName = string.IsNullOrWhiteSpace(inputModel.Name) ? null : inputModel.Name,
                     GbEmail = string.IsNullOrWhiteSpace(inputModel.Email) ? null : inputModel.Email,
                     GbHomepage = homePage,
@@ -194,7 +193,7 @@ public class InfoController : Controller
             catch (Exception dbEx)
             {
                 Log.Error(dbEx, "Failed to save contact form to database");
-                errorMessage = "Database error: " + dbEx.Message;
+                _ = "Database error: " + dbEx.Message;
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
 
@@ -239,7 +238,7 @@ public class InfoController : Controller
                     client.Connect(_smtpSettings.Server, _smtpSettings.Port,
                         _smtpSettings.EnableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
                     client.Authenticate(_smtpSettings.SenderEmail, _smtpSettings.SenderPassword);
-                    client.Send(message);
+                    _ = client.Send(message);
                     client.Disconnect(true);
                     Log.Information("Email sent successfully!");
                     emailSent = true;
@@ -271,7 +270,7 @@ public class InfoController : Controller
             {
                 try
                 {
-                    _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
+                    _ = _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
                     Log.Information("Updated contact record {ContactId} - EmailSent: {EmailSent}", savedContactId, emailSent);
                 }
                 catch (Exception updateEx)

@@ -134,7 +134,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     pathInfo.Add(new
                     {
                         Level = "Main",
-                        Name = category.Name,
+                        category.Name,
                         Id = category.CategoryId,
                         UrlSegment = category.UrlCategoryPath?.ToLowerInvariant()
                     });
@@ -158,7 +158,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     pathInfo.Add(new
                     {
                         Level = $"Level {pathInfo.Count + 1}",
-                        Name = matchingChild.Name,
+                        matchingChild.Name,
                         Id = matchingChild.CategoryId,
                         UrlSegment = matchingChild.UrlCategoryPath
                     });
@@ -214,7 +214,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         {
             logger.LogInformation("Category - GetAllPublicCached called");
             var allCategories = apiCategoryService.GetAll();
-            return Ok(allCategories ?? new List<CategoryDto>());
+            return Ok(allCategories ?? []);
         }
         catch (Exception ex)
         {
@@ -261,17 +261,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
 
             var category = apiCategoryService.GetById(categoryId);
 
-            if (category == null || category.CategoryId == -1)
-            {
-                return Problem(
+            return category == null || category.CategoryId == -1
+                ? Problem(
                     title: "Category Not Found",
                     detail: $"No category found with ID {categoryId}",
                     statusCode: StatusCodes.Status404NotFound,
                     type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
-                );
-            }
-
-            return Ok(category);
+                )
+                : (IActionResult)Ok(category);
         }
         catch (Exception ex)
         {
@@ -315,7 +312,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             }
 
             var subcategories = apiCategoryService.GetChildrenByParentId(categoryId);
-            return Ok(subcategories ?? new List<CategoryDto>());
+            return Ok(subcategories ?? []);
         }
         catch (Exception ex)
         {
@@ -346,7 +343,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             logger.LogInformation("Category - GetChildren called with ID: {CategoryId}", categoryId);
 
             var children = apiCategoryService.GetChildrenByParentId(categoryId ?? 0);
-            return Ok(children ?? new List<CategoryDto>());
+            return Ok(children ?? []);
         }
         catch (Exception ex)
         {
@@ -392,17 +389,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
 
             var categoryName = apiCategoryService.GetNameById(categoryId);
 
-            if (categoryName == "Not found" || string.IsNullOrEmpty(categoryName))
-            {
-                return Problem(
+            return categoryName == "Not found" || string.IsNullOrEmpty(categoryName)
+                ? Problem(
                     title: "Category Not Found",
                     detail: $"No category found with ID {categoryId}",
                     statusCode: StatusCodes.Status404NotFound,
                     type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
-                );
-            }
-
-            return Ok(categoryName);
+                )
+                : (IActionResult)Ok(categoryName);
         }
         catch (Exception ex)
         {
@@ -508,7 +502,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         {
             logger.LogInformation("Category - GetMainCategories called");
             var mainCategories = apiCategoryService.GetMainCategories();
-            return Ok(mainCategories ?? new List<CategoryDto>());
+            return Ok(mainCategories ?? []);
         }
         catch (Exception ex)
         {

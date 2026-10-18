@@ -28,7 +28,7 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
                 db.TblImages.Count(i => !i.ImageDescriptionEnReviewed) +
                 db.TblGbs.Count(g => !g.GbNameEnReviewed) +
                 db.TblGbs.Count(g => !g.GbTextEnReviewed),
-            AllFieldsCount = 2 * db.TblMenus.Count() + db.TblImages.Count() + 2 * db.TblGbs.Count()
+            AllFieldsCount = (2 * db.TblMenus.Count()) + db.TblImages.Count() + (2 * db.TblGbs.Count())
         };
         if (table == "menu")
         {
@@ -64,8 +64,7 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
                 query = query.Where(i => !i.ImageDescriptionEnReviewed);
             }
             model.TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
-            model.Items = query.OrderBy(i => i.ImageId).Skip((model.Page - 1) * PageSize).Take(PageSize)
-                .Select(i => new TranslationReviewItem(i.ImageId!.Value, "description", i.ImageDescription ?? "", i.ImageDescriptionEn, i.ImageDescriptionEnReviewed)).ToList();
+            model.Items = [.. query.OrderBy(i => i.ImageId).Skip((model.Page - 1) * PageSize).Take(PageSize).Select(i => new TranslationReviewItem(i.ImageId!.Value, "description", i.ImageDescription ?? "", i.ImageDescriptionEn, i.ImageDescriptionEnReviewed))];
         }
         else
         {
@@ -209,7 +208,7 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
         else
         {
             update(value, reviewStatus);
-            db.SaveChanges();
+            _ = db.SaveChanges();
         }
         if (table == "menu" && value != originalEn)
         {

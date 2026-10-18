@@ -67,22 +67,22 @@ public class BilderController(
         if (subLevel4 is not null)
         {
             categoryName = subLevel4;
-            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4);
         }
         else if (subLevel3 is not null)
         {
             categoryName = subLevel3;
-            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3);
         }
         else if (subLevel2 is not null)
         {
             categoryName = subLevel2;
-            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1 + "/" + subLevel2;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/Bilder/" + subLevel1 + "/" + subLevel2);
         }
         else if (subLevel1 is not null)
         {
             categoryName = subLevel1;
-            currentUrl = HttpContext?.Request.Path.Value ?? "/Bilder/" + subLevel1;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/Bilder/" + subLevel1);
         }
 
         if (categoryName != null)
@@ -122,7 +122,7 @@ public class BilderController(
                 pageSize);
 
             // Set AllImagesList to empty list to save memory (we don't need all images in memory)
-            viewModel.AllImagesList = new List<ImageDto>();
+            viewModel.AllImagesList = [];
         }
 
         if (subLevel5ImageName is not null)
@@ -136,10 +136,7 @@ public class BilderController(
             _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.Name);
         }
 
-        if (viewModel.DisplayImagesList == null)
-        {
-            viewModel.DisplayImagesList = new List<ImageDto>();
-        }
+        viewModel.DisplayImagesList ??= [];
 
         return View(viewModel);
     }
@@ -185,8 +182,8 @@ public class BilderController(
             ViewData["Title"] = "Söker efter: " + s;
             s = s.Trim();
             s = s.Replace("+", " ");
-            List<CategoryDto> allCategories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
-            List<ImageDto> listOfFirstSearchedImages = new();
+            List<CategoryDto> allCategories = [.. _categoryService.GetAll().OrderBy(c => c.Name)];
+            List<ImageDto> listOfFirstSearchedImages = [];
             foreach (var category in allCategories)
             {
                 if (category.CategoryId.HasValue &&

@@ -56,8 +56,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         try
         {
             var tblMenu = category.ToTblMenu();
-            _entityContext.TblMenus.Add(tblMenu);
-            _entityContext.SaveChanges();
+            _ = _entityContext.TblMenus.Add(tblMenu);
+            _ = _entityContext.SaveChanges();
             success = true;
         }
         catch (Exception ex)
@@ -145,7 +145,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var allCategoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
         if (allCategoryIds.Count != 0)
         {
-            GetCategoryPathsBulk(allCategoryIds);
+            _ = GetCategoryPathsBulk(allCategoryIds);
         }
 
         // OPTIMIZED: Build lightweight CategoryDtos without last image (expensive query)
@@ -156,7 +156,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             return category.ToCategoryDto(categoryPath, string.Empty); // Empty string for lastImageFilename
         }).ToList();
 
-        _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
+        _ = _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
         Log.Debug("All categories cached ({Count} categories)", categoryDtos.Count);
         return categoryDtos;
     }
@@ -174,7 +174,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
             if (categoryIds.Count != 0)
             {
-                GetCategoryPathsBulk(categoryIds);
+                _ = GetCategoryPathsBulk(categoryIds);
             }
 
             // OPTIMIZED: Don't load last image for children lists (expensive)
@@ -189,7 +189,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         catch (Exception ex)
         {
             Log.Error("Error in GetChildrenByParentId: {Message}", ex.Message);
-            return new List<CategoryDto>();
+            return [];
         }
     }
 
@@ -243,10 +243,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         try
         {
             var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == categoryName.ToLowerInvariant());
-            if (category == null)
-            {
-                category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == categoryName.ToLowerInvariant());
-            }
+            category ??= _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == categoryName.ToLowerInvariant());
 
             if (category == null)
             {
@@ -272,12 +269,18 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             {
                 categoryToEdit.MenuDisplayName = updatedCategory.NameSv;
                 if (updatedCategory.NameEn != null)
+                {
                     categoryToEdit.MenuDisplayNameEn = updatedCategory.NameEn;
+                }
+
                 categoryToEdit.MenuUrlSegment = updatedCategory.UrlCategoryPath;
                 if (updatedCategory.UrlCategoryPathEn != null)
+                {
                     categoryToEdit.MenuUrlSegmentEn = updatedCategory.UrlCategoryPathEn;
-                _entityContext.TblMenus.Update(categoryToEdit);
-                _entityContext.SaveChanges();
+                }
+
+                _ = _entityContext.TblMenus.Update(categoryToEdit);
+                _ = _entityContext.SaveChanges();
                 success = true;
             }
         }
@@ -297,8 +300,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryToDelete = _entityContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id);
             if (categoryToDelete != null)
             {
-                _entityContext.TblMenus.Remove(categoryToDelete);
-                _entityContext.SaveChanges();
+                _ = _entityContext.TblMenus.Remove(categoryToDelete);
+                _ = _entityContext.SaveChanges();
                 success = true;
             }
         }
@@ -441,8 +444,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             }
         }
 
-        mainMenu.MainMenu = mainMenu.MainMenu.OrderBy(x => x.SortingUrlWithAao).ToList();
-        _cache.Set(MAIN_MENU_CACHE_KEY, mainMenu, _longCacheExpiry);
+        mainMenu.MainMenu = [.. mainMenu.MainMenu.OrderBy(x => x.SortingUrlWithAao)];
+        _ = _cache.Set(MAIN_MENU_CACHE_KEY, mainMenu, _longCacheExpiry);
         Log.Debug("Main menu cached with {Count} items", mainMenu.MainMenu.Count);
 
         return mainMenu;
@@ -478,14 +481,14 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 new() { CategoryId = 5, Name = "Växter", UrlCategoryPath = "vaxter", UrlCategoryPathFull = "vaxter" }
             };
 
-            _cache.Set(MAIN_CATEGORIES_CACHE_KEY, testCategories, _longCacheExpiry);
+            _ = _cache.Set(MAIN_CATEGORIES_CACHE_KEY, testCategories, _longCacheExpiry);
             Log.Debug("Main categories cached ({Count} categories)", testCategories.Count);
             return testCategories;
         }
         catch (Exception ex)
         {
             Log.Error("GetMainCategories failed: {Message}", ex.Message);
-            return new List<CategoryDto>();
+            return [];
         }
     }
 
@@ -736,7 +739,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var now = DateTime.UtcNow;
             var needsCacheRefresh = now - _cacheLastUpdated > _cacheExpiry;
-            var uncachedIds = needsCacheRefresh ? categoryIds.ToList() : categoryIds.Where(id => !_categoryPathCache.ContainsKey(id)).ToList();
+            var uncachedIds = needsCacheRefresh ? categoryIds.ToList() : [.. categoryIds.Where(id => !_categoryPathCache.ContainsKey(id))];
 
             if (uncachedIds.Count != 0 || needsCacheRefresh)
             {
@@ -849,7 +852,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         catch (Exception ex)
         {
             Log.Error("Error in GetAllDescendantCategoryIds: {Message}", ex.Message);
-            return new List<int>();
+            return [];
         }
     }
 

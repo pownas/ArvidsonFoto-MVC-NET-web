@@ -12,8 +12,8 @@ public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValida
     private readonly ILogger<InputValidationMiddleware> _logger = logger;
 
     // Patterns that indicate potential SQL injection attempts
-    private static readonly List<Regex> SqlInjectionPatterns = new()
-    {
+    private static readonly List<Regex> SqlInjectionPatterns =
+    [
         new Regex(@"(\bunion\b.*\bselect\b)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(\bselect\b.*\bfrom\b)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(\binsert\b.*\binto\b)", RegexOptions.IgnoreCase | RegexOptions.Compiled),
@@ -40,7 +40,7 @@ public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValida
         new Regex(@"(database\s*\(\))", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(user\s*\(\))", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(convert\s*\(int)", RegexOptions.IgnoreCase | RegexOptions.Compiled)
-    };
+    ];
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -73,7 +73,7 @@ public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValida
         {
             foreach (var routeValue in context.Request.RouteValues)
             {
-                if (routeValue.Value != null && ContainsSqlInjectionAttempt(routeValue.Value.ToString()!))
+                if (routeValue.Value != null && ContainsSqlInjectionAttempt(routeValue.Value.ToString()))
                 {
                     _logger.LogWarning(
                         "Potential SQL injection attempt detected in route parameter '{Key}' from IP {IpAddress}. Value: {Value}",

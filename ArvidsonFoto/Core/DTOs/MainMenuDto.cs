@@ -9,10 +9,7 @@ public class MainMenuDto()
 {
     /// <summary> Meny-kategorins unika länk-id </summary>
     public string MenuUrl { get; set; } = "/404-NotFound";
-
-    /// <summary> Meny-kategorins namn </summary>
-    private string _menuDisplayName = "404 - Not Found";
-    public string MenuDisplayName { get => Extensions.LocalizedText.Select(_menuDisplayName, MenuDisplayNameEn); set => _menuDisplayName = value; }
+    public string MenuDisplayName { get => Extensions.LocalizedText.Select(field, MenuDisplayNameEn); set; } = "404 - Not Found";
     public string? MenuDisplayNameEn { get; set; }
     public string? MenuUrlSegmentEn { get; set; }
 
@@ -23,10 +20,7 @@ public class MainMenuDto()
     //public int? ParentId { get; set; } = -1;
 
     /// <summary> Om det finns underkategorier </summary>
-    public bool HasSubCategories
-    {
-        get => SubCategoryCount > 0; // Return true if there are subcategories, otherwise false.
-    }
+    public bool HasSubCategories => SubCategoryCount > 0; // Return true if there are subcategories, otherwise false.
 
     ///// <summary> Lista med underkategoriernas id:n </summary>
     //public IList<int> SubCategories { get; set; } = new List<int>();

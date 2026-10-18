@@ -54,7 +54,7 @@ public class GenerateRecoveryCodesModel(
 
         var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
 #pragma warning disable CS8604 // Possible null reference argument.
-        RecoveryCodes = recoveryCodes.ToArray();
+        RecoveryCodes = [.. recoveryCodes];
 #pragma warning restore CS8604 // Possible null reference argument.
 
         _logger.LogInformation("User with ID '{UserId}' has generated new 2FA recovery codes.", userId);

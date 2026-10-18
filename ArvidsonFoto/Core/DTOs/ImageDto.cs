@@ -37,13 +37,8 @@ public class ImageDto()
     /// <remarks> Datum och tid i ISO 8601 format, t.ex. "2021-11-23T16:21:00" </remarks>
     /// <example>2021-11-23T16:21:00</example>
     public DateTime? DateUploaded { get; set; } = null;
-
-    /// <summary> Bildens beskrivning </summary>
-    /// <remarks> Beskrivning av bilden, kan vara tom sträng. </remarks>
-    /// <example>Hane, beskrivning av amiral...</example>
-    private string? _description = string.Empty;
-    public string? Description { get => Extensions.LocalizedText.Select(_description, DescriptionEn); set => _description = value; }
-    public string? DescriptionSv { get => _description; set => _description = value; }
+    public string? Description { get => Extensions.LocalizedText.Select(DescriptionSv, DescriptionEn); set => DescriptionSv = value; }
+    public string? DescriptionSv { get; set; } = string.Empty;
     public string? DescriptionEn { get; set; }
 
     /// <summary> Bildens unika ID </summary>

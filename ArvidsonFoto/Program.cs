@@ -39,7 +39,7 @@ public class Program
         // Add Console sink in Development for easier debugging
         if (isDevelopment)
         {
-            loggerConfig.WriteTo.Console(
+            _ = loggerConfig.WriteTo.Console(
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
         }
 
@@ -55,11 +55,11 @@ public class Program
             var builder = WebApplication.CreateBuilder(args);
 
             // Add Aspire service defaults (observability, health checks, resilience, service discovery)
-            builder.AddServiceDefaults();
+            _ = builder.AddServiceDefaults();
 
             // Expose important configuration values as OpenTelemetry resource attributes so they appear
             // as metadata on every trace and structured-log entry in the Aspire dashboard
-            builder.Services.AddOpenTelemetry()
+            _ = builder.Services.AddOpenTelemetry()
                 .ConfigureResource(resource => resource.AddAttributes(
                     GetConfigurationAttributes(builder.Configuration)));
 
@@ -86,10 +86,10 @@ public class Program
 
     private static void ConfigureServices(IServiceCollection services, ConfigurationManager configuration, IWebHostEnvironment environment)
     {
-        services.AddDatabaseDeveloperPageExceptionFilter();
+        _ = services.AddDatabaseDeveloperPageExceptionFilter();
 
         // Configure SMTP settings from appsettings
-        services.Configure<ArvidsonFoto.Core.Configuration.SmtpSettings>(
+        _ = services.Configure<Core.Configuration.SmtpSettings>(
             configuration.GetSection("SmtpSettings"));
 
         // Database configuration - ONLY Core DbContext now
@@ -100,23 +100,23 @@ public class Program
         if (useInMemoryDb)
         {
             // Use In-Memory database in Codespaces or when configured
-            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
+            _ = services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
-            services.AddDbContext<IdentityContext>(options =>
+            _ = services.AddDbContext<IdentityContext>(options =>
                 options.UseInMemoryDatabase("ArvidsonFotoInMemory"));
         }
         else
         {
             // Use SQL Server locally
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
+            _ = services.AddDbContext<ArvidsonFotoCoreDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            services.AddDbContext<IdentityContext>(options =>
+            _ = services.AddDbContext<IdentityContext>(options =>
                 options.UseSqlServer(connectionString));
         }
 
         // Identity configuration (moved from IdentityHostingStartup.cs)
-        services.AddDefaultIdentity<ArvidsonFotoUser>(options =>
+        _ = services.AddDefaultIdentity<ArvidsonFotoUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 // Enable passkey table storage (requires AspNetUserPasskeys migration)
@@ -125,7 +125,7 @@ public class Program
             .AddEntityFrameworkStores<IdentityContext>();
 
         // Passkey (WebAuthn) configuration
-        services.Configure<IdentityPasskeyOptions>(options =>
+        _ = services.Configure<IdentityPasskeyOptions>(options =>
         {
             // ServerDomain defaults to the host header if not set.
             // In production, set this to your domain to prevent subdomain attacks.
@@ -134,25 +134,25 @@ public class Program
         });
 
         // Add frontend services - all using Core now
-        services.AddScoped<IGuestBookService, GuestBookService>();
-        services.AddScoped<IPageCounterService, PageCounterService>();
-        services.AddScoped<IContactService, ContactService>();
-        services.AddScoped<IFacebookService, FacebookService>();
+        _ = services.AddScoped<IGuestBookService, GuestBookService>();
+        _ = services.AddScoped<IPageCounterService, PageCounterService>();
+        _ = services.AddScoped<IContactService, ContactService>();
+        _ = services.AddScoped<IFacebookService, FacebookService>();
 
         // Add HttpClient for FacebookService
-        services.AddHttpClient<IFacebookService, FacebookService>();
+        _ = services.AddHttpClient<IFacebookService, FacebookService>();
 
         // Add backend API services
-        services.AddScoped<IApiCategoryService, ApiCategoryService>();
-        services.AddScoped<IApiImageService, ApiImageService>();
+        _ = services.AddScoped<IApiCategoryService, ApiCategoryService>();
+        _ = services.AddScoped<IApiImageService, ApiImageService>();
 
         // CORS configuration for API calls from localhost and production
         var corsPolicyName = "ArvidsonFotoCorsPolicy";
-        services.AddCors(options =>
+        _ = services.AddCors(options =>
         {
             options.AddPolicy(corsPolicyName, policy =>
             {
-                policy.WithOrigins(
+                _ = policy.WithOrigins(
                         "https://localhost:5001",
                         "http://localhost:5000",
                         "https://www.arvidsonfoto.se",
@@ -163,55 +163,55 @@ public class Program
             });
         });
 
-        services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
+        _ = services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
             options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(ValidationResource)));
-        services.AddRazorPages();
-        services.AddLocalization(options => options.ResourcesPath = "Resources");
-        services.Configure<RequestLocalizationOptions>(options =>
+        _ = services.AddRazorPages();
+        _ = services.AddLocalization(options => options.ResourcesPath = "Resources");
+        _ = services.Configure<RequestLocalizationOptions>(options =>
         {
-            options.SetDefaultCulture("sv-SE")
+            _ = options.SetDefaultCulture("sv-SE")
                 .AddSupportedCultures("sv-SE", "en-US")
                 .AddSupportedUICultures("sv-SE", "en-US");
             options.RequestCultureProviders.Insert(1, new CustomRequestCultureProvider(context =>
             {
-                return Task.FromResult<ProviderCultureResult?>(
+                return Task.FromResult(
                     LocalizedRoutes.IsEnglishPath(context.Request.Path.Value) ? new ProviderCultureResult("en-US") : null);
             }));
         });
 
         // ===== ROUTING CONFIGURATION =====
         // Enable case-insensitive and URL-decoding routing
-        services.Configure<RouteOptions>(options =>
+        _ = services.Configure<RouteOptions>(options =>
         {
             options.LowercaseUrls = false; // Keep original casing in generated URLs
             options.LowercaseQueryStrings = false;
         });
 
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
-        services.AddOpenApi();
+        _ = services.AddOpenApi();
 
         // Configure JavaScript engine for SCSS compilation
-        services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+        _ = services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
                 .AddV8();
 
         // WebOptimizer for SCSS compilation and CSS/JS minification
-        services.AddWebOptimizer(pipeline =>
+        _ = services.AddWebOptimizer(pipeline =>
         {
             // Compile SCSS to CSS and minify
-            pipeline.AddScssBundle("/css/site.css", "wwwroot/css/site.scss")
+            _ = pipeline.AddScssBundle("/css/site.css", "wwwroot/css/site.scss")
                 .UseContentRoot();
 
             // Minify JavaScript files
-            pipeline.AddJavaScriptBundle("/js/site.min.js", "wwwroot/js/site.js")
+            _ = pipeline.AddJavaScriptBundle("/js/site.min.js", "wwwroot/js/site.js")
                 .UseContentRoot();
 
-            pipeline.AddJavaScriptBundle("/js/contactform.min.js", "wwwroot/js/ContactForm.js")
+            _ = pipeline.AddJavaScriptBundle("/js/contactform.min.js", "wwwroot/js/ContactForm.js")
                 .UseContentRoot();
 
-            pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
+            _ = pipeline.AddJavaScriptBundle("/js/glightbox.min.js", "wwwroot/js/gLightBoxOptions.js")
                 .UseContentRoot();
 
-            pipeline.AddJavaScriptBundle("/js/passkey.min.js", "wwwroot/js/passkey.js")
+            _ = pipeline.AddJavaScriptBundle("/js/passkey.min.js", "wwwroot/js/passkey.js")
                 .UseContentRoot();
         });
     }
@@ -227,7 +227,7 @@ public class Program
         {
             using var scope = app.Services.CreateScope();
             var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
-            coreContext.Database.EnsureCreated();
+            _ = coreContext.Database.EnsureCreated();
 
             // Seeda data om databasen är tom
             if (!coreContext.TblImages.Any())
@@ -268,8 +268,8 @@ public class Program
 
                 if (allCategoryIds.Count != 0)
                 {
-                    categoryService.GetCategoryNamesBulk(allCategoryIds);
-                    categoryService.GetCategoryPathsBulk(allCategoryIds);
+                    _ = categoryService.GetCategoryNamesBulk(allCategoryIds);
+                    _ = categoryService.GetCategoryPathsBulk(allCategoryIds);
                 }
 
                 var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
@@ -284,34 +284,37 @@ public class Program
 
         if (env.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
-            app.UseMigrationsEndPoint();
-            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+            _ = app.UseDeveloperExceptionPage();
+            _ = app.UseMigrationsEndPoint();
+            _ = app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
         }
         else
         {
-            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+            _ = app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            _ = app.UseHsts();
         }
 
         // Only use HTTPS redirection in production, not in development/Codespaces
         if (!env.IsDevelopment())
         {
-            app.UseHttpsRedirection();
+            _ = app.UseHttpsRedirection();
         }
 
         // WebOptimizer middleware - add before UseStaticFiles
-        app.UseWebOptimizer();
+        _ = app.UseWebOptimizer();
 
-        app.UseStaticFiles();
+        _ = app.UseStaticFiles();
 
-        app.UseRequestLocalization();
-        app.Use(async (context, next) =>
+        _ = app.UseRequestLocalization();
+        _ = app.Use(async (context, next) =>
         {
             var culture = context.Request.Query["culture"].ToString();
             if (culture.Length == 0 && LocalizedRoutes.IsEnglishPath(context.Request.Path.Value))
+            {
                 culture = "en-US";
+            }
+
             if (culture is "sv-SE" or "en-US")
             {
                 context.Response.Cookies.Append(
@@ -330,18 +333,18 @@ public class Program
         });
 
         // Add input validation middleware to prevent SQL injection and malicious input
-        app.UseMiddleware<InputValidationMiddleware>();
+        _ = app.UseMiddleware<InputValidationMiddleware>();
 
-        app.UseRouting();
+        _ = app.UseRouting();
 
         // CORS middleware - must be after UseRouting and before UseAuthorization
-        app.UseCors("ArvidsonFotoCorsPolicy");
+        _ = app.UseCors("ArvidsonFotoCorsPolicy");
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+        _ = app.UseAuthentication();
+        _ = app.UseAuthorization();
 
         // Map Aspire default endpoints (health checks, alive checks)
-        app.MapDefaultEndpoints();
+        _ = app.MapDefaultEndpoints();
 
         foreach (var (path, controller, action, sortOrder) in new (string Path, string Controller, string Action, string? SortOrder)[]
         {
@@ -358,27 +361,27 @@ public class Program
                 new { controller, action, sortOrder })
                 .Add(endpoint => endpoint.Metadata.Add(new SuppressLinkGenerationMetadata()));
         }
-        app.MapControllerRoute(
+        _ = app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        app.MapRazorPages();
+        _ = app.MapRazorPages();
 
         // .NET 10: endpoint-based static asset serving with fingerprinting and compression
-        app.MapStaticAssets();
+        _ = app.MapStaticAssets();
 
         // Passkey (WebAuthn) endpoints (excluded from OpenAPI/Scalar). Used by passkey.js.
-        app.MapPasskeyEndpoints();
+        _ = app.MapPasskeyEndpoints();
 
         // OpenAPI endpoints - only in development
         if (env.IsDevelopment())
         {
             // Native .NET 10 OpenAPI JSON endpoint
-            app.MapOpenApi();
+            _ = app.MapOpenApi();
 
             // Scalar UI for interactive API documentation  
-            app.MapScalarApiReference(options =>
+            _ = app.MapScalarApiReference(options =>
             {
-                options
+                _ = options
                     .WithTitle("ArvidsonFoto API")
                     .WithTheme(ScalarTheme.Purple)
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
@@ -467,12 +470,9 @@ public class Program
     /// </summary>
     private static string SanitizeConnectionString(string? connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            return "(not configured)";
-        }
-
-        return System.Text.RegularExpressions.Regex.Replace(
+        return string.IsNullOrEmpty(connectionString)
+            ? "(not configured)"
+            : System.Text.RegularExpressions.Regex.Replace(
             connectionString,
             @"(?i)(password|pwd)\s*=\s*[^;]+",
             "$1=***");

@@ -87,7 +87,7 @@ public class UploadAdminController(
         }
 
         viewModel.SelectedCategory = selectedCategory;
-        viewModel.SubCategories = subCategories.OrderBy(c => c.Name).ToList();
+        viewModel.SubCategories = [.. subCategories.OrderBy(c => c.Name)];
 
         return View(viewModel);
     }
@@ -128,8 +128,8 @@ public class UploadAdminController(
             try
             {
                 var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
-                coreContext.TblImages.Add(newImage);
-                coreContext.SaveChanges();
+                _ = coreContext.TblImages.Add(newImage);
+                _ = coreContext.SaveChanges();
 
                 // Använd TempData för att visa framgångsmeddelande
                 TempData["ImageCreated"] = true;
@@ -174,7 +174,7 @@ public class UploadAdminController(
                     existingImage.ImageDescriptionEn = model.ImageDescriptionEn;
                     existingImage.ImageUpdate = DateTime.Now;
 
-                    await coreContext.SaveChangesAsync();
+                    _ = await coreContext.SaveChangesAsync();
                     return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
                 }
             }
@@ -258,9 +258,15 @@ public class UploadAdminController(
         ViewData["Title"] = localizer["Admin.CategoriesTitle"];
         var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
         if (category == null)
+        {
             return NotFound();
+        }
+
         if (!ValidCategorySegments(input.UrlSegmentSv, input.UrlSegmentEn, input.CategoryId))
+        {
             ModelState.AddModelError(nameof(input.UrlSegmentSv), localizer["Admin.InvalidUrlSegments"]);
+        }
+
         if (!ModelState.IsValid)
         {
             ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
@@ -271,20 +277,20 @@ public class UploadAdminController(
         category.MenuUrlSegment = input.UrlSegmentSv.Trim();
         category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim();
         category.MenuDateUpdated = DateTime.UtcNow;
-        coreContext.SaveChanges();
+        _ = coreContext.SaveChanges();
         _categoryService.ClearCache();
         return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId });
     }
 
     private bool ValidCategorySegments(string? swedish, string? english, int? excludeId)
     {
-        if (string.IsNullOrWhiteSpace(swedish) || swedish.Length > 50 ||
+        return string.IsNullOrWhiteSpace(swedish) || swedish.Length > 50 ||
             !System.Text.RegularExpressions.Regex.IsMatch(swedish, @"^[a-zA-Z0-9-]+$") ||
             (!string.IsNullOrWhiteSpace(english) &&
                 (english.Length > 50 || !System.Text.RegularExpressions.Regex.IsMatch(english, @"^[a-zA-Z0-9-]+$"))) ||
-            (!string.IsNullOrWhiteSpace(english) && string.Equals(swedish, english, StringComparison.OrdinalIgnoreCase)))
-            return false;
-        return !coreContext.TblMenus.AsEnumerable().Any(c => c.MenuCategoryId != excludeId &&
+            (!string.IsNullOrWhiteSpace(english) && string.Equals(swedish, english, StringComparison.OrdinalIgnoreCase))
+            ? false
+            : !coreContext.TblMenus.AsEnumerable().Any(c => c.MenuCategoryId != excludeId &&
             new[] { c.MenuUrlSegment, c.MenuUrlSegmentEn }.Any(existing =>
                 string.Equals(existing, swedish, StringComparison.OrdinalIgnoreCase) ||
                 (!string.IsNullOrWhiteSpace(english) && string.Equals(existing, english, StringComparison.OrdinalIgnoreCase))));
@@ -378,10 +384,10 @@ public class UploadAdminController(
         {
             if (_guestBookService.ReadGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId = gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId = gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId });
     }
 
     public IActionResult DeleteGbPost(int gbId)
@@ -390,10 +396,10 @@ public class UploadAdminController(
         {
             if (_guestBookService.DeleteGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId = gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId = gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId });
     }
 
     public IActionResult DeleteImage(int imgId)
@@ -402,10 +408,10 @@ public class UploadAdminController(
         {
             if (_imageService.DeleteImgId(imgId))
             {
-                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId = imgId });
+                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId });
             }
         }
-        return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId = imgId });
+        return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId });
     }
 
     public IActionResult Statistik()
@@ -450,7 +456,7 @@ public class UploadAdminController(
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
         user.ShowAllLogs = !user.ShowAllLogs;
 
-        await _userManager.UpdateAsync(user);
+        _ = await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
     }
 

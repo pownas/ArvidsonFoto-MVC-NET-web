@@ -32,8 +32,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == false
-                                  && p.PageName == pageName
+                .FirstOrDefault(p => !p.PicturePage && p.PageName == pageName
                                   && p.MonthViewed == monthViewed);
 
             if (existingCounter != null)
@@ -54,10 +53,10 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
                     PicturePage = false,
                     LastShowDate = DateTime.Now
                 };
-                _context.TblPageCounter.Add(pageCounter);
+                _ = _context.TblPageCounter.Add(pageCounter);
             }
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -78,8 +77,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == true
-                                  && p.CategoryId == categoryId
+                .FirstOrDefault(p => p.PicturePage && p.CategoryId == categoryId
                                   && p.MonthViewed == monthViewed);
 
             if (existingCounter != null)
@@ -100,10 +98,10 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
                     PicturePage = true,
                     LastShowDate = DateTime.Now
                 };
-                _context.TblPageCounter.Add(pageCounter);
+                _ = _context.TblPageCounter.Add(pageCounter);
             }
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -119,10 +117,9 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <returns>Lista med sidvisningar för den angivna månaden</returns>
     public List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage)
     {
-        return _context.TblPageCounter
+        return [.. _context.TblPageCounter
             .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
-            .OrderByDescending(p => p.PageViews)
-            .ToList();
+            .OrderByDescending(p => p.PageViews)];
     }
 
     /// <summary>
@@ -156,7 +153,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     public List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount()
     {
         var groupedCounters = _context.TblPageCounter
-            .Where(p => p.PicturePage == true)
+            .Where(p => p.PicturePage)
             .GroupBy(p => p.CategoryId)
             .Select(g => new TblPageCounter
             {
@@ -181,9 +178,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <returns>Lista med alla sidvisningar</returns>
     public List<TblPageCounter> GetAllPageCounts()
     {
-        return _context.TblPageCounter
-            .OrderByDescending(p => p.LastShowDate)
-            .ToList();
+        return [.. _context.TblPageCounter.OrderByDescending(p => p.LastShowDate)];
     }
 
     /// <summary>

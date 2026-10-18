@@ -11,7 +11,7 @@ namespace ArvidsonFoto.Core.ApiResponses;
 public class MainMenuResponse()
 {
     /// <summary> Huvudmenyns kategorier </summary>
-    public List<MainMenuDto> MainMenu { get; set; } = new();
+    public List<MainMenuDto> MainMenu { get; set; } = [];
 
     /// <summary>
     /// Determines whether the specified key exists in the menu collection.

@@ -290,7 +290,10 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         existingImage.ImageFamilyId = image.ImageFamilj;
         existingImage.ImageDescription = image.ImageDescription;
         if (image.ImageDescriptionEn != null)
+        {
             existingImage.ImageDescriptionEn = image.ImageDescriptionEn;
+        }
+
         existingImage.ImageDate = image.ImageDate;
         existingImage.ImageCategoryId = image.ImageArt;
         existingImage.ImageUpdate = DateTime.Now;
@@ -299,7 +302,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         //TODO: Kanske uppdatera fler fält om det behövs
 
         // Save changes to the database
-        entityContext.SaveChanges();
+        _ = entityContext.SaveChanges();
 
         return true; // Update successful
     }
@@ -479,37 +482,26 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     private static List<ImageDto> ApplySortingAndLimit(List<ImageDto> images, string sortBy, string sortOrder, int limit)
     {
         // Apply sorting
-        IOrderedEnumerable<ImageDto> sortedImages;
-
-        switch (sortBy)
+        IOrderedEnumerable<ImageDto> sortedImages = sortBy switch
         {
-            case "imagetaken":
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.DateImageTaken)
-                    : images.OrderByDescending(i => i.DateImageTaken);
-                break;
-
-            case "categoryname":
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.UrlCategory)
-                    : images.OrderByDescending(i => i.UrlCategory);
-                break;
-
-            case "uploaded":
-            default:
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.DateUploaded)
-                    : images.OrderByDescending(i => i.DateUploaded);
-                break;
-        }
+            "imagetaken" => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.DateImageTaken)
+                                : images.OrderByDescending(i => i.DateImageTaken),
+            "categoryname" => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.UrlCategory)
+                                : images.OrderByDescending(i => i.UrlCategory),
+            _ => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.DateUploaded)
+                                : images.OrderByDescending(i => i.DateUploaded),
+        };
 
         // if limit = 0, then no limit
         if (limit == 0)
         {
-            return sortedImages.ToList();
+            return [.. sortedImages];
         }
 
         // else retur with Applied limit
-        return sortedImages.Take(limit).ToList();
+        return [.. sortedImages.Take(limit)];
     }
 }

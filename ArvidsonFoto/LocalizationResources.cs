@@ -15,7 +15,10 @@ public class ValidationResource
 {
     private static readonly ResourceManager Resources = new("ArvidsonFoto.Resources.ValidationResource", typeof(ValidationResource).Assembly);
 
-    private static string Get(string key) => Resources.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+    private static string Get(string key)
+    {
+        return Resources.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+    }
 
     public static string CodeRequired => Get("Form.Validation.CodeRequired");
     public static string CodeInvalid => Get("Form.Validation.CodeInvalid");

@@ -19,8 +19,8 @@ public static class ArvidsonFotoCoreDbSeeder
     /// <summary>
     /// Guestbook entries seed data
     /// </summary>
-    public static List<TblGb> DbSeed_Tbl_Guestbook => new()
-    {
+    public static List<TblGb> DbSeed_Tbl_Guestbook =>
+    [
         new() {
             Id = 1,
             GbId = 1,
@@ -45,7 +45,7 @@ public static class ArvidsonFotoCoreDbSeeder
             GbText = "Ett andra test inlägg i databasen... 😊",
             GbTextEn = "A second test entry in the database... 😊"
         },
-    };
+    ];
 
     #endregion
 
@@ -81,8 +81,8 @@ public static class ArvidsonFotoCoreDbSeeder
     /// ORDER BY [Id];
     /// </code>
     /// </remarks>
-    public static List<TblMenu> DbSeed_Tbl_MenuCategories => new()
-    {
+    public static List<TblMenu> DbSeed_Tbl_MenuCategories =>
+    [
         // Main categories (parent = 0)
         new() { Id = 1, MenuCategoryId = 1, MenuParentCategoryId = 0, MenuDisplayName = "Fåglar", MenuDisplayNameEn = "Birds", MenuUrlSegment = "Faglar", MenuUrlSegmentEn = "birds", MenuDateUpdated = DateTime.Parse("2021-03-25T20:27:00") },
         new() { Id = 2, MenuCategoryId = 2, MenuParentCategoryId = 0, MenuDisplayName = "Däggdjur", MenuDisplayNameEn = "Mammals", MenuUrlSegment = "Daggdjur", MenuUrlSegmentEn = "mammals", MenuDateUpdated = DateTime.Parse("2021-03-19T13:56:00") },
@@ -629,7 +629,7 @@ public static class ArvidsonFotoCoreDbSeeder
         new() { Id = 541, MenuCategoryId = 553, MenuParentCategoryId = 10, MenuDisplayName = "Stäppörn", MenuDisplayNameEn = "Steppe eagle", MenuUrlSegment = "", MenuUrlSegmentEn = "steppe-eagle", MenuDateUpdated = null },
         new() { Id = 542, MenuCategoryId = 554, MenuParentCategoryId = 338, MenuDisplayName = "Havtorn", MenuDisplayNameEn = "Sea buckthorn", MenuUrlSegment = "", MenuUrlSegmentEn = "sea-buckthorn", MenuDateUpdated = null },
         new() { Id = 543, MenuCategoryId = 555, MenuParentCategoryId = 2, MenuDisplayName = "Större brunfladdermus", MenuDisplayNameEn = "Common noctule", MenuUrlSegment = "", MenuUrlSegmentEn = "common-noctule", MenuDateUpdated = null },
-    };
+    ];
 
     #endregion
 
@@ -664,8 +664,8 @@ public static class ArvidsonFotoCoreDbSeeder
     /// OFFSET 0 ROWS FETCH NEXT 100 ROWS ONLY;
     /// </code>
     /// </remarks>
-    public static List<TblPageCounter> DbSeed_Tbl_PageCounters => new()
-    {
+    public static List<TblPageCounter> DbSeed_Tbl_PageCounters =>
+    [
         new() { Id = 1, CategoryId = 0, PicturePage = false, PageName = "Startsidan", MonthViewed = "2025-07", LastShowDate = new DateTime(2025, 7, 9, 22, 5, 26), PageViews = 31 },
         new() { Id = 2, CategoryId = 0, PicturePage = true, PageName = "Bild: ", MonthViewed = "2025-07", LastShowDate = new DateTime(2025, 7, 7, 17, 57, 18), PageViews = 100 },
         new() { Id = 3, CategoryId = 0, PicturePage = false, PageName = "Bilder", MonthViewed = "2025-07", LastShowDate = new DateTime(2025, 7, 9, 22, 5, 32), PageViews = 32 },
@@ -710,7 +710,7 @@ public static class ArvidsonFotoCoreDbSeeder
         new() { Id = 42, CategoryId = 0, PicturePage = false, PageName = "Kontakt", MonthViewed = "2025-08", LastShowDate = new DateTime(2025, 8, 5, 2, 18, 6), PageViews = 2 },
         new() { Id = 43, CategoryId = 0, PicturePage = false, PageName = "Gästbok", MonthViewed = "2025-08", LastShowDate = new DateTime(2025, 8, 5, 2, 18, 26), PageViews = 2 },
         new() { Id = 44, CategoryId = 0, PicturePage = true, PageName = "Kategori: Vår", MonthViewed = "2025-08", LastShowDate = new DateTime(2025, 8, 5, 2, 22, 40), PageViews = 1 },
-    };
+    ];
 
     #endregion
 
@@ -753,8 +753,8 @@ public static class ArvidsonFotoCoreDbSeeder
     /// OFFSET 0 ROWS FETCH NEXT 100 ROWS ONLY;
     /// </code>
     /// </remarks>
-    public static List<TblImage> DbSeed_Tbl_Image => new()
-    {
+    public static List<TblImage> DbSeed_Tbl_Image =>
+    [
         new() { Id = 1, ImageId = 1, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6321", ImageDescription = "Beskrivning", ImageDescriptionEn = "Description", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
         new() { Id = 2, ImageId = 2, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6366", ImageDescription = "Testar lite text", ImageDescriptionEn = "Testing some text", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
         new() { Id = 3, ImageId = 3, ImageCategoryId = 49, ImageFamilyId = 27, ImageMainFamilyId = null, ImageUrlName = "AP2D6437", ImageDescription = "Mer beskrivande info...", ImageDescriptionEn = "More descriptive information...", ImageDate = new DateTime(2011, 3, 2, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 11, 18, 37, 0) },
@@ -855,7 +855,7 @@ public static class ArvidsonFotoCoreDbSeeder
         new() { Id = 98, ImageId = 98, ImageCategoryId = 74, ImageFamilyId = 288, ImageMainFamilyId = 22, ImageUrlName = "_TAR2403", ImageDescription = "", ImageDate = new DateTime(2007, 6, 13, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 19, 12, 27, 0) },
         new() { Id = 99, ImageId = 99, ImageCategoryId = 74, ImageFamilyId = 288, ImageMainFamilyId = 22, ImageUrlName = "_TAR2446", ImageDescription = "", ImageDate = new DateTime(2007, 6, 13, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 19, 12, 28, 0) },
         new() { Id = 100, ImageId = 100, ImageCategoryId = 74, ImageFamilyId = 288, ImageMainFamilyId = 22, ImageUrlName = "TTAR4615", ImageDescription = "", ImageDate = new DateTime(2008, 10, 1, 0, 0, 0), ImageUpdate = new DateTime(2011, 8, 19, 12, 29, 0) },
-    };
+    ];
 
     #endregion
 
@@ -867,10 +867,10 @@ public static class ArvidsonFotoCoreDbSeeder
     public static void InitialDatabaseSeed(this ModelBuilder modelBuilder)
     {
         // Seed all data using the public properties
-        modelBuilder.Entity<TblGb>().HasData(DbSeed_Tbl_Guestbook);
-        modelBuilder.Entity<TblMenu>().HasData(DbSeed_Tbl_MenuCategories);
-        modelBuilder.Entity<TblPageCounter>().HasData(DbSeed_Tbl_PageCounters);
-        modelBuilder.Entity<TblImage>().HasData(DbSeed_Tbl_Image);
+        _ = modelBuilder.Entity<TblGb>().HasData(DbSeed_Tbl_Guestbook);
+        _ = modelBuilder.Entity<TblMenu>().HasData(DbSeed_Tbl_MenuCategories);
+        _ = modelBuilder.Entity<TblPageCounter>().HasData(DbSeed_Tbl_PageCounters);
+        _ = modelBuilder.Entity<TblImage>().HasData(DbSeed_Tbl_Image);
     }
 
     #endregion
@@ -898,7 +898,7 @@ public static class ArvidsonFotoCoreDbSeeder
         context.TblImages.AddRange(DbSeed_Tbl_Image);
 
         // Spara ändringar
-        context.SaveChanges();
+        _ = context.SaveChanges();
     }
 
     #endregion

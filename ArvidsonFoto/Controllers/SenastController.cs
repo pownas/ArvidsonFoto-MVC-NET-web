@@ -38,10 +38,7 @@ public class SenastController(
             "by-category" => "Per kategori",
             _ => sortOrder
         };
-        if (sortOrder is null)
-        {
-            sortOrder = "Fotograferad";
-        }
+        sortOrder ??= "Fotograferad";
 
         viewModel.CurrentPage = (int)sida;
 
@@ -59,7 +56,7 @@ public class SenastController(
                 .OrderBy(m => m.MenuDisplayName)
                 .ToList();
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>();
+            viewModel.AllImagesList = [];
 
             // Get all category IDs that have images (including family and main family relationships)
             var categoriesWithImages = categories
@@ -116,10 +113,9 @@ public class SenastController(
 
             viewModel.TotalImageCount = viewModel.AllImagesList.Count;
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
-            viewModel.DisplayImagesList = viewModel.AllImagesList
+            viewModel.DisplayImagesList = [.. viewModel.AllImagesList
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize)];
         }
         else if (sortOrder.Equals("Uppladdad"))
         {
@@ -167,7 +163,7 @@ public class SenastController(
             // Use bulk category name lookup to avoid N+1 queries
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
 
-            viewModel.DisplayImagesList = images.Select(image =>
+            viewModel.DisplayImagesList = [.. images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
@@ -185,9 +181,9 @@ public class SenastController(
                     DateUploaded = image.ImageUpdate,
                     Description = image.ImageDescription ?? string.Empty
                 };
-            }).ToList();
+            })];
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
+            viewModel.AllImagesList = []; // Don't load all images
         }
         else if (sortOrder.Equals("Fotograferad", StringComparison.OrdinalIgnoreCase))
         {
@@ -235,7 +231,7 @@ public class SenastController(
 
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
 
-            viewModel.DisplayImagesList = images.Select(image =>
+            viewModel.DisplayImagesList = [.. images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
@@ -253,7 +249,7 @@ public class SenastController(
                     DateUploaded = image.ImageUpdate,
                     Description = image.ImageDescription ?? string.Empty
                 };
-            }).ToList();
+            })];
 
             viewModel.AllImagesList = []; // Don't load all images
         }
@@ -268,7 +264,7 @@ public class SenastController(
 
         viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
         viewModel.CurrentUrl = HttpContext?.Request.Path.Value ??
-            "/Senast/" + sortOrder;
+            ("/Senast/" + sortOrder);
 
         return View(viewModel);
     }
