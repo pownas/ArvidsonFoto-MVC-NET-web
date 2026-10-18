@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root>
   <data name="UploadAdmin.RedigeraBilder.PhotoDate" xml:space="preserve">
     <value>Photo date</value>
@@ -487,4 +487,5 @@
   <data name="UploadAdmin.Review.Pages" xml:space="preserve"><value>Pages</value></data>
   <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Previous</value></data>
   <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Next</value></data>
+  <data name="UploadAdmin.GameSelectable" xml:space="preserve"><value>Available for games (e.g. memory and image guessing)</value></data>
 </root>

@@ -141,6 +141,10 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("image_update");
 
+            _ = entity.Property(e => e.IsGameSelectable)
+                .HasColumnName("is_game_selectable")
+                .HasDefaultValue(true);
+
             _ = entity.HasKey(e => e.Id);
         });
 
@@ -180,6 +184,10 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
             _ = entity.Property(e => e.MenuDateUpdated)
                 .HasColumnType("datetime")
                 .HasColumnName("menu_dateUpdated");
+
+            _ = entity.Property(e => e.IsGameSelectable)
+                .HasColumnName("is_game_selectable")
+                .HasDefaultValue(true);
 
             _ = entity.HasKey(e => e.Id);
         });

@@ -66,6 +66,8 @@ public class UploadImageInputDto
     /// <summary>Indikerar om bilden har skapats framgångsrikt</summary>
     public bool ImageCreated { get; set; }
 
+    public bool IsGameSelectable { get; set; } = true;
+
     /// <summary>Datum och tid när bilden senast uppdaterades</summary>
     public DateTime ImageUpdate { get; set; } = DateTime.Now;
 

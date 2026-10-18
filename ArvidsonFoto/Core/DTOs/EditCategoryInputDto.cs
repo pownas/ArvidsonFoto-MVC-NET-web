@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Core.DTOs;
 
@@ -18,4 +18,6 @@ public class EditCategoryInputDto
 
     [MaxLength(50), RegularExpression(@"^[a-zA-Z0-9-]*$")]
     public string? UrlSegmentEn { get; set; }
+
+    public bool IsGameSelectable { get; set; } = true;
 }

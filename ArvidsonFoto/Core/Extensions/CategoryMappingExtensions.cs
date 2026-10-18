@@ -40,6 +40,7 @@ public static class CategoryMappingExtensions
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
+            IsGameSelectable = menu.IsGameSelectable,
             ImageCount = imageCounted ?? -1,
         };
     }
@@ -61,7 +62,8 @@ public static class CategoryMappingExtensions
             MenuUrlSegment = categoryDto.UrlCategoryPath,
             MenuUrlSegmentEn = categoryDto.UrlCategoryPathEn,
             MenuParentCategoryId = categoryDto.ParentCategoryId,
-            MenuDateUpdated = categoryDto.DateUpdated
+            MenuDateUpdated = categoryDto.DateUpdated,
+            IsGameSelectable = categoryDto.IsGameSelectable
         };
     }
 

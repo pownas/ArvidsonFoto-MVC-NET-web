@@ -63,6 +63,9 @@ public class MockImageService : IApiImageService
         })
         .ToList();
 
+    public List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null) =>
+        GetRandomNumberOfImages(Math.Min(count, 100));
+
     public int GetCountedAllImages() => 100;
 
     public int GetCountedCategoryId(int categoryId) => 10;

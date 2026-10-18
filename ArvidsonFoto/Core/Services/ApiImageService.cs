@@ -275,6 +275,71 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         return imageDtos;
     }
 
+    public List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null)
+    {
+        if (count < 1 || categoryId is <= 0)
+        {
+            return [];
+        }
+
+        try
+        {
+            var imagesQuery = _entityContext.TblImages
+                .Where(image => image.IsGameSelectable
+                    && image.ImageCategoryId.HasValue
+                    && _entityContext.TblMenus.Any(category =>
+                        category.MenuCategoryId == image.ImageCategoryId
+                        && category.IsGameSelectable));
+
+            if (categoryId.HasValue)
+            {
+                var category = _entityContext.TblMenus
+                    .FirstOrDefault(item => item.MenuCategoryId == categoryId.Value);
+                if (category?.IsGameSelectable != true)
+                {
+                    return [];
+                }
+
+                var categoryIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId.Value);
+                categoryIds.Add(categoryId.Value);
+                imagesQuery = imagesQuery.Where(image =>
+                    image.ImageCategoryId.HasValue && categoryIds.Contains(image.ImageCategoryId.Value));
+            }
+
+            var images = imagesQuery
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(Math.Min(count, 100))
+                .ToList();
+
+            if (NewGalleryCategoryEnabled)
+            {
+                return GetImageDtosWithOptimizedCategoryPathsAndNames(images);
+            }
+
+            var categoryIdsForNames = images
+                .Select(image => image.ImageCategoryId)
+                .Where(id => id.HasValue && id.Value > 0)
+                .Select(id => id!.Value)
+                .Distinct()
+                .ToList();
+            var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIdsForNames);
+
+            return images.Select(image =>
+            {
+                var categoryName = image.ImageCategoryId.HasValue
+                    && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name)
+                    ? name
+                    : string.Empty;
+                return image.ToImageDto(GetOldCategoryPathForImage(image), categoryName);
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Error in GetGameSelectableImages: {Message}", ex.Message);
+            return [];
+        }
+    }
+
     /// <summary>
     /// Gets a list of images by category ID
     /// </summary>

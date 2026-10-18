@@ -122,7 +122,8 @@ public class UploadAdminController(
                 ImageDate = model.ImageDate,
                 ImageDescription = model.ImageDescription,
                 ImageDescriptionEn = model.ImageDescriptionEn,
-                ImageUrlName = model.ImageUrl
+                ImageUrlName = model.ImageUrl,
+                IsGameSelectable = model.IsGameSelectable
             };
 
             try
@@ -172,6 +173,7 @@ public class UploadAdminController(
                     existingImage.ImageDate = model.ImageDate;
                     existingImage.ImageDescription = model.ImageDescription;
                     existingImage.ImageDescriptionEn = model.ImageDescriptionEn;
+                    existingImage.IsGameSelectable = model.IsGameSelectable;
                     existingImage.ImageUpdate = DateTime.Now;
 
                     _ = await coreContext.SaveChangesAsync();
@@ -248,7 +250,8 @@ public class UploadAdminController(
             NameSv = selected?.MenuDisplayName ?? string.Empty,
             NameEn = selected?.MenuDisplayNameEn,
             UrlSegmentSv = selected?.MenuUrlSegment ?? string.Empty,
-            UrlSegmentEn = selected?.MenuUrlSegmentEn
+            UrlSegmentEn = selected?.MenuUrlSegmentEn,
+            IsGameSelectable = selected?.IsGameSelectable ?? true
         });
     }
 
@@ -276,6 +279,7 @@ public class UploadAdminController(
         category.MenuDisplayNameEn = string.IsNullOrWhiteSpace(input.NameEn) ? null : input.NameEn.Trim();
         category.MenuUrlSegment = input.UrlSegmentSv.Trim();
         category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim();
+        category.IsGameSelectable = input.IsGameSelectable;
         category.MenuDateUpdated = DateTime.UtcNow;
         _ = coreContext.SaveChanges();
         _categoryService.ClearCache();
@@ -348,6 +352,7 @@ public class UploadAdminController(
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
             inputModel.ImageDescription = item.ImageDescription ?? localizer["Admin.Missing"];
             inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
+            inputModel.IsGameSelectable = item.IsGameSelectable;
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
             // Get category path using the service method
