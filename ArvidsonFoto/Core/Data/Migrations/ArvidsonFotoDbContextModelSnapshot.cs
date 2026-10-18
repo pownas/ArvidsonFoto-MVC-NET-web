@@ -16,14 +16,14 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261017162636_AddTranslationReviewStatus";
+    public override string LastMigrationId => "20261018210222_AddGameSelectableFlags";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
 #pragma warning disable 612, 618
         modelBuilder
             .UseCollation("Finnish_Swedish_CI_AS")
-            .HasAnnotation("ProductVersion", "11.0.0-rc.1.26425.128")
+            .HasAnnotation("ProductVersion", "11.0.0-rc.2.26504.105")
             .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
         SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -147,6 +147,12 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasColumnType("nvarchar(50)")
                     .HasColumnName("image_URL");
 
+                b.Property<bool>("IsGameSelectable")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(true)
+                    .HasColumnName("is_game_selectable");
+
                 b.HasKey("Id");
 
                 b.ToTable("tbl_images");
@@ -217,6 +223,12 @@ partial class ArvidsonFotoDbContextModelSnapshot : ModelSnapshot
                     .HasColumnName("ID");
 
                 SqlServerPropertyBuilderExtensions.UseIdentityColumn(id);
+
+                b.Property<bool>("IsGameSelectable")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(true)
+                    .HasColumnName("is_game_selectable");
 
                 b.Property<int?>("MenuCategoryId")
                     .HasColumnType("int")

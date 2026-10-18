@@ -81,6 +81,17 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         return apiCategoryService.GetAll();
     }
 
+    [AllowAnonymous]
+    [HttpGet("/api/game/categories")]
+    [ProducesResponseType<List<CategoryDto>>(StatusCodes.Status200OK)]
+    public List<CategoryDto> GetGameSelectableCategories()
+    {
+        logger.LogInformation("Game API - GetGameSelectableCategories called.");
+        return apiCategoryService.GetAll()
+            .Where(category => category.IsGameSelectable)
+            .ToList();
+    }
+
     /// <summary>
     /// Tests the multi-level category path resolution without returning images.
     /// </summary>

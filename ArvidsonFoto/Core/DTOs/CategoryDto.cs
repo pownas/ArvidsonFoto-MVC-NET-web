@@ -56,6 +56,8 @@ public class CategoryDto()
     /// <example>12</example>
     public int? ParentCategoryId { get; set; } = null;
 
+    public bool IsGameSelectable { get; set; } = true;
+
     /// <summary> Antal bilder i kategorin </summary>
     /// <remarks> Används för att visa antal bilder i kategorin. </remarks>
     /// <example>25</example>

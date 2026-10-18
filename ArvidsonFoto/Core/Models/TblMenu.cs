@@ -41,4 +41,6 @@ public partial class TblMenu()
     /// <summary> Datumen då menyn uppdaterades senast. </summary>
     //[JsonPropertyName("menu_dateUpdated")] // ColumnName in database
     public DateTime? MenuDateUpdated { get; set; } = DateTime.Now;
+
+    public bool IsGameSelectable { get; set; } = true;
 }

@@ -236,6 +236,15 @@ public class ImageApiControllerTests : IDisposable
     }
 
     [Fact]
+    public void GetGameSelectableImages_UsesGameImageService()
+    {
+        var result = _controller.GetGameSelectableImages(5, 49);
+
+        Assert.IsType<List<ImageDto>>(result);
+        Assert.True(result.Count <= 5);
+    }
+
+    [Fact]
     public void GetLatestImages_ValidCount_ReturnsOkWithImages()
     {
         // Arrange

@@ -56,6 +56,14 @@ public interface IApiImageService
     List<ImageDto> GetRandomNumberOfImages(int count);
 
     /// <summary>
+    /// Gets random images enabled for games, optionally limited to a category and its descendants.
+    /// </summary>
+    /// <param name="count">The maximum number of images to return.</param>
+    /// <param name="categoryId">Optional category ID to limit the selection.</param>
+    /// <returns>Images whose own and assigned category selection flags are enabled.</returns>
+    List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null);
+
+    /// <summary>
     /// Gets all images by category ID
     /// </summary>
     /// <param name="categoryID">The category ID</param>

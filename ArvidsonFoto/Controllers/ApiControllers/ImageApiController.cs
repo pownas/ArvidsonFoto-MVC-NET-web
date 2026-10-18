@@ -216,6 +216,15 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         return imageService.GetRandomNumberOfImages(count);
     }
 
+    [AllowAnonymous]
+    [HttpGet("/api/game/images")]
+    [ProducesResponseType<List<ImageDto>>(StatusCodes.Status200OK)]
+    public List<ImageDto> GetGameSelectableImages([FromQuery] int count = 20, [FromQuery] int? categoryId = null)
+    {
+        logger.LogInformation("Game API - GetGameSelectableImages called.");
+        return imageService.GetGameSelectableImages(count, categoryId);
+    }
+
     /// <summary>
     /// Retrieves the latest images from the database.
     /// </summary>
@@ -296,6 +305,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
         existingImage.ImageDate = image.ImageDate;
         existingImage.ImageCategoryId = image.ImageArt;
+        existingImage.IsGameSelectable = image.IsGameSelectable;
         existingImage.ImageUpdate = DateTime.Now;
         existingImage.ImageUrlName = image.ImageUrl;
         existingImage.Name = image.ImageArtNamn;

@@ -144,6 +144,14 @@ public class MockApiImageService : IApiImageService
             .ToList();
     }
 
+    public List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null)
+    {
+        var images = categoryId.HasValue
+            ? GetImagesByCategoryID(categoryId.Value)
+            : _testImages;
+        return images.OrderBy(_ => Guid.NewGuid()).Take(Math.Min(count, 100)).ToList();
+    }
+
     public List<ImageDto> GetImagesByCategoryID(int categoryID)
     {
         var direct = _testImages

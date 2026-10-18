@@ -50,6 +50,8 @@ public partial class TblImage()
     /// <example>2021-12-03T19:23:42</example>
     public DateTime? ImageUpdate { get; set; } = DateTime.Now;
 
+    public bool IsGameSelectable { get; set; } = true;
+
     /// <summary> Inte något fält i databasen, men kan sättas ett namn, om det är en kategori som sökts fram. </summary>
     [NotMapped]
     public string? Name { get; set; } = string.Empty;
