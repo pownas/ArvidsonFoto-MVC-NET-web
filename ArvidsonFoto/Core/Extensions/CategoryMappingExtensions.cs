@@ -40,7 +40,7 @@ public static class CategoryMappingExtensions
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
-            ImageCount = imageCounted.HasValue ? imageCounted.Value : -1,
+            ImageCount = imageCounted ?? -1,
         };
     }
 
@@ -51,12 +51,9 @@ public static class CategoryMappingExtensions
     /// <returns>A TblMenu representation of the CategoryDto</returns>
     public static TblMenu ToTblMenu(this CategoryDto categoryDto)
     {
-        if (categoryDto == null)
-        {
-            return new TblMenu();
-        }
-
-        return new TblMenu
+        return categoryDto == null
+            ? new TblMenu()
+            : new TblMenu
         {
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.NameSv,

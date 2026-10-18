@@ -13,7 +13,7 @@ public class UploadFacebookInputDto
     [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImageRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     [MinLength(1, ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImageRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     [MaxLength(10, ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImagesTooMany), ErrorMessageResourceType = typeof(ValidationResource))]
-    public List<int> SelectedImageIds { get; set; } = new();
+    public List<int> SelectedImageIds { get; set; } = [];
 
     /// <summary>
     /// Text som ska följa med inlägget
@@ -32,7 +32,7 @@ public class UploadFacebookInputDto
     {
         return new UploadFacebookInputDto
         {
-            SelectedImageIds = new List<int>(),
+            SelectedImageIds = [],
             Message = string.Empty
         };
     }

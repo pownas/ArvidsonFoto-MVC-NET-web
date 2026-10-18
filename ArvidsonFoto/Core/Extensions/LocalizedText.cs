@@ -6,6 +6,8 @@ public static class LocalizedText
 {
     public static bool IsEnglish => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en";
 
-    public static string Select(string? swedish, string? english) =>
-        IsEnglish && !string.IsNullOrWhiteSpace(english) ? english : swedish ?? string.Empty;
+    public static string Select(string? swedish, string? english)
+    {
+        return IsEnglish && !string.IsNullOrWhiteSpace(english) ? english : swedish ?? string.Empty;
+    }
 }

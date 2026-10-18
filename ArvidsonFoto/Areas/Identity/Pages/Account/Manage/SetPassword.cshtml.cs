@@ -44,12 +44,7 @@ public class SetPasswordModel(
 
         var hasPassword = await _userManager.HasPasswordAsync(user);
 
-        if (hasPassword)
-        {
-            return RedirectToPage("./ChangePassword");
-        }
-
-        return Page();
+        return hasPassword ? RedirectToPage("./ChangePassword") : Page();
     }
 
     public async Task<IActionResult> OnPostAsync()

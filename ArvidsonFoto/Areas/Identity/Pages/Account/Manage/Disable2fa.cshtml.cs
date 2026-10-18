@@ -24,12 +24,9 @@ public class Disable2faModel(
             return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
-        if (!await _userManager.GetTwoFactorEnabledAsync(user))
-        {
-            throw new InvalidOperationException($"Cannot disable 2FA for user with ID '{_userManager.GetUserId(User)}' as it's not currently enabled.");
-        }
-
-        return Page();
+        return !await _userManager.GetTwoFactorEnabledAsync(user)
+            ? throw new InvalidOperationException($"Cannot disable 2FA for user with ID '{_userManager.GetUserId(User)}' as it's not currently enabled.")
+            : (IActionResult)Page();
     }
 
     public async Task<IActionResult> OnPostAsync()

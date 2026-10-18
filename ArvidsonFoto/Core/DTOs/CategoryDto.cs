@@ -13,13 +13,8 @@ public class CategoryDto()
     /// <remarks> Används för att identifiera vilken kategori bilden tillhör, t.ex. 13 för Blåmes. </remarks>
     /// <example>13</example>
     public int? CategoryId { get; set; } = -1; // Default value when not set
-
-    /// <summary> Namn på kategori </summary>
-    /// <remarks> Exempel: "Amiral" </remarks>
-    /// <example>Amiral</example>
-    private string? _name = string.Empty;
-    public string? Name { get => Extensions.LocalizedText.Select(_name, NameEn); set => _name = value; }
-    public string? NameSv { get => _name; set => _name = value; }
+    public string? Name { get => Extensions.LocalizedText.Select(NameSv, NameEn); set => NameSv = value; }
+    public string? NameSv { get; set; } = string.Empty;
     public string? NameEn { get; set; }
 
     /// <summary> En bild sökväg för den senast fotograferade bilden i denna kategorin </summary>

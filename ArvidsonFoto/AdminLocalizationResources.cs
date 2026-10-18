@@ -7,7 +7,10 @@ public class IdentityResource
 {
     private static readonly ResourceManager Resources = new("ArvidsonFoto.Resources.IdentityResource", typeof(IdentityResource).Assembly);
 
-    public static string Get(string key) => Resources.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+    public static string Get(string key)
+    {
+        return Resources.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+    }
 
     public static string Email => Get(nameof(Email));
     public static string Password => Get(nameof(Password));

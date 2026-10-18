@@ -102,9 +102,7 @@ public static class SharedStaticFunctions
         // NFD decomposes each accented character into base letter + combining diacritical mark(s).
         // Filtering out NonSpacingMark characters then removes all diacritics (å→a, é→e, ü→u, etc.).
         var withoutDiacritics = new string(
-            displayName.Normalize(NormalizationForm.FormD)
-                       .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                       .ToArray());
+            [.. displayName.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)]);
 
         var segment = withoutDiacritics.Replace(" ", "-");
 

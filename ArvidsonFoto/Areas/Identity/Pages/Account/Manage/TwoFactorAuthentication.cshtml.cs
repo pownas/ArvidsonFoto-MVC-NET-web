@@ -11,8 +11,6 @@ public class TwoFactorAuthenticationModel(
     SignInManager<ArvidsonFotoUser> signInManager,
     ILogger<TwoFactorAuthenticationModel> logger) : PageModel
 {
-    private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
-
     private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
     private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
     private readonly ILogger<TwoFactorAuthenticationModel> _logger = logger;

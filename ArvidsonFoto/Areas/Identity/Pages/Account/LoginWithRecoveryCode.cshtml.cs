@@ -29,12 +29,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
     public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
     {
         // Ensure the user has gone through the username & password screen first
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         ReturnUrl = returnUrl;
 
         return Page();
@@ -47,12 +42,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
             return Page();
         }
 
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
 
         var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);

@@ -69,8 +69,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         try
         {
             var tblImage = image.ToTblImage();
-            _entityContext.TblImages.Add(tblImage);
-            _entityContext.SaveChanges();
+            _ = _entityContext.TblImages.Add(tblImage);
+            _ = _entityContext.SaveChanges();
             success = true;
         }
         catch (Exception ex)
@@ -100,8 +100,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                                                     .FirstOrDefault();
             if (image != null)
             {
-                _entityContext.TblImages.Remove(image);
-                _entityContext.SaveChanges();
+                _ = _entityContext.TblImages.Remove(image);
+                _ = _entityContext.SaveChanges();
                 succeeded = true;
             }
         }
@@ -233,7 +233,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         // Early return if no images found
         if (images.Count == 0)
         {
-            return new List<ImageDto>();
+            return [];
         }
 
         // OPTIMIZED: Bulk load category names instead of one-by-one
@@ -287,7 +287,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             if (categoryID <= 0)
             {
                 Log.Information("Invalid category ID for GetImagesByCategoryID: {CategoryID}", categoryID);
-                return new List<ImageDto>();
+                return [];
             }
 
             var images = _entityContext.TblImages
@@ -302,18 +302,17 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
                 if (descendantIds.Count != 0)
                 {
-                    images = _entityContext.TblImages
+                    images = [.. _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
                                  || (i.ImageFamilyId.HasValue && descendantIds.Contains(i.ImageFamilyId.Value))
-                                 || (i.ImageMainFamilyId.HasValue && descendantIds.Contains(i.ImageMainFamilyId.Value)))
-                        .ToList();
+                                 || (i.ImageMainFamilyId.HasValue && descendantIds.Contains(i.ImageMainFamilyId.Value)))];
                 }
             }
 
             // Early return if no images found
             if (images.Count == 0)
             {
-                return new List<ImageDto>();
+                return [];
             }
 
             // Check feature flag once
@@ -354,7 +353,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         catch (Exception ex)
         {
             Log.Error("Error in GetImagesByCategoryID: {Message}", ex.Message);
-            return new List<ImageDto>();
+            return [];
         }
     }
 
@@ -372,7 +371,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             if (categoryID <= 0)
             {
                 Log.Information("Invalid category ID for GetImagesByCategoryIDPaginated: {CategoryID}", categoryID);
-                return new List<ImageDto>();
+                return [];
             }
 
             if (page < 1)
@@ -403,22 +402,21 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
                 if (descendantIds.Count != 0)
                 {
-                    images = _entityContext.TblImages
+                    images = [.. _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
                                  || (i.ImageFamilyId.HasValue && descendantIds.Contains(i.ImageFamilyId.Value))
                                  || (i.ImageMainFamilyId.HasValue && descendantIds.Contains(i.ImageMainFamilyId.Value)))
                         .OrderByDescending(i => i.ImageId)
                         .ThenByDescending(i => i.ImageDate)
                         .Skip((page - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
+                        .Take(pageSize)];
                 }
             }
 
             // Early return if no images found
             if (images.Count == 0)
             {
-                return new List<ImageDto>();
+                return [];
             }
 
             // Check feature flag once
@@ -459,7 +457,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         catch (Exception ex)
         {
             Log.Error("Error in GetImagesByCategoryIDPaginated: {Message}", ex.Message);
-            return new List<ImageDto>();
+            return [];
         }
     }
 
@@ -555,10 +553,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 existingImage.ImageDate = tblImage.ImageDate;
                 existingImage.ImageDescription = tblImage.ImageDescription;
                 if (tblImage.ImageDescriptionEn != null)
+                {
                     existingImage.ImageDescriptionEn = tblImage.ImageDescriptionEn;
+                }
+
                 existingImage.ImageUpdate = DateTime.UtcNow;
 
-                await _entityContext.SaveChangesAsync();
+                _ = await _entityContext.SaveChangesAsync();
                 return true;
             }
             return false;

@@ -82,7 +82,7 @@ public class EnableAuthenticatorModel(
             return Page();
         }
 
-        await _userManager.SetTwoFactorEnabledAsync(user, true);
+        _ = await _userManager.SetTwoFactorEnabledAsync(user, true);
         var userId = await _userManager.GetUserIdAsync(user);
         _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
@@ -92,7 +92,7 @@ public class EnableAuthenticatorModel(
         {
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
 #pragma warning disable CS8604 // Possible null reference argument.
-            RecoveryCodes = recoveryCodes.ToArray();
+            RecoveryCodes = [.. recoveryCodes];
 #pragma warning restore CS8604 // Possible null reference argument.
             return RedirectToPage("./ShowRecoveryCodes");
         }
@@ -108,7 +108,7 @@ public class EnableAuthenticatorModel(
         var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         if (string.IsNullOrEmpty(unformattedKey))
         {
-            await _userManager.ResetAuthenticatorKeyAsync(user);
+            _ = await _userManager.ResetAuthenticatorKeyAsync(user);
             unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
 
@@ -124,12 +124,12 @@ public class EnableAuthenticatorModel(
         int currentPosition = 0;
         while (currentPosition + 4 < unformattedKey.Length)
         {
-            result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+            _ = result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
             currentPosition += 4;
         }
         if (currentPosition < unformattedKey.Length)
         {
-            result.Append(unformattedKey.Substring(currentPosition));
+            _ = result.Append(unformattedKey[currentPosition..]);
         }
 
         return result.ToString().ToLowerInvariant();

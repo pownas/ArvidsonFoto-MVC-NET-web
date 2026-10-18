@@ -53,12 +53,9 @@ public static class ImageMappingExtensions
     /// <returns>A TblImage representation of the ImageDto</returns>
     public static TblImage ToTblImage(this ImageDto imageDto)
     {
-        if (imageDto == null)
-        {
-            return new TblImage();
-        }
-
-        return new TblImage
+        return imageDto == null
+            ? new TblImage()
+            : new TblImage
         {
             ImageId = imageDto.ImageId,
             ImageCategoryId = imageDto.CategoryId == -1 ? null : imageDto.CategoryId,
