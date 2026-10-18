@@ -18,6 +18,10 @@ public class ImageDto()
     /// <example>Fasan</example>
     public string CategoryName { get; set; } = string.Empty;
 
+    public string CategoryNameSv { get; set; } = string.Empty;
+
+    public string? CategoryNameEn { get; set; }
+
     /// <summary> Url för kategori </summary>
     /// <remarks> Exempel: "https://arvidsonfoto.se/bilder/insekter/fjarilar/amiral" </remarks>
     /// <example>https://arvidsonfoto.se/bilder/insekter/fjarilar/amiral</example>

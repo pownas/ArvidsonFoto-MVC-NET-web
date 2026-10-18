@@ -1,5 +1,6 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
@@ -23,11 +24,15 @@ public class MockApiImageService : IApiImageService
             ImageId = image.ImageId ?? 0,
             CategoryId = image.ImageCategoryId ?? -1, // ImageCategoryId is the category ID
             Name = GetCategoryName(image.ImageCategoryId ?? -1),
+            CategoryName = GetCategoryName(image.ImageCategoryId ?? -1),
+            CategoryNameSv = GetCategoryNameSv(image.ImageCategoryId ?? -1),
+            CategoryNameEn = GetCategoryNameEn(image.ImageCategoryId ?? -1),
             UrlImage = image.ImageUrlName ?? $"image-{image.ImageId}",
             UrlCategory = GetCategoryPath(image.ImageCategoryId ?? -1),
             DateImageTaken = image.ImageDate,
             DateUploaded = image.ImageUpdate,
-            Description = image.ImageDescription ?? string.Empty
+            Description = image.ImageDescription ?? string.Empty,
+            DescriptionEn = image.ImageDescriptionEn
         }).ToList();
     }
 
@@ -39,7 +44,19 @@ public class MockApiImageService : IApiImageService
         }
 
         var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(m => m.MenuCategoryId == categoryId);
-        return menu?.MenuDisplayName ?? "Unknown";
+        return LocalizedText.Select(menu?.MenuDisplayName, menu?.MenuDisplayNameEn);
+    }
+
+    private string GetCategoryNameSv(int categoryId)
+    {
+        return ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories
+            .FirstOrDefault(menu => menu.MenuCategoryId == categoryId)?.MenuDisplayName ?? "Unknown";
+    }
+
+    private string? GetCategoryNameEn(int categoryId)
+    {
+        return ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories
+            .FirstOrDefault(menu => menu.MenuCategoryId == categoryId)?.MenuDisplayNameEn;
     }
 
     private string GetCategoryPath(int categoryId)

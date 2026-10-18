@@ -150,6 +150,42 @@ public class LocalizedContentTests
         }
     }
 
+    [Theory]
+    [InlineData("/api/images/insects/butterflies/camberwell-beauty", true, false)]
+    [InlineData("/api/bilder/insekter/fjarilar/sorgmantel", false, true)]
+    public void ApiCategoryRoutes_SelectTheirLanguage(string path, bool isEnglish, bool isSwedishApi)
+    {
+        Assert.Equal(isEnglish, LocalizedRoutes.IsEnglishPath(path));
+        Assert.Equal(isSwedishApi, LocalizedRoutes.IsSwedishApiPath(path));
+    }
+
+    [Fact]
+    public void ImageDto_PreservesBothDescriptionLanguagesAndSelectsByCurrentCulture()
+    {
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            var image = new TblImage
+            {
+                ImageDescription = "Svensk beskrivning",
+                ImageDescriptionEn = "English description"
+            }.ToImageDto();
+
+            Assert.Equal("Svensk beskrivning", image.DescriptionSv);
+            Assert.Equal("English description", image.DescriptionEn);
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            Assert.Equal("English description", image.Description);
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+            Assert.Equal("Svensk beskrivning", image.Description);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
     [Fact]
     public void BulkCategoryNames_UseRequestLanguageAndFallbackAfterSwedishCache()
     {
@@ -204,7 +240,7 @@ public class LocalizedContentTests
     {
         var categories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories;
 
-        Assert.Equal(543, categories.Count);
+        Assert.Equal(550, categories.Count);
         Assert.All(categories, category =>
         {
             Assert.False(string.IsNullOrWhiteSpace(category.MenuDisplayNameEn), $"Missing English name for {category.MenuCategoryId}");

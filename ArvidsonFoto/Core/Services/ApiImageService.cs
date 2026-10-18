@@ -823,8 +823,18 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         var categories = GetGameCategoryLookup();
         for (var index = 0; index < images.Count && index < imageDtos.Count; index++)
         {
-            imageDtos[index].IsGameSelectable = images[index].IsGameSelectable
-                && IsCategoryTreeGameSelectable(images[index].ImageCategoryId, categories);
+            var image = images[index];
+            var imageDto = imageDtos[index];
+            imageDto.IsGameSelectable = image.IsGameSelectable
+                && IsCategoryTreeGameSelectable(image.ImageCategoryId, categories);
+
+            if (image.ImageCategoryId.HasValue
+                && categories.TryGetValue(image.ImageCategoryId.Value, out var category))
+            {
+                imageDto.CategoryNameSv = category.MenuDisplayName ?? string.Empty;
+                imageDto.CategoryNameEn = category.MenuDisplayNameEn;
+                imageDto.CategoryName = LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn);
+            }
         }
 
         return imageDtos;

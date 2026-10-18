@@ -20,7 +20,9 @@ public class MockApiCategoryService : IApiCategoryService
         {
             CategoryId = menu.MenuCategoryId ?? 0,
             Name = menu.MenuDisplayName ?? string.Empty,
+            NameEn = menu.MenuDisplayNameEn,
             UrlCategoryPath = menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}",
+            UrlCategoryPathEn = menu.MenuUrlSegmentEn,
             UrlCategoryPathFull = BuildCategoryPath(menu.MenuCategoryId ?? 0),
             UrlCategory = $"bilder/{menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}"}",
             UrlImage = GetDefaultImageForCategory(menu.MenuCategoryId ?? 0),
@@ -269,7 +271,8 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathEn, urlSegment, StringComparison.OrdinalIgnoreCase));
 
         return category ?? CreateNotFoundCategory();
     }
@@ -282,7 +285,8 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathEn, urlSegment, StringComparison.OrdinalIgnoreCase));
 
         return category?.CategoryId ?? -1;
     }

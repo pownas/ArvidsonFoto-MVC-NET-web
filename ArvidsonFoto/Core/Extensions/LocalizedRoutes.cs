@@ -1,4 +1,4 @@
-using ArvidsonFoto.Core.DTOs;
+﻿using ArvidsonFoto.Core.DTOs;
 
 namespace ArvidsonFoto.Core.Extensions;
 
@@ -7,9 +7,15 @@ public static class LocalizedRoutes
     public static bool IsEnglishPath(string? path)
     {
         return path is not null && (path.Equals("/search", StringComparison.OrdinalIgnoreCase) ||
-            new[] { "/images", "/latest", "/information" }
+            new[] { "/images", "/api/images", "/latest", "/information" }
                 .Any(prefix => path.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
                     path.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase)));
+    }
+
+    public static bool IsSwedishApiPath(string? path)
+    {
+        return path is not null && (path.Equals("/api/bilder", StringComparison.OrdinalIgnoreCase) ||
+            path.StartsWith("/api/bilder/", StringComparison.OrdinalIgnoreCase));
     }
 
     public static string Gallery => LocalizedText.IsEnglish ? "/images" : "/Bilder";

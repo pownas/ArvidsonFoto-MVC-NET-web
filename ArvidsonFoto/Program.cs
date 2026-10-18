@@ -174,8 +174,14 @@ public class Program
                 .AddSupportedUICultures("sv-SE", "en-US");
             options.RequestCultureProviders.Insert(1, new CustomRequestCultureProvider(context =>
             {
+                var path = context.Request.Path.Value;
+                if (LocalizedRoutes.IsSwedishApiPath(path))
+                {
+                    return Task.FromResult<ProviderCultureResult?>(new ProviderCultureResult("sv-SE"));
+                }
+
                 return Task.FromResult(
-                    LocalizedRoutes.IsEnglishPath(context.Request.Path.Value) ? new ProviderCultureResult("en-US") : null);
+                    LocalizedRoutes.IsEnglishPath(path) ? new ProviderCultureResult("en-US") : null);
             }));
         });
 
