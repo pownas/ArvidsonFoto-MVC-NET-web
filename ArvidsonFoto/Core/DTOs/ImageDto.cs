@@ -51,6 +51,8 @@ public class ImageDto()
     /// <example>13</example>
     public int CategoryId { get; set; } = -1; // Default value when not set
 
+    public bool IsGameSelectable { get; set; } = true;
+
     /// <summary>
     /// Skapar en tom ImageDto med alla properties initialiserade
     /// </summary>

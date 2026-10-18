@@ -5,3 +5,8 @@
 
 ## Code Quality
 - For build and code-style warning cleanup, fix warnings without suppressing them and reduce the total below 50.
+
+## Game Image API Guidelines
+- Include an `IsGameSelectable` flag on each image.
+- A disabled category must make all its images effectively unavailable to games, even when an individual image flag is true.
+- Keep individual image flags manageable in admin.

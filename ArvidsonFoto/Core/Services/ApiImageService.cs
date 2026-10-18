@@ -39,6 +39,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         DateImageTaken = DateTime.Now,
         Description = "Bild inte hittad",
         DateUploaded = DateTime.Now,
+        IsGameSelectable = false,
     };
 
     /// <summary> Värde när <see cref="TblImage"/> inte hittats </summary>
@@ -181,7 +182,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 categoryPath = GetOldCategoryPathForImage(image);
             }
 
-            return image.ToImageDto(categoryPath, categoryName) ?? DefaultImageDtoNotFound;
+            var imageDto = image.ToImageDto(categoryPath, categoryName) ?? DefaultImageDtoNotFound;
+            return ApplyEffectiveGameSelection([image], [imageDto])[0];
         }
         catch (Exception ex)
         {
@@ -217,7 +219,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             imageDtos.Add(image.ToImageDto(categoryPath));
         }
-        return imageDtos;
+        return ApplyEffectiveGameSelection(images, imageDtos);
     }
 
     /// <summary> Används på startsidan för random antal av bilder. </summary>
@@ -272,7 +274,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
         }
 
-        return imageDtos;
+        return ApplyEffectiveGameSelection(images, imageDtos);
     }
 
     public List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null)
@@ -284,24 +286,27 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
         try
         {
+            var categories = GetGameCategoryLookup();
+            var selectableCategoryIds = categories.Values
+                .Where(category => IsCategoryTreeGameSelectable(category.MenuCategoryId, categories))
+                .Select(category => category.MenuCategoryId!.Value)
+                .ToList();
+
             var imagesQuery = _entityContext.TblImages
                 .Where(image => image.IsGameSelectable
                     && image.ImageCategoryId.HasValue
-                    && _entityContext.TblMenus.Any(category =>
-                        category.MenuCategoryId == image.ImageCategoryId
-                        && category.IsGameSelectable));
+                    && selectableCategoryIds.Contains(image.ImageCategoryId.Value));
 
             if (categoryId.HasValue)
             {
-                var category = _entityContext.TblMenus
-                    .FirstOrDefault(item => item.MenuCategoryId == categoryId.Value);
-                if (category?.IsGameSelectable != true)
+                if (!selectableCategoryIds.Contains(categoryId.Value))
                 {
                     return [];
                 }
 
                 var categoryIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId.Value);
                 categoryIds.Add(categoryId.Value);
+                categoryIds = categoryIds.Where(selectableCategoryIds.Contains).ToList();
                 imagesQuery = imagesQuery.Where(image =>
                     image.ImageCategoryId.HasValue && categoryIds.Contains(image.ImageCategoryId.Value));
             }
@@ -324,7 +329,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 .ToList();
             var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIdsForNames);
 
-            return images.Select(image =>
+            var imageDtos = images.Select(image =>
             {
                 var categoryName = image.ImageCategoryId.HasValue
                     && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name)
@@ -332,6 +337,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     : string.Empty;
                 return image.ToImageDto(GetOldCategoryPathForImage(image), categoryName);
             }).ToList();
+            return ApplyEffectiveGameSelection(images, imageDtos);
         }
         catch (Exception ex)
         {
@@ -412,7 +418,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     }
                     imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
                 }
-                return imageDtos;
+                return ApplyEffectiveGameSelection(images, imageDtos);
             }
         }
         catch (Exception ex)
@@ -516,7 +522,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     }
                     imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
                 }
-                return imageDtos;
+                return ApplyEffectiveGameSelection(images, imageDtos);
             }
         }
         catch (Exception ex)
@@ -557,7 +563,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
 
             // Convert the image to DTO and include the category path
-            return image.ToImageDto(categoryPath) ?? DefaultImageDtoNotFound;
+            var imageDto = image.ToImageDto(categoryPath) ?? DefaultImageDtoNotFound;
+            return ApplyEffectiveGameSelection([image], [imageDto])[0];
         }
         catch (Exception ex)
         {
@@ -621,6 +628,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 {
                     existingImage.ImageDescriptionEn = tblImage.ImageDescriptionEn;
                 }
+
+                existingImage.IsGameSelectable = tblImage.IsGameSelectable;
 
                 existingImage.ImageUpdate = DateTime.UtcNow;
 
@@ -712,7 +721,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             imageDtos.Add(image.ToImageDto(categoryPath));
         }
 
-        return imageDtos;
+        return ApplyEffectiveGameSelection(images, imageDtos);
     }
 
     /// <summary>
@@ -801,7 +810,55 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
         }
 
+        return ApplyEffectiveGameSelection(images, imageDtos);
+    }
+
+    private List<ImageDto> ApplyEffectiveGameSelection(IReadOnlyList<TblImage> images, List<ImageDto> imageDtos)
+    {
+        if (images.Count == 0)
+        {
+            return imageDtos;
+        }
+
+        var categories = GetGameCategoryLookup();
+        for (var index = 0; index < images.Count && index < imageDtos.Count; index++)
+        {
+            imageDtos[index].IsGameSelectable = images[index].IsGameSelectable
+                && IsCategoryTreeGameSelectable(images[index].ImageCategoryId, categories);
+        }
+
         return imageDtos;
+    }
+
+    private Dictionary<int, TblMenu> GetGameCategoryLookup()
+    {
+        return _entityContext.TblMenus
+            .Where(category => category.MenuCategoryId.HasValue)
+            .ToDictionary(category => category.MenuCategoryId!.Value);
+    }
+
+    private static bool IsCategoryTreeGameSelectable(int? categoryId, IReadOnlyDictionary<int, TblMenu> categories)
+    {
+        if (categoryId is null or <= 0)
+        {
+            return false;
+        }
+
+        var visited = new HashSet<int>();
+        var currentId = categoryId.Value;
+        while (currentId > 0)
+        {
+            if (!visited.Add(currentId)
+                || !categories.TryGetValue(currentId, out var category)
+                || !category.IsGameSelectable)
+            {
+                return false;
+            }
+
+            currentId = category.MenuParentCategoryId ?? 0;
+        }
+
+        return true;
     }
 
     /// <summary>

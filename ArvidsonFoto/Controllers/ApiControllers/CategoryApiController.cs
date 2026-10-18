@@ -87,9 +87,40 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
     public List<CategoryDto> GetGameSelectableCategories()
     {
         logger.LogInformation("Game API - GetGameSelectableCategories called.");
-        return apiCategoryService.GetAll()
-            .Where(category => category.IsGameSelectable)
+        var categories = apiCategoryService.GetAll();
+        var categoriesById = categories
+            .Where(category => category.CategoryId.HasValue)
+            .ToDictionary(category => category.CategoryId!.Value);
+
+        return categories
+            .Where(category => IsCategoryTreeGameSelectable(category.CategoryId, categoriesById))
             .ToList();
+    }
+
+    private static bool IsCategoryTreeGameSelectable(
+        int? categoryId,
+        IReadOnlyDictionary<int, CategoryDto> categories)
+    {
+        if (categoryId is null or <= 0)
+        {
+            return false;
+        }
+
+        var visited = new HashSet<int>();
+        var currentId = categoryId.Value;
+        while (currentId > 0)
+        {
+            if (!visited.Add(currentId)
+                || !categories.TryGetValue(currentId, out var category)
+                || !category.IsGameSelectable)
+            {
+                return false;
+            }
+
+            currentId = category.ParentCategoryId ?? 0;
+        }
+
+        return true;
     }
 
     /// <summary>

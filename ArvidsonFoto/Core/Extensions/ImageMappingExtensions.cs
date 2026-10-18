@@ -42,7 +42,8 @@ public static class ImageMappingExtensions
             DateImageTaken = image.ImageDate,
             DateUploaded = image.ImageUpdate,
             Description = image.ImageDescription ?? string.Empty,
-            DescriptionEn = image.ImageDescriptionEn
+            DescriptionEn = image.ImageDescriptionEn,
+            IsGameSelectable = image.IsGameSelectable
         };
     }
 
@@ -63,7 +64,8 @@ public static class ImageMappingExtensions
             ImageDate = imageDto.DateImageTaken,
             ImageUpdate = imageDto.DateUploaded ?? DateTime.UtcNow,
             ImageDescription = imageDto.DescriptionSv,
-            ImageDescriptionEn = imageDto.DescriptionEn
+            ImageDescriptionEn = imageDto.DescriptionEn,
+            IsGameSelectable = imageDto.IsGameSelectable
         };
     }
 }

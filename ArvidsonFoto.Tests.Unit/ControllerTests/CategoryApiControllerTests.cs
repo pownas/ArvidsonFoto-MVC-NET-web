@@ -86,10 +86,12 @@ public class CategoryApiControllerTests
     public void GetGameSelectableCategories_ExcludesCategoriesNotEnabledForGames()
     {
         _mockCategoryService.GetById(1).IsGameSelectable = false;
+        var childCategoryId = _mockCategoryService.GetChildrenByParentId(1).First().CategoryId;
 
         var result = _controller.GetGameSelectableCategories();
 
         Assert.DoesNotContain(result, category => category.CategoryId == 1);
+        Assert.DoesNotContain(result, category => category.CategoryId == childCategoryId);
         Assert.Contains(result, category => category.CategoryId == 2);
     }
 
