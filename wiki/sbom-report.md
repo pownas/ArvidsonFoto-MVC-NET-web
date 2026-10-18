@@ -1,13 +1,13 @@
 ﻿# 🛡️ Security & SBOM Scan Report
-*Genererad den: 2026-10-18 13:02:04*
+*Genererad den: 2026-10-18 16:32:25*
 
 ## 📊 Översikt
 <table width="100%">
   <tr>
-    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">213</font></td>
+    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">206</font></td>
     <td align="center" width="25%" style="background-color:#ffebe9; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #ffc1c0;"><b>⚠️ Aktiva sårbarheter</b><br><font size="5" color="#cf222e"><b>2</b></font></td>
-    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>9</b></font></td>
-    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>87</b></font></td>
+    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>1</b></font></td>
+    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>79</b></font></td>
   </tr>
 </table>
 
@@ -35,7 +35,7 @@
     </tr>
     <tr>
       <td><b>System.Security.Cryptography.Pkcs</b></td>
-      <td><code style="color:#cf222e; background-color:#ffebe9; padding:2px 4px; border-radius:4px; border:none;">11.0.0-rc.1.26425.128</code></td>
+      <td><code style="color:#cf222e; background-color:#ffebe9; padding:2px 4px; border-radius:4px; border:none;">11.0.0-rc.2.26504.105</code></td>
       <td><code style="color:#1f883d; background-color:#dafbe1; padding:2px 4px; border-radius:4px; border:none;">Okänd</code></td>
       <td>
         <div style="margin-bottom:6px;">
@@ -62,40 +62,8 @@
   </thead>
   <tbody>
     <tr>
-      <td><b>Microsoft.Extensions.Configuration.CommandLine</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Configuration.EnvironmentVariables</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Configuration.UserSecrets</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Hosting</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging.Console</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging.Debug</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging.EventLog</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>Microsoft.Extensions.Logging.EventSource</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
-    </tr>
-    <tr>
-      <td><b>System.Diagnostics.EventLog</b></td>
-      <td><code>10.0.12</code> &nbsp;|&nbsp; <code>11.0.0-rc.1.26425.128</code></td>
+      <td><b>Microsoft.NET.StringTools</b></td>
+      <td><code>18.4.0</code> &nbsp;|&nbsp; <code>18.9.6</code></td>
     </tr>
   </tbody>
 </table>
@@ -127,32 +95,32 @@
       <td><font size="2">Ja (1.5.1)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Aspire.Hosting</b></td>
-      <td><code>13.6.0</code></td>
+      <td><code>13.6.1</code></td>
       <td><code>13.6.1</code></td>
       <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Aspire.Hosting.AppHost</b></td>
-      <td><code>13.6.0</code></td>
+      <td><code>13.6.1</code></td>
       <td><code>13.6.1</code></td>
       <td><font size="2">Nej (Transitivt)<br>[Direkt SDK-beroende]</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Aspire.Hosting.SqlServer</b></td>
-      <td><code>13.6.0</code></td>
       <td><code>13.6.1</code></td>
-      <td><font size="2">Ja (13.6.0)</font></td>
+      <td><code>13.6.1</code></td>
+      <td><font size="2">Ja (13.6.1)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Aspire.Hosting.Testing</b></td>
-      <td><code>13.6.0</code></td>
       <td><code>13.6.1</code></td>
-      <td><font size="2">Ja (13.6.0)</font></td>
+      <td><code>13.6.1</code></td>
+      <td><font size="2">Ja (13.6.1)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -360,98 +328,98 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Authorization</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Cryptography.Internal</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Cryptography.KeyDerivation</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Identity.EntityFrameworkCore</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Identity.UI</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Metadata</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.Mvc.Testing</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.OpenApi</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.TestHost</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.AspNetCore.WebUtilities</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Bcl.AsyncInterfaces</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>10.0.13</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Bcl.Cryptography</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>10.0.13</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Build.Framework</b></td>
-      <td><code>18.4.0</code></td>
+      <td><code>18.9.6</code></td>
       <td><code>18.11.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
@@ -486,42 +454,42 @@
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.CodeAnalysis.Analyzers</b></td>
-      <td><code>5.3.0-2.25625.1</code></td>
+      <td><code>5.9.0-1.26328.17</code></td>
       <td><code>5.9.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.CodeAnalysis.Common</b></td>
-      <td><code>5.3.0</code></td>
+      <td><code>5.9.0</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.CodeAnalysis.CSharp</b></td>
-      <td><code>5.3.0</code></td>
+      <td><code>5.9.0</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.CodeAnalysis.CSharp.Workspaces</b></td>
-      <td><code>5.3.0</code></td>
+      <td><code>5.9.0</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.CodeAnalysis.Workspaces.Common</b></td>
-      <td><code>5.3.0</code></td>
+      <td><code>5.9.0</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.CodeAnalysis.Workspaces.MSBuild</b></td>
-      <td><code>5.3.0</code></td>
+      <td><code>5.9.0</code></td>
       <td><code>5.9.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
@@ -533,88 +501,88 @@
       <td><font size="2">Nej (Transitivt)<br>Microsoft.NET.Test.Sdk</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Data.SqlClient</b></td>
-      <td><code>7.0.2</code></td>
       <td><code>7.1.1</code></td>
-      <td><font size="2">Ja (7.0.2)</font></td>
+      <td><code>7.1.1</code></td>
+      <td><font size="2">Ja (7.1.1)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Data.SqlClient.Extensions.Abstractions</b></td>
-      <td><code>7.0.2</code></td>
+      <td><code>7.1.1</code></td>
       <td><code>7.1.1</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.SqlServer, Aspire.Hosting.SqlServer</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Data.SqlClient.Internal.Logging</b></td>
-      <td><code>7.0.2</code></td>
+      <td><code>7.1.1</code></td>
       <td><code>7.1.1</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.SqlServer, Aspire.Hosting.SqlServer</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Data.SqlClient.SNI.runtime</b></td>
-      <td><code>6.0.2</code></td>
+      <td><code>7.1.0</code></td>
       <td><code>7.1.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.SqlServer, Aspire.Hosting.SqlServer</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.InMemory, Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.Abstractions</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.InMemory, Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.Analyzers</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.InMemory, Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.Design</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.InMemory</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.Relational</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.SqlServer</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.EntityFrameworkCore.Tools</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -633,9 +601,9 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Caching.Memory</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -647,79 +615,58 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.Binder</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.CommandLine</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Configuration.CommandLine</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.EnvironmentVariables</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Configuration.EnvironmentVariables</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.FileExtensions</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.Json</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Configuration.UserSecrets</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Configuration.UserSecrets</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.DependencyInjection</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -731,16 +678,16 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.DependencyModel</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Diagnostics</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>10.0.13</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -772,45 +719,45 @@
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><b>Microsoft.Extensions.FileProviders.Abstractions</b></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
+      <td><code>Okänd</code></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
+    </tr>
+    <tr>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.FileProviders.Embedded</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Identity.UI</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.FileProviders.Physical</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.OpenApi, Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.FileSystemGlobbing</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.OpenApi, Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Hosting</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Hosting</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Http</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -829,86 +776,58 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Identity.Core</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Identity.Stores</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.Configuration</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.Console</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging.Console</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.Debug</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging.Debug</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.EventLog</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging.EventLog</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Logging.EventSource</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.Extensions.Logging.EventSource</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -920,9 +839,9 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Extensions.Options.ConfigurationExtensions</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.OpenApi, Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
@@ -1018,16 +937,23 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.Net.Http.Headers</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
+      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
       <td><b>Microsoft.NET.StringTools</b></td>
       <td><code>18.4.0</code></td>
       <td><code>18.11.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>MessagePack, Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Aspire.Hosting.Testing</font></td>
+    </tr>
+    <tr>
+      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><b>Microsoft.NET.StringTools</b></td>
+      <td><code>18.9.6</code></td>
+      <td><code>18.11.0</code></td>
+      <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -1039,7 +965,7 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.OpenApi</b></td>
-      <td><code>3.10.0</code></td>
+      <td><code>3.10.2</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.OpenApi</font></td>
     </tr>
@@ -1403,65 +1329,58 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition.AttributedModel</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition.Convention</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition.Hosting</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition.Runtime</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Composition.TypedParts</b></td>
-      <td><code>9.0.0</code></td>
+      <td><code>10.0.1</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Configuration.ConfigurationManager</b></td>
-      <td><code>9.0.13</code></td>
+      <td><code>9.0.18</code></td>
       <td><code>Okänd</code></td>
       <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.SqlServer, Aspire.Hosting.SqlServer</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Diagnostics.EventLog</b></td>
-      <td><code>10.0.12</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>System.Diagnostics.EventLog</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
-      <td><code>Okänd</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
@@ -1501,16 +1420,16 @@
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>System.Security.Cryptography.ProtectedData</b></td>
-      <td><code>11.0.0-rc.1.26425.128</code></td>
+      <td><code>11.0.0-rc.2.26504.105</code></td>
       <td><code>Okänd</code></td>
-      <td><font size="2">Ja (11.0.0-rc.1.26425.128)</font></td>
+      <td><font size="2">Ja (11.0.0-rc.2.26504.105)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>System.Threading.RateLimiting</b></td>
-      <td><code>8.0.0</code></td>
+      <td><code>9.0.18</code></td>
       <td><code>10.0.13</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Okänd källa, Aspire.Hosting.Testing</font></td>
+      <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.SqlServer, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
