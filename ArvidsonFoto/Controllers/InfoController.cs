@@ -8,8 +8,8 @@ using ArvidsonFoto.Core.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace ArvidsonFoto.Controllers;

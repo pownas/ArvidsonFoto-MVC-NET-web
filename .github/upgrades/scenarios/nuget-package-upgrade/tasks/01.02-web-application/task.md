@@ -1,24 +1,25 @@
-﻿# 01.02-web-application: Uppdatera webbappens aktiva paket
+﻿# 01.02-web-application: Uppdatera webbappens aktiva paket och .NET 11 RC2
 
-## Warning remediation (user approved)
-- The first clean non-incremental web-app build completed but reported 302 warnings; the saved log has 300 unique warning diagnostics across 56 C# files (each diagnostic was emitted twice in the log). Leading unique counts: CA1848 116, CA1873 44, IDE0028 32, CA1805 18, CA1305 11, IDE0011 7, IDE0052 7, IDE0060 6, IDE0270 6 and IDE0059 5.
-- The user explicitly requested fixing build and style warnings and reducing the count below 50. Do not suppress warnings or change analyzer settings to hide them.
-- The .NET 11 SDK contains `DotnetTools/dotnet-format/dotnet-format.dll`; the `dotnet format` shim was unavailable from the SDK resolver, so invoke the SDK tool DLL directly to apply supported analyzer fixes, then fix remaining diagnostics in source and verify by a clean build.
-
-## Objective
-Uppdatera aktiva stabila paket som används av `ArvidsonFoto` enligt assessmentens enhetliga versioner och åtgärda warnings till färre än 50 utan att undertrycka dem.
+## Scope Inventory
+- **Projects affected**: `ArvidsonFoto` and its referenced `ArvidsonFoto.ServiceDefaults`; shared package declarations are in root `Directory.Packages.props`.
+- **Distinct concerns**: update active ASP.NET Core/EF Core references to the selected RC2 release; resolve the cross-project .NET package conflicts through CPM; keep application package versions aligned with the SBOM; reduce existing code-style/build warnings without suppressions.
+- **Change signals**: the SBOM reports 9 dependency version conflicts between `10.0.12` and `.NET 11 RC1`, plus two active vulnerabilities. `System.Security.Cryptography.Pkcs` is pinned at RC1 and both listed advisory intervals end at RC1. `MessagePack` is a separate AppHost/test concern and will be handled in task 01.03.
+- **Skill matches**: `managing-package-references` requires CPM discovery before edits; `building-projects` requires restore-enabled builds and warnings review.
 
 ## Research findings
-- `get_project_dependencies` bekräftade CPM i `ArvidsonFoto.csproj`; paketversionerna kommer från root `Directory.Packages.props`, och projektet refererar `ArvidsonFoto.ServiceDefaults`.
-- Verifierade nuvarande och valda versioner: JavaScriptEngineSwitcher.V8 3.34.1→3.35.2; MailKit 4.17.0→4.18.1; MimeKit 4.17.0→4.18.1; Scalar.AspNetCore 2.17.1→2.17.10; Serilog 4.3.1→4.4.0.
-- Bedömningen rapporterade inga breaking changes för dessa fem valda målversioner. ASP.NET Core- och EF Core-referenser är uttryckligen kvar på `11.0.0-rc.1.26425.128` och ska inte ändras.
-- Alla ändringar hör hemma i `Directory.Packages.props`; projektets versionlösa PackageReference-rader förblir oförändrade. `dotnet build ArvidsonFoto.csproj` ska återställa paket automatiskt från de vanliga NuGet-källorna.
-
-## Scope
-Centrala versioner i `Directory.Packages.props`: `JavaScriptEngineSwitcher.V8` 3.34.1→3.35.2, `MailKit` och `MimeKit` 4.17.0→4.18.1, `Scalar.AspNetCore` 2.17.1→2.17.10 och `Serilog` 4.3.1→4.4.0. Lämna resterande redan senaste paket oförändrade samt behåll ASP.NET Core- och EF Core-paketen på `11.0.0-rc.1.26425.128`, enligt användarens beslut. API-diffen för paket som uppdateras innehåller inga breaking changes.
+- `ArvidsonFoto.csproj` uses CPM, and the active direct packages are versionless references resolved from root `Directory.Packages.props`; this project references `ArvidsonFoto.ServiceDefaults`.
+- Confirmed active app references currently at `11.0.0-rc.1.26425.128`: Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.AspNetCore.Identity.UI, Microsoft.AspNetCore.OpenApi, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.InMemory, Microsoft.EntityFrameworkCore.SqlServer, Microsoft.EntityFrameworkCore.Tools. The central transitive pins also include RC1 Microsoft.Extensions and cryptography packages.
+- CPM is enabled with `CentralPackageTransitivePinningEnabled=true`. Make version changes centrally and do not add `Version` attributes to project `PackageReference` elements.
+- NuGet confirms exact `11.0.0-rc.2.26504.105` is available for `net11.0` for representative ASP.NET Core, EF Core, Microsoft.Extensions, `System.Security.Cryptography.Pkcs`, `System.Security.Cryptography.ProtectedData`, Microsoft.Bcl.AsyncInterfaces, and `Microsoft.AspNetCore.Mvc.Testing` packages.
+- The nine SBOM conflicts concern Configuration.CommandLine, Configuration.EnvironmentVariables, Configuration.UserSecrets, Hosting, Logging.Console, Logging.Debug, Logging.EventLog, Logging.EventSource, and System.Diagnostics.EventLog. Align them to the exact RC2 version only after confirming resolved package graph compatibility.
+- The app packages JavaScriptEngineSwitcher.V8 3.35.2, MailKit/MimeKit 4.18.1, Scalar.AspNetCore 2.17.10, and Serilog 4.4.0 already match the SBOM; do not change them based on the older assessment.
+- The SBOM flags `System.Security.Cryptography.Pkcs` RC1 with advisories GHSA-846f-f764-76mx and GHSA-2fmv-rv2c-59x7, whose affected ranges end at RC1. RC2 is the user-selected target; verify the resulting graph with `dotnet list package --vulnerable --include-transitive`.
+- A prior clean non-incremental app build recorded 302 warning lines / 300 unique diagnostics across 56 C# files. Project instructions require fewer than 50 warnings without suppressing them; the scenario preference is stricter (fewer than 30). Rebuild to establish current baseline and fix actual warnings.
 
 ## Steps
-1. Ändra endast de fem valda `PackageVersion`-posterna i root `Directory.Packages.props`.
-2. Återställ och bygg `ArvidsonFoto` samt beroenden; åtgärda eventuella fel och alla warnings.
+1. Update applicable RC1 framework package pins and the 9 conflict pins in root `Directory.Packages.props` to exactly `11.0.0-rc.2.26504.105`, without downgrading to 10.0.12.
+2. Confirm active web package versions remain aligned to the SBOM; avoid unrelated changes.
+3. Restore/build `ArvidsonFoto`, resolve compiler/warning issues without suppressions, and verify warning count below the configured threshold.
+4. Record build, vulnerability and test evidence before completing this subtask.
 
-**Done when**: De fem versionerna är uppdaterade centralt; RC1-versionerna är oförändrade; webbappen bygger utan fel eller warnings.
+**Done when**: the active application package graph resolves on the exact RC2 version where available, web package versions agree with the SBOM, the app builds without errors and has fewer than 30 warnings, and no RC1 Pkcs advisory remains in the restored graph.

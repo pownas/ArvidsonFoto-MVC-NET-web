@@ -7,8 +7,8 @@ using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers;
