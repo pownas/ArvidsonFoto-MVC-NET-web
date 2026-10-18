@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Controllers.ApiControllers;
+﻿using System.Globalization;
+using ArvidsonFoto.Controllers.ApiControllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Models;
@@ -393,13 +394,52 @@ public class ImageApiControllerTests : IDisposable
     }
 
     [Fact]
+    public void GetImagesByCategoryPath_EnglishPath_ReturnsBothCategoryNames()
+    {
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            var routeTemplates = typeof(ImageApiController)
+                .GetMethod(nameof(ImageApiController.GetImagesByCategoryPath))!
+                .GetCustomAttributes(typeof(HttpGetAttribute), inherit: false)
+                .Cast<HttpGetAttribute>()
+                .Select(attribute => attribute.Template);
+            Assert.Contains("/api/images/{*categoryPath}", routeTemplates);
+
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+
+            var result = _controller.GetImagesByCategoryPath(
+                "insects/butterflies/camberwell-beauty",
+                cancellationToken: TestContext.Current.CancellationToken);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
+            Assert.Equal(33, response.CategoryId);
+            Assert.Equal("Camberwell beauty", response.CategoryName);
+            Assert.Equal("Sorgmantel", response.CategoryNameSv);
+            Assert.Equal("Camberwell beauty", response.CategoryNameEn);
+
+            var image = Assert.IsType<ImageDto>(response.Images.First());
+            Assert.Equal("Sorgmantel", image.CategoryNameSv);
+            Assert.Equal("Camberwell beauty", image.CategoryNameEn);
+            Assert.Equal("Camberwell beauty", image.CategoryName);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
     public void GetImagesByCategoryPath_ParentCategoryPath_ReturnsOkWithImagesFromSubcategories()
     {
         // Arrange - "Faglar" är en förälderkategori (categoryId=1) utan direkta bilder,
         // men med underkategorier som innehåller bilder.
+        var originalCulture = CultureInfo.CurrentUICulture;
         string categoryPath = "Faglar";
 
         // Act
+        CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
         var result = _controller.GetImagesByCategoryPath(categoryPath, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert - Ska returnera Ok, inte 404 eller tom bildlista
@@ -412,6 +452,9 @@ public class ImageApiControllerTests : IDisposable
         Assert.True(response.Images.Count > 0, "Images list should not be empty for parent category");
         // Kategorinamnet ska vara korrekt, inte 'Unknown'
         Assert.Equal("Fåglar", response.CategoryName);
+        Assert.Equal("Fåglar", response.CategoryNameSv);
+        Assert.Equal("Birds", response.CategoryNameEn);
+        CultureInfo.CurrentUICulture = originalCulture;
     }
 
     [Fact]

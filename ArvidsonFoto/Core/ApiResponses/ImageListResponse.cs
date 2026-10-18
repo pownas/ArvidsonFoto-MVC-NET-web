@@ -11,6 +11,10 @@ public class ImageListResponse
     /// <summary> Kategori Namn </summary>
     public string CategoryName { get; set; } = string.Empty;
 
+    public string CategoryNameSv { get; set; } = string.Empty;
+
+    public string? CategoryNameEn { get; set; }
+
     /// <summary> Kategori URL med gamla formatet som innehåller åäö </summary>
     public string CategoryUrlWithAAO { get; set; } = string.Empty;
 

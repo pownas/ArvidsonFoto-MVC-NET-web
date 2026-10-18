@@ -336,6 +336,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
     [HttpGet("/api/Bilder/{*categoryPath}")]
+    [HttpGet("/api/images/{*categoryPath}")]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
     [HttpGet("ByPath/Bilder/{*categoryPath}")]
@@ -421,19 +422,13 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
                 // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
                 // In that case look up the category by ID so we can populate name and URL correctly.
-                string categoryName;
-                string categoryUrl;
-                if (matchingChildCategory != null)
-                {
-                    categoryName = matchingChildCategory.Name ?? "Unknown";
-                    categoryUrl = matchingChildCategory.UrlCategoryPathFull ?? "Unknown";
-                }
-                else
-                {
-                    var resolvedCategory = categoryService.GetById(currentCategoryId.Value);
-                    categoryName = resolvedCategory.Name ?? "Unknown";
-                    categoryUrl = resolvedCategory.UrlCategoryPath ?? "Unknown";
-                }
+                var resolvedCategory = matchingChildCategory ?? categoryService.GetById(currentCategoryId.Value);
+                var categoryName = resolvedCategory.Name ?? "Unknown";
+                var categoryNameSv = resolvedCategory.NameSv ?? string.Empty;
+                var categoryNameEn = resolvedCategory.NameEn;
+                var categoryUrl = matchingChildCategory != null
+                    ? matchingChildCategory.UrlCategoryPathFull ?? "Unknown"
+                    : resolvedCategory.UrlCategoryPath ?? "Unknown";
 
                 List<ImageDto> resultImages;
                 int currentPage;
@@ -462,6 +457,8 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 {
                     CategoryId = currentCategoryId.Value,
                     CategoryName = categoryName,
+                    CategoryNameSv = categoryNameSv,
+                    CategoryNameEn = categoryNameEn,
                     CategoryUrl = categoryUrl,
                     CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
                     ImageCategoryTotalCount = totalCategoryImageCount,
