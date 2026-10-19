@@ -8,18 +8,13 @@ public class ImageListResponse
     /// <summary> Kategori Id </summary>
     public int CategoryId { get; set; } = -1;
 
-    /// <summary> Kategori Namn </summary>
-    public string CategoryName { get; set; } = string.Empty;
-
     public string CategoryNameSv { get; set; } = string.Empty;
 
     public string? CategoryNameEn { get; set; }
 
-    /// <summary> Kategori URL med gamla formatet som innehåller åäö </summary>
-    public string CategoryUrlWithAAO { get; set; } = string.Empty;
+    public string UrlCategorySv { get; set; } = string.Empty;
 
-    /// <summary> Kategori Url </summary>
-    public string CategoryUrl { get; set; } = string.Empty;
+    public string UrlCategoryEn { get; set; } = string.Empty;
 
     /// <summary> Antal bilder i denna kategori </summary>
     public int ImageCategoryTotalCount { get; set; } = -1;

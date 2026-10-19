@@ -50,7 +50,7 @@ public class BilderControllerTests
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
         Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Fåglar", model.SelectedCategory.Name);
+        Assert.Equal("Fåglar", model.SelectedCategory.NameSv);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class BilderControllerTests
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
         Assert.Equal("/Bilder/Tättingar/Mesar/Blåmes", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Blåmes", model.SelectedCategory.Name);
+        Assert.Equal("Blåmes", model.SelectedCategory.NameSv);
     }
 
     [Fact]

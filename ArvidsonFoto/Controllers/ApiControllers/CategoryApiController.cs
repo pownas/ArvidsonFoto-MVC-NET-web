@@ -176,9 +176,9 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     pathInfo.Add(new
                     {
                         Level = "Main",
-                        category.Name,
+                        category.NameSv,
                         Id = category.CategoryId,
-                        UrlSegment = category.UrlCategoryPath?.ToLowerInvariant()
+                        UrlSegment = category.UrlCategoryPathSv?.ToLowerInvariant()
                     });
                 }
                 else
@@ -186,23 +186,25 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     // Find the child category under the current parent
                     var children = apiCategoryService.GetChildrenByParentId(currentCategoryId.Value);
                     var matchingChild = children.FirstOrDefault(c =>
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
-                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
+                        c.UrlCategoryPathSv!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.UrlCategoryPathEn!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.NameSv.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.NameEn!.Equals(segment, StringComparison.OrdinalIgnoreCase));
 
                     if (matchingChild == null)
                     {
                         return NotFound($"Category '{segment}' not found under parent category");
                     }
-                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLowerInvariant();
+                    matchingChild.UrlCategoryPathSv = matchingChild.UrlCategoryPathSv!.ToLowerInvariant();
 
 
                     currentCategoryId = matchingChild.CategoryId;
                     pathInfo.Add(new
                     {
                         Level = $"Level {pathInfo.Count + 1}",
-                        matchingChild.Name,
+                        matchingChild.NameSv,
                         Id = matchingChild.CategoryId,
-                        UrlSegment = matchingChild.UrlCategoryPath
+                        UrlSegment = matchingChild.UrlCategoryPathSv
                     });
                 }
             }
@@ -715,9 +717,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             var lightweightCategories = allCategories.Select(c => new
             {
                 categoryId = c.CategoryId,
-                name = c.Name,
-                urlCategoryPath = c.UrlCategoryPath,
-                urlCategoryPathFull = c.UrlCategoryPathFull,
+                nameSv = c.NameSv,
+                nameEn = c.NameEn,
+                urlCategorySv = c.UrlCategorySv,
+                urlCategoryEn = c.UrlCategoryEn,
+                urlCategoryPathSv = c.UrlCategoryPathSv,
+                urlCategoryPathEn = c.UrlCategoryPathEn,
+                urlCategoryPathFullSv = c.UrlCategoryPathFullSv,
+                urlCategoryPathFullEn = c.UrlCategoryPathFullEn,
                 parentCategoryId = c.ParentCategoryId
             }).ToList();
 

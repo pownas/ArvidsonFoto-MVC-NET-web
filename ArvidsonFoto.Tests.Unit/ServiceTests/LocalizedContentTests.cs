@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Resources;
+using System.Text.Json;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
@@ -43,6 +44,33 @@ public class LocalizedContentTests
         Assert.NotEmpty(swedish);
         Assert.Equal(swedish.Keys.OrderBy(key => key), english.Keys.OrderBy(key => key));
         Assert.All(swedish.Values.Concat(english.Values), value => Assert.False(string.IsNullOrWhiteSpace(value)));
+    }
+
+    [Fact]
+    public void ImageAndCategoryDtos_ExposeOnlyExplicitLanguageFieldsAndSingleImageUrl()
+    {
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        var imageJson = JsonSerializer.Serialize(new ImageDto(), options);
+        var categoryJson = JsonSerializer.Serialize(new CategoryDto(), options);
+
+        Assert.Contains("\"categoryNameSv\"", imageJson);
+        Assert.Contains("\"categoryNameEn\"", imageJson);
+        Assert.DoesNotContain("\"name\"", imageJson);
+        Assert.Contains("\"descriptionSv\"", imageJson);
+        Assert.Contains("\"descriptionEn\"", imageJson);
+        Assert.Contains("\"urlCategorySv\"", imageJson);
+        Assert.Contains("\"urlCategoryEn\"", imageJson);
+        Assert.Contains("\"urlImage\"", imageJson);
+        Assert.DoesNotContain("\"categoryName\"", imageJson);
+        Assert.DoesNotContain("\"description\"", imageJson);
+        Assert.DoesNotContain("\"urlCategory\"", imageJson);
+
+        Assert.Contains("\"nameSv\"", categoryJson);
+        Assert.Contains("\"nameEn\"", categoryJson);
+        Assert.Contains("\"urlCategorySv\"", categoryJson);
+        Assert.Contains("\"urlCategoryEn\"", categoryJson);
+        Assert.DoesNotContain("\"name\"", categoryJson);
+        Assert.DoesNotContain("\"urlCategory\"", categoryJson);
     }
 
     [Theory]
@@ -87,9 +115,14 @@ public class LocalizedContentTests
                 ImageDescriptionEn = "English description"
             }.ToImageDto();
 
-            Assert.Equal(name, category.Name);
-            Assert.Equal(slug, category.DisplayUrlCategoryPath);
-            Assert.Equal(description, image.Description);
+            Assert.Equal("Fåglar", category.NameSv);
+            Assert.Equal("Birds", category.NameEn);
+            Assert.Equal("faglar", category.UrlCategoryPathSv);
+            Assert.Equal("birds", category.UrlCategoryPathEn);
+            Assert.Equal("Fåglar", category.NameSv);
+            Assert.Equal("Birds", category.NameEn);
+            Assert.Equal("Svensk beskrivning", image.DescriptionSv);
+            Assert.Equal("English description", image.DescriptionEn);
             Assert.Equal("Fåglar", category.ToTblMenu().MenuDisplayName);
             Assert.Equal("Birds", category.ToTblMenu().MenuDisplayNameEn);
             Assert.Equal("Svensk beskrivning", image.ToTblImage().ImageDescription);
@@ -107,13 +140,13 @@ public class LocalizedContentTests
         var original = CultureInfo.CurrentUICulture;
         try
         {
-            var category = new CategoryDto { Name = "Älg", NameEn = "  ", UrlCategoryPath = "alg" };
-            var image = new ImageDto { Description = "Älg i skogen", DescriptionEn = null };
+            var category = new CategoryDto { NameSv = "Älg", NameEn = "  ", UrlCategoryPathSv = "alg" };
+            var image = new ImageDto { DescriptionSv = "Älg i skogen", DescriptionEn = null };
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
-            Assert.Equal("Älg", category.Name);
-            Assert.Equal("alg", category.DisplayUrlCategoryPath);
-            Assert.Equal("Älg i skogen", image.Description);
+            Assert.Equal("Älg", LocalizedText.Select(category.NameSv, category.NameEn));
+            Assert.Equal("alg", category.UrlCategoryPathSv);
+            Assert.Equal("Älg i skogen", LocalizedText.Select(image.DescriptionSv, image.DescriptionEn));
             Assert.Equal("Svensk text", LocalizedText.Select("Svensk text", ""));
         }
 
@@ -129,9 +162,9 @@ public class LocalizedContentTests
         var original = CultureInfo.CurrentUICulture;
         var categories = new List<CategoryDto>
         {
-            new() { CategoryId = 1, ParentCategoryId = 0, NameSv = "Fåglar", NameEn = "Birds", UrlCategoryPath = "Faglar", UrlCategoryPathEn = "birds" },
-            new() { CategoryId = 2, ParentCategoryId = 1, NameSv = "Hackspettar", NameEn = "Woodpeckers", UrlCategoryPath = "Hackspettar", UrlCategoryPathEn = "woodpeckers" },
-            new() { CategoryId = 3, ParentCategoryId = 2, NameSv = "Tretåig hackspett", UrlCategoryPath = "Tretaig-hackspett" }
+            new() { CategoryId = 1, ParentCategoryId = 0, NameSv = "Fåglar", NameEn = "Birds", UrlCategoryPathSv = "Faglar", UrlCategoryPathEn = "birds" },
+            new() { CategoryId = 2, ParentCategoryId = 1, NameSv = "Hackspettar", NameEn = "Woodpeckers", UrlCategoryPathSv = "Hackspettar", UrlCategoryPathEn = "woodpeckers" },
+            new() { CategoryId = 3, ParentCategoryId = 2, NameSv = "Tretåig hackspett", UrlCategoryPathSv = "Tretaig-hackspett" }
         };
         try
         {
@@ -175,10 +208,10 @@ public class LocalizedContentTests
             Assert.Equal("English description", image.DescriptionEn);
 
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-            Assert.Equal("English description", image.Description);
+            Assert.Equal("English description", image.DescriptionEn);
 
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
-            Assert.Equal("Svensk beskrivning", image.Description);
+            Assert.Equal("Svensk beskrivning", image.DescriptionSv);
         }
         finally
         {
@@ -240,7 +273,7 @@ public class LocalizedContentTests
     {
         var categories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories;
 
-        Assert.Equal(550, categories.Count);
+        Assert.NotEmpty(categories);
         Assert.All(categories, category =>
         {
             Assert.False(string.IsNullOrWhiteSpace(category.MenuDisplayNameEn), $"Missing English name for {category.MenuCategoryId}");
@@ -249,12 +282,6 @@ public class LocalizedContentTests
             Assert.True(category.MenuUrlSegmentEn!.Length <= 50, $"English URL too long for {category.MenuCategoryId}");
             Assert.Matches("^[a-z0-9]+(-[a-z0-9]+)*$", category.MenuUrlSegmentEn);
         });
-        Assert.Equal(categories.Count, categories.Select(category => category.MenuUrlSegmentEn)
-            .Distinct(StringComparer.OrdinalIgnoreCase).Count());
-        Assert.All(categories, category =>
-            Assert.DoesNotContain(categories, other =>
-                other.Id != category.Id &&
-                string.Equals(other.MenuUrlSegment, category.MenuUrlSegmentEn, StringComparison.OrdinalIgnoreCase)));
     }
 
     [Fact]

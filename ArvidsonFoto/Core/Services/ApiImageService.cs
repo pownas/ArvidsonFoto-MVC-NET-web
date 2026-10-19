@@ -33,11 +33,12 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     {
         ImageId = -1,
         CategoryId = -1,
-        Name = "404-NotFound", //Ett standardvärde som kan användas i UI, om ingen bild hittats.
+        CategoryNameSv = "404-NotFound",
         UrlImage = "bilder/404-NotFound",
-        UrlCategory = string.Empty,
+        UrlCategorySv = string.Empty,
+        UrlCategoryEn = string.Empty,
         DateImageTaken = DateTime.Now,
-        Description = "Bild inte hittad",
+        DescriptionSv = "Bild inte hittad",
         DateUploaded = DateTime.Now,
         IsGameSelectable = false,
     };
@@ -50,11 +51,10 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         ImageCategoryId = -1,
         ImageFamilyId = -1,
         ImageMainFamilyId = -1,
-        ImageUrlName = "404-NotFound", //Ett standardvärde som kan användas i UI, om ingen bild hittats.
+        ImageUrlName = "bilder/404-NotFound", //Ett standardvärde som kan användas i UI, om ingen bild hittats.
         ImageDate = DateTime.Now,
         ImageDescription = "Bild inte hittad",
         ImageUpdate = DateTime.Now,
-        Name = "404-NotFound", //Ett standardvärde som kan användas i UI, om ingen bild hittats.
     };
 
     /// <summary>
@@ -137,7 +137,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <param name="categoryId">The ID of the category to get an image from.</param>
     /// <param name="categoryName">Optional category name to use for display</param>
     /// <returns>An image DTO from the specified category, or a default "not found" image if no image exists.</returns>
-    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "")
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryNameSv = "", string categoryNameEn = "")
     {
         try
         {
@@ -182,7 +182,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 categoryPath = GetOldCategoryPathForImage(image);
             }
 
-            var imageDto = image.ToImageDto(categoryPath, categoryName) ?? DefaultImageDtoNotFound;
+            var imageDto = image.ToImageDto(categoryPath) ?? DefaultImageDtoNotFound;
+            imageDto.CategoryNameSv = categoryNameSv;
+            imageDto.CategoryNameEn = categoryNameEn;
             return ApplyEffectiveGameSelection([image], [imageDto])[0];
         }
         catch (Exception ex)
@@ -246,14 +248,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             .Distinct()
             .ToList();
 
-        var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-
         // Get category paths for all images
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
             var categoryPath = "";
-            var categoryName = "";
 
             if (NewGalleryCategoryEnabled)
             {
@@ -265,13 +264,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 categoryPath = GetOldCategoryPathForImage(image);
             }
 
-            // Get category name from bulk loaded data
-            if (image.ImageCategoryId.HasValue && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name))
-            {
-                categoryName = name;
-            }
-
-            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+            imageDtos.Add(image.ToImageDto(categoryPath));
         }
 
         return ApplyEffectiveGameSelection(images, imageDtos);
@@ -327,16 +320,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 .Select(id => id!.Value)
                 .Distinct()
                 .ToList();
-            var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIdsForNames);
-
-            var imageDtos = images.Select(image =>
-            {
-                var categoryName = image.ImageCategoryId.HasValue
-                    && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name)
-                    ? name
-                    : string.Empty;
-                return image.ToImageDto(GetOldCategoryPathForImage(image), categoryName);
-            }).ToList();
+            var imageDtos = images.Select(image => image.ToImageDto(GetOldCategoryPathForImage(image))).ToList();
             return ApplyEffectiveGameSelection(images, imageDtos);
         }
         catch (Exception ex)
@@ -405,18 +389,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     .Distinct()
                     .ToList();
 
-                var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
                     var categoryPath = GetOldCategoryPathForImage(image);
-                    var categoryName = "";
-                    if (image.ImageCategoryId.HasValue && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name))
-                    {
-                        categoryName = name;
-                    }
-                    imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+                    imageDtos.Add(image.ToImageDto(categoryPath));
                 }
                 return ApplyEffectiveGameSelection(images, imageDtos);
             }
@@ -509,18 +486,11 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                     .Distinct()
                     .ToList();
 
-                var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-
                 var imageDtos = new List<ImageDto>();
                 foreach (var image in images)
                 {
                     var categoryPath = GetOldCategoryPathForImage(image);
-                    var categoryName = "";
-                    if (image.ImageCategoryId.HasValue && categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name))
-                    {
-                        categoryName = name;
-                    }
-                    imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+                    imageDtos.Add(image.ToImageDto(categoryPath));
                 }
                 return ApplyEffectiveGameSelection(images, imageDtos);
             }
@@ -788,26 +758,19 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
         // Bulk load category paths AND names for all unique category IDs
         var categoryPaths = apiCategoryService.GetCategoryPathsBulk(categoryIds);
-        var categoryNames = apiCategoryService.GetCategoryNamesBulk(categoryIds);
-
         // Build ImageDtos with cached category paths and category names
         var imageDtos = new List<ImageDto>();
         foreach (var image in images)
         {
             var categoryPath = "";
-            var categoryName = "";
             if (image.ImageCategoryId.HasValue)
             {
                 if (categoryPaths.TryGetValue(image.ImageCategoryId.Value, out var path))
                 {
                     categoryPath = path;
                 }
-                if (categoryNames.TryGetValue(image.ImageCategoryId.Value, out var name))
-                {
-                    categoryName = name;
-                }
             }
-            imageDtos.Add(image.ToImageDto(categoryPath, categoryName));
+            imageDtos.Add(image.ToImageDto(categoryPath));
         }
 
         return ApplyEffectiveGameSelection(images, imageDtos);
@@ -833,11 +796,27 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             {
                 imageDto.CategoryNameSv = category.MenuDisplayName ?? string.Empty;
                 imageDto.CategoryNameEn = category.MenuDisplayNameEn;
-                imageDto.CategoryName = LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn);
+                imageDto.UrlCategoryEn = $"images/{BuildCategoryPath(image.ImageCategoryId.Value, categories)}";
             }
         }
-
         return imageDtos;
+    }
+
+    private static string BuildCategoryPath(int categoryId, IReadOnlyDictionary<int, TblMenu> categories)
+    {
+        var segments = new List<string>();
+        var visited = new HashSet<int>();
+        while (categoryId > 0 && visited.Add(categoryId) && categories.TryGetValue(categoryId, out var category))
+        {
+            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegmentEn ?? category.MenuUrlSegment))
+            {
+                segments.Insert(0, (category.MenuUrlSegmentEn ?? category.MenuUrlSegment)!.ToLowerInvariant());
+            }
+
+            categoryId = category.MenuParentCategoryId ?? 0;
+        }
+
+        return string.Join("/", segments);
     }
 
     private Dictionary<int, TblMenu> GetGameCategoryLookup()

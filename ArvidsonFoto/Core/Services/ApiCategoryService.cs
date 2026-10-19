@@ -97,7 +97,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
         var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
         var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-        return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+        return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
     }
 
     public CategoryDto GetById(int? id)
@@ -122,7 +122,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
             var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
         }
         catch (Exception ex)
         {
@@ -153,7 +153,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         var categoryDtos = categories.Select(category =>
         {
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
-            return category.ToCategoryDto(categoryPath, string.Empty); // Empty string for lastImageFilename
+            return category.ToCategoryDto(categoryPath, string.Empty, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1)); // Empty string for lastImageFilename
         }).ToList();
 
         _ = _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
@@ -181,7 +181,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryDtos = categories.Select(category =>
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
-                return category.ToCategoryDto(categoryPath, string.Empty); // Empty string for lastImageFilename
+                return category.ToCategoryDto(categoryPath, string.Empty, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1)); // Empty string for lastImageFilename
             }).ToList();
 
             return categoryDtos;
@@ -273,7 +273,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                     categoryToEdit.MenuDisplayNameEn = updatedCategory.NameEn;
                 }
 
-                categoryToEdit.MenuUrlSegment = updatedCategory.UrlCategoryPath;
+                categoryToEdit.MenuUrlSegment = updatedCategory.UrlCategoryPathSv;
                 if (updatedCategory.UrlCategoryPathEn != null)
                 {
                     categoryToEdit.MenuUrlSegmentEn = updatedCategory.UrlCategoryPathEn;
@@ -474,11 +474,11 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         {
             var testCategories = new List<CategoryDto>
             {
-                new() { CategoryId = 1, Name = "Däggdjur", UrlCategoryPath = "daggdjur", UrlCategoryPathFull = "daggdjur" },
-                new() { CategoryId = 2, Name = "Fåglar", UrlCategoryPath = "faglar", UrlCategoryPathFull = "faglar" },
-                new() { CategoryId = 3, Name = "Insekter", UrlCategoryPath = "insekter", UrlCategoryPathFull = "insekter" },
-                new() { CategoryId = 4, Name = "Landskap", UrlCategoryPath = "landskap", UrlCategoryPathFull = "landskap" },
-                new() { CategoryId = 5, Name = "Växter", UrlCategoryPath = "vaxter", UrlCategoryPathFull = "vaxter" }
+                new() { CategoryId = 1, NameSv = "Däggdjur", NameEn = "Mammals", UrlCategoryPathSv = "daggdjur", UrlCategoryPathEn = "mammals", UrlCategoryPathFullSv = "daggdjur", UrlCategoryPathFullEn = "mammals" },
+                new() { CategoryId = 2, NameSv = "Fåglar", NameEn = "Birds", UrlCategoryPathSv = "faglar", UrlCategoryPathEn = "birds", UrlCategoryPathFullSv = "faglar", UrlCategoryPathFullEn = "birds" },
+                new() { CategoryId = 3, NameSv = "Insekter", NameEn = "Insects", UrlCategoryPathSv = "insekter", UrlCategoryPathEn = "insects", UrlCategoryPathFullSv = "insekter", UrlCategoryPathFullEn = "insects" },
+                new() { CategoryId = 4, NameSv = "Landskap", NameEn = "Landscapes", UrlCategoryPathSv = "landskap", UrlCategoryPathEn = "landscapes", UrlCategoryPathFullSv = "landskap", UrlCategoryPathFullEn = "landscapes" },
+                new() { CategoryId = 5, NameSv = "Växter", NameEn = "Plants", UrlCategoryPathSv = "vaxter", UrlCategoryPathEn = "plants", UrlCategoryPathFullSv = "vaxter", UrlCategoryPathFullEn = "plants" }
             };
 
             _ = _cache.Set(MAIN_CATEGORIES_CACHE_KEY, testCategories, _longCacheExpiry);
@@ -537,7 +537,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
             var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+            return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
         }
         catch (Exception ex)
         {
@@ -591,7 +591,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                 var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
             }
 
             if (int.TryParse(urlSegment, out int categoryId))
@@ -603,7 +603,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                     var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                     var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                     var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-                    return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+                    return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
                 }
             }
 
@@ -614,7 +614,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                 var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
             }
 
             category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()) || c.MenuDisplayName!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()));
@@ -624,7 +624,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
                 var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
                 var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
-                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount);
+                return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
             }
 
             Log.Warning("Could not find category with URL segment or fallback: '{UrlSegment}'", urlSegment);
@@ -685,6 +685,44 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
         }
 
         return segments.Count > 0 ? string.Join("/", segments).ToLowerInvariant() : string.Empty;
+    }
+
+    private string GetEnglishCategoryPath(int categoryId)
+    {
+        if (categoryId <= 0)
+        {
+            return string.Empty;
+        }
+
+        var segments = new List<string>();
+        var currentId = categoryId;
+
+        while (currentId > 0)
+        {
+            var category = _entityContext.TblMenus
+                .Where(item => item.MenuCategoryId == currentId)
+                .Select(item => new { item.MenuCategoryId, item.MenuParentCategoryId, item.MenuUrlSegment, item.MenuUrlSegmentEn })
+                .FirstOrDefault();
+
+            if (category is null)
+            {
+                break;
+            }
+
+            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
+            if (category.MenuCategoryId != 1)
+            {
+                var segment = category.MenuUrlSegmentEn ?? category.MenuUrlSegment;
+                if (!string.IsNullOrWhiteSpace(segment))
+                {
+                    segments.Insert(0, segment.ToLowerInvariant());
+                }
+            }
+
+            currentId = category.MenuParentCategoryId ?? 0;
+        }
+
+        return string.Join("/", segments);
     }
 
     /// <summary>
@@ -885,13 +923,13 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 // Bulk load all uncached category names in a single query
                 var categories = _entityContext.TblMenus
                     .Where(c => c.MenuCategoryId.HasValue && uncachedIds.Contains(c.MenuCategoryId.Value))
-                    .Select(c => new { Id = c.MenuCategoryId!.Value, Name = c.MenuDisplayName ?? "Not found" })
+                    .Select(c => new { Id = c.MenuCategoryId!.Value, c.MenuDisplayName, c.MenuDisplayNameEn })
                     .ToList();
 
                 // Cache the results
                 foreach (var category in categories)
                 {
-                    _categoryNameCache[category.Id] = category.Name;
+                    _categoryNameCache[category.Id] = LocalizedText.Select(category.MenuDisplayName ?? "Not found", category.MenuDisplayNameEn);
                 }
             }
 

@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Interfaces
@@ -37,9 +37,9 @@
                 <label asp-for="MainMenuId">@L["UploadAdmin.NyKategori.WhichCategoryShouldItBelongTo"]</label>
                 <select asp-for="MainMenuId" class="form-control">
                     <option selected disabled value="">@L["UploadAdmin.NyKategori.ChooseACategory"]</option>
-                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.Name))
+                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.NameSv))
                     {
-                        <option value="@category.CategoryId">@category.Name</option>
+                        <option value="@category.CategoryId">@category.NameSv</option>
                     }
                 </select>
                 <span asp-validation-for="MainMenuId"></span>

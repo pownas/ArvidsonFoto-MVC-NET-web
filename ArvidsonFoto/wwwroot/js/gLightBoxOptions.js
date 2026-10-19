@@ -70,10 +70,11 @@ async function loadNextGalleryPage() {
                 var imgDate = img.dateImageTaken
                     ? img.dateImageTaken.substring(0, 10)
                     : _galleryEl.dataset.imageMissing;
-                var categoryName = escapeGalleryHtml(img.categoryName || img.name || '');
+                var categoryName = escapeGalleryHtml((document.documentElement.lang === 'en' ? img.categoryNameEn : img.categoryNameSv) || '');
                 var imgHref = escapeGalleryHtml(galleryUrl);
                 var imageId = Number.isSafeInteger(img.imageId) && img.imageId > 0 ? img.imageId : '';
-                var description = img.description ? ', ' + escapeGalleryHtml(img.description) + '.' : '';
+                var localizedDescription = document.documentElement.lang === 'en' ? img.descriptionEn : img.descriptionSv;
+                var description = localizedDescription ? ', ' + escapeGalleryHtml(localizedDescription) + '.' : '';
 
                 var descHtml = '<div class="row">'
                     + '<p>' + formatGalleryText(_galleryEl.dataset.imagePosition, imgNum, _totalImages) + ' \u2013 '
