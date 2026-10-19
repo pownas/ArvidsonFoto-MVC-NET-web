@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Controllers;
+﻿using System.Globalization;
+using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
@@ -888,25 +889,31 @@ public class InfoControllerTests
     [Fact]
     public void ContactFormModel_ValidatesCorrectCode()
     {
-        // Arrange
-        var model = new ContactFormInputDto
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
         {
-            Code = "1234", // Wrong code (should be 3568)
-            Name = "Test",
-            Email = "test@example.com",
-            Subject = "Test Subject",
-            Message = "Test message"
-        };
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+            var model = new ContactFormInputDto
+            {
+                Code = "1234", // Wrong code (should be 3568)
+                Name = "Test",
+                Email = "test@example.com",
+                Subject = "Test Subject",
+                Message = "Test message"
+            };
 
-        var context = new ValidationContext(model);
-        var results = new List<ValidationResult>();
+            var context = new ValidationContext(model);
+            var results = new List<ValidationResult>();
 
-        // Act
-        var isValid = Validator.TryValidateObject(model, context, results, true);
+            var isValid = Validator.TryValidateObject(model, context, results, true);
 
-        // Assert
-        Assert.False(isValid);
-        Assert.Contains(results, r => r.MemberNames.Contains("Code") && r.ErrorMessage!.Contains("Fel kod"));
+            Assert.False(isValid);
+            Assert.Contains(results, r => r.MemberNames.Contains("Code") && r.ErrorMessage!.Contains("Fel kod"));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
     }
 
     #endregion
