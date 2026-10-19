@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
@@ -87,7 +88,7 @@ public class UploadAdminController(
         }
 
         viewModel.SelectedCategory = selectedCategory;
-        viewModel.SubCategories = [.. subCategories.OrderBy(c => c.Name)];
+        viewModel.SubCategories = [.. subCategories.OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
 
         return View(viewModel);
     }
@@ -213,11 +214,11 @@ public class UploadAdminController(
             }
             CategoryDto newCategory = new()
             {
-                Name = inputModel.MenuText,
+                NameSv = inputModel.MenuText,
                 NameEn = inputModel.MenuTextEn,
                 CategoryId = _categoryService.GetLastId() + 1,
                 ParentCategoryId = inputModel.MainMenuId,
-                UrlCategoryPath = svSegment,
+                UrlCategoryPathSv = svSegment,
                 UrlCategoryPathEn = enSegment,
                 DateUpdated = DateTime.UtcNow
             };

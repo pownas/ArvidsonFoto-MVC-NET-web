@@ -65,7 +65,7 @@ public class ImageApiControllerTests : IDisposable
         {
             UrlImage = "TEST999", // Use different ID to avoid conflicts
             CategoryId = 99, // Use different category
-            Description = "Test image",
+            DescriptionSv = "Test image",
             DateImageTaken = DateTime.Now
         };
 
@@ -415,14 +415,12 @@ public class ImageApiControllerTests : IDisposable
             var okResult = Assert.IsType<OkObjectResult>(result);
             var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
             Assert.Equal(33, response.CategoryId);
-            Assert.Equal("Camberwell beauty", response.CategoryName);
             Assert.Equal("Sorgmantel", response.CategoryNameSv);
             Assert.Equal("Camberwell beauty", response.CategoryNameEn);
 
             var image = Assert.IsType<ImageDto>(response.Images.First());
             Assert.Equal("Sorgmantel", image.CategoryNameSv);
             Assert.Equal("Camberwell beauty", image.CategoryNameEn);
-            Assert.Equal("Camberwell beauty", image.CategoryName);
         }
         finally
         {
@@ -451,7 +449,6 @@ public class ImageApiControllerTests : IDisposable
         Assert.True(response.ImageResultCount > 0, "Parent category 'Faglar' should return images from subcategories");
         Assert.True(response.Images.Count > 0, "Images list should not be empty for parent category");
         // Kategorinamnet ska vara korrekt, inte 'Unknown'
-        Assert.Equal("Fåglar", response.CategoryName);
         Assert.Equal("Fåglar", response.CategoryNameSv);
         Assert.Equal("Birds", response.CategoryNameEn);
         CultureInfo.CurrentUICulture = originalCulture;
@@ -470,7 +467,7 @@ public class ImageApiControllerTests : IDisposable
         var okResult = Assert.IsType<OkObjectResult>(result);
         var response = Assert.IsType<ArvidsonFoto.Core.ApiResponses.ImageListResponse>(okResult.Value);
         // CategoryName ska vara "Fåglar", INTE "Unknown"
-        Assert.NotEqual("Unknown", response.CategoryName);
+        Assert.NotEqual("Unknown", response.CategoryNameSv);
         Assert.Equal(1, response.CategoryId);
     }
 

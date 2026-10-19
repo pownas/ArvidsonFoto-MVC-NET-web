@@ -121,7 +121,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 return string.Empty;
             }
 
-            var path = category.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
+            var path = category.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
 
             // Get parent categories if any
             if (category.ParentCategoryId.HasValue && category.ParentCategoryId.Value > 0)
@@ -129,7 +129,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 var parent = categoryService.GetById(category.ParentCategoryId.Value);
                 if (parent != null && parent.CategoryId > 0)
                 {
-                    path = (parent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
+                    path = (parent.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
 
                     // Get grandparent if any
                     if (parent.ParentCategoryId.HasValue && parent.ParentCategoryId.Value > 0)
@@ -137,7 +137,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                         var grandparent = categoryService.GetById(parent.ParentCategoryId.Value);
                         if (grandparent != null && grandparent.CategoryId > 0)
                         {
-                            path = (grandparent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
+                            path = (grandparent.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
                         }
                     }
                 }
@@ -398,7 +398,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                     // Find the child category under the current parent
                     var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
                     matchingChildCategory = children.FirstOrDefault(c =>
-                        string.Equals(c.UrlCategoryPath, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.UrlCategoryPathSv, segment, StringComparison.OrdinalIgnoreCase) ||
                         string.Equals(c.UrlCategoryPathEn, segment, StringComparison.OrdinalIgnoreCase) ||
                         string.Equals(c.NameSv, segment, StringComparison.OrdinalIgnoreCase) ||
                         string.Equals(c.NameEn, segment, StringComparison.OrdinalIgnoreCase));
@@ -423,12 +423,12 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
                 // In that case look up the category by ID so we can populate name and URL correctly.
                 var resolvedCategory = matchingChildCategory ?? categoryService.GetById(currentCategoryId.Value);
-                var categoryName = resolvedCategory.Name ?? "Unknown";
-                var categoryNameSv = resolvedCategory.NameSv ?? string.Empty;
+                var categoryNameSv = resolvedCategory.NameSv;
                 var categoryNameEn = resolvedCategory.NameEn;
-                var categoryUrl = matchingChildCategory != null
-                    ? matchingChildCategory.UrlCategoryPathFull ?? "Unknown"
-                    : resolvedCategory.UrlCategoryPath ?? "Unknown";
+                var categoryUrlSv = matchingChildCategory != null
+                    ? matchingChildCategory.UrlCategoryPathFullSv ?? "Unknown"
+                    : resolvedCategory.UrlCategoryPathFullSv ?? "Unknown";
+                var categoryUrlEn = matchingChildCategory?.UrlCategoryPathFullEn ?? resolvedCategory.UrlCategoryPathFullEn ?? string.Empty;
 
                 List<ImageDto> resultImages;
                 int currentPage;
@@ -456,11 +456,10 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 var response = new ImageListResponse
                 {
                     CategoryId = currentCategoryId.Value,
-                    CategoryName = categoryName,
                     CategoryNameSv = categoryNameSv,
                     CategoryNameEn = categoryNameEn,
-                    CategoryUrl = categoryUrl,
-                    CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
+                    UrlCategorySv = $"bilder/{categoryUrlSv}",
+                    UrlCategoryEn = $"images/{categoryUrlEn}",
                     ImageCategoryTotalCount = totalCategoryImageCount,
                     ImageResultCount = resultImages.Count,
                     Images = resultImages,
@@ -495,8 +494,8 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                                 ? images.OrderBy(i => i.DateImageTaken)
                                 : images.OrderByDescending(i => i.DateImageTaken),
             "categoryname" => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                                ? images.OrderBy(i => i.UrlCategory)
-                                : images.OrderByDescending(i => i.UrlCategory),
+                                ? images.OrderBy(i => i.UrlCategorySv)
+                                : images.OrderByDescending(i => i.UrlCategorySv),
             _ => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
                                 ? images.OrderBy(i => i.DateUploaded)
                                 : images.OrderByDescending(i => i.DateUploaded),

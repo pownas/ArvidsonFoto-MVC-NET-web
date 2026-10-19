@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.DTOs
 @using ArvidsonFoto.Core.Interfaces
@@ -46,7 +46,7 @@
         
         @if (Model!.ImageInputModel is not null && Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
-            <h3>@L["Admin.SelectedCategory", Model.SelectedCategory.Name]</h3>
+            <h3>@L["Admin.SelectedCategory", Model.SelectedCategory.NameSv]</h3>
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {
@@ -67,7 +67,7 @@
                 @foreach (var category in Model.SubCategories)
                 {
                     <li class="my-2">
-                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.Name)">@category.Name</a>
+                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.UrlCategoryPathSv)">@category.NameSv</a>
                     </li>
                 }
             </ul>

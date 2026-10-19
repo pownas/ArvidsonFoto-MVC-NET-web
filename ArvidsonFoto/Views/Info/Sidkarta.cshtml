@@ -42,27 +42,27 @@
             <li><a href="@LocalizedRoutes.Page("/Senast/Per kategori")">@T["Navigation.ByCategory"]</a></li>
         </ul>
     </li>
-    @foreach (var head in byParent[0].OrderBy(c => c.Name))
+    @foreach (var head in byParent[0].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
     {
-        <li><a href="@LocalizedRoutes.Category(head)">@head.Name</a>
+        <li><a href="@LocalizedRoutes.Category(head)">@LocalizedText.Select(head.NameSv, head.NameEn)</a>
             @if (byParent[head.CategoryId.GetValueOrDefault()].Any())
             {
                 <ul class="sitemap">
-                @foreach (var child in byParent[head.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
+                @foreach (var child in byParent[head.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                 {
-                    <li><a href="@LocalizedRoutes.Category(head, child)">@child.Name</a>
+                    <li><a href="@LocalizedRoutes.Category(head, child)">@LocalizedText.Select(child.NameSv, child.NameEn)</a>
                         @if (byParent[child.CategoryId.GetValueOrDefault()].Any())
                         {
                             <ul class="sitemap">
-                            @foreach (var grandchild in byParent[child.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
+                            @foreach (var grandchild in byParent[child.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                             {
-                                <li><a href="@LocalizedRoutes.Category(head, child, grandchild)">@grandchild.Name</a>
+                                <li><a href="@LocalizedRoutes.Category(head, child, grandchild)">@LocalizedText.Select(grandchild.NameSv, grandchild.NameEn)</a>
                                     @if (byParent[grandchild.CategoryId.GetValueOrDefault()].Any())
                                     {
                                         <ul class="sitemap">
-                                        @foreach (var leaf in byParent[grandchild.CategoryId.GetValueOrDefault()].OrderBy(c => c.Name))
+                                        @foreach (var leaf in byParent[grandchild.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                                         {
-                                            <li><a href="@LocalizedRoutes.Category(head, child, grandchild, leaf)">@leaf.Name</a></li>
+                                            <li><a href="@LocalizedRoutes.Category(head, child, grandchild, leaf)">@LocalizedText.Select(leaf.NameSv, leaf.NameEn)</a></li>
                                         }
                                         </ul>
                                     }

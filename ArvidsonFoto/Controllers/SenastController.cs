@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
@@ -82,7 +83,8 @@ public class SenastController(
                         i.ImageUrlName,
                         i.ImageDate,
                         i.ImageUpdate,
-                        i.ImageDescription
+                        i.ImageDescription,
+                        i.ImageDescriptionEn
                     })
                     .FirstOrDefault();
 
@@ -100,13 +102,14 @@ public class SenastController(
                     {
                         ImageId = image.ImageId ?? 0,
                         CategoryId = image.ImageCategoryId ?? 0,
-                        Name = categoryName,
-                        CategoryName = categoryName,
+                        CategoryNameSv = categoryName,
+                        CategoryNameEn = category?.MenuDisplayNameEn,
                         UrlImage = $"bilder/{imagePath}/{image.ImageUrlName}",
-                        UrlCategory = $"bilder/{categoryPath}",
+                        UrlCategorySv = $"bilder/{categoryPath}",
                         DateImageTaken = image.ImageDate,
                         DateUploaded = image.ImageUpdate,
-                        Description = image.ImageDescription ?? string.Empty
+                        DescriptionSv = image.ImageDescription ?? string.Empty,
+                        DescriptionEn = image.ImageDescriptionEn
                     });
                 }
             }
@@ -142,7 +145,8 @@ public class SenastController(
                     i.ImageUrlName,
                     i.ImageDate,
                     i.ImageUpdate,
-                    i.ImageDescription
+                    i.ImageDescription,
+                    i.ImageDescriptionEn
                 })
                 .ToList();
 
@@ -173,13 +177,14 @@ public class SenastController(
                 {
                     ImageId = image.ImageId ?? 0,
                     CategoryId = categoryId,
-                    Name = categoryName,
-                    CategoryName = categoryName,
+                    CategoryNameSv = categoryName,
+                    CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
                     UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategory = $"bilder/{categoryPath}",
+                    UrlCategorySv = $"bilder/{categoryPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
-                    Description = image.ImageDescription ?? string.Empty
+                    DescriptionSv = image.ImageDescription ?? string.Empty,
+                    DescriptionEn = image.ImageDescriptionEn
                 };
             })];
 
@@ -211,7 +216,8 @@ public class SenastController(
                     i.ImageUrlName,
                     i.ImageDate,
                     i.ImageUpdate,
-                    i.ImageDescription
+                    i.ImageDescription,
+                    i.ImageDescriptionEn
                 })
                 .ToList();
 
@@ -241,13 +247,14 @@ public class SenastController(
                 {
                     ImageId = image.ImageId ?? 0,
                     CategoryId = categoryId,
-                    Name = categoryName,
-                    CategoryName = categoryName,
+                    CategoryNameSv = categoryName,
+                    CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
                     UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategory = $"bilder/{categoryPath}",
+                    UrlCategorySv = $"bilder/{categoryPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
-                    Description = image.ImageDescription ?? string.Empty
+                    DescriptionSv = image.ImageDescription ?? string.Empty,
+                    DescriptionEn = image.ImageDescriptionEn
                 };
             })];
 
@@ -262,7 +269,7 @@ public class SenastController(
             return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
         }
 
-        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
+        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { NameSv = sortOrder };
         viewModel.CurrentUrl = HttpContext?.Request.Path.Value ??
             ("/Senast/" + sortOrder);
 

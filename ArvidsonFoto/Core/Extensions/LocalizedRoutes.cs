@@ -45,7 +45,9 @@ public static class LocalizedRoutes
     public static string Category(params CategoryDto[] categories)
     {
         return Gallery + "/" + string.Join("/", categories.Select(c => Uri.EscapeDataString(
-            LocalizedText.IsEnglish ? c.DisplayUrlCategoryPath : c.UrlCategoryPath ?? c.NameSv ?? string.Empty)));
+            LocalizedText.IsEnglish
+                ? string.IsNullOrWhiteSpace(c.UrlCategoryPathEn) ? c.UrlCategoryPathSv ?? c.NameSv : c.UrlCategoryPathEn
+                : c.UrlCategoryPathSv ?? c.NameSv)));
     }
 
     public static string CategoryForId(int id, IReadOnlyCollection<CategoryDto> categories)
@@ -85,7 +87,7 @@ public static class LocalizedRoutes
                 var decoded = Uri.UnescapeDataString(segment);
                 var category = categories.FirstOrDefault(c =>
                     (parent is null ? c.ParentCategoryId is null or 0 : c.ParentCategoryId == parent) &&
-                    (string.Equals(c.UrlCategoryPath, decoded, StringComparison.OrdinalIgnoreCase) ||
+                    (string.Equals(c.UrlCategoryPathSv, decoded, StringComparison.OrdinalIgnoreCase) ||
                      string.Equals(c.UrlCategoryPathEn, decoded, StringComparison.OrdinalIgnoreCase) ||
                      string.Equals(c.NameEn, decoded, StringComparison.OrdinalIgnoreCase) ||
                      string.Equals(c.NameSv, decoded, StringComparison.OrdinalIgnoreCase)));
@@ -97,8 +99,8 @@ public static class LocalizedRoutes
                 else
                 {
                     result.Add(Uri.EscapeDataString(english
-                        ? (string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPath ?? decoded : category.UrlCategoryPathEn)
-                        : category.UrlCategoryPath ?? decoded));
+                        ? (string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? decoded : category.UrlCategoryPathEn)
+                        : category.UrlCategoryPathSv ?? decoded));
                     parent = category.CategoryId;
                 }
             }

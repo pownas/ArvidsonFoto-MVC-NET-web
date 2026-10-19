@@ -130,10 +130,10 @@ public class BilderController(
             Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
         }
 
-        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null && viewModel.SelectedCategory.CategoryId.HasValue && viewModel.SelectedCategory.Name != null)
+        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null && viewModel.SelectedCategory.CategoryId.HasValue)
         {
             _pageCounterService.AddPageCount("Bilder");
-            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.Name);
+            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.NameSv);
         }
 
         viewModel.DisplayImagesList ??= [];
@@ -182,7 +182,7 @@ public class BilderController(
             ViewData["Title"] = "Söker efter: " + s;
             s = s.Trim();
             s = s.Replace("+", " ");
-            List<CategoryDto> allCategories = [.. _categoryService.GetAll().OrderBy(c => c.Name)];
+            List<CategoryDto> allCategories = [.. _categoryService.GetAll().OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
             List<ImageDto> listOfFirstSearchedImages = [];
             foreach (var category in allCategories)
             {
@@ -190,14 +190,14 @@ public class BilderController(
                     ((category.NameSv?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
                      (category.NameEn?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false)))
                 {
-                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, LocalizedText.Select(category.NameSv, category.NameEn));
                     listOfFirstSearchedImages.Add(imageDto);
                 }
             }
             viewModel.DisplayImagesList = listOfFirstSearchedImages;
             viewModel.SelectedCategory = CategoryDto.CreateEmpty();
-            viewModel.SelectedCategory.Name = "SearchFor: " + s;
-            viewModel.SelectedCategory.UrlCategoryPath = "/Search";
+            viewModel.SelectedCategory.NameSv = "SearchFor: " + s;
+            viewModel.SelectedCategory.UrlCategoryPathSv = "/Search";
 
             if (listOfFirstSearchedImages.Count == 0)
             {

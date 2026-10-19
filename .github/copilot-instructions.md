@@ -10,3 +10,7 @@
 - Include an `IsGameSelectable` flag on each image.
 - A disabled category must make all its images effectively unavailable to games, even when an individual image flag is true.
 - Keep individual image flags manageable in admin.
+
+## Category DTO Guidelines
+- For `CategoryDto`, localized category names must be named `NameSv` and `NameEn` (not `CategoryNameSv`/`CategoryNameEn`); category URL fields remain explicitly language-suffixed.
+- För `ImageDto` ska det inte finnas en neutral `Name`-property. Referenser till den ska i stället använda `CategoryNameSv` eller `CategoryNameEn`. Rapportera på svenska.

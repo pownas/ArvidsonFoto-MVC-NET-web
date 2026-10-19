@@ -23,15 +23,13 @@ public class MockApiImageService : IApiImageService
         {
             ImageId = image.ImageId ?? 0,
             CategoryId = image.ImageCategoryId ?? -1, // ImageCategoryId is the category ID
-            Name = GetCategoryName(image.ImageCategoryId ?? -1),
-            CategoryName = GetCategoryName(image.ImageCategoryId ?? -1),
             CategoryNameSv = GetCategoryNameSv(image.ImageCategoryId ?? -1),
             CategoryNameEn = GetCategoryNameEn(image.ImageCategoryId ?? -1),
             UrlImage = image.ImageUrlName ?? $"image-{image.ImageId}",
-            UrlCategory = GetCategoryPath(image.ImageCategoryId ?? -1),
+            UrlCategorySv = GetCategoryPath(image.ImageCategoryId ?? -1),
             DateImageTaken = image.ImageDate,
             DateUploaded = image.ImageUpdate,
-            Description = image.ImageDescription ?? string.Empty,
+            DescriptionSv = image.ImageDescription ?? string.Empty,
             DescriptionEn = image.ImageDescriptionEn
         }).ToList();
     }
@@ -121,7 +119,7 @@ public class MockApiImageService : IApiImageService
         return _testImages.Count > 0 ? _testImages.Max(i => i.ImageId) : 0;
     }
 
-    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "")
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryNameSv = "", string categoryNameEn = "")
     {
         // Check if there are images directly in this category
         var image = _testImages
@@ -138,7 +136,7 @@ public class MockApiImageService : IApiImageService
         var subcategories = _categoryService.GetChildrenByParentId(categoryId);
         foreach (var subcategory in subcategories)
         {
-            image = GetOneImageFromCategory(subcategory.CategoryId ?? -1, categoryName);
+            image = GetOneImageFromCategory(subcategory.CategoryId ?? -1, categoryNameSv, categoryNameEn);
             if (image.ImageId != -1)
             {
                 return image;
@@ -234,7 +232,8 @@ public class MockApiImageService : IApiImageService
         existingImage.UrlImage = image.UrlImage;
         existingImage.CategoryId = image.CategoryId;
         existingImage.DateImageTaken = image.DateImageTaken;
-        existingImage.Description = image.Description;
+        existingImage.DescriptionSv = image.DescriptionSv;
+        existingImage.DescriptionEn = image.DescriptionEn;
         existingImage.DateUploaded = DateTime.UtcNow;
 
         return Task.FromResult(true);
@@ -291,11 +290,11 @@ public class MockApiImageService : IApiImageService
         {
             ImageId = -1,
             CategoryId = -1,
-            Name = "404-NotFound",
+            CategoryNameSv = "404-NotFound",
             UrlImage = "404-NotFound",
-            UrlCategory = "bilder/404-NotFound",
+            UrlCategorySv = "bilder/404-NotFound",
             DateImageTaken = DateTime.Now,
-            Description = "Bild inte hittad",
+            DescriptionSv = "Bild inte hittad",
             DateUploaded = DateTime.Now
         };
     }

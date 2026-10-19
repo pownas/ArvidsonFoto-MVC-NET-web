@@ -62,7 +62,7 @@ const CategoryCache = {
         if (!categories) return null;
         
         const category = categories.find(c => c.categoryId === categoryId);
-        return category ? category.name : null;
+        return category ? (document.documentElement.lang === 'en' ? category.nameEn : category.nameSv) : null;
     },
     
     /**

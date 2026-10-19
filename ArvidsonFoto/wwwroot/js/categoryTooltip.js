@@ -98,7 +98,8 @@
         imagePath = config.imageBaseUrl + imagePath + '.thumb.jpg';
 
         var html = '<div class="category-tooltip-content">';
-        html += '<img src="' + escapeHtml(imagePath) + '" alt="' + escapeHtml(categoryName || imageData.name || '') + '" ';
+        var localizedCategoryName = document.documentElement.lang === 'en' ? imageData.categoryNameEn : imageData.categoryNameSv;
+        html += '<img src="' + escapeHtml(imagePath) + '" alt="' + escapeHtml(categoryName || localizedCategoryName || '') + '" ';
         html += 'loading="lazy" '; // Native lazy loading
         html += 'style="max-width: ' + config.imageMaxWidth + 'px; max-height: ' + config.imageMaxHeight + 'px; width: auto; height: auto; display: block;" />';
         

@@ -41,39 +41,39 @@
       var mainCategories = categories.Where(m => m.ParentCategoryId == 0 || m.ParentCategoryId == null).ToList();
       foreach (var head in mainCategories)
       {
-        var subs1 = categories.Where(m => m.ParentCategoryId == head.CategoryId).OrderBy(m => m.Name).ToList();
+        var subs1 = categories.Where(m => m.ParentCategoryId == head.CategoryId).OrderBy(m => LocalizedText.Select(m.NameSv, m.NameEn)).ToList();
         <li class="pe-1">
         @if (subs1.Any())
         {
-          <a href="@LocalizedRoutes.Category(head)">@head.Name</a>
+          <a href="@LocalizedRoutes.Category(head)">@LocalizedText.Select(head.NameSv, head.NameEn)</a>
           <ul>
             @foreach (var s1 in subs1)
             {
-              var subs2 = categories.Where(m => m.ParentCategoryId == s1.CategoryId).OrderBy(m => m.Name).ToList();
+              var subs2 = categories.Where(m => m.ParentCategoryId == s1.CategoryId).OrderBy(m => LocalizedText.Select(m.NameSv, m.NameEn)).ToList();
               <li>
                 @if (subs2.Any())
                 {
-                  <a href="@LocalizedRoutes.Category(head, s1)" class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
+                  <a href="@LocalizedRoutes.Category(head, s1)" class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@LocalizedText.Select(s1.NameSv, s1.NameEn)">@LocalizedText.Select(s1.NameSv, s1.NameEn)</a>
                   <ul>
                     @foreach (var s2 in subs2)
                     {
-                      var subs3 = categories.Where(m => m.ParentCategoryId == s2.CategoryId).OrderBy(m => m.Name).ToList();
+                      var subs3 = categories.Where(m => m.ParentCategoryId == s2.CategoryId).OrderBy(m => LocalizedText.Select(m.NameSv, m.NameEn)).ToList();
                       <li>
                         @if (subs3.Any())
                         {
-                          <a href="@LocalizedRoutes.Category(head, s1, s2)" class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
+                          <a href="@LocalizedRoutes.Category(head, s1, s2)" class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@LocalizedText.Select(s2.NameSv, s2.NameEn)">@LocalizedText.Select(s2.NameSv, s2.NameEn)</a>
                           <ul>
                             @foreach (var s3 in subs3)
                             {
                               <li>
-                                <a href="@LocalizedRoutes.Category(head, s1, s2, s3)" class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@s3.Name">@s3.Name</a>
+                                <a href="@LocalizedRoutes.Category(head, s1, s2, s3)" class="has-category-tooltip" data-category-id="@s3.CategoryId" data-category-name="@LocalizedText.Select(s3.NameSv, s3.NameEn)">@LocalizedText.Select(s3.NameSv, s3.NameEn)</a>
                               </li>
                             }
                           </ul>
                         }
                         else
                         {
-                          <a href="@LocalizedRoutes.Category(head, s1, s2)" class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@s2.Name">@s2.Name</a>
+                          <a href="@LocalizedRoutes.Category(head, s1, s2)" class="has-category-tooltip" data-category-id="@s2.CategoryId" data-category-name="@LocalizedText.Select(s2.NameSv, s2.NameEn)">@LocalizedText.Select(s2.NameSv, s2.NameEn)</a>
                         }
                       </li>
                     }
@@ -81,7 +81,7 @@
                 }
                 else
                 {
-                  <a href="@LocalizedRoutes.Category(head, s1)" class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@s1.Name">@s1.Name</a>
+                  <a href="@LocalizedRoutes.Category(head, s1)" class="has-category-tooltip" data-category-id="@s1.CategoryId" data-category-name="@LocalizedText.Select(s1.NameSv, s1.NameEn)">@LocalizedText.Select(s1.NameSv, s1.NameEn)</a>
                 }
               </li>
             }
@@ -89,7 +89,7 @@
         }
         else
         {
-          <a href="@LocalizedRoutes.Category(head)">@head.Name</a>
+          <a href="@LocalizedRoutes.Category(head)">@LocalizedText.Select(head.NameSv, head.NameEn)</a>
         }
         </li>
       }
