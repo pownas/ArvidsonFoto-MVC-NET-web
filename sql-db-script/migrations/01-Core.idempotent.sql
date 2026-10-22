@@ -958,3 +958,25 @@ END;
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261020222600_AddMenuDateUpdatedIfMissing'
+)
+BEGIN
+    IF COL_LENGTH(N'dbo.tbl_menu', N'menu_dateUpdated') IS NULL
+        ALTER TABLE [dbo].[tbl_menu] ADD [menu_dateUpdated] datetime NULL;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261020222600_AddMenuDateUpdatedIfMissing'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261020222600_AddMenuDateUpdatedIfMissing', N'11.0.0-rc.2.26504.105');
+END;
+
+COMMIT;
+GO
+
