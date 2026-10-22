@@ -1,4 +1,4 @@
-﻿USE [arvidsonfoto_migrationtest_20261022]
+﻿USE [arvidsonfoto_se_db]
 GO
 
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
@@ -164,7 +164,8 @@ IF NOT EXISTS (
 BEGIN
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'PageCounter_ID', N'PageCounter_CategoryId', N'PageCounter_LastShowDate', N'PageCounter_MonthViewed', N'PageCounter_Name', N'PageCounter_Views', N'PageCounter_PicturePage') AND [object_id] = OBJECT_ID(N'[tbl_PageCounter]'))
         SET IDENTITY_INSERT [tbl_PageCounter] ON;
-    EXEC(N'INSERT INTO [tbl_PageCounter] ([PageCounter_ID], [PageCounter_CategoryId], [PageCounter_LastShowDate], [PageCounter_MonthViewed], [PageCounter_Name], [PageCounter_Views], [PageCounter_PicturePage])
+    EXEC(N'IF NOT EXISTS (SELECT 1 FROM [dbo].[tbl_PageCounter] WHERE [PageCounter_ID] = 1)
+    INSERT INTO [dbo].[tbl_PageCounter] ([PageCounter_ID], [PageCounter_CategoryId], [PageCounter_LastShowDate], [PageCounter_MonthViewed], [PageCounter_Name], [PageCounter_Views], [PageCounter_PicturePage])
     VALUES (1, 1, ''2021-11-22T16:16:00.000'', N''2021-11'', N''Fåglar'', 0, CAST(1 AS bit))');
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'PageCounter_ID', N'PageCounter_CategoryId', N'PageCounter_LastShowDate', N'PageCounter_MonthViewed', N'PageCounter_Name', N'PageCounter_Views', N'PageCounter_PicturePage') AND [object_id] = OBJECT_ID(N'[tbl_PageCounter]'))
         SET IDENTITY_INSERT [tbl_PageCounter] OFF;
@@ -188,7 +189,8 @@ BEGIN
 
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'GB_date', N'GB_email', N'GB_homepage', N'GB_ID', N'GB_IP', N'GB_name', N'GB_ReadPost', N'GB_text') AND [object_id] = OBJECT_ID(N'[tbl_gb]'))
         SET IDENTITY_INSERT [tbl_gb] ON;
-    EXEC(N'INSERT INTO [tbl_gb] ([ID], [GB_date], [GB_email], [GB_homepage], [GB_ID], [GB_IP], [GB_name], [GB_ReadPost], [GB_text])
+    EXEC(N'IF NOT EXISTS (SELECT 1 FROM [dbo].[tbl_gb] WHERE [ID] = 1)
+    INSERT INTO [dbo].[tbl_gb] ([ID], [GB_date], [GB_email], [GB_homepage], [GB_ID], [GB_IP], [GB_name], [GB_ReadPost], [GB_text])
     VALUES (1, ''2021-11-22T00:00:00'', N''pownas@outlook.com'', N''github.com/pownas'', 1, NULL, N''pownas'', CAST(0 AS bit), N''Ett första test inlägg i databasen...'')');
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'GB_date', N'GB_email', N'GB_homepage', N'GB_ID', N'GB_IP', N'GB_name', N'GB_ReadPost', N'GB_text') AND [object_id] = OBJECT_ID(N'[tbl_gb]'))
         SET IDENTITY_INSERT [tbl_gb] OFF;
@@ -201,16 +203,20 @@ IF NOT EXISTS (
 BEGIN
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'image_art', N'image_date', N'image_description', N'image_familj', N'image_huvudfamilj', N'image_ID', N'image_update', N'image_URL') AND [object_id] = OBJECT_ID(N'[tbl_images]'))
         SET IDENTITY_INSERT [tbl_images] ON;
-    EXEC(N'INSERT INTO [tbl_images] ([ID], [image_art], [image_date], [image_description], [image_familj], [image_huvudfamilj], [image_ID], [image_update], [image_URL])
-    VALUES (1, 11, ''2021-11-22T16:21:00'', N''En fjällabbs beskrivning...'', 9, NULL, 1, ''2021-11-22T16:21:00.000'', N''08TA3696''),
-    (2, 13, ''2021-11-22T16:21:00'', N''Hane, beskrivning av blåmes....'', 12, 10, 2, ''2021-11-22T16:21:00.000'', N''B57W4725''),
-    (3, 14, ''2021-11-22T16:21:00'', N''i Sverige'', 2, NULL, 3, ''2021-11-22T16:21:00.000'', N''B59W4837''),
-    (4, 15, ''2021-11-22T16:21:00'', N'''', 3, NULL, 4, ''2021-11-22T16:21:00.000'', N''13TA5142''),
-    (5, 16, ''2021-11-22T16:21:00'', N''Ekoxe, hane'', 4, NULL, 5, ''2021-11-22T16:21:00.000'', N''B60W1277''),
-    (6, 17, ''2021-11-22T16:21:00'', N''Fjällviol'', 5, NULL, 6, ''2021-11-22T16:21:00.000'', N''09TA8491''),
-    (7, 18, ''2021-11-22T16:21:00'', N''Rauk'', 6, NULL, 7, ''2021-11-22T16:21:00.000'', N''B57W8697''),
-    (8, 19, ''2021-11-22T16:21:00'', N''Jordgubbar'', 7, NULL, 8, ''2021-11-22T16:21:00.000'', N''IMG_1496''),
-    (9, 20, ''2021-11-22T16:21:00'', N''Hane, beskrivning av Costa rica....'', 8, NULL, 9, ''2021-11-22T16:21:00.000'', N''_N0Q8690'')');
+    EXEC(N'INSERT INTO [dbo].[tbl_images] ([ID], [image_art], [image_date], [image_description], [image_familj], [image_huvudfamilj], [image_ID], [image_update], [image_URL])
+    SELECT seed.[ID], seed.[image_art], seed.[image_date], seed.[image_description], seed.[image_familj], seed.[image_huvudfamilj], seed.[image_ID], seed.[image_update], seed.[image_URL]
+    FROM (VALUES
+        (1, 11, ''2021-11-22T16:21:00'', N''En fjällabbs beskrivning...'', 9, NULL, 1, ''2021-11-22T16:21:00.000'', N''08TA3696''),
+        (2, 13, ''2021-11-22T16:21:00'', N''Hane, beskrivning av blåmes....'', 12, 10, 2, ''2021-11-22T16:21:00.000'', N''B57W4725''),
+        (3, 14, ''2021-11-22T16:21:00'', N''i Sverige'', 2, NULL, 3, ''2021-11-22T16:21:00.000'', N''B59W4837''),
+        (4, 15, ''2021-11-22T16:21:00'', N'''', 3, NULL, 4, ''2021-11-22T16:21:00.000'', N''13TA5142''),
+        (5, 16, ''2021-11-22T16:21:00'', N''Ekoxe, hane'', 4, NULL, 5, ''2021-11-22T16:21:00.000'', N''B60W1277''),
+        (6, 17, ''2021-11-22T16:21:00'', N''Fjällviol'', 5, NULL, 6, ''2021-11-22T16:21:00.000'', N''09TA8491''),
+        (7, 18, ''2021-11-22T16:21:00'', N''Rauk'', 6, NULL, 7, ''2021-11-22T16:21:00.000'', N''B57W8697''),
+        (8, 19, ''2021-11-22T16:21:00'', N''Jordgubbar'', 7, NULL, 8, ''2021-11-22T16:21:00.000'', N''IMG_1496''),
+        (9, 20, ''2021-11-22T16:21:00'', N''Hane, beskrivning av Costa rica....'', 8, NULL, 9, ''2021-11-22T16:21:00.000'', N''_N0Q8690'')
+    ) AS seed ([ID], [image_art], [image_date], [image_description], [image_familj], [image_huvudfamilj], [image_ID], [image_update], [image_URL])
+    WHERE NOT EXISTS (SELECT 1 FROM [dbo].[tbl_images] AS existing WHERE existing.[ID] = seed.[ID]);');
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'image_art', N'image_date', N'image_description', N'image_familj', N'image_huvudfamilj', N'image_ID', N'image_update', N'image_URL') AND [object_id] = OBJECT_ID(N'[tbl_images]'))
         SET IDENTITY_INSERT [tbl_images] OFF;
 END;
@@ -222,27 +228,31 @@ IF NOT EXISTS (
 BEGIN
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'menu_ID', N'menu_mainID', N'menu_text', N'menu_URLtext') AND [object_id] = OBJECT_ID(N'[tbl_menu]'))
         SET IDENTITY_INSERT [tbl_menu] ON;
-    EXEC(N'INSERT INTO [tbl_menu] ([ID], [menu_ID], [menu_mainID], [menu_text], [menu_URLtext])
-    VALUES (1, 1, 0, N''Fåglar'', N''Faglar''),
-    (2, 2, 0, N''Däggdjur'', N''Daggdjur''),
-    (3, 3, 0, N''Kräldjur'', N''Kraldjur''),
-    (4, 4, 0, N''Insekter'', N''Insekter''),
-    (5, 5, 0, N''Växter'', N''Vaxter''),
-    (6, 6, 0, N''Landskap'', N''Landskap''),
-    (7, 7, 0, N''Årstider'', N''Arstider''),
-    (8, 8, 0, N''Resor'', N''Resor''),
-    (9, 9, 1, N''Alkor och labbar'', N''Alkor-och-labbar''),
-    (10, 10, 1, N''Tättingar'', N''Tattingar''),
-    (11, 11, 9, N''Fjällabb'', N''Fjallabb''),
-    (12, 12, 10, N''Mesar'', N''Mesar''),
-    (13, 13, 12, N''Blåmes'', N''Blames''),
-    (14, 14, 2, N''Björn'', N''Bjorn''),
-    (15, 15, 3, N''Hasselsnok'', N''Hasselsnok''),
-    (16, 16, 4, N''Skalbaggar'', N''Skalbaggar''),
-    (17, 17, 5, N''Blommor'', N''Blommor''),
-    (18, 18, 6, N''Gotland'', N''Gotland''),
-    (19, 19, 7, N''Sommar'', N''Sommar''),
-    (20, 20, 8, N''2008 Costa Rica'', N''2008-Costa-Rica'')');
+    EXEC(N'INSERT INTO [dbo].[tbl_menu] ([ID], [menu_ID], [menu_mainID], [menu_text], [menu_URLtext])
+    SELECT seed.[ID], seed.[menu_ID], seed.[menu_mainID], seed.[menu_text], seed.[menu_URLtext]
+    FROM (VALUES
+        (1, 1, 0, N''Fåglar'', N''Faglar''),
+        (2, 2, 0, N''Däggdjur'', N''Daggdjur''),
+        (3, 3, 0, N''Kräldjur'', N''Kraldjur''),
+        (4, 4, 0, N''Insekter'', N''Insekter''),
+        (5, 5, 0, N''Växter'', N''Vaxter''),
+        (6, 6, 0, N''Landskap'', N''Landskap''),
+        (7, 7, 0, N''Årstider'', N''Arstider''),
+        (8, 8, 0, N''Resor'', N''Resor''),
+        (9, 9, 1, N''Alkor och labbar'', N''Alkor-och-labbar''),
+        (10, 10, 1, N''Tättingar'', N''Tattingar''),
+        (11, 11, 9, N''Fjällabb'', N''Fjallabb''),
+        (12, 12, 10, N''Mesar'', N''Mesar''),
+        (13, 13, 12, N''Blåmes'', N''Blames''),
+        (14, 14, 2, N''Björn'', N''Bjorn''),
+        (15, 15, 3, N''Hasselsnok'', N''Hasselsnok''),
+        (16, 16, 4, N''Skalbaggar'', N''Skalbaggar''),
+        (17, 17, 5, N''Blommor'', N''Blommor''),
+        (18, 18, 6, N''Gotland'', N''Gotland''),
+        (19, 19, 7, N''Sommar'', N''Sommar''),
+        (20, 20, 8, N''2008 Costa Rica'', N''2008-Costa-Rica'')
+    ) AS seed ([ID], [menu_ID], [menu_mainID], [menu_text], [menu_URLtext])
+    WHERE NOT EXISTS (SELECT 1 FROM [dbo].[tbl_menu] AS existing WHERE existing.[ID] = seed.[ID]);');
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'menu_ID', N'menu_mainID', N'menu_text', N'menu_URLtext') AND [object_id] = OBJECT_ID(N'[tbl_menu]'))
         SET IDENTITY_INSERT [tbl_menu] OFF;
 END;
