@@ -1,4 +1,7 @@
-﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+﻿USE [arvidsonfoto_migrationtest_20261022]
+GO
+
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (
         [MigrationId] nvarchar(150) NOT NULL,
@@ -14,18 +17,21 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20210208214305_SkapatTabeller'
 )
 BEGIN
-    CREATE TABLE [tbl_gb] (
-        [ID] int NOT NULL IDENTITY,
-        [GB_ID] int NOT NULL,
-        [GB_name] nvarchar(100) NULL,
-        [GB_email] nvarchar(100) NULL,
-        [GB_homepage] nvarchar(255) NULL,
-        [GB_text] nvarchar(max) NULL,
-        [GB_date] smalldatetime NULL,
-        [GB_ReadPost] bit NULL,
-        [GB_IP] nvarchar(50) NULL,
-        CONSTRAINT [PK_tbl_gb] PRIMARY KEY ([ID])
-    );
+    IF OBJECT_ID(N'dbo.tbl_gb', N'U') IS NULL
+    BEGIN
+        CREATE TABLE [tbl_gb] (
+            [ID] int NOT NULL IDENTITY,
+            [GB_ID] int NOT NULL,
+            [GB_name] nvarchar(100) NULL,
+            [GB_email] nvarchar(100) NULL,
+            [GB_homepage] nvarchar(255) NULL,
+            [GB_text] nvarchar(max) NULL,
+            [GB_date] smalldatetime NULL,
+            [GB_ReadPost] bit NULL,
+            [GB_IP] nvarchar(50) NULL,
+            CONSTRAINT [PK_tbl_gb] PRIMARY KEY ([ID])
+        );
+    END;
 END;
 
 IF NOT EXISTS (
@@ -33,18 +39,21 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20210208214305_SkapatTabeller'
 )
 BEGIN
-    CREATE TABLE [tbl_images] (
-        [ID] int NOT NULL IDENTITY,
-        [image_ID] int NOT NULL,
-        [image_huvudfamilj] int NULL,
-        [image_familj] int NULL,
-        [image_art] int NOT NULL,
-        [image_URL] nvarchar(50) NULL,
-        [image_date] smalldatetime NULL,
-        [image_description] nvarchar(150) NULL,
-        [image_update] datetime NOT NULL,
-        CONSTRAINT [PK_tbl_images] PRIMARY KEY ([ID])
-    );
+    IF OBJECT_ID(N'dbo.tbl_images', N'U') IS NULL
+    BEGIN
+        CREATE TABLE [tbl_images] (
+            [ID] int NOT NULL IDENTITY,
+            [image_ID] int NOT NULL,
+            [image_huvudfamilj] int NULL,
+            [image_familj] int NULL,
+            [image_art] int NOT NULL,
+            [image_URL] nvarchar(50) NULL,
+            [image_date] smalldatetime NULL,
+            [image_description] nvarchar(150) NULL,
+            [image_update] datetime NOT NULL,
+            CONSTRAINT [PK_tbl_images] PRIMARY KEY ([ID])
+        );
+    END;
 END;
 
 IF NOT EXISTS (
@@ -52,16 +61,19 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20210208214305_SkapatTabeller'
 )
 BEGIN
-    CREATE TABLE [tbl_menu] (
-        [ID] int NOT NULL IDENTITY,
-        [menu_ID] int NOT NULL,
-        [menu_mainID] int NULL,
-        [menu_text] nvarchar(50) NULL,
-        [menu_URLtext] nvarchar(50) NULL,
-        [menu_lastshowdate] datetime NULL,
-        [menu_pagecounter] int NULL,
-        CONSTRAINT [PK_tbl_menu] PRIMARY KEY ([ID])
-    );
+    IF OBJECT_ID(N'dbo.tbl_menu', N'U') IS NULL
+    BEGIN
+        CREATE TABLE [tbl_menu] (
+            [ID] int NOT NULL IDENTITY,
+            [menu_ID] int NOT NULL,
+            [menu_mainID] int NULL,
+            [menu_text] nvarchar(50) NULL,
+            [menu_URLtext] nvarchar(50) NULL,
+            [menu_lastshowdate] datetime NULL,
+            [menu_pagecounter] int NULL,
+            CONSTRAINT [PK_tbl_menu] PRIMARY KEY ([ID])
+        );
+    END;
 END;
 
 IF NOT EXISTS (
@@ -69,14 +81,17 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20210208214305_SkapatTabeller'
 )
 BEGIN
-    CREATE TABLE [tbl_PageCounter] (
-        [PageCounter_ID] int NOT NULL IDENTITY,
-        [PageCounter_Views] int NOT NULL,
-        [PageCounter_Name] nvarchar(50) NULL,
-        [PageCounter_MonthViewed] nvarchar(20) NULL,
-        [PageCounter_LastShowDate] datetime NOT NULL,
-        CONSTRAINT [PK_tbl_PageCounter] PRIMARY KEY ([PageCounter_ID])
-    );
+    IF OBJECT_ID(N'dbo.tbl_PageCounter', N'U') IS NULL
+    BEGIN
+        CREATE TABLE [tbl_PageCounter] (
+            [PageCounter_ID] int NOT NULL IDENTITY,
+            [PageCounter_Views] int NOT NULL,
+            [PageCounter_Name] nvarchar(50) NULL,
+            [PageCounter_MonthViewed] nvarchar(20) NULL,
+            [PageCounter_LastShowDate] datetime NOT NULL,
+            CONSTRAINT [PK_tbl_PageCounter] PRIMARY KEY ([PageCounter_ID])
+        );
+    END;
 END;
 
 IF NOT EXISTS (
@@ -97,12 +112,15 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20211122184803_DatabaseSeed'
 )
 BEGIN
-    DECLARE @var nvarchar(max);
-    SELECT @var = QUOTENAME(OBJECT_NAME([c].[default_object_id]))
-    FROM [sys].[columns] [c]
-    WHERE [c].[object_id] = OBJECT_ID(N'[tbl_menu]') AND [c].[name] = N'menu_lastshowdate';
-    IF @var IS NOT NULL EXEC(N'ALTER TABLE [tbl_menu] DROP CONSTRAINT ' + @var + ';');
-    ALTER TABLE [tbl_menu] DROP COLUMN [menu_lastshowdate];
+    IF COL_LENGTH(N'dbo.tbl_menu', N'menu_lastshowdate') IS NOT NULL
+    BEGIN
+        DECLARE @var nvarchar(max);
+        SELECT @var = QUOTENAME(OBJECT_NAME([c].[default_object_id]))
+        FROM [sys].[columns] [c]
+        WHERE [c].[object_id] = OBJECT_ID(N'[dbo].[tbl_menu]') AND [c].[name] = N'menu_lastshowdate';
+        IF @var IS NOT NULL EXEC(N'ALTER TABLE [dbo].[tbl_menu] DROP CONSTRAINT ' + @var + ';');
+        ALTER TABLE [dbo].[tbl_menu] DROP COLUMN [menu_lastshowdate];
+    END;
 END;
 
 IF NOT EXISTS (
@@ -110,12 +128,15 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20211122184803_DatabaseSeed'
 )
 BEGIN
-    DECLARE @var1 nvarchar(max);
-    SELECT @var1 = QUOTENAME(OBJECT_NAME([c].[default_object_id]))
-    FROM [sys].[columns] [c]
-    WHERE [c].[object_id] = OBJECT_ID(N'[tbl_menu]') AND [c].[name] = N'menu_pagecounter';
-    IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [tbl_menu] DROP CONSTRAINT ' + @var1 + ';');
-    ALTER TABLE [tbl_menu] DROP COLUMN [menu_pagecounter];
+    IF COL_LENGTH(N'dbo.tbl_menu', N'menu_pagecounter') IS NOT NULL
+    BEGIN
+        DECLARE @var1 nvarchar(max);
+        SELECT @var1 = QUOTENAME(OBJECT_NAME([c].[default_object_id]))
+        FROM [sys].[columns] [c]
+        WHERE [c].[object_id] = OBJECT_ID(N'[dbo].[tbl_menu]') AND [c].[name] = N'menu_pagecounter';
+        IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [dbo].[tbl_menu] DROP CONSTRAINT ' + @var1 + ';');
+        ALTER TABLE [dbo].[tbl_menu] DROP COLUMN [menu_pagecounter];
+    END;
 END;
 
 IF NOT EXISTS (
@@ -123,7 +144,8 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20211122184803_DatabaseSeed'
 )
 BEGIN
-    ALTER TABLE [tbl_PageCounter] ADD [PageCounter_CategoryId] int NOT NULL DEFAULT 0;
+    IF COL_LENGTH(N'dbo.tbl_PageCounter', N'PageCounter_CategoryId') IS NULL
+        ALTER TABLE [dbo].[tbl_PageCounter] ADD [PageCounter_CategoryId] int NOT NULL DEFAULT 0;
 END;
 
 IF NOT EXISTS (
@@ -131,7 +153,8 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20211122184803_DatabaseSeed'
 )
 BEGIN
-    ALTER TABLE [tbl_PageCounter] ADD [PageCounter_PicturePage] bit NOT NULL DEFAULT CAST(0 AS bit);
+    IF COL_LENGTH(N'dbo.tbl_PageCounter', N'PageCounter_PicturePage') IS NULL
+        ALTER TABLE [dbo].[tbl_PageCounter] ADD [PageCounter_PicturePage] bit NOT NULL DEFAULT CAST(0 AS bit);
 END;
 
 IF NOT EXISTS (
@@ -152,6 +175,17 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20211122184803_DatabaseSeed'
 )
 BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM sys.columns
+        WHERE object_id = OBJECT_ID(N'dbo.tbl_gb')
+          AND name = N'GB_IP'
+          AND is_nullable = 0
+    )
+    BEGIN
+        ALTER TABLE [dbo].[tbl_gb] ALTER COLUMN [GB_IP] nvarchar(50) NULL;
+    END;
+
     IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'ID', N'GB_date', N'GB_email', N'GB_homepage', N'GB_ID', N'GB_IP', N'GB_name', N'GB_ReadPost', N'GB_text') AND [object_id] = OBJECT_ID(N'[tbl_gb]'))
         SET IDENTITY_INSERT [tbl_gb] ON;
     EXEC(N'INSERT INTO [tbl_gb] ([ID], [GB_date], [GB_email], [GB_homepage], [GB_ID], [GB_IP], [GB_name], [GB_ReadPost], [GB_text])
@@ -827,6 +861,7 @@ IF NOT EXISTS (
 BEGIN
     ALTER TABLE [tbl_images] ADD [is_game_selectable] bit NOT NULL DEFAULT CAST(1 AS bit);
 END;
+GO
 
 IF NOT EXISTS (
     SELECT * FROM [__EFMigrationsHistory]
