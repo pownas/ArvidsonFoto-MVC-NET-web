@@ -5,7 +5,7 @@ De två SQL-skripten här är genererade från projektets EF Core-migreringar oc
 1. `01-Core.idempotent.sql` – applikationens kärntabeller, inklusive kontaktformulär, översättningar och spelurval.
 2. `02-Identity.idempotent.sql` – ASP.NET Identity-tabeller, inklusive passkeys.
 
-Kärnmigreringen `20261020222500_CreateTblKontaktIfMissing` ser till att `tbl_kontakt`, dess index och standardvärden finns. Den skapar tabellen om den saknas och lämnar befintliga kontaktdata orörda. Dess `Down`-migrering tar avsiktligt inte bort tabellen.
+De två sista kärnmigreringarna kompletterar objekt som finns i den aktuella applikationsmodellen men saknas i den äldre migrationskedjan: `20261020222500_CreateTblKontaktIfMissing` ser till att `tbl_kontakt`, dess index och standardvärden finns, och `20261020222600_AddMenuDateUpdatedIfMissing` lägger till `menu_dateUpdated` om den saknas. De bevarar befintliga data; deras `Down`-migreringar tar avsiktligt inte bort tabellen eller kolumnen.
 
 Kör dem mot samma valda SQL Server-databas, i ordningen ovan. Skripten skapar inte databasen eller SQL Server-användaren. Ta en backup före körning i en befintlig miljö.
 
