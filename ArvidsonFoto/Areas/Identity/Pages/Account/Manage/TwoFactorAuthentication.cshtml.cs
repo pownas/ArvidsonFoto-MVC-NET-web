@@ -11,8 +11,6 @@ public class TwoFactorAuthenticationModel(
     SignInManager<ArvidsonFotoUser> signInManager,
     ILogger<TwoFactorAuthenticationModel> logger) : PageModel
 {
-    private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
-
     private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
     private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
     private readonly ILogger<TwoFactorAuthenticationModel> _logger = logger;
@@ -34,7 +32,7 @@ public class TwoFactorAuthenticationModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
@@ -50,11 +48,11 @@ public class TwoFactorAuthenticationModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await _signInManager.ForgetTwoFactorClientAsync();
-        StatusMessage = "The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.TwoFactorAuthentication.TheCurrentBrowserHasBeenForgotten2faCode");
         return RedirectToPage();
     }
 }

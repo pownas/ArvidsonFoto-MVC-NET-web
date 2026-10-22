@@ -32,15 +32,15 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "E-postadress")]
+        [Display(Name = nameof(IdentityResource.Email), ResourceType = typeof(IdentityResource))]
         public string Email { get; set; } = null!;
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Lösenord")]
+        [Display(Name = nameof(IdentityResource.Password), ResourceType = typeof(IdentityResource))]
         public string Password { get; set; } = null!;
 
-        [Display(Name = "Kom ihåg inloggningen?")]
+        [Display(Name = nameof(IdentityResource.RememberMe), ResourceType = typeof(IdentityResource))]
         public bool RememberMe { get; set; }
     }
 
@@ -62,7 +62,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
         // Clear the existing external cookie to ensure a clean login process
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        ExternalLogins = [.. await _signInManager.GetExternalAuthenticationSchemesAsync()];
 
         ReturnUrl = returnUrl;
     }
@@ -71,12 +71,12 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
     {
         returnUrl ??= Url.Content("~/");
 
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        ExternalLogins = [.. await _signInManager.GetExternalAuthenticationSchemesAsync()];
 
         // Handle passkey sign-in
         if (!string.IsNullOrEmpty(PasskeyInput?.Error))
         {
-            ModelState.AddModelError(string.Empty, $"Passkey-fel: {PasskeyInput.Error}");
+            ModelState.AddModelError(string.Empty, string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.Login.PasskeyFel0"), PasskeyInput.Error));
             return Page();
         }
 
@@ -94,7 +94,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
                 return RedirectToPage("./Lockout");
             }
 
-            ModelState.AddModelError(string.Empty, "Ogiltig passkey-inloggning.");
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Login.OgiltigPasskeyInloggning"));
             return Page();
         }
 
@@ -111,7 +111,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
             }
             if (result.RequiresTwoFactor)
             {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
             }
             if (result.IsLockedOut)
             {
@@ -120,7 +120,7 @@ public class LoginModel(SignInManager<ArvidsonFotoUser> signInManager,
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Login.InvalidLoginAttempt"));
                 return Page();
             }
         }

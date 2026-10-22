@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Views.Shared
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @*<!-- UploadAdmin-index -->*@
 @section MetaData { 
     <meta name="robots" content="noindex" />
@@ -9,7 +10,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Upload Admin<i class="bi bi-cloud-upload ms-1"></i></li>
+        <li class="breadcrumb-item active" aria-current="page">@L["UploadAdmin.Controller.UploadAdmin"]<i class="bi bi-cloud-upload ms-1"></i></li>
     </ol>
 </nav>
 <h2 class="offset-md-4"><i class="bi bi-cloud-upload me-2"></i>@ViewData["Title"]</h2>
@@ -21,8 +22,8 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <h3>Välkommen till Upload Admin!</h3>
-        <p>Här visas lite statistik för hemsidan:</p>
+        <h3>@L["UploadAdmin.Index.WelcomeToUploadAdmin"]</h3>
+        <p>@L["UploadAdmin.Index.HereAreSomeSiteStatistics"]</p>
         <div id="page-statistics">
             <partial name="_HomepageStatistics" />
         </div>

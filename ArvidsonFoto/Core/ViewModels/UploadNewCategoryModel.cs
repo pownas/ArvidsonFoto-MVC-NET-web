@@ -12,11 +12,11 @@ namespace ArvidsonFoto.Core.ViewModels;
 public class UploadNewCategoryModel
 {
     /// <summary>Kategorinamn som ska visas i menyn</summary>
-    [Required(ErrorMessage = "Ange ett kategorinamn")]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminCategoryNameRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     public required string MenuText { get; set; }
 
     /// <summary>Huvudmeny ID som den nya kategorin ska kopplas till</summary>
-    [Required(ErrorMessage = "Välj en kategori att koppla den nya till")]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminCategoryParentRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     public int? MainMenuId { get; set; } = -1;
 
     /// <summary>Indikerar om kategorin har skapats framgångsrikt</summary>

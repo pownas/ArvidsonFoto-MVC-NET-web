@@ -41,14 +41,9 @@ public class FacebookService(IConfiguration configuration, HttpClient httpClient
 
             // För en bild: använd photo endpoint
             // För flera bilder: använd feed endpoint med flera bilder
-            if (imageUrls.Count == 1)
-            {
-                return await CreateSinglePhotoPostAsync(pageId!, pageAccessToken!, imageUrls[0], message);
-            }
-            else
-            {
-                return await CreateMultiPhotoPostAsync(pageId!, pageAccessToken!, imageUrls, message);
-            }
+            return imageUrls.Count == 1
+                ? await CreateSinglePhotoPostAsync(pageId!, pageAccessToken!, imageUrls[0], message)
+                : await CreateMultiPhotoPostAsync(pageId!, pageAccessToken!, imageUrls, message);
         }
         catch (Exception ex)
         {

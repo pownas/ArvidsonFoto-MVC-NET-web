@@ -31,7 +31,7 @@ public class PasskeysModel(
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         CurrentPasskeys = await _userManager.GetPasskeysAsync(user);
@@ -43,40 +43,40 @@ public class PasskeysModel(
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         CurrentPasskeys = await _userManager.GetPasskeysAsync(user);
 
         if (!string.IsNullOrEmpty(Input.Error))
         {
-            StatusMessage = $"Error: {Input.Error}";
+            StatusMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.Manage.Passkeys.Error0"), Input.Error);
             return RedirectToPage();
         }
 
         if (string.IsNullOrEmpty(Input.CredentialJson))
         {
-            StatusMessage = "Error: The browser did not provide a passkey.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.ErrorTheBrowserDidNotProvideAPasskey");
             return RedirectToPage();
         }
 
         if (CurrentPasskeys.Count >= MaxPasskeyCount)
         {
-            StatusMessage = "Error: You have reached the maximum number of allowed passkeys.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.ErrorYouHaveReachedTheMaximumAllowedPasskeys");
             return RedirectToPage();
         }
 
         var attestationResult = await _signInManager.PerformPasskeyAttestationAsync(Input.CredentialJson);
         if (!attestationResult.Succeeded)
         {
-            StatusMessage = $"Error: Could not add the passkey: {attestationResult.Failure?.Message}";
+            StatusMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.Manage.Passkeys.ErrorCouldNotAddThePasskey0"), attestationResult.Failure?.Message);
             return RedirectToPage();
         }
 
         var addPasskeyResult = await _userManager.AddOrUpdatePasskeyAsync(user, attestationResult.Passkey);
         if (!addPasskeyResult.Succeeded)
         {
-            StatusMessage = "Error: The passkey could not be added to your account.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.ErrorThePasskeyCouldNotBeYourAccount");
             return RedirectToPage();
         }
 
@@ -92,7 +92,7 @@ public class PasskeysModel(
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         byte[] credentialIdBytes;
@@ -102,19 +102,19 @@ public class PasskeysModel(
         }
         catch (FormatException)
         {
-            StatusMessage = "Error: The specified passkey ID had an invalid format.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.ErrorTheSpecifiedPasskeyIDHadInvalidFormat");
             return RedirectToPage();
         }
 
         var result = await _userManager.RemovePasskeyAsync(user, credentialIdBytes);
         if (!result.Succeeded)
         {
-            StatusMessage = "Error: The passkey could not be deleted.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.ErrorThePasskeyCouldNotBeDeleted");
             return RedirectToPage();
         }
 
         _logger.LogInformation("User '{UserId}' deleted a passkey.", _userManager.GetUserId(User));
-        StatusMessage = "Passkey deleted successfully.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.Passkeys.PasskeyDeletedSuccessfully");
         return RedirectToPage();
     }
 }

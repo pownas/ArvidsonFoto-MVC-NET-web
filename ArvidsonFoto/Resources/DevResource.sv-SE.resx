@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Dev.Portal.Note" xml:space="preserve">
+    <value>Obs:</value>
+  </data>
+  <data name="Dev.Portal.ManageImagesCategoriesAndViewStatistics" xml:space="preserve">
+    <value>Hantera bilder och kategorier och visa statistik.</value>
+  </data>
+  <data name="Dev.Portal.APIDocumentation" xml:space="preserve">
+    <value>API-dokumentation</value>
+  </data>
+  <data name="Dev.Portal.ManageGuestbook" xml:space="preserve">
+    <value>Hantera gästboken</value>
+  </data>
+  <data name="Dev.Portal.OpenScalarAPIDocs" xml:space="preserve">
+    <value>Öppna Scalar API-dokumentation</value>
+  </data>
+  <data name="Dev.Portal.ViewOpenAPIJSON" xml:space="preserve">
+    <value>Visa OpenAPI-JSON</value>
+  </data>
+  <data name="Dev.Portal.MainWebsite" xml:space="preserve">
+    <value>Webbplatsen</value>
+  </data>
+  <data name="Dev.Portal.AuthenticationRequired" xml:space="preserve">
+    <value>Inloggning krävs.</value>
+  </data>
+  <data name="Dev.Portal.Sitemap" xml:space="preserve">
+    <value>Webbplatskarta</value>
+  </data>
+  <data name="Dev.Portal.RunningViaNETAspire" xml:space="preserve">
+    <value>Körs med .NET Aspire</value>
+  </data>
+  <data name="Dev.Portal.QuickLinks" xml:space="preserve">
+    <value>Snabblänkar</value>
+  </data>
+  <data name="Dev.Portal.ThisPageIsOnlyAccessibleInDevelopmentMode" xml:space="preserve">
+    <value>Den här sidan är bara tillgänglig i utvecklingsläge</value>
+  </data>
+  <data name="Dev.Portal.AdminPanel" xml:space="preserve">
+    <value>Administrationspanel</value>
+  </data>
+  <data name="Dev.Portal.DevelopmentTools" xml:space="preserve">
+    <value>Utvecklingsverktyg</value>
+  </data>
+  <data name="Dev.Portal.Login" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Dev.Portal.Environment" xml:space="preserve">
+    <value>Miljö</value>
+  </data>
+  <data name="Dev.Portal.QuickAccessToDevelopmentToolsAndAdminFeatures" xml:space="preserve">
+    <value>Snabb åtkomst till utvecklingsverktyg och administrationsfunktioner</value>
+  </data>
+  <data name="Dev.Portal.EditImages" xml:space="preserve">
+    <value>Redigera bilder</value>
+  </data>
+  <data name="Dev.Portal.DevelopmentAdminPortal" xml:space="preserve">
+    <value>Utvecklings- och administrationsportal</value>
+  </data>
+  <data name="Dev.Portal.OpenAdminPanel" xml:space="preserve">
+    <value>Öppna administrationspanelen</value>
+  </data>
+  <data name="Dev.Intro" xml:space="preserve">
+    <value>Interaktiv API-dokumentation med Scalar. Utforska alla slutpunkter, testa anrop och visa svarsscheman.</value>
+  </data>
+  <data name="Dev.Aspire" xml:space="preserve">
+    <value>Den här portalen nås via Aspire AppHost. Se Aspire-instrumentpanelen för fler verktyg för övervakning och felsökning.</value>
+  </data>
+  <data name="Dev.InMemoryDatabase" xml:space="preserve">
+    <value>Databas i minnet</value>
+  </data>
+  <data name="Dev.DevelopmentMode" xml:space="preserve">
+    <value>Utvecklingsläge</value>
+  </data>
+  <data name="Dev.ConsoleLogging" xml:space="preserve">
+    <value>Konsolloggning</value>
+  </data>
+  <data name="Dev.CorsEnabled" xml:space="preserve">
+    <value>CORS aktiverat</value>
+  </data>
+</root>

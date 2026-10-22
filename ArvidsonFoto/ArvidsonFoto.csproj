@@ -19,6 +19,10 @@
   <ItemGroup Label="PackageReferences">
     <PackageReference Include="Azure.Identity" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="MailKit" /> <!-- Används för att skicka mail från kontakt-/köp av bilder sidan -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="MimeKit" /> <!-- Används för kryptering av skicka mail -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" /> <!-- Osäker vart denna används... -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" /> <!-- Används för inloggning på sidan -->
@@ -36,6 +40,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Core" /> <!-- För CSS/JS minifiering och bundling -->
     <PackageReference Include="LigerShark.WebOptimizer.Sass" /> <!-- För SCSS kompilering -->
     <PackageReference Include="JavaScriptEngineSwitcher.V8" /> <!-- JavaScript engine för SCSS kompilering -->
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" /> <!-- Native V8-bibliotek saknas annars på Windows ARM64 -->
     <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" /> <!-- DI för JS engine -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" /> <!-- OpenAPI support -->
     <PackageReference Include="Scalar.AspNetCore" /> <!-- Scalar UI för OpenAPI dokumentation -->

@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Views.Shared
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.Interfaces
 @model UploadEditImagesViewModel
 
@@ -13,7 +14,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-pencil-square ms-1"></i></li>
     </ol>
 </nav>
@@ -27,18 +28,18 @@
     <div class="col-12 col-md-8">
         @if (Model!.DisplayMessage is not null && Model.DisplayMessage.Equals("ErrorImgEdit") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-danger bg-danger text-light">Något gick fel vid redigering av bilden med nummer: <span class="text-dark">@Model.UpdatedId</span></h5>
+            <h5 class="alert alert-danger bg-danger text-light">@L["UploadAdmin.RedigeraBilder.FailedToEditImageNumber"] <span class="text-dark">@Model.UpdatedId</span></h5>
         }
         else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgDelete") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-success bg-success text-dark">Har nu raderat länkningen för bilden med nummer: <span class="text-light">@Model.UpdatedId</span></h5>
+            <h5 class="alert alert-success bg-success text-dark">@L["UploadAdmin.RedigeraBilder.DeletedTheLinkForImageNumber"] <span class="text-light">@Model.UpdatedId</span></h5>
         }
         else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgEdit") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-success bg-success text-dark">Har nu sparat ändringar för bilden: <span class="text-light">@_categoryService.GetNameById(Model.UpdatedId)</span></h5>
+            <h5 class="alert alert-success bg-success text-dark">@L["UploadAdmin.RedigeraBilder.SavedChangesForImage"] <span class="text-light">@_categoryService.GetNameById(Model.UpdatedId)</span></h5>
         }
-        <p>Här nedanför kan du redigera bland de senaste bilderna:</p>
-        <p class="">(du kan scrolla i sidled på telefonen)</p>
+        <p>@L["UploadAdmin.RedigeraBilder.EditTheLatestImagesBelow"]</p>
+        <p class="">@L["UploadAdmin.RedigeraBilder.YouCanScrollHorizontallyOnYourPhone"]</p>
     </div>
 </div>
 <div class="col-12">
@@ -46,14 +47,14 @@
         <table class="table table-bordered table-striped table-dark">
             <thead>
                 <tr>
-                    <th scope="col">Bild</th>
-                    <th scope="col">Bildnamn</th>
-                    <th scope="col">Art</th>
-                    <th scope="col">Familj</th>
-                    <th scope="col">HuvudFamilj</th>
-                    <th scope="col">Fotodatum</th>
-                    <th scope="col">Beskrivning</th>
-                    <th scope="col">Redigera</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Image"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.ImageName"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Species"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Family"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.MainFamily"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.PhotoDate"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Description"]</th>
+                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Edit"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,13 +73,13 @@
                             <td>@image.ImageDescription</td>
                             <td>
                                 <p class="m-0 mb-3">
-                                    <button title="Ändra @image.ImageUrl" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
-                                        <i class="bi bi-pencil-square me-2"></i> Ändra
+                                    <button title="@L["UploadAdmin.Images.EditTitle", image.ImageUrl]" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
+                                        <i class="bi bi-pencil-square me-2"></i> @L["UploadAdmin.RedigeraBilder.Change"]
                                     </button>
                                 </p>
                                 <p class="m-0">
-                                    <button title="Radera @image.ImageUrl" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
-                                        <i class="bi bi-trash me-2"></i> Radera
+                                    <button title="@L["UploadAdmin.Images.DeleteTitle", image.ImageUrl]" type="button" class="btn btn-sm btn-danger" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#DeleteImage-@image.ImageId">
+                                        <i class="bi bi-trash me-2"></i> @L["UploadAdmin.HanteraGB.Delete"]
                                     </button>
                                 </p>
                             </td>
@@ -88,7 +89,7 @@
                 catch (Exception ex)
                 {
                     <tr>
-                        <td colspan="8">Hittade inga bilder</td>
+                        <td colspan="8">@L["UploadAdmin.RedigeraBilder.NoImagesFound"]</td>
                     </tr>
                     Log.Error("Något gick fel på RedigeraBilder-sidan. Felmeddelande: " + ex.Message);
                 }
@@ -106,9 +107,9 @@
                     <div class="modal-content text-dark">
                         <div class="modal-header">
                             <h5 class="modal-title" id="EditImage-@image.ImageId-Label">
-                                Ändra bilden: @image.ImageUrl på @image.ImageArtNamn
+                                @L["Admin.EditImage", image.ImageUrl, image.ImageArtNamn]
                             </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["UploadAdmin.HanteraGB.Close"]"></button>
                         </div>
                         <partial name="_EditImageInputForm" model="@image" /> @*<!-- Formuläret för att ändra på bilden ligger i denna filen... -->*@
                     </div>
@@ -121,22 +122,22 @@
                     <div class="modal-content text-dark">
                         <div class="modal-header">
                             <h5 class="modal-title" id="DeleteImage-@image.ImageId-Label">
-                                Radera bilden: @image.ImageUrl på @image.ImageArtNamn?
+                                @L["Admin.DeleteImage", image.ImageUrl, image.ImageArtNamn]
                             </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["UploadAdmin.HanteraGB.Close"]"></button>
                         </div>
                         <div class="modal-body">
                             <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
-                            <p>Vill du ta bort denna bilden på @image.ImageArtNamn?</p>
-                            <p><strong>Filnamn:</strong> @image.ImageUrl</p>
-                            <p><strong>Uppladdad:</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
+                            <p>@L["Admin.ConfirmDeleteImage", image.ImageArtNamn]</p>
+                            <p><strong>@L["UploadAdmin.RedigeraBilder.FileName"]</strong> @image.ImageUrl</p>
+                            <p><strong>@L["UploadAdmin.RedigeraBilder.Uploaded"]</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                Avbryt <i class="bi bi-x-circle"></i>
+                                @L["UploadAdmin.FacebookUpload.Cancel"] <i class="bi bi-x-circle"></i>
                             </button>
                             <a href="/UploadAdmin/DeleteImage?imgId=@image.ImageId" class="btn btn-danger">
-                                Radera <i class="bi bi-trash"></i>
+                                @L["UploadAdmin.HanteraGB.Delete"] <i class="bi bi-trash"></i>
                             </a>
                             @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
                                 Radera bilden <i class="bi bi-trash"></i>
@@ -148,31 +149,31 @@
         }
     </section>
 
-    <p id="page-image-counter-bottom" class="text-center">Antal bilder: @(Model.DisplayImagesList.Count)st , sida: @Model.CurrentPage av @Model.TotalPages</p>
+    <p id="page-image-counter-bottom" class="text-center">@L["Admin.ImageCount", Model.DisplayImagesList.Count, Model.CurrentPage, Model.TotalPages]</p>
     @if (Model.TotalPages > 1) // === Page-counter (Sidräknaren) ===
     {
-        <nav id="page-paging-bottom" aria-label="Page navigation example">
+        <nav id="page-paging-bottom" aria-label="@L["UploadAdmin.Images.PaginationLabel"]">
             <ul class="pagination justify-content-center">
                 @if (Model.CurrentPage > 1)
                 {
-                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">Första</a></li>
-                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="Föregående"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)">@L["UploadAdmin.RedigeraBilder.First"]</a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage - 1)" aria-label="@L["UploadAdmin.RedigeraBilder.Previous"]"><span aria-hidden="true">« @(Model.CurrentPage - 1)</span></a></li>
                 }
                 else
                 {
-                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Första</a></li>
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@L["UploadAdmin.RedigeraBilder.First"]</a></li>
                     <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">«</a></li>
                 }
-                <li class="page-item active"><a class="page-link" aria-label="Nuvarande">@(Model.CurrentPage)<span class="sr-only"> (nuvarande)</span></a></li>
+                <li class="page-item active"><a class="page-link" aria-label="@L["UploadAdmin.RedigeraBilder.Current"]">@(Model.CurrentPage)<span class="sr-only"> @L["UploadAdmin.RedigeraBilder.Current2"]</span></a></li>
                 @if (Model.CurrentPage == Model.TotalPages)
                 {
                     <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true"> »</a></li>
-                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">Sista</a></li>
+                    <li class="page-item disabled"><a class="page-link" tabindex="-1" aria-disabled="true">@L["UploadAdmin.RedigeraBilder.Last"]</a></li>
                 }
                 else
                 {
-                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="Nästa">@(Model.CurrentPage + 1) »</a></li>
-                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">Sista</a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.CurrentPage + 1)" aria-label="@L["UploadAdmin.RedigeraBilder.Next"]">@(Model.CurrentPage + 1) »</a></li>
+                    <li class="page-item"><a class="page-link" href="@(Model.CurrentUrl)?sida=@(Model.TotalPages)">@L["UploadAdmin.RedigeraBilder.Last"]</a></li>
                 }
             </ul>
         </nav>

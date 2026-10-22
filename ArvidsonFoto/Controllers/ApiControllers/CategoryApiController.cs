@@ -81,6 +81,48 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         return apiCategoryService.GetAll();
     }
 
+    [AllowAnonymous]
+    [HttpGet("/api/game/categories")]
+    [ProducesResponseType<List<CategoryDto>>(StatusCodes.Status200OK)]
+    public List<CategoryDto> GetGameSelectableCategories()
+    {
+        logger.LogInformation("Game API - GetGameSelectableCategories called.");
+        var categories = apiCategoryService.GetAll();
+        var categoriesById = categories
+            .Where(category => category.CategoryId.HasValue)
+            .ToDictionary(category => category.CategoryId!.Value);
+
+        return categories
+            .Where(category => IsCategoryTreeGameSelectable(category.CategoryId, categoriesById))
+            .ToList();
+    }
+
+    private static bool IsCategoryTreeGameSelectable(
+        int? categoryId,
+        IReadOnlyDictionary<int, CategoryDto> categories)
+    {
+        if (categoryId is null or <= 0)
+        {
+            return false;
+        }
+
+        var visited = new HashSet<int>();
+        var currentId = categoryId.Value;
+        while (currentId > 0)
+        {
+            if (!visited.Add(currentId)
+                || !categories.TryGetValue(currentId, out var category)
+                || !category.IsGameSelectable)
+            {
+                return false;
+            }
+
+            currentId = category.ParentCategoryId ?? 0;
+        }
+
+        return true;
+    }
+
     /// <summary>
     /// Tests the multi-level category path resolution without returning images.
     /// </summary>
@@ -134,9 +176,9 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     pathInfo.Add(new
                     {
                         Level = "Main",
-                        Name = category.Name,
+                        category.NameSv,
                         Id = category.CategoryId,
-                        UrlSegment = category.UrlCategoryPath?.ToLowerInvariant()
+                        UrlSegment = category.UrlCategoryPathSv?.ToLowerInvariant()
                     });
                 }
                 else
@@ -144,23 +186,25 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
                     // Find the child category under the current parent
                     var children = apiCategoryService.GetChildrenByParentId(currentCategoryId.Value);
                     var matchingChild = children.FirstOrDefault(c =>
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
-                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
+                        c.UrlCategoryPathSv!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.UrlCategoryPathEn!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.NameSv.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
+                        c.NameEn!.Equals(segment, StringComparison.OrdinalIgnoreCase));
 
                     if (matchingChild == null)
                     {
                         return NotFound($"Category '{segment}' not found under parent category");
                     }
-                    matchingChild.UrlCategoryPath = matchingChild.UrlCategoryPath!.ToLowerInvariant();
+                    matchingChild.UrlCategoryPathSv = matchingChild.UrlCategoryPathSv!.ToLowerInvariant();
 
 
                     currentCategoryId = matchingChild.CategoryId;
                     pathInfo.Add(new
                     {
                         Level = $"Level {pathInfo.Count + 1}",
-                        Name = matchingChild.Name,
+                        matchingChild.NameSv,
                         Id = matchingChild.CategoryId,
-                        UrlSegment = matchingChild.UrlCategoryPath
+                        UrlSegment = matchingChild.UrlCategoryPathSv
                     });
                 }
             }
@@ -214,7 +258,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         {
             logger.LogInformation("Category - GetAllPublicCached called");
             var allCategories = apiCategoryService.GetAll();
-            return Ok(allCategories ?? new List<CategoryDto>());
+            return Ok(allCategories ?? []);
         }
         catch (Exception ex)
         {
@@ -261,17 +305,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
 
             var category = apiCategoryService.GetById(categoryId);
 
-            if (category == null || category.CategoryId == -1)
-            {
-                return Problem(
+            return category == null || category.CategoryId == -1
+                ? Problem(
                     title: "Category Not Found",
                     detail: $"No category found with ID {categoryId}",
                     statusCode: StatusCodes.Status404NotFound,
                     type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
-                );
-            }
-
-            return Ok(category);
+                )
+                : (IActionResult)Ok(category);
         }
         catch (Exception ex)
         {
@@ -315,7 +356,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             }
 
             var subcategories = apiCategoryService.GetChildrenByParentId(categoryId);
-            return Ok(subcategories ?? new List<CategoryDto>());
+            return Ok(subcategories ?? []);
         }
         catch (Exception ex)
         {
@@ -346,7 +387,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             logger.LogInformation("Category - GetChildren called with ID: {CategoryId}", categoryId);
 
             var children = apiCategoryService.GetChildrenByParentId(categoryId ?? 0);
-            return Ok(children ?? new List<CategoryDto>());
+            return Ok(children ?? []);
         }
         catch (Exception ex)
         {
@@ -392,17 +433,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
 
             var categoryName = apiCategoryService.GetNameById(categoryId);
 
-            if (categoryName == "Not found" || string.IsNullOrEmpty(categoryName))
-            {
-                return Problem(
+            return categoryName == "Not found" || string.IsNullOrEmpty(categoryName)
+                ? Problem(
                     title: "Category Not Found",
                     detail: $"No category found with ID {categoryId}",
                     statusCode: StatusCodes.Status404NotFound,
                     type: "https://tools.ietf.org/html/rfc7231#section-6.5.4"
-                );
-            }
-
-            return Ok(categoryName);
+                )
+                : (IActionResult)Ok(categoryName);
         }
         catch (Exception ex)
         {
@@ -508,7 +546,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
         {
             logger.LogInformation("Category - GetMainCategories called");
             var mainCategories = apiCategoryService.GetMainCategories();
-            return Ok(mainCategories ?? new List<CategoryDto>());
+            return Ok(mainCategories ?? []);
         }
         catch (Exception ex)
         {
@@ -679,9 +717,14 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
             var lightweightCategories = allCategories.Select(c => new
             {
                 categoryId = c.CategoryId,
-                name = c.Name,
-                urlCategoryPath = c.UrlCategoryPath,
-                urlCategoryPathFull = c.UrlCategoryPathFull,
+                nameSv = c.NameSv,
+                nameEn = c.NameEn,
+                urlCategorySv = c.UrlCategorySv,
+                urlCategoryEn = c.UrlCategoryEn,
+                urlCategoryPathSv = c.UrlCategoryPathSv,
+                urlCategoryPathEn = c.UrlCategoryPathEn,
+                urlCategoryPathFullSv = c.UrlCategoryPathFullSv,
+                urlCategoryPathFullEn = c.UrlCategoryPathFullEn,
                 parentCategoryId = c.ParentCategoryId
             }).ToList();
 

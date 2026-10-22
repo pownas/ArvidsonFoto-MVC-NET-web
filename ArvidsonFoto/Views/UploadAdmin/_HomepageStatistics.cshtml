@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Core.Models
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Core.Models
 @using ArvidsonFoto.Core.Interfaces
 @inject IApiImageService _imageService
 @inject IApiCategoryService _categoryService
@@ -18,19 +19,19 @@
 
 <!-- Chart.js för sidvisningar per månad -->
 <div class="mb-4">
-    <h4>Sidvisningar senaste 6 månaderna</h4>
+    <h4>@L["UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months"]</h4>
     <div style="width: 100%; height: 400px;">
         <canvas id="pageViewsChart"></canvas>
     </div>
 </div>
 
-<h4>Sidvisningar per sida, denna månaden (@(DateTime.Now.ToString("yyyy-MM")))</h4>
+<h4>@L["Admin.ThisMonthPageViews", DateTime.Now.ToString("yyyy-MM")]</h4>
 <table class="table table-striped table-dark">
     <thead>
         <tr>
-            <th scope="col" class="col-3">Visningar</th>
-            <th scope="col" class="col-5">Kategori</th>
-            <th scope="col" class="col-4">Senast besökt</th>
+            <th scope="col" class="col-3">@L["UploadAdmin.Statistik.Views"]</th>
+            <th scope="col" class="col-5">@L["UploadAdmin.Statistik.Category"]</th>
+            <th scope="col" class="col-4">@L["UploadAdmin.Statistik.LastVisited"]</th>
         </tr>
     </thead>
     <tbody>
@@ -45,13 +46,13 @@
     </tbody>
 </table>
 
-<h4>10 mest visade kategorierna, denna månaden (@(DateTime.Now.ToString("yyyy-MM")))</h4>
+<h4>@L["Admin.ThisMonthCategories", DateTime.Now.ToString("yyyy-MM")]</h4>
 <table class="table table-striped table-dark">
     <thead>
         <tr>
-            <th scope="col" class="col-3">Visningar</th>
-            <th scope="col" class="col-5">Kategori</th>
-            <th scope="col" class="col-4">Senast besökt</th>
+            <th scope="col" class="col-3">@L["UploadAdmin.Statistik.Views"]</th>
+            <th scope="col" class="col-5">@L["UploadAdmin.Statistik.Category"]</th>
+            <th scope="col" class="col-4">@L["UploadAdmin.Statistik.LastVisited"]</th>
         </tr>
     </thead>
     <tbody>
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Formatera månadslabels för bättre visning
     const monthLabels = months.map(month => {
         const date = new Date(month + '-01');
-        return date.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short' });
+        return date.toLocaleDateString('@System.Globalization.CultureInfo.CurrentUICulture.Name', { year: 'numeric', month: 'short' });
     });
     
     // Kontrollera om Chart.js har laddats
@@ -93,13 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: monthLabels,
                 datasets: [{
-                    label: 'Sidvisningar',
+                    label: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Views"].Value)),
                     data: pageViews,
                     borderColor: 'rgb(75, 192, 192)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     tension: 0.1
                 }, {
-                    label: 'Kategorivisningar',
+                    label: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.CategoryViews"].Value)),
                     data: categoryViews,
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Sidvisningar per månad (senaste 6 månaderna)'
+                        text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.ChartTitle"].Value))
                     },
                     legend: {
                         display: true
@@ -133,11 +134,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const canvas = document.getElementById('pageViewsChart');
         const fallbackDiv = document.createElement('div');
         fallbackDiv.className = 'alert alert-info';
+        const heading = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.ChartFallback"].Value));
+        const monthHeading = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Month"].Value));
+        const viewsHeading = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Views"].Value));
+        const categoryHeading = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.CategoryViews"].Value));
         fallbackDiv.innerHTML = `
-            <h5>Månadsvis statistik (Chart.js kunde inte laddas)</h5>
+            <h5>${heading}</h5>
             <table class="table table-sm table-striped">
                 <thead>
-                    <tr><th>Månad</th><th>Sidvisningar</th><th>Kategorivisningar</th></tr>
+                    <tr><th>${monthHeading}</th><th>${viewsHeading}</th><th>${categoryHeading}</th></tr>
                 </thead>
                 <tbody>
                     ${monthLabels.map((label, i) => 

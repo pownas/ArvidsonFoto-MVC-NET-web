@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Controllers;
+﻿using System.Globalization;
+using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Tests.Unit.MockServices;
 using Microsoft.AspNetCore.Http;
@@ -7,12 +8,16 @@ using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace ArvidsonFoto.Tests.Unit.ControllerTests;
 
-public class BilderControllerTests
+public class BilderControllerTests : IDisposable
 {
     private readonly BilderController _controller;
+    private readonly CultureInfo _originalCulture;
 
     public BilderControllerTests()
     {
+        _originalCulture = CultureInfo.CurrentUICulture;
+        CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+
         var mockImageService = new MockImageService();
         var mockApiCategoryService = new MockApiCategoryService();
         var mockPageCounterService = new MockPageCounterService();
@@ -36,6 +41,11 @@ public class BilderControllerTests
         _controller.Url = urlHelper;
     }
 
+    public void Dispose()
+    {
+        CultureInfo.CurrentUICulture = _originalCulture;
+    }
+
     [Fact]
     public void Index_ReturnsViewResult_WithGalleryViewModel()
     {
@@ -48,9 +58,9 @@ public class BilderControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/Fåglar", model.CurrentUrl);
+        Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Fåglar", model.SelectedCategory.Name);
+        Assert.Equal("Fåglar", model.SelectedCategory.NameSv);
     }
 
     [Fact]
@@ -70,7 +80,7 @@ public class BilderControllerTests
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
         Assert.Equal("/Bilder/Tättingar/Mesar/Blåmes", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
-        Assert.Equal("Blåmes", model.SelectedCategory.Name);
+        Assert.Equal("Blåmes", model.SelectedCategory.NameSv);
     }
 
     [Fact]
@@ -97,9 +107,8 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        // Controller använder GetNameById som returnerar MenuText (display-namn), inte MenuUrltext
-        Assert.Equal("/Bilder/Fåglar", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.Equal("/Bilder/Faglar", redirectResult.Url);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]
@@ -114,7 +123,7 @@ public class BilderControllerTests
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
         Assert.Equal("/Bilder/Insekter", redirectResult.Url);
-        Assert.True(redirectResult.Permanent);
+        Assert.False(redirectResult.Permanent);
     }
 
     [Fact]
@@ -174,7 +183,7 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("./Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
         Assert.False(redirectResult.Permanent);
     }
 
@@ -189,7 +198,7 @@ public class BilderControllerTests
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("./Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
     }
 
     [Fact]

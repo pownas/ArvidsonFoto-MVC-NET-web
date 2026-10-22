@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
 @model FacebookUploadViewModel
 
@@ -10,7 +11,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-facebook ms-1"></i></li>
     </ol>
 </nav>
@@ -25,10 +26,10 @@
         @if (Model!.DisplayMessage == "Success" && !string.IsNullOrEmpty(Model.FacebookPostUrl))
         {
             <div class="alert alert-success bg-success text-dark">
-                <h5><i class="bi bi-check-circle me-2"></i>Inlägget har publicerats på Facebook!</h5>
+                <h5><i class="bi bi-check-circle me-2"></i>@L["UploadAdmin.FacebookUpload.ThePostWasPublishedOnFacebook"]</h5>
                 <p class="mb-0">
                     <a href="@Model.FacebookPostUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
-                        <i class="bi bi-box-arrow-up-right me-1"></i>Visa inlägget på Facebook
+                        <i class="bi bi-box-arrow-up-right me-1"></i>@L["UploadAdmin.FacebookUpload.ViewPostOnFacebook"]
                     </a>
                 </p>
             </div>
@@ -36,55 +37,55 @@
         else if (Model.DisplayMessage == "FacebookError")
         {
             <div class="alert alert-danger bg-danger text-light">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Fel vid publicering</h5>
-                <p class="mb-0">Något gick fel vid kommunikationen med Facebook. Kontrollera inställningarna och försök igen.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.PublishingFailed"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.CommunicationWithFacebookFailedCheckTheTryAgain"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "NotConfigured")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Facebook är inte konfigurerat</h5>
-                <p class="mb-0">Facebook-integreringen är inte konfigurerad. Kontakta administratören.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.FacebookIsNotConfigured"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.FacebookIntegrationIsNotConfiguredContactTheAdministrator"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "NoImagesSelected")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Inga bilder valda</h5>
-                <p class="mb-0">Du måste välja minst en bild att dela.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.NoImagesSelected"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.YouMustSelectAtLeastOneToShare"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "ValidationError")
         {
             <div class="alert alert-warning bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Valideringsfel</h5>
-                <p class="mb-0">Kontrollera att du fyllt i alla obligatoriska fält korrekt.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.ValidationError"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.CheckThatAllRequiredFieldsAreInCorrectly"]</p>
             </div>
         }
         else if (Model.DisplayMessage == "Error")
         {
             <div class="alert alert-danger bg-danger text-light">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Ett fel inträffade</h5>
-                <p class="mb-0">Ett oväntat fel inträffade. Försök igen senare.</p>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>@L["UploadAdmin.FacebookUpload.AnErrorOccurred"]</h5>
+                <p class="mb-0">@L["UploadAdmin.FacebookUpload.AnUnexpectedErrorOccurredTryAgainLater"]</p>
             </div>
         }
 
-        <p>Välj 1-10 bilder från de senast uppladdade bilderna och skapa ett Facebook-inlägg:</p>
+        <p>@L["UploadAdmin.FacebookUpload.Select110RecentlyUploadedImagesToFacebookPost"]</p>
         
         <form method="post" asp-action="CreateFacebookPost" asp-controller="UploadAdmin" id="facebookUploadForm">
             @Html.AntiForgeryToken()
             
             <div class="mb-3">
-                <label for="message" class="form-label">Meddelande till inlägget <span class="text-danger">*</span></label>
+                <label for="message" class="form-label">@L["UploadAdmin.FacebookUpload.PostMessage"] <span class="text-danger">*</span></label>
                 <textarea class="form-control" id="message" name="Message" rows="4" maxlength="5000" required 
-                          placeholder="Skriv en text som ska följa med bilderna på Facebook..."></textarea>
-                <div class="form-text">Max 5000 tecken</div>
+                          placeholder="@L["UploadAdmin.FacebookUpload.WriteAMessageToAccompanyTheOnFacebook"]"></textarea>
+                <div class="form-text">@L["UploadAdmin.FacebookUpload.Maximum5000Characters"]</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Välj bilder (1-10 st) <span class="text-danger">*</span></label>
-                <div id="selectedCount" class="badge bg-secondary mb-2">0 valda</div>
-                <p class="text-muted small">Klicka på bilderna för att välja/avvälja dem. Du kan välja mellan 1 och 10 bilder.</p>
+                <label class="form-label">@L["UploadAdmin.FacebookUpload.SelectImages110"] <span class="text-danger">*</span></label>
+                <div id="selectedCount" class="badge bg-secondary mb-2">@L["UploadAdmin.FacebookUpload.Number0Selected"]</div>
+                <p class="text-muted small">@L["UploadAdmin.FacebookUpload.ClickImagesToSelectOrDeselect10Images"]</p>
             </div>
 
             <div class="row" id="imageGrid">
@@ -103,7 +104,7 @@
                                            name="SelectedImageIds" value="@image.ImageId" 
                                            id="img-@image.ImageId">
                                     <label class="form-check-label small" for="img-@image.ImageId">
-                                        Välj
+                                        @L["UploadAdmin.FacebookUpload.Select"]
                                     </label>
                                 </div>
                             </div>
@@ -114,10 +115,10 @@
 
             <div class="mt-4 mb-4">
                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                    <i class="bi bi-facebook me-2"></i>Publicera på Facebook
+                    <i class="bi bi-facebook me-2"></i>@L["UploadAdmin.FacebookUpload.PublishOnFacebook"]
                 </button>
                 <a href="/UploadAdmin" class="btn btn-secondary btn-lg">
-                    <i class="bi bi-x-circle me-2"></i>Avbryt
+                    <i class="bi bi-x-circle me-2"></i>@L["UploadAdmin.FacebookUpload.Cancel"]
                 </a>
             </div>
         </form>
@@ -135,7 +136,7 @@
 
             function updateSelectedCount() {
                 const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
-                selectedCountBadge.textContent = checkedCount + ' valda';
+                selectedCountBadge.textContent = @(Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.SelectedCount"].Value))).replace('{0}', checkedCount);
                 
                 if (checkedCount === 0) {
                     selectedCountBadge.classList.remove('bg-primary', 'bg-success');
@@ -205,25 +206,25 @@
                 
                 if (checkedCount === 0) {
                     e.preventDefault();
-                    alert('Du måste välja minst en bild!');
+                    alert(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.SelectOne"].Value)));
                     return false;
                 }
                 
                 if (checkedCount > maxImages) {
                     e.preventDefault();
-                    alert('Du kan välja max ' + maxImages + ' bilder!');
+                    alert(@(Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.MaxImages"].Value))).replace('{0}', maxImages));
                     return false;
                 }
                 
                 if (message === '') {
                     e.preventDefault();
-                    alert('Du måste skriva ett meddelande!');
+                    alert(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.MessageRequired"].Value)));
                     return false;
                 }
                 
                 // Disable submit button to prevent double submission
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Publicerar...';
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Publishing"].Value));
             });
         })();
     </script>

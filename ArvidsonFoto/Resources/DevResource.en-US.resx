@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Dev.Portal.Note" xml:space="preserve">
+    <value>Note:</value>
+  </data>
+  <data name="Dev.Portal.ManageImagesCategoriesAndViewStatistics" xml:space="preserve">
+    <value>Manage images, categories, and view statistics.</value>
+  </data>
+  <data name="Dev.Portal.APIDocumentation" xml:space="preserve">
+    <value>API Documentation</value>
+  </data>
+  <data name="Dev.Portal.ManageGuestbook" xml:space="preserve">
+    <value>Manage Guestbook</value>
+  </data>
+  <data name="Dev.Portal.OpenScalarAPIDocs" xml:space="preserve">
+    <value>Open Scalar API Docs</value>
+  </data>
+  <data name="Dev.Portal.ViewOpenAPIJSON" xml:space="preserve">
+    <value>View OpenAPI JSON</value>
+  </data>
+  <data name="Dev.Portal.MainWebsite" xml:space="preserve">
+    <value>Main Website</value>
+  </data>
+  <data name="Dev.Portal.AuthenticationRequired" xml:space="preserve">
+    <value>Authentication required.</value>
+  </data>
+  <data name="Dev.Portal.Sitemap" xml:space="preserve">
+    <value>Sitemap</value>
+  </data>
+  <data name="Dev.Portal.RunningViaNETAspire" xml:space="preserve">
+    <value>Running via .NET Aspire</value>
+  </data>
+  <data name="Dev.Portal.QuickLinks" xml:space="preserve">
+    <value>Quick Links</value>
+  </data>
+  <data name="Dev.Portal.ThisPageIsOnlyAccessibleInDevelopmentMode" xml:space="preserve">
+    <value>This page is only accessible in Development mode</value>
+  </data>
+  <data name="Dev.Portal.AdminPanel" xml:space="preserve">
+    <value>Admin Panel</value>
+  </data>
+  <data name="Dev.Portal.DevelopmentTools" xml:space="preserve">
+    <value>Development Tools</value>
+  </data>
+  <data name="Dev.Portal.Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Dev.Portal.Environment" xml:space="preserve">
+    <value>Environment</value>
+  </data>
+  <data name="Dev.Portal.QuickAccessToDevelopmentToolsAndAdminFeatures" xml:space="preserve">
+    <value>Quick access to development tools and admin features</value>
+  </data>
+  <data name="Dev.Portal.EditImages" xml:space="preserve">
+    <value>Edit Images</value>
+  </data>
+  <data name="Dev.Portal.DevelopmentAdminPortal" xml:space="preserve">
+    <value>Development &amp; Admin Portal</value>
+  </data>
+  <data name="Dev.Portal.OpenAdminPanel" xml:space="preserve">
+    <value>Open Admin Panel</value>
+  </data>
+  <data name="Dev.Intro" xml:space="preserve">
+    <value>Interactive API documentation powered by Scalar. Explore all endpoints, test requests, and view response schemas.</value>
+  </data>
+  <data name="Dev.Aspire" xml:space="preserve">
+    <value>This portal is accessible through the Aspire AppHost. Check the Aspire dashboard for more monitoring and debugging tools.</value>
+  </data>
+  <data name="Dev.InMemoryDatabase" xml:space="preserve">
+    <value>In-Memory Database</value>
+  </data>
+  <data name="Dev.DevelopmentMode" xml:space="preserve">
+    <value>Development Mode</value>
+  </data>
+  <data name="Dev.ConsoleLogging" xml:space="preserve">
+    <value>Console Logging</value>
+  </data>
+  <data name="Dev.CorsEnabled" xml:space="preserve">
+    <value>CORS Enabled</value>
+  </data>
+</root>

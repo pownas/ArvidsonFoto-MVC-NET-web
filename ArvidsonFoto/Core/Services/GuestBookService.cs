@@ -22,15 +22,15 @@ public class GuestBookService(ArvidsonFotoCoreDbContext context) : IGuestBookSer
 
     public List<TblGb> GetAll()
     {
-        return _entityContext.TblGbs.OrderByDescending(g => g.GbId).ToList();
+        return [.. _entityContext.TblGbs.OrderByDescending(g => g.GbId)];
     }
 
     public bool CreateGBpost(TblGb gb)
     {
         try
         {
-            _entityContext.TblGbs.Add(gb);
-            _entityContext.SaveChanges();
+            _ = _entityContext.TblGbs.Add(gb);
+            _ = _entityContext.SaveChanges();
             return true;
         }
         catch (Exception ex)
@@ -48,7 +48,7 @@ public class GuestBookService(ArvidsonFotoCoreDbContext context) : IGuestBookSer
             if (gb != null)
             {
                 gb.GbReadPost = true;
-                _entityContext.SaveChanges();
+                _ = _entityContext.SaveChanges();
                 return true;
             }
             return false;
@@ -67,8 +67,8 @@ public class GuestBookService(ArvidsonFotoCoreDbContext context) : IGuestBookSer
             TblGb? gb = _entityContext.TblGbs.FirstOrDefault(gb => gb.GbId == gbId);
             if (gb != null)
             {
-                _entityContext.TblGbs.Remove(gb);
-                _entityContext.SaveChanges();
+                _ = _entityContext.TblGbs.Remove(gb);
+                _ = _entityContext.SaveChanges();
                 return true;
             }
             return false;

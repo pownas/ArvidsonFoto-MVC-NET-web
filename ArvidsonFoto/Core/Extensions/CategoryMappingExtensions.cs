@@ -16,7 +16,7 @@ public static class CategoryMappingExtensions
     /// <param name="lastImageFilename">Filename of the last image in the category, used to generate the UrlImage</param>
     /// <param name="baseUrl">Optional base URL for URL generation</param>
     /// <returns>A CategoryDto representation of the TblMenu</returns>
-    public static CategoryDto ToCategoryDto(this TblMenu menu, string categoryPath, string lastImageFilename, int? imageCounted = null, string baseUrl = "")
+    public static CategoryDto ToCategoryDto(this TblMenu menu, string categoryPath, string lastImageFilename, int? imageCounted = null, string baseUrl = "", string categoryPathEn = "", string categoryPathFullSv = "")
     {
         if (menu == null)
         {
@@ -30,15 +30,20 @@ public static class CategoryMappingExtensions
         return new CategoryDto
         {
             CategoryId = menu.MenuCategoryId,
-            Name = menu.MenuDisplayName ?? string.Empty,
+            NameSv = menu.MenuDisplayName ?? string.Empty,
+            NameEn = menu.MenuDisplayNameEn,
             UrlImage = string.IsNullOrEmpty(lastImageFilename) ? string.Empty : $"{lastImageFilename}",
-            UrlCategory = categoryUrl,
-            UrlCategoryPath = menu.MenuUrlSegment ?? string.Empty,
-            UrlCategoryPathFull = categoryPath ?? menu.MenuUrlSegment ?? string.Empty, // This might need more complex logic for full paths
+            UrlCategorySv = categoryUrl,
+            UrlCategoryEn = string.IsNullOrEmpty(categoryPathEn) ? string.Empty : $"images/{categoryPathEn}",
+            UrlCategoryPathSv = menu.MenuUrlSegment ?? string.Empty,
+            UrlCategoryPathEn = menu.MenuUrlSegmentEn,
+            UrlCategoryPathFullSv = string.IsNullOrEmpty(categoryPathFullSv) ? categoryPath ?? menu.MenuUrlSegment ?? string.Empty : categoryPathFullSv,
+            UrlCategoryPathFullEn = categoryPathEn,
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
-            ImageCount = imageCounted.HasValue ? imageCounted.Value : -1,
+            IsGameSelectable = menu.IsGameSelectable,
+            ImageCount = imageCounted ?? -1,
         };
     }
 
@@ -49,18 +54,18 @@ public static class CategoryMappingExtensions
     /// <returns>A TblMenu representation of the CategoryDto</returns>
     public static TblMenu ToTblMenu(this CategoryDto categoryDto)
     {
-        if (categoryDto == null)
-        {
-            return new TblMenu();
-        }
-
-        return new TblMenu
+        return categoryDto == null
+            ? new TblMenu()
+            : new TblMenu
         {
             MenuCategoryId = categoryDto.CategoryId,
-            MenuDisplayName = categoryDto.Name,
-            MenuUrlSegment = categoryDto.UrlCategoryPath,
+            MenuDisplayName = categoryDto.NameSv,
+            MenuDisplayNameEn = categoryDto.NameEn,
+            MenuUrlSegment = categoryDto.UrlCategoryPathSv,
+            MenuUrlSegmentEn = categoryDto.UrlCategoryPathEn,
             MenuParentCategoryId = categoryDto.ParentCategoryId,
-            MenuDateUpdated = categoryDto.DateUpdated
+            MenuDateUpdated = categoryDto.DateUpdated,
+            IsGameSelectable = categoryDto.IsGameSelectable
         };
     }
 
@@ -73,10 +78,10 @@ public static class CategoryMappingExtensions
         return new CategoryDto
         {
             CategoryId = -1,
-            Name = "Not found",
-            UrlCategory = "bilder/404-NotFound",
-            UrlCategoryPath = "404-NotFound",
-            UrlCategoryPathFull = "404-NotFound",
+            NameSv = "Not found",
+            UrlCategorySv = "bilder/404-NotFound",
+            UrlCategoryPathSv = "404-NotFound",
+            UrlCategoryPathFullSv = "404-NotFound",
             DateUpdated = DateTime.UtcNow,
             //Description = "Category not found"
         };

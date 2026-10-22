@@ -40,7 +40,7 @@ public interface IApiImageService
     /// <param name="categoryId">The category ID</param>
     /// <param name="categoryName">Optional category name to use for display</param>
     /// <returns>An image from the category</returns>
-    ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "");
+    ImageDto GetOneImageFromCategory(int categoryId, string categoryNameSv = "", string categoryNameEn = "");
 
     /// <summary>
     /// Gets all images
@@ -54,6 +54,14 @@ public interface IApiImageService
     /// <param name="count">The number of images to get</param>
     /// <returns>A list of random images</returns>
     List<ImageDto> GetRandomNumberOfImages(int count);
+
+    /// <summary>
+    /// Gets random images enabled for games, optionally limited to a category and its descendants.
+    /// </summary>
+    /// <param name="count">The maximum number of images to return.</param>
+    /// <param name="categoryId">Optional category ID to limit the selection.</param>
+    /// <returns>Images whose own and assigned category selection flags are enabled.</returns>
+    List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null);
 
     /// <summary>
     /// Gets all images by category ID
