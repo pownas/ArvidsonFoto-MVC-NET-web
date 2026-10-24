@@ -7,6 +7,11 @@
     missing schema, and baselines the current EF migration IDs only after the
     schema changes succeed.
 
+    Each DDL/data phase commits separately to limit transaction-log usage.
+    If a phase fails, rerun the script after resolving the reported issue;
+    the completed phases are guarded and the EF migration IDs are recorded
+    only after every phase succeeds. Keep the application offline until then.
+
     Run against a restored copy first. Do not run against production without
     reviewing the target database and taking a fresh backup.
 */
@@ -57,12 +62,33 @@ IF COL_LENGTH(N'dbo.tbl_PageCounter', N'PageCounter_Name') IS NULL
    OR COL_LENGTH(N'dbo.tbl_kontakt', N'EmailSent') IS NULL
     THROW 51004, 'The existing table definitions do not match the inspected backup. No changes were made.', 1;
 
-BEGIN TRY
-    BEGIN TRANSACTION;
+IF EXISTS (SELECT 1 FROM [dbo].[tbl_PageCounter] WHERE [PageCounter_Name] IS NULL OR [PageCounter_MonthViewed] IS NULL)
+    THROW 51005, 'tbl_PageCounter contains NULL names or months. Resolve those rows explicitly before enforcing the EF-required columns.', 1;
 
+IF EXISTS (
+    SELECT [NormalizedUserName]
+    FROM [dbo].[AspNetUsers]
+    WHERE [NormalizedUserName] IS NOT NULL
+    GROUP BY [NormalizedUserName]
+    HAVING COUNT(*) > 1
+)
+    THROW 51006, 'Duplicate normalized user names prevent creation of the Identity unique index.', 1;
+
+IF EXISTS (
+    SELECT [NormalizedName]
+    FROM [dbo].[AspNetRoles]
+    WHERE [NormalizedName] IS NOT NULL
+    GROUP BY [NormalizedName]
+    HAVING COUNT(*) > 1
+)
+    THROW 51007, 'Duplicate normalized role names prevent creation of the Identity unique index.', 1;
+
+BEGIN TRY
     PRINT CONCAT(N'Applying the data-preserving schema upgrade to ', QUOTENAME(DB_NAME()), N'.');
 
     /* Match nullable EF model fields without narrowing or deleting stored values. */
+    BEGIN TRANSACTION;
+
     IF EXISTS (
         SELECT 1 FROM sys.columns
         WHERE [object_id] = OBJECT_ID(N'[dbo].[tbl_menu]')
@@ -169,9 +195,10 @@ BEGIN TRY
     )
         ALTER TABLE [dbo].[tbl_images] ALTER COLUMN [image_update] datetime NULL;
 
-    IF EXISTS (SELECT 1 FROM [dbo].[tbl_PageCounter] WHERE [PageCounter_Name] IS NULL OR [PageCounter_MonthViewed] IS NULL)
-        THROW 51005, 'tbl_PageCounter contains NULL names or months. Resolve those rows explicitly before enforcing the EF-required columns.', 1;
+    COMMIT TRANSACTION;
+    PRINT N'Phase 1 committed: nullable menu/image fields.';
 
+    BEGIN TRANSACTION;
     IF EXISTS (
         SELECT 1 FROM sys.columns
         WHERE [object_id] = OBJECT_ID(N'[dbo].[tbl_PageCounter]')
@@ -179,7 +206,10 @@ BEGIN TRY
             AND [is_nullable] = 1
     )
         ALTER TABLE [dbo].[tbl_PageCounter] ALTER COLUMN [PageCounter_Name] nvarchar(50) NOT NULL;
+    COMMIT TRANSACTION;
+    PRINT N'Phase 2 committed: PageCounter_Name.';
 
+    BEGIN TRANSACTION;
     IF EXISTS (
         SELECT 1 FROM sys.columns
         WHERE [object_id] = OBJECT_ID(N'[dbo].[tbl_PageCounter]')
@@ -187,8 +217,11 @@ BEGIN TRY
             AND [is_nullable] = 1
     )
         ALTER TABLE [dbo].[tbl_PageCounter] ALTER COLUMN [PageCounter_MonthViewed] nvarchar(20) NOT NULL;
+    COMMIT TRANSACTION;
+    PRINT N'Phase 3 committed: PageCounter_MonthViewed.';
 
     /* Add English values and translation review state. */
+    BEGIN TRANSACTION;
     IF COL_LENGTH(N'dbo.tbl_menu', N'menu_text_en') IS NULL
         ALTER TABLE [dbo].[tbl_menu] ADD [menu_text_en] nvarchar(50) NULL;
     IF COL_LENGTH(N'dbo.tbl_menu', N'menu_URLtext_en') IS NULL
@@ -199,7 +232,10 @@ BEGIN TRY
         ALTER TABLE [dbo].[tbl_gb] ADD [GB_name_en] nvarchar(100) NULL;
     IF COL_LENGTH(N'dbo.tbl_gb', N'GB_text_en') IS NULL
         ALTER TABLE [dbo].[tbl_gb] ADD [GB_text_en] nvarchar(max) NULL;
+    COMMIT TRANSACTION;
+    PRINT N'Phase 4 committed: English text columns.';
 
+    BEGIN TRANSACTION;
     IF COL_LENGTH(N'dbo.tbl_menu', N'menu_text_en_reviewed') IS NULL
         ALTER TABLE [dbo].[tbl_menu] ADD [menu_text_en_reviewed] bit NOT NULL CONSTRAINT [DF_Migration_menu_text_en_reviewed] DEFAULT (0);
     IF COL_LENGTH(N'dbo.tbl_menu', N'menu_URLtext_en_reviewed') IS NULL
@@ -256,8 +292,11 @@ BEGIN TRY
             AND c.[name] = N'GB_text_en_reviewed'
     )
         ALTER TABLE [dbo].[tbl_gb] ADD CONSTRAINT [DF_Migration_GB_text_en_reviewed] DEFAULT (0) FOR [GB_text_en_reviewed];
+    COMMIT TRANSACTION;
+    PRINT N'Phase 5 committed: translation review flags.';
 
     /* Add game selection switches, default existing rows to selectable. */
+    BEGIN TRANSACTION;
     IF COL_LENGTH(N'dbo.tbl_menu', N'is_game_selectable') IS NULL
         ALTER TABLE [dbo].[tbl_menu] ADD [is_game_selectable] bit NOT NULL CONSTRAINT [DF_Migration_tbl_menu_is_game_selectable] DEFAULT (1);
     IF COL_LENGTH(N'dbo.tbl_images', N'is_game_selectable') IS NULL
@@ -281,7 +320,10 @@ BEGIN TRY
             AND c.[name] = N'is_game_selectable'
     )
         ALTER TABLE [dbo].[tbl_images] ADD CONSTRAINT [DF_Migration_tbl_images_is_game_selectable] DEFAULT (1) FOR [is_game_selectable];
+    COMMIT TRANSACTION;
+    PRINT N'Phase 6 committed: game selection flags.';
 
+    BEGIN TRANSACTION;
     IF COL_LENGTH(N'dbo.tbl_menu', N'menu_dateUpdated') IS NULL
         ALTER TABLE [dbo].[tbl_menu] ADD [menu_dateUpdated] datetime NULL;
 
@@ -327,26 +369,11 @@ BEGIN TRY
     )
         ALTER TABLE [dbo].[tbl_kontakt]
             ADD CONSTRAINT [DF_tbl_kontakt_EmailSent] DEFAULT ((0)) FOR [EmailSent];
+    COMMIT TRANSACTION;
+    PRINT N'Phase 7 committed: menu date and contact indexes/defaults.';
 
     /* Restore ASP.NET Identity indexes omitted from the database export. */
-    IF EXISTS (
-        SELECT [NormalizedUserName]
-        FROM [dbo].[AspNetUsers]
-        WHERE [NormalizedUserName] IS NOT NULL
-        GROUP BY [NormalizedUserName]
-        HAVING COUNT(*) > 1
-    )
-        THROW 51006, 'Duplicate normalized user names prevent creation of the Identity unique index.', 1;
-
-    IF EXISTS (
-        SELECT [NormalizedName]
-        FROM [dbo].[AspNetRoles]
-        WHERE [NormalizedName] IS NOT NULL
-        GROUP BY [NormalizedName]
-        HAVING COUNT(*) > 1
-    )
-        THROW 51007, 'Duplicate normalized role names prevent creation of the Identity unique index.', 1;
-
+    BEGIN TRANSACTION;
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE [object_id] = OBJECT_ID(N'[dbo].[AspNetUsers]') AND [name] = N'EmailIndex')
         CREATE INDEX [EmailIndex] ON [dbo].[AspNetUsers] ([NormalizedEmail]);
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE [object_id] = OBJECT_ID(N'[dbo].[AspNetUsers]') AND [name] = N'UserNameIndex')
@@ -363,8 +390,11 @@ BEGIN TRY
         CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [dbo].[AspNetUserRoles] ([RoleId]);
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE [object_id] = OBJECT_ID(N'[dbo].[AspNetUserPasskeys]') AND [name] = N'IX_AspNetUserPasskeys_UserId')
         CREATE INDEX [IX_AspNetUserPasskeys_UserId] ON [dbo].[AspNetUserPasskeys] ([UserId]);
+    COMMIT TRANSACTION;
+    PRINT N'Phase 8 committed: ASP.NET Identity indexes.';
 
     /* Mark categories excluded by the existing game-selection policy. */
+    BEGIN TRANSACTION;
     IF NOT EXISTS (
         SELECT 1 FROM [dbo].[__EFMigrationsHistory]
         WHERE [MigrationId] = N'20261018210222_AddGameSelectableFlags'
@@ -408,12 +438,15 @@ BEGIN TRY
 
         EXEC sys.sp_executesql @updateGameFlagsSql;
     END;
+    COMMIT TRANSACTION;
+    PRINT N'Phase 9 committed: game-selectability defaults.';
 
     /*
        The old EF migration 20250714143852 deletes seed IDs 1-20. That deletion
        is intentionally not replayed against this data-bearing database copy.
        Existing rows stand in for the old seed state; only schema is baselined.
     */
+    BEGIN TRANSACTION;
     DECLARE @currentProductVersion nvarchar(32) = N'11.0.0-rc.2.26504.105';
     DECLARE @currentMigrations TABLE ([MigrationId] nvarchar(150) PRIMARY KEY);
 

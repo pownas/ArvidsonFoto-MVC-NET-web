@@ -12,7 +12,11 @@ För en ny, tom databas körs `01-Core.idempotent.sql` och därefter `02-Identit
 
 För databaskopian i projektet ska den återställda databasen i stället få **endast** `03-Upgrade-Backup-20261020.sql` körd. Kör inte generiska `01`/`02`-skript mot den: dumpens historik-ID:n skiljer sig från EF-kedjan och tabellerna finns redan. `03` kontrollerar att dumpen känns igen, lägger till de saknade modellkolumnerna och Identity-/kontaktindexen, samt lägger in nuvarande EF-migrerings-ID:n efter schemaändringarna. Det raderar inte tabellrader och behåller äldre, omappade kolumner.
 
-Återställ alltid dumpen till en separat testdatabas och ta en backup innan körning. `03` har en transaktion, avbryter om förväntade äldre historikposter/tabeller saknas och avbryter om `tbl_PageCounter` har NULL i namn/månad. Jag har torrkört skriptet mot den lokala återställda kopian i en yttre transaktion och rullat tillbaka allt; den körningen lyckades. Databasen har alltså inte ändrats permanent.
+Återställ alltid dumpen till en separat testdatabas och ta en backup innan körning. `03` använder separata, korta transaktioner för schemagrupperna. Varje slutförd fas sparas; EF-migrerings-ID:n registreras först när alla faser lyckats. Om en fas fallerar, åtgärda felet och kör om hela `03` medan applikationen hålls offline — redan slutförda faser hoppas över. Skriptet avbryter om förväntade äldre historikposter/tabeller saknas eller om `tbl_PageCounter` har NULL i namn/månad.
+
+Om loggen fortfarande blir full mellan faserna behöver SQL Server-loggen tillräckligt med utrymme och möjlighet att återanvända loggposter. Kontrollera återställningsmodell och `log_reuse_wait_desc`; i `FULL`-läge kan en loggbackup krävas. Öka loggfilens storlek/autogrowth vid behov. Ändra inte återställningsmodell eller krymp loggen utan DBA-bedömning.
+
+Den fasindelade versionen har torrkörts mot den lokala återställda kopian i en yttre transaktion. Alla faser lyckades, och efter rollback verifierades att inga kolumner eller EF-migrerings-ID:n blev kvar. Torrkörningen verifierar SQL och transaktionshantering, men inte faktisk loggåteranvändning eftersom den yttre transaktionen håller loggposter aktiva. Databasen som gav 9002-felet har inte ändrats av mig.
 
 Dumpfilen innehåller användar- och kontaktdata och är därför undantagen från Git via `.gitignore`; den ska inte checkas in.
 
