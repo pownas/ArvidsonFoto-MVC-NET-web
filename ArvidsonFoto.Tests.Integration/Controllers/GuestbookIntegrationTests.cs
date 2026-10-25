@@ -255,11 +255,11 @@ public class GuestbookIntegrationTests
     {
         using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
-        var category = await client.GetAsync("/Bilder/Däggdjur/Bäver?culture=sv-SE&sida=2");
+        var category = await client.GetAsync("/bilder/Däggdjur/Bäver?culture=sv-SE&sida=2");
         Assert.AreEqual(HttpStatusCode.PermanentRedirect, category.StatusCode);
         Assert.AreEqual("/bilder/daggdjur/baver?culture=sv-SE&sida=2", category.Headers.Location?.OriginalString);
 
-        var legacyApi = await client.GetAsync("/api/Bilder/Däggdjur/Bäver?page=1");
+        var legacyApi = await client.GetAsync("/api/bilder/Däggdjur/Bäver?page=1");
         Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyApi.StatusCode);
         Assert.AreEqual("/api/bilder/daggdjur/baver?page=1", legacyApi.Headers.Location?.OriginalString);
 

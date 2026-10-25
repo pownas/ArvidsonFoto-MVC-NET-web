@@ -503,7 +503,7 @@ public class UploadAdminController(
             inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
             inputModel.ImageUrl = item.ImageUrlName ?? string.Empty;
 
-            inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
+            inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/bilder";
             if (inputModel.ImageHuvudfamilj is not null)
             {
                 inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
@@ -554,7 +554,7 @@ public class UploadAdminController(
             var imageUrls = new List<string>();
             foreach (var image in selectedImages)
             {
-                string imageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
+                string imageUrlFullSrc = "https://arvidsonfoto.se/bilder";
 
                 if (image.ImageMainFamilyId is not null)
                 {

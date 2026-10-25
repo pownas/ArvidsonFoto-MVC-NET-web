@@ -148,8 +148,8 @@ public class RedirectRouterController() : Controller
 
     [Route("/Latest.asp")]
     [Route("/Bild_kalender.asp")]
-    [Route("/Bilder/Senast")]
-    [Route("/Bilder/Senast/{sortering}")]
+    [Route("/bilder/Senast")]
+    [Route("/bilder/Senast/{sortering}")]
     [Route("/Senast")]
     [Route("/Senast/Index.html")]
     [Route("/Senast/Default.asp")]

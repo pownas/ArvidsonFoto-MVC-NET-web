@@ -35,7 +35,7 @@
 {
     string url = Model.VisitedUrl;
     string[] splittedUrl = url.Split("/");
-    string currentUrl = "https://arvidsonfoto.se/Bilder";
+    string currentUrl = "https://arvidsonfoto.se/bilder";
     foreach (var splitt in splittedUrl)
     {
         //Sökvägen ska inte innehålla: '/images/gallery/' eller '/images/gallery-thumb/' 
@@ -58,7 +58,7 @@ else
     <p class="mt-5 mb-0">@S["Error.Rabbit.Message"]</p>
     <p>
         <figure class="figure alert alert-light" title="@S["Error.Rabbit.Image"]">
-            <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/Bilder/D%C3%A4ggdjur/Kanin/B57V4570.thumb.jpg" alt="@S["Error.Rabbit.Image"]" />
+            <img class="figure-img img-fluid rounded" src="https://arvidsonfoto.se/bilder/D%C3%A4ggdjur/Kanin/B57V4570.thumb.jpg" alt="@S["Error.Rabbit.Image"]" />
             <figcaption class="figure-caption text-center text-truncate">@S["Error.Rabbit.Image"]</figcaption>
         </figure>
     </p>

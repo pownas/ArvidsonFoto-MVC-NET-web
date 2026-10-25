@@ -45,7 +45,7 @@ async function loadNextGalleryPage() {
     if (_isLoadingMore || _nextPageToLoad < 0 || _nextPageToLoad > _totalPages) return;
     _isLoadingMore = true;
 
-    var galleryUrl = _galleryEl.dataset.galleryUrl; // e.g. "/Bilder/Fåglar/Svanar/Sångsvan"
+    var galleryUrl = _galleryEl.dataset.galleryUrl; // e.g. "/bilder/Fåglar/Svanar/Sångsvan"
     // Remove the localized gallery prefix before calling the image API.
     var apiPath = galleryUrl.replace(/^\/(?:bilder|images)\//i, '');
     // Koda URL korrekt (bevara "/" men koda ÅÄÖ etc.)
