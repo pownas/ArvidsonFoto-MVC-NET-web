@@ -69,7 +69,7 @@
       return "";
     }
 
-    string imageUrl = $"/{image.UrlImage}.thumb.jpg";
+    string imageUrl = $"https://arvidsonfoto.se/{image.UrlImage}.thumb.jpg";
 
     // Build the popover content - escape the values but not the HTML structure
     string escapedCategoryName = WebUtility.HtmlEncode(LocalizedText.Select(category.NameSv, category.NameEn)) ?? string.Empty;

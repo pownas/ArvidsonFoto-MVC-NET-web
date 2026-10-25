@@ -326,7 +326,7 @@
       "arvidsonfoto": {
         "type": "Project",
         "dependencies": {
-          "ArvidsonFoto.ServiceDefaults": "[3.11.2, )",
+          "ArvidsonFoto.ServiceDefaults": "[4.11.0, )",
           "Azure.Identity": "[1.21.0, )",
           "LigerShark.WebOptimizer.Core": "[3.0.477, )",
           "MailKit": "[4.18.1, )",
@@ -347,13 +347,13 @@
       "arvidsonfoto.servicedefaults": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
-          "Microsoft.Extensions.ServiceDiscovery": "[10.9.0, )",
-          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
-          "OpenTelemetry.Extensions.Hosting": "[1.18.0, )",
-          "OpenTelemetry.Instrumentation.AspNetCore": "[1.18.0, )",
-          "OpenTelemetry.Instrumentation.Http": "[1.18.0, )",
-          "OpenTelemetry.Instrumentation.Runtime": "[1.18.0, )"
+          "Microsoft.Extensions.Http.Resilience": "[10.10.0, )",
+          "Microsoft.Extensions.ServiceDiscovery": "[10.10.0, )",
+          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.19.1, )",
+          "OpenTelemetry.Extensions.Hosting": "[1.19.1, )",
+          "OpenTelemetry.Instrumentation.AspNetCore": "[1.19.0, )",
+          "OpenTelemetry.Instrumentation.Http": "[1.19.0, )",
+          "OpenTelemetry.Instrumentation.Runtime": "[1.19.0, )"
         }
       },
       "Azure.Core": {

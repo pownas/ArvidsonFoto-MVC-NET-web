@@ -31,6 +31,17 @@
         });
     }
 
+    function encodePathSegment(segment) {
+        try {
+            return encodeURIComponent(decodeURIComponent(segment));
+        } catch (error) {
+            if (!(error instanceof URIError)) {
+                throw error;
+            }
+            return encodeURIComponent(segment);
+        }
+    }
+
     /**
      * Checks if current viewport is mobile (max-width: 767px)
      */
@@ -91,7 +102,7 @@
             return '<div class="text-muted small">' + escapeHtml(labels.tooltipNoImage) + '</div>';
         }
 
-        var imagePath = imageData.urlImage.split('/').map(encodeURIComponent).join('/');
+        var imagePath = imageData.urlImage.split('/').map(encodePathSegment).join('/');
         if (!imagePath.startsWith('/')) {
             imagePath = '/' + imagePath;
         }

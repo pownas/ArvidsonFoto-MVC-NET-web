@@ -357,7 +357,7 @@ public class UploadAdminController(
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
             var categoryPath = _categoryService.GetCategoryDisplayPathForImage(inputModel.ImageArt);
-            inputModel.ImageUrlFullSrc = $"/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, inputModel.ImageUrl)}";
+            inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, inputModel.ImageUrl)}";
 
             viewModel.DisplayImagesList.Add(inputModel);
         }
