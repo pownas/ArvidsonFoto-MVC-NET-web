@@ -471,6 +471,13 @@
   <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Totalt ogranskade fält: {0} av {1}</value></data>
   <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Spara först ändrade texter. Markera sedan befintliga, ifyllda översättningar som granskade.</value></data>
   <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Visa bara ogranskade</value></data>
+  <data name="UploadAdmin.Review.MissingOnly" xml:space="preserve"><value>Saknar engelsk översättning</value></data>
+  <data name="UploadAdmin.Review.MissingCount" xml:space="preserve"><value>Bilder utan engelsk beskrivning: {0}</value></data>
+  <data name="UploadAdmin.Review.Missing" xml:space="preserve"><value>Saknar översättning</value></data>
+  <data name="UploadAdmin.Review.Filter" xml:space="preserve"><value>Filtrera granskningsstatus</value></data>
+  <data name="UploadAdmin.Review.SearchImages" xml:space="preserve"><value>Sök bild på ID, filnamn eller svensk beskrivning</value></data>
+  <data name="UploadAdmin.Review.Search" xml:space="preserve"><value>Sök</value></data>
+  <data name="UploadAdmin.Review.NoResults" xml:space="preserve"><value>Inga poster matchar urvalet.</value></data>
   <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Visa alla</value></data>
   <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Post {0}</value></data>
   <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Kategorinamn</value></data>

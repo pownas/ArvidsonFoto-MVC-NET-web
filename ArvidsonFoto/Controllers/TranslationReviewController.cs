@@ -11,9 +11,14 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
 {
     private const int PageSize = 20;
 
-    public IActionResult Index(string table = "menu", bool pendingOnly = true, int page = 1)
+    public IActionResult Index(string table = "menu", bool pendingOnly = true, int page = 1, bool missingOnly = false, string? search = null)
     {
         if (table is not ("menu" or "images" or "guestbook"))
+        {
+            return BadRequest();
+        }
+        search = table == "images" ? search?.Trim() : null;
+        if (search?.Length > 100)
         {
             return BadRequest();
         }
@@ -22,6 +27,8 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
         {
             Table = table,
             PendingOnly = pendingOnly,
+            MissingOnly = table == "images" && missingOnly,
+            Search = search,
             Page = Math.Max(1, page),
             AllPendingCount = db.TblMenus.Count(m => !m.MenuDisplayNameEnReviewed) +
                 db.TblMenus.Count(m => !m.MenuUrlSegmentEnReviewed) +
@@ -57,13 +64,26 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
         else if (table == "images")
         {
             var query = db.TblImages.AsNoTracking().Where(i => i.ImageId != null);
+            if (!string.IsNullOrEmpty(search))
+            {
+                var imageId = int.TryParse(search, out var parsedId) ? parsedId : -1;
+                query = query.Where(i => i.ImageId == imageId ||
+                    (i.ImageUrlName != null && i.ImageUrlName.Contains(search)) ||
+                    (i.ImageDescription != null && i.ImageDescription.Contains(search)));
+            }
             model.PendingCount = query.Count(i => !i.ImageDescriptionEnReviewed);
+            model.MissingCount = query.Count(i => i.ImageDescriptionEn == null || i.ImageDescriptionEn.Trim() == "");
             model.TotalCount = query.Count();
-            if (pendingOnly)
+            if (missingOnly)
+            {
+                query = query.Where(i => i.ImageDescriptionEn == null || i.ImageDescriptionEn.Trim() == "");
+            }
+            else if (pendingOnly)
             {
                 query = query.Where(i => !i.ImageDescriptionEnReviewed);
             }
             model.TotalPages = (int)Math.Ceiling(query.Count() / (double)PageSize);
+            model.Page = Math.Min(model.Page, Math.Max(1, model.TotalPages));
             model.Items = [.. query.OrderBy(i => i.ImageId).Skip((model.Page - 1) * PageSize).Take(PageSize).Select(i => new TranslationReviewItem(i.ImageId!.Value, "description", i.ImageDescription ?? "", i.ImageDescriptionEn, i.ImageDescriptionEnReviewed))];
         }
         else
@@ -93,7 +113,7 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult Save(string table, int id, string field, string? english, string swedish, string? previousEnglish, bool reviewed, bool pendingOnly = true, int page = 1)
+    public IActionResult Save(string table, int id, string field, string? english, string swedish, string? previousEnglish, bool reviewed, bool pendingOnly = true, int page = 1, bool missingOnly = false, string? search = null)
     {
         if (table is not ("menu" or "images" or "guestbook") || id < 1)
         {
@@ -214,6 +234,6 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
         {
             categoryService?.ClearCache();
         }
-        return RedirectToAction(nameof(Index), new { table, pendingOnly, page });
+        return RedirectToAction(nameof(Index), new { table, pendingOnly, page, missingOnly, search });
     }
 }

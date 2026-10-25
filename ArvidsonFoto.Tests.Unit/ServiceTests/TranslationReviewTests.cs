@@ -80,6 +80,58 @@ public class TranslationReviewTests
     }
 
     [Fact]
+    public void ImageFiltersFindMissingAndUnreviewedSeparately()
+    {
+        using var db = CreateContext();
+        db.TblImages.AddRange(
+            new TblImage { Id = 1, ImageId = 11, ImageUrlName = "A.jpg", ImageDescription = "Bäver", ImageDescriptionEn = null },
+            new TblImage { Id = 2, ImageId = 12, ImageUrlName = "B.jpg", ImageDescription = "Utter", ImageDescriptionEn = "   " },
+            new TblImage { Id = 3, ImageId = 13, ImageUrlName = "C.jpg", ImageDescription = "Älg", ImageDescriptionEn = "Moose" },
+            new TblImage { Id = 4, ImageId = 14, ImageUrlName = "D.jpg", ImageDescription = "Räv", ImageDescriptionEn = "Fox", ImageDescriptionEnReviewed = true });
+        db.SaveChanges();
+        var controller = new TranslationReviewController(db);
+
+        var missing = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
+            controller.Index("images", missingOnly: true)).Model);
+        Assert.Equal([11, 12], missing.Items.Select(i => i.Id));
+        Assert.Equal(2, missing.MissingCount);
+        Assert.Equal(3, missing.PendingCount);
+        Assert.Equal(4, missing.TotalCount);
+
+        var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
+            controller.Index("images")).Model);
+        Assert.Equal([11, 12, 13], pending.Items.Select(i => i.Id));
+
+        var all = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
+            controller.Index("images", pendingOnly: false)).Model);
+        Assert.Equal(4, all.Items.Count);
+
+        var searched = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
+            controller.Index("images", missingOnly: true, page: 9, search: " A.jpg ")).Model);
+        Assert.Equal("A.jpg", searched.Search);
+        Assert.Equal(1, searched.Page);
+        Assert.Equal(1, searched.MissingCount);
+        Assert.Equal(11, Assert.Single(searched.Items).Id);
+        Assert.IsType<BadRequestResult>(controller.Index("images", search: new string('x', 101)));
+    }
+
+    [Fact]
+    public void ImageSavePreservesMissingFilterAndSearch()
+    {
+        using var db = CreateContext();
+        db.TblImages.Add(new TblImage { Id = 1, ImageId = 11, ImageDescription = "Bäver" });
+        db.SaveChanges();
+        var controller = new TranslationReviewController(db);
+        var result = Assert.IsType<RedirectToActionResult>(
+            controller.Save("images", 11, "description", "Beaver", "Bäver", null, false,
+                missingOnly: true, search: "Bäver"));
+        Assert.Equal(true, result.RouteValues!["missingOnly"]);
+        Assert.Equal("Bäver", result.RouteValues["search"]);
+        Assert.Empty(Assert.IsType<TranslationReviewViewModel>(
+            Assert.IsType<ViewResult>(controller.Index("images", missingOnly: true, search: "Bäver")).Model).Items);
+    }
+
+    [Fact]
     public async Task ChangesResetOnlyTheAffectedFieldAcrossAllTables()
     {
         using var db = CreateContext();

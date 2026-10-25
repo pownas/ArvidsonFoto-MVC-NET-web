@@ -471,6 +471,13 @@
   <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Total unreviewed fields: {0} of {1}</value></data>
   <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Save changed text first. Then mark existing, non-empty translations as reviewed.</value></data>
   <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Show unreviewed only</value></data>
+  <data name="UploadAdmin.Review.MissingOnly" xml:space="preserve"><value>Missing English translation</value></data>
+  <data name="UploadAdmin.Review.MissingCount" xml:space="preserve"><value>Images without an English description: {0}</value></data>
+  <data name="UploadAdmin.Review.Missing" xml:space="preserve"><value>Missing translation</value></data>
+  <data name="UploadAdmin.Review.Filter" xml:space="preserve"><value>Filter review status</value></data>
+  <data name="UploadAdmin.Review.SearchImages" xml:space="preserve"><value>Find image by ID, filename or Swedish description</value></data>
+  <data name="UploadAdmin.Review.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="UploadAdmin.Review.NoResults" xml:space="preserve"><value>No entries match the filter.</value></data>
   <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Show all</value></data>
   <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Entry {0}</value></data>
   <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Category name</value></data>
