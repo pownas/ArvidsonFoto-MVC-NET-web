@@ -21,14 +21,18 @@ public class SenastController(
     [Route("[controller]/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
     {
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
         int pageSize = 48;
 
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
+        {
             sida = 1;
+        }
 
         if (sortOrder is null)
+        {
             sortOrder = "Fotograferad";
+        }
 
         viewModel.CurrentPage = (int)sida;
 
@@ -36,7 +40,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Per kategori";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Per kategori");
+            }
 
             // OPTIMIZED: Use SQL-level query to get one image per category efficiently
             var categories = coreContext.TblMenus
@@ -110,7 +116,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Uppladdad";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Uppladdad");
+            }
 
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
@@ -176,7 +184,9 @@ public class SenastController(
         {
             ViewData["Title"] = "Fotograferad";
             if (User?.Identity?.IsAuthenticated is false)
+            {
                 _pageCounterService.AddPageCount("Senast-Fotograferad");
+            }
 
             // OPTIMIZED: Get total count first
             int totalImages = coreContext.TblImages.Count();
@@ -236,7 +246,7 @@ public class SenastController(
                 };
             }).ToList();
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
+            viewModel.AllImagesList = []; // Don't load all images
         }
         else
         {

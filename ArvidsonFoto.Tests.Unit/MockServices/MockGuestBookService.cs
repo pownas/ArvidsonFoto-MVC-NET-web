@@ -1,5 +1,5 @@
-﻿using ArvidsonFoto.Core.Models;
-using ArvidsonFoto.Core.Interfaces;
+﻿using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
@@ -15,8 +15,7 @@ public class MockGuestBookService : IGuestBookService
     {
         _mockGuestbookEntries = new List<TblGb>
         {
-            new TblGb
-            {
+            new() {
                 Id = 1,
                 GbId = 1,
                 GbName = "Test User 1",
@@ -26,8 +25,7 @@ public class MockGuestBookService : IGuestBookService
                 GbDate = DateTime.Now.AddDays(-2),
                 GbReadPost = true
             },
-            new TblGb
-            {
+            new() {
                 Id = 2,
                 GbId = 2,
                 GbName = "Test User 2",
@@ -44,7 +42,9 @@ public class MockGuestBookService : IGuestBookService
     public bool CreateGBpost(TblGb gb)
     {
         if (gb == null)
+        {
             return false;
+        }
 
         gb.Id = _nextId++;
         gb.GbDate = DateTime.Now;
@@ -56,7 +56,9 @@ public class MockGuestBookService : IGuestBookService
     {
         var post = _mockGuestbookEntries.FirstOrDefault(g => g.GbId == gbId);
         if (post == null)
+        {
             return false;
+        }
 
         post.GbReadPost = true;
         return true;
@@ -66,7 +68,9 @@ public class MockGuestBookService : IGuestBookService
     {
         var post = _mockGuestbookEntries.FirstOrDefault(g => g.GbId == gbId);
         if (post == null)
+        {
             return false;
+        }
 
         _mockGuestbookEntries.Remove(post);
         return true;
@@ -74,13 +78,15 @@ public class MockGuestBookService : IGuestBookService
 
     public int GetCountOfUnreadPosts()
     {
-        return _mockGuestbookEntries.Count(g => g.GbReadPost == null || g.GbReadPost == false);
+        return _mockGuestbookEntries.Count(g => g.GbReadPost is null or false);
     }
 
     public int GetLastGbId()
     {
-        if (!_mockGuestbookEntries.Any())
+        if (_mockGuestbookEntries.Count == 0)
+        {
             return 0;
+        }
 
         return _mockGuestbookEntries.Max(g => g.GbId);
     }

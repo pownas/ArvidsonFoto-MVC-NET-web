@@ -1,7 +1,6 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
-using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
@@ -14,29 +13,20 @@ using System.Diagnostics;
 namespace ArvidsonFoto.Controllers;
 
 [Authorize]
-public class UploadAdminController : Controller
+public class UploadAdminController(
+    ArvidsonFotoCoreDbContext coreContext,
+    UserManager<ArvidsonFotoUser> userManager,
+    IFacebookService facebookService,
+    ILogger<ApiImageService> imageLogger,
+    ILogger<ApiCategoryService> categoryLogger,
+    IConfiguration configuration,
+    IMemoryCache memoryCache) : Controller
 {
-    internal IApiImageService _imageService;
-    internal IApiCategoryService _categoryService;
-    internal IGuestBookService _guestBookService;
-    internal readonly UserManager<ArvidsonFotoUser> _userManager;
-    internal readonly IFacebookService _facebookService;
-
-    public UploadAdminController(
-        ArvidsonFotoCoreDbContext coreContext,
-        UserManager<ArvidsonFotoUser> userManager,
-        IFacebookService facebookService,
-        ILogger<ApiImageService> imageLogger,
-        ILogger<ApiCategoryService> categoryLogger,
-        IConfiguration configuration,
-        IMemoryCache memoryCache)
-    {
-        _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
-        _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
-        _guestBookService = new GuestBookService(coreContext);
-        _userManager = userManager;
-        _facebookService = facebookService;
-    }
+    internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
+    internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
+    internal IGuestBookService _guestBookService = new GuestBookService(coreContext);
+    internal readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    internal readonly IFacebookService _facebookService = facebookService;
 
     public IActionResult Index()
     {
@@ -56,8 +46,10 @@ public class UploadAdminController : Controller
         // Rensa ModelState för GET-requests så att validering inte körs automatiskt
         ModelState.Clear();
 
-        UploadImageViewModel viewModel = new UploadImageViewModel();
-        viewModel.ImageInputModel = UploadImageInputDto.CreateEmpty();
+        UploadImageViewModel viewModel = new()
+        {
+            ImageInputModel = UploadImageInputDto.CreateEmpty()
+        };
 
         var selectedCategory = CategoryDto.CreateEmpty();
         var subCategories = new List<CategoryDto>();
@@ -104,15 +96,21 @@ public class UploadAdminController : Controller
         if (ModelState.IsValid)
         {
             if (model.ImageHuvudfamilj.Equals(0))
+            {
                 model.ImageHuvudfamilj = null;
+            }
 
             if (model.ImageFamilj.Equals(0))
+            {
                 model.ImageFamilj = null;
+            }
 
             if (model.ImageHuvudfamilj.Equals(1))
+            {
                 model.ImageHuvudfamilj = null;
+            }
 
-            Core.Models.TblImage newImage = new Core.Models.TblImage
+            Core.Models.TblImage newImage = new()
             {
                 ImageId = _imageService.GetImageLastId() + 1,
                 ImageMainFamilyId = model.ImageHuvudfamilj,
@@ -198,7 +196,7 @@ public class UploadAdminController : Controller
 
         if (ModelState.IsValid)
         {
-            CategoryDto newCategory = new CategoryDto
+            CategoryDto newCategory = new()
             {
                 Name = inputModel.MenuText,
                 CategoryId = _categoryService.GetLastId() + 1,
@@ -222,24 +220,26 @@ public class UploadAdminController : Controller
         ViewData["Title"] = "Redigera bland bilderna";
 
         int imagesPerPage = 25;
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
+        {
             sida = 1;
+        }
 
         var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
         var allImages = coreContext.TblImages.OrderByDescending(i => i.ImageId).ToList();
 
-        UploadEditImagesViewModel viewModel = new UploadEditImagesViewModel()
+        UploadEditImagesViewModel viewModel = new()
         {
             CurrentPage = (int)sida,
-            CurrentUrl = "./UploadAdmin/RedigeraBilder"
+            CurrentUrl = "./UploadAdmin/RedigeraBilder",
+            TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage),
+            DisplayImagesList = []
         };
 
-        viewModel.TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage);
         var displayTblImages = allImages
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
-        viewModel.DisplayImagesList = new List<UploadImageInputDto>();
 
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(imgId))
         {
@@ -283,7 +283,7 @@ public class UploadAdminController : Controller
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
         ViewData["Title"] = "Hantera gästboken";
-        UploadGbViewModel viewModel = new UploadGbViewModel();
+        UploadGbViewModel viewModel = new();
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
             viewModel.DisplayMessage = "";
@@ -344,10 +344,10 @@ public class UploadAdminController : Controller
     {
         ViewData["Title"] = $"Läser loggboken för: {datum:yyyy-MM-dd dddd}";
 
-        AppLogReaderService logReader = new AppLogReaderService();
+        AppLogReaderService logReader = new();
         string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
 
-        UploadLogReaderViewModel viewModel = new UploadLogReaderViewModel
+        UploadLogReaderViewModel viewModel = new()
         {
             ExistingLogFiles = logReader.ExistingLogFiles(),
             LogBook = logReader.ReadData(appLogFile),
@@ -367,13 +367,12 @@ public class UploadAdminController : Controller
     public async Task<IActionResult> ToggleShowAllLogs(string date)
     {
         if (string.IsNullOrWhiteSpace(date))
+        {
             date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+        }
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
-        if (user.ShowAllLogs)
-            user.ShowAllLogs = false;
-        else
-            user.ShowAllLogs = true;
+        user.ShowAllLogs = !user.ShowAllLogs;
 
         await _userManager.UpdateAsync(user);
         return RedirectToAction("VisaLoggboken", new { datum = date });
@@ -417,9 +416,14 @@ public class UploadAdminController : Controller
 
             inputModel.ImageUrlFullSrc = "https://arvidsonfoto.se/Bilder";
             if (inputModel.ImageHuvudfamilj is not null)
+            {
                 inputModel.ImageUrlFullSrc += "/" + inputModel.ImageHuvudfamiljNamn;
+            }
+
             if (inputModel.ImageFamilj is not null)
+            {
                 inputModel.ImageUrlFullSrc += "/" + inputModel.ImageFamiljNamn;
+            }
 
             inputModel.ImageUrlFullSrc += "/" + inputModel.ImageArtNamn + "/" + inputModel.ImageUrl;
 

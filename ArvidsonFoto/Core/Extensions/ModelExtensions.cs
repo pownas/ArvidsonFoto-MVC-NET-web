@@ -13,17 +13,26 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the MenuId (maps to MenuCategoryId in the new model)
     /// </summary>
-    public static int MenuId(this TblMenu menu) => menu.MenuCategoryId ?? 0;
+    public static int MenuId(this TblMenu menu)
+    {
+        return menu.MenuCategoryId ?? 0;
+    }
 
     /// <summary>
     /// Gets the MenuText (maps to MenuDisplayName in the new model)
     /// </summary>
-    public static string MenuText(this TblMenu menu) => menu.MenuDisplayName ?? string.Empty;
+    public static string MenuText(this TblMenu menu)
+    {
+        return menu.MenuDisplayName ?? string.Empty;
+    }
 
     /// <summary>
     /// Gets the MenuMainId (maps to MenuParentCategoryId in the new model)
     /// </summary>
-    public static int? MenuMainId(this TblMenu menu) => menu.MenuParentCategoryId;
+    public static int? MenuMainId(this TblMenu menu)
+    {
+        return menu.MenuParentCategoryId;
+    }
 
     #endregion
 
@@ -32,28 +41,42 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the ImageName (maps to ImageUrlName in the new model)
     /// </summary>
-    public static string ImageName(this TblImage image) => image.ImageUrlName ?? string.Empty;
+    public static string ImageName(this TblImage image)
+    {
+        return image.ImageUrlName ?? string.Empty;
+    }
 
     /// <summary>
     /// Gets the ImageArt (maps to ImageCategoryId in the new model)
     /// </summary>
-    public static int ImageArt(this TblImage image) => image.ImageCategoryId ?? 0;
+    public static int ImageArt(this TblImage image)
+    {
+        return image.ImageCategoryId ?? 0;
+    }
 
     /// <summary>
     /// Gets the ImageHuvudfamilj (maps to ImageMainFamilyId in the new model)
     /// </summary>
-    public static int? ImageHuvudfamilj(this TblImage image) => image.ImageMainFamilyId;
+    public static int? ImageHuvudfamilj(this TblImage image)
+    {
+        return image.ImageMainFamilyId;
+    }
 
     /// <summary>
     /// Gets the ImageFamilj (maps to ImageFamilyId in the new model)
     /// </summary>
-    public static int? ImageFamilj(this TblImage image) => image.ImageFamilyId;
+    public static int? ImageFamilj(this TblImage image)
+    {
+        return image.ImageFamilyId;
+    }
 
     /// <summary>
     /// Gets the ImageDate safely
     /// </summary>
-    public static DateTime GetImageDate(this TblImage image) =>
-        image.ImageDate ?? DateTime.Now;
+    public static DateTime GetImageDate(this TblImage image)
+    {
+        return image.ImageDate ?? DateTime.Now;
+    }
 
     #endregion
 
@@ -62,13 +85,18 @@ public static class ModelExtensions
     /// <summary>
     /// Gets the GbMessage (maps to GbText in the new model)
     /// </summary>
-    public static string? GbMessage(this TblGb gb) => gb.GbText;
+    public static string? GbMessage(this TblGb gb)
+    {
+        return gb.GbText;
+    }
 
     /// <summary>
     /// Gets the GbDate safely
     /// </summary>
-    public static DateTime GetGbDate(this TblGb gb) =>
-        gb.GbDate ?? DateTime.Now;
+    public static DateTime GetGbDate(this TblGb gb)
+    {
+        return gb.GbDate ?? DateTime.Now;
+    }
 
     #endregion
 
@@ -77,8 +105,10 @@ public static class ModelExtensions
     /// <summary>
     /// Extension to allow ToString with format parameter
     /// </summary>
-    public static string ToString(this DateTime dateTime, string format) =>
-        dateTime.ToString(format, CultureInfo.InvariantCulture);
+    public static string ToString(this DateTime dateTime, string format)
+    {
+        return dateTime.ToString(format, CultureInfo.InvariantCulture);
+    }
 
     #endregion
 }

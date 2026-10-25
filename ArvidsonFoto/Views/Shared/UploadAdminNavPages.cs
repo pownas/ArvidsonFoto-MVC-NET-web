@@ -2,6 +2,8 @@
 
 namespace ArvidsonFoto.Views.Shared;
 
+#pragma warning disable IDE0022 // Use block body for method
+
 public static class UploadAdminNavPages
 {
     public static string Index => "Index";

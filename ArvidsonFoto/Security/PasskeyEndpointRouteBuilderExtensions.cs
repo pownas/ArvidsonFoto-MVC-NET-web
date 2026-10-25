@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArvidsonFoto.Security;
 

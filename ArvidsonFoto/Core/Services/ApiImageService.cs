@@ -231,7 +231,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                                .ToList();
 
         // Early return if no images found
-        if (!images.Any())
+        if (images.Count == 0)
         {
             return new List<ImageDto>();
         }
@@ -297,10 +297,10 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                         .ToList();
 
             // If no direct images found, check descendant categories (e.g. parent category like "Fåglar")
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
-                if (descendantIds.Any())
+                if (descendantIds.Count != 0)
                 {
                     images = _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
@@ -311,7 +311,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
 
             // Early return if no images found
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 return new List<ImageDto>();
             }
@@ -375,8 +375,15 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 return new List<ImageDto>();
             }
 
-            if (page < 1) page = 1;
-            if (pageSize < 1) pageSize = 48;
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            if (pageSize < 1)
+            {
+                pageSize = 48;
+            }
 
             // Try direct category images first (materialised to avoid a second .Any() round-trip)
             var images = _entityContext.TblImages
@@ -391,10 +398,10 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
 
             // If no direct images found on this page, check whether there are descendant categories
             // (e.g. a parent category like "Fåglar" that has no images assigned directly)
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
-                if (descendantIds.Any())
+                if (descendantIds.Count != 0)
                 {
                     images = _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
@@ -409,7 +416,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
 
             // Early return if no images found
-            if (!images.Any())
+            if (images.Count == 0)
             {
                 return new List<ImageDto>();
             }
@@ -595,7 +602,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         if (totalImagesForCategoryId == 0)
         {
             var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId);
-            if (descendantIds.Any())
+            if (descendantIds.Count != 0)
             {
                 totalImagesForCategoryId = _entityContext.TblImages
                     .Count(x => (x.ImageCategoryId.HasValue && descendantIds.Contains(x.ImageCategoryId.Value))
@@ -647,15 +654,17 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>bilder/hackspettar/tretåig-hackspett , utan "/fåglar" och med ÅÄÖ</returns>
     private string GetOldCategoryPathForImage(TblImage image)
     {
-        if (image.ImageCategoryId == null || image.ImageCategoryId <= 0)
+        if (image.ImageCategoryId is null or <= 0)
+        {
             return string.Empty;
+        }
 
         // Build the category path by traversing up the parent chain
         var segments = new List<string>();
         var currentId = image.ImageCategoryId;
 
         // Start with the current category and traverse up to the root category
-        while (currentId != null && currentId > 0)
+        while (currentId is not null and > 0)
         {
             // Fetch the current category and its parent category from the database
             var category = _entityContext.TblMenus
@@ -664,15 +673,21 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 .FirstOrDefault();
 
             if (currentId == 1)
+            {
                 break; // If the category is "Fåglar", return empty string
+            }
 
             // If the category is not found, break the loop
             if (category == null)
+            {
                 break;
+            }
 
             // Insert the URL segment at the beginning of the list
             if (!string.IsNullOrWhiteSpace(category.MenuDisplayName))
+            {
                 segments.Insert(0, category.MenuDisplayName);
+            }
 
             // Move to the parent category
             currentId = category.MenuParentCategoryId;

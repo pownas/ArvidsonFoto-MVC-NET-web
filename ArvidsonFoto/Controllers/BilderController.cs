@@ -2,7 +2,6 @@
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
-using System.Web;
 
 namespace ArvidsonFoto.Controllers;
 
@@ -22,12 +21,14 @@ public class BilderController(
     [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
     public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
         int pageSize = 48;
         viewModel.PageSize = pageSize;
 
-        if (sida is null || sida < 1)
+        if (sida is null or < 1)
+        {
             sida = 1;
+        }
 
         viewModel.CurrentPage = (int)sida;
 
@@ -157,9 +158,11 @@ public class BilderController(
     public IActionResult Search(string? s)
     {
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("search");
+        }
 
-        GalleryViewModel viewModel = new GalleryViewModel();
+        GalleryViewModel viewModel = new();
 
         ViewBag.SearchQuery = s ?? "";
         ViewBag.SearchPerformed = !string.IsNullOrWhiteSpace(s); // Track if a search was actually performed
@@ -175,7 +178,7 @@ public class BilderController(
             s = s.Trim();
             s = s.Replace("+", " ");
             List<CategoryDto> allCategories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
-            List<ImageDto> listOfFirstSearchedImages = new List<ImageDto>();
+            List<ImageDto> listOfFirstSearchedImages = new();
             foreach (var category in allCategories)
             {
                 if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)
@@ -190,7 +193,9 @@ public class BilderController(
             viewModel.SelectedCategory.UrlCategoryPath = "/Search";
 
             if (listOfFirstSearchedImages.Count == 0)
+            {
                 Log.Warning("Hittade inget vid sökning: '" + s + "'");
+            }
         }
         return View(viewModel);
     }

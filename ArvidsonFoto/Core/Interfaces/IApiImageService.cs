@@ -12,7 +12,7 @@ public interface IApiImageService
     /// </summary>
     /// <param name="image">The image to add</param>
     /// <returns>True if the image was added successfully</returns>
-    public bool AddImage(ImageDto image);
+    bool AddImage(ImageDto image);
 
     /// <summary>
     /// Deletes an image by its ID

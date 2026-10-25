@@ -6,18 +6,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class GenerateRecoveryCodesModel : PageModel
+public class GenerateRecoveryCodesModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    ILogger<GenerateRecoveryCodesModel> logger) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly ILogger<GenerateRecoveryCodesModel> _logger;
-
-    public GenerateRecoveryCodesModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        ILogger<GenerateRecoveryCodesModel> logger)
-    {
-        _userManager = userManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly ILogger<GenerateRecoveryCodesModel> _logger = logger;
 
     [TempData]
     public string[]? RecoveryCodes { get; set; }

@@ -34,32 +34,29 @@ All tests capture screenshots that are saved to the `screenshots/` directory:
 ## Running the Tests
 
 ### Prerequisites
-1. Install Playwright browsers:
+1. Install Playwright browsers (once after building the E2E project):
    ```bash
-   pwsh bin/Debug/net10.0/playwright.ps1 install chromium
+   dotnet build ArvidsonFoto.Tests.E2E/ArvidsonFoto.Tests.E2E.csproj
+   pwsh artifacts/bin/ArvidsonFoto.Tests.E2E/debug/playwright.ps1 install chromium
    ```
 
-2. Start the ArvidsonFoto application:
-   ```bash
-   cd ../ArvidsonFoto
-   dotnet run --urls "https://localhost:5001"
-   ```
+No separate application or database needs to be started. The tests start the application with an in-memory database on a free localhost HTTP port and stop it after the tests. Browser installation is a one-time Playwright prerequisite.
 
 ### Run Tests
 ```bash
-dotnet test
+dotnet test ArvidsonFoto.Tests.E2E/ArvidsonFoto.Tests.E2E.csproj
 ```
 
 ### Run Tests with Verbose Output
 ```bash
-dotnet test --logger "console;verbosity=detailed"
+dotnet test ArvidsonFoto.Tests.E2E/ArvidsonFoto.Tests.E2E.csproj --logger "console;verbosity=detailed"
 ```
 
 ## Test Configuration
 
-- **Base URL**: `https://localhost:5001` (configurable in ContactFormTests.cs)
+- **Base URL**: Automatically assigned loopback HTTP port by the test host
 - **Browser**: Chromium (headless mode)
-- **HTTPS**: Ignores certificate errors for local development
+- **HTTP**: Local test host requires no development HTTPS certificate
 
 ## Notes
 

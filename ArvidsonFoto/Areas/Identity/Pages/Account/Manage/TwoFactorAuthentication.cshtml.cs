@@ -6,23 +6,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class TwoFactorAuthenticationModel : PageModel
+public class TwoFactorAuthenticationModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager,
+    ILogger<TwoFactorAuthenticationModel> logger) : PageModel
 {
     private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
 
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly ILogger<TwoFactorAuthenticationModel> _logger;
-
-    public TwoFactorAuthenticationModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager,
-        ILogger<TwoFactorAuthenticationModel> logger)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly ILogger<TwoFactorAuthenticationModel> _logger = logger;
 
     public bool HasAuthenticator { get; set; }
 

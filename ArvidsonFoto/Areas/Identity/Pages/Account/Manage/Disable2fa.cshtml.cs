@@ -6,18 +6,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class Disable2faModel : PageModel
+public class Disable2faModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    ILogger<Disable2faModel> logger) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly ILogger<Disable2faModel> _logger;
-
-    public Disable2faModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        ILogger<Disable2faModel> logger)
-    {
-        _userManager = userManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly ILogger<Disable2faModel> _logger = logger;
 
     [TempData]
     public string? StatusMessage { get; set; }

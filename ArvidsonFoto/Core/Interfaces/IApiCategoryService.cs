@@ -35,7 +35,7 @@ public interface IApiCategoryService
     /// <summary>Hämtar en kategori baserat på dess ID</summary>
     /// <param name="id">Kategori-ID</param>
     /// <returns>Kategorin eller en standardkategori om den inte hittas</returns>
-    public CategoryDto GetById(int? id);
+    CategoryDto GetById(int? id);
 
     /// <summary>Hämtar en kategori baserat på dess namn</summary>
     /// <param name="categoryName">Namnet på kategorin</param>

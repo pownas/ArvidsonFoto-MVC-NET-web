@@ -1,24 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Text;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterConfirmationModel : PageModel
+    public class RegisterConfirmationModel(UserManager<ArvidsonFotoUser> userManager, IEmailSender sender) : PageModel
     {
-        private readonly UserManager<ArvidsonFotoUser> _userManager;
-        private readonly IEmailSender _sender;
-
-        public RegisterConfirmationModel(UserManager<ArvidsonFotoUser> userManager, IEmailSender sender)
-        {
-            _userManager = userManager;
-            _sender = sender;
-        }
+        private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+        private readonly IEmailSender _sender = sender;
 
         public string? Email { get; set; }
 

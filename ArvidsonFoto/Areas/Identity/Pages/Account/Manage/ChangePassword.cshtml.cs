@@ -1,27 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class ChangePasswordModel : PageModel
+public class ChangePasswordModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager,
+    ILogger<ChangePasswordModel> logger) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-    private readonly ILogger<ChangePasswordModel> _logger;
-
-    public ChangePasswordModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager,
-        ILogger<ChangePasswordModel> logger)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
+    private readonly ILogger<ChangePasswordModel> _logger = logger;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;

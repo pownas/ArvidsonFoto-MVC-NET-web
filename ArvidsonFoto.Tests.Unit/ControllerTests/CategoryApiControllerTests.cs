@@ -391,6 +391,6 @@ public class CategoryApiControllerTests
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-        Assert.Contains("not found", notFoundResult.Value!.ToString()!.ToLower());
+        Assert.Contains("not found", notFoundResult.Value!.ToString()!.ToLowerInvariant());
     }
 }

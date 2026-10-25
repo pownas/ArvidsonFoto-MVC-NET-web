@@ -6,18 +6,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage
 {
     [Authorize]
-    public class PersonalDataModel : PageModel
+    public class PersonalDataModel(
+        UserManager<ArvidsonFotoUser> userManager,
+        ILogger<PersonalDataModel> logger) : PageModel
     {
-        private readonly UserManager<ArvidsonFotoUser> _userManager;
-        private readonly ILogger<PersonalDataModel> _logger;
-
-        public PersonalDataModel(
-            UserManager<ArvidsonFotoUser> userManager,
-            ILogger<PersonalDataModel> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
+        private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+        private readonly ILogger<PersonalDataModel> _logger = logger;
 
         public async Task<IActionResult> OnGet()
         {

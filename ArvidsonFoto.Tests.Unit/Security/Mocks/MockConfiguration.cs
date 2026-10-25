@@ -48,16 +48,10 @@ public class MockConfiguration : IConfiguration
         public void Dispose() { }
     }
 
-    private class MockConfigurationSection : IConfigurationSection
+    private class MockConfigurationSection(string key, MockConfiguration configuration) : IConfigurationSection
     {
-        private readonly string _key;
-        private readonly MockConfiguration _configuration;
-
-        public MockConfigurationSection(string key, MockConfiguration configuration)
-        {
-            _key = key;
-            _configuration = configuration;
-        }
+        private readonly string _key = key;
+        private readonly MockConfiguration _configuration = configuration;
 
         public string? this[string key]
         {

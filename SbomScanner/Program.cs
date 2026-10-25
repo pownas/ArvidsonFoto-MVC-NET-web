@@ -1,13 +1,10 @@
-﻿using System.Net.Http.Json;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
 #pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1308 // Normalize strings to uppercase
-#pragma warning disable IDE0058 // Expression value is never used
+#pragma warning disable IDE0057 // Use range operator
 
 // 1. Definitiera sökvägar i utdatamappen
 string lockFilesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProjectLockfiles");
@@ -32,7 +29,10 @@ if (Directory.Exists(lockFilesFolder))
         string jsonContent = await File.ReadAllTextAsync(file).ConfigureAwait(true);
         var lockFile = JsonSerializer.Deserialize<LockFile>(jsonContent);
 
-        if (lockFile?.Dependencies is null) continue;
+        if (lockFile?.Dependencies is null)
+        {
+            continue;
+        }
 
         foreach (var framework in lockFile.Dependencies)
         {
@@ -46,12 +46,13 @@ if (Directory.Exists(lockFilesFolder))
                 {
                     foreach (var childDep in package.Value.Dependencies)
                     {
-                        if (!dependentOnTracker.ContainsKey(childDep.Key))
+                        if (!dependentOnTracker.TryGetValue(childDep.Key, out List<string>? value))
                         {
-                            dependentOnTracker[childDep.Key] = new List<string>();
+                            value = [];
+                            dependentOnTracker[childDep.Key] = value;
                         }
-                        // 'package.Key' är föräldern som kräver 'childDep.Key'
-                        dependentOnTracker[childDep.Key].Add(package.Key);
+
+                        value.Add(package.Key);
                     }
                 }
             }
@@ -60,7 +61,9 @@ if (Directory.Exists(lockFilesFolder))
             foreach (var package in framework.Value)
             {
                 if (package.Value.Type == "Project" || string.IsNullOrEmpty(package.Value.ContentHash))
+                {
                     continue;
+                }
 
                 string packageName = package.Key;
                 string packageVersion = package.Value.Resolved ?? "Okänd";
@@ -75,7 +78,7 @@ if (Directory.Exists(lockFilesFolder))
                 else
                 {
                     // Hitta alla Direct-paket som i slutändan leder till detta transitiva paket
-                    FindDirectRoots(packageName, framework.Value, dependentOnTracker, roots, new HashSet<string>());
+                    FindDirectRoots(packageName, framework.Value, dependentOnTracker, roots, []);
                 }
 
                 string introducedByString = roots.Count > 0 ? string.Join(", ", roots) : "Okänd källa";
@@ -198,7 +201,10 @@ var lookupTasks = uniqueLookups.Select(async item =>
             for (int p = regIndex.Pages.Count - 1; p >= 0; p--)
             {
                 var page = regIndex.Pages[p];
-                if (page.Items == null || page.Items.Count == 0) continue;
+                if (page.Items == null || page.Items.Count == 0)
+                {
+                    continue;
+                }
 
                 // Leta bakifrån bland paketen på den sidan (senaste först)
                 for (int i = page.Items.Count - 1; i >= 0; i--)
@@ -215,11 +221,15 @@ var lookupTasks = uniqueLookups.Select(async item =>
                 }
 
                 // Om vi hittade en version, avbryt sökningen efter äldre sidor
-                if (latestVersion != "Okänd") break;
+                if (latestVersion != "Okänd")
+                {
+                    break;
+                }
             }
         }
     }
-    catch {
+    catch
+    {
         /* Ignorera API-missar, t.ex. interna paket */
     }
 
@@ -473,22 +483,16 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
     foreach (var item in items)
     {
-        if (item.ActiveVulnerabilities.Count != 0) continue;
+        if (item.ActiveVulnerabilities.Count != 0)
+        {
+            continue;
+        }
 
-        string statusBadge;
-
-        if (item.HasVersionMismatch)
-        {
-            statusBadge = "<span style=\"background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">⚠️ Konflikt</span>";
-        }
-        else if (item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion)
-        {
-            statusBadge = "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">🔄 Uppdatering</span>";
-        }
-        else
-        {
-            statusBadge = "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">✓ OK</span>";
-        }
+        string statusBadge = item.HasVersionMismatch
+            ? "<span style=\"background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">⚠️ Konflikt</span>"
+            : item.LatestVersion != "Okänd" && item.LatestVersion != item.InstalledVersion
+                ? "<span style=\"background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">🔄 Uppdatering</span>"
+                : "<span style=\"background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;\">✓ OK</span>";
 
         // --- BYGGER UPPDATERAD CELL FÖR CPM-STATUS OCH URSPRUNG ---
         string cpmCellContent;
@@ -527,15 +531,25 @@ static async Task GenerateMarkdownReportAsync(List<ReportItem> items, string out
 
 static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 {
-    if (string.IsNullOrWhiteSpace(rangeStr)) return false;
-    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion)) return false;
+    if (string.IsNullOrWhiteSpace(rangeStr))
+    {
+        return false;
+    }
+
+    if (!Version.TryParse(currentVersionStr.Split('-')[0], out var currentVersion))
+    {
+        return false;
+    }
 
     rangeStr = rangeStr.Trim();
 
     if (rangeStr.StartsWith('(') || rangeStr.StartsWith('['))
     {
         var parts = rangeStr.Substring(1, rangeStr.Length - 2).Split(',');
-        if (parts.Length != 2) return false;
+        if (parts.Length != 2)
+        {
+            return false;
+        }
 
         bool isMinInclusive = rangeStr.StartsWith('[');
         bool isMaxInclusive = rangeStr.EndsWith(']');
@@ -545,14 +559,28 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 
         if (!string.IsNullOrEmpty(minStr) && Version.TryParse(minStr.Split('-')[0], out var minVersion))
         {
-            if (isMinInclusive && currentVersion < minVersion) return false;
-            if (!isMinInclusive && currentVersion <= minVersion) return false;
+            if (isMinInclusive && currentVersion < minVersion)
+            {
+                return false;
+            }
+
+            if (!isMinInclusive && currentVersion <= minVersion)
+            {
+                return false;
+            }
         }
 
         if (!string.IsNullOrEmpty(maxStr) && Version.TryParse(maxStr.Split('-')[0], out var maxVersion))
         {
-            if (isMaxInclusive && currentVersion > maxVersion) return false;
-            if (!isMaxInclusive && currentVersion >= maxVersion) return false;
+            if (isMaxInclusive && currentVersion > maxVersion)
+            {
+                return false;
+            }
+
+            if (!isMaxInclusive && currentVersion >= maxVersion)
+            {
+                return false;
+            }
         }
 
         return true;
@@ -560,11 +588,17 @@ static bool IsVersionAffected(string currentVersionStr, string rangeStr)
 
     if (rangeStr.StartsWith("<=", StringComparison.OrdinalIgnoreCase))
     {
-        if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v)) return currentVersion <= v;
+        if (Version.TryParse(rangeStr.Replace("<=", "").Trim().Split('-')[0], out var v))
+        {
+            return currentVersion <= v;
+        }
     }
     if (rangeStr.StartsWith('<'))
     {
-        if (Version.TryParse(rangeStr.Replace("<", "").Trim().Split('-')[0], out var v)) return currentVersion < v;
+        if (Version.TryParse(rangeStr.Replace("<", "").Trim().Split('-')[0], out var v))
+        {
+            return currentVersion < v;
+        }
     }
 
     return false;
@@ -578,7 +612,10 @@ static void FindDirectRoots(
     HashSet<string> visited)
 {
     // Förhindra oändliga loopar om det finns cirkulära referenser i graferna
-    if (!visited.Add(currentPackage)) return;
+    if (!visited.Add(currentPackage))
+    {
+        return;
+    }
 
     if (dependentOnTracker.TryGetValue(currentPackage, out var parents))
     {
@@ -638,7 +675,7 @@ static string GetWikiOutputPath(string fileName = "sbom-report.md")
 
 #region DataModeller
 
-sealed record ReportItem(
+internal sealed record ReportItem(
     string PackageName,
     string InstalledVersion,
     string LatestVersion,
@@ -650,12 +687,12 @@ sealed record ReportItem(
     string IntroducedBy
 );
 
-sealed record ServiceIndex(
+internal sealed record ServiceIndex(
     [property: JsonPropertyName("resources")]
     List<Resource> Resources
 );
 
-sealed record Resource(
+internal sealed record Resource(
     [property: JsonPropertyName("@id")]
     string Id,
 
@@ -663,7 +700,7 @@ sealed record Resource(
     string Type
 );
 
-sealed record VulnerabilityFile(
+internal sealed record VulnerabilityFile(
     [property: JsonPropertyName("@name")]
     string Name,
 
@@ -671,7 +708,7 @@ sealed record VulnerabilityFile(
     string Id
 );
 
-sealed record Vulnerability(
+internal sealed record Vulnerability(
     [property: JsonPropertyName("severity")]
     int Severity,
 
@@ -682,12 +719,12 @@ sealed record Vulnerability(
     string Url
 );
 
-sealed record LockFile(
+internal sealed record LockFile(
     [property: JsonPropertyName("dependencies")]
     Dictionary<string, Dictionary<string, LockDependency>> Dependencies
 );
 
-sealed record LockDependency(
+internal sealed record LockDependency(
     [property: JsonPropertyName("type")]
     string Type,
 
@@ -701,7 +738,7 @@ sealed record LockDependency(
     Dictionary<string, string>? Dependencies
 );
 
-sealed record NuGetPackage
+internal sealed record NuGetPackage
 {
     public string Name { get; init; }
     public string Version { get; init; }
@@ -716,22 +753,22 @@ sealed record NuGetPackage
     }
 }
 
-sealed record NugetRegistrationIndex(
+internal sealed record NugetRegistrationIndex(
     [property: JsonPropertyName("items")]
     List<RegistrationPage> Pages
 );
 
-sealed record RegistrationPage(
+internal sealed record RegistrationPage(
     [property: JsonPropertyName("items")]
     List<RegistrationItem> Items
 );
 
-sealed record RegistrationItem(
+internal sealed record RegistrationItem(
     [property: JsonPropertyName("catalogEntry")]
     CatalogEntry CatalogEntry
 );
 
-sealed record CatalogEntry(
+internal sealed record CatalogEntry(
     [property: JsonPropertyName("version")]
     string Version
 );

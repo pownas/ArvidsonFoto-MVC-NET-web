@@ -8,27 +8,23 @@ namespace ArvidsonFoto.Controllers;
 /// <summary>
 /// Controller for handling home page and general site functionality.
 /// </summary>
-public class HomeController : Controller
+/// <remarks>
+/// Initializes a new instance of the <see cref="HomeController"/> class.
+/// </remarks>
+/// <param name="pageCounterService">The page counter service for tracking page views</param>
+/// <param name="imageService">The image service for fetching images</param>
+public class HomeController(IPageCounterService pageCounterService, IApiImageService imageService) : Controller
 {
-    private readonly IPageCounterService _pageCounterService;
-    private readonly IApiImageService _imageService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HomeController"/> class.
-    /// </summary>
-    /// <param name="pageCounterService">The page counter service for tracking page views</param>
-    /// <param name="imageService">The image service for fetching images</param>
-    public HomeController(IPageCounterService pageCounterService, IApiImageService imageService)
-    {
-        _pageCounterService = pageCounterService;
-        _imageService = imageService;
-    }
+    private readonly IPageCounterService _pageCounterService = pageCounterService;
+    private readonly IApiImageService _imageService = imageService;
 
     public IActionResult Index()
     {
         ViewData["Title"] = "Startsidan";
         if (User?.Identity?.IsAuthenticated is false)
+        {
             _pageCounterService.AddPageCount("Startsidan");
+        }
 
         var viewModel = new GalleryViewModel
         {
@@ -53,14 +49,22 @@ public class HomeController : Controller
         viewModel.VisitedUrl = HttpRequestExtensions.GetRawUrl(url);
 
         if (LogErrorUrlPost(viewModel.VisitedUrl))
+        {
             Log.Fatal("Navigation error to page: " + viewModel.VisitedUrl);
+        }
 
         if (viewModel.VisitedUrl is null)
+        {
             ViewData["Title"] = "Error";
+        }
         else if (viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase))
+        {
             ViewData["Title"] = "Error 301 - Old image Url";
+        }
         else
+        {
             ViewData["Title"] = "Error 404 - Page not found";
+        }
 
         return View(viewModel);
     }

@@ -1,24 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ArvidsonFoto.Areas.Identity.Data;
+﻿using ArvidsonFoto.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArvidsonFoto.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class SetPasswordModel : PageModel
+public class SetPasswordModel(
+    UserManager<ArvidsonFotoUser> userManager,
+    SignInManager<ArvidsonFotoUser> signInManager) : PageModel
 {
-    private readonly UserManager<ArvidsonFotoUser> _userManager;
-    private readonly SignInManager<ArvidsonFotoUser> _signInManager;
-
-    public SetPasswordModel(
-        UserManager<ArvidsonFotoUser> userManager,
-        SignInManager<ArvidsonFotoUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;
