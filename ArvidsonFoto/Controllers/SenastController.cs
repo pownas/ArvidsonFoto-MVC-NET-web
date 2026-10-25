@@ -32,12 +32,12 @@ public class SenastController(
             sida = 1;
         }
 
-        sortOrder = sortOrder?.ToLowerInvariant() switch
+        sortOrder = sortOrder?.Trim().ToLowerInvariant() switch
         {
-            "photographed" => "Fotograferad",
-            "uploaded" => "Uppladdad",
-            "by-category" => "Per kategori",
-            _ => sortOrder
+            "photographed" or "fotograferad" => "Fotograferad",
+            "uploaded" or "uppladdad" => "Uppladdad",
+            "by-category" or "per kategori" => "Per kategori",
+            _ => sortOrder?.Trim()
         };
         sortOrder ??= "Fotograferad";
 

@@ -250,6 +250,18 @@ public class GuestbookIntegrationTests
         Assert.AreEqual("/bilder/daggdjur/baver", swedish.Headers.Location?.OriginalString);
     }
 
+    [DataTestMethod]
+    [DataRow("/senast/uppladdad", "Uppladdad")]
+    [DataRow("/senast/per%20kategori", "Per kategori")]
+    public async Task SwedishLatestRoutes_ShowTheRequestedSortOrder(string path, string expectedSortOrder)
+    {
+        var response = await _client!.GetAsync($"{path}?culture=sv-SE");
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.Headers.Location?.OriginalString);
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+        Assert.IsTrue(document.QuerySelector("h2")?.TextContent.Contains(expectedSortOrder, StringComparison.Ordinal) == true);
+    }
+
     [TestMethod]
     public async Task LegacyCasingAndCategoryNames_RedirectToCanonicalLowercaseUrls()
     {
