@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Tests.Unit.MockServices;
@@ -61,6 +62,36 @@ public class BilderControllerTests : IDisposable
         Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Fåglar", model.SelectedCategory.NameSv);
+    }
+
+    [Fact]
+    public void Index_CreatesChildActivity_WithSameTraceIdAsRequest()
+    {
+        ActivityTraceId traceId = default;
+        ActivitySpanId parentSpanId = default;
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ArvidsonFoto",
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            ActivityStarted = activity =>
+            {
+                if (activity.OperationName == "BilderController.Index")
+                {
+                    traceId = activity.TraceId;
+                    parentSpanId = activity.ParentSpanId;
+                }
+            }
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        using var requestActivity = new Activity("ASP.NET Core request")
+            .SetIdFormat(ActivityIdFormat.W3C)
+            .Start();
+
+        _ = _controller.Index("Fåglar", null, null, null, null, 1);
+
+        Assert.Equal(requestActivity.TraceId, traceId);
+        Assert.Equal(requestActivity.SpanId, parentSpanId);
     }
 
     [Fact]

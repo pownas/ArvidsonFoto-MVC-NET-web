@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Core.DTOs;
+﻿using System.Diagnostics;
+using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
@@ -11,6 +12,8 @@ public class BilderController(
     IApiCategoryService categoryService,
     IPageCounterService pageCounterService) : Controller
 {
+    private static readonly ActivitySource ActivitySource = new("ArvidsonFoto");
+
     private readonly IApiImageService _imageService = imageService;
     private readonly IApiCategoryService _categoryService = categoryService;
     private readonly IPageCounterService _pageCounterService = pageCounterService;
@@ -27,6 +30,8 @@ public class BilderController(
     [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
     public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Index");
+
         GalleryViewModel viewModel = new();
         int pageSize = 48;
         viewModel.PageSize = pageSize;
@@ -147,6 +152,8 @@ public class BilderController(
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Bilder");
+
         var url = Url.ActionContext.HttpContext;
         string visitedUrl = url?.GetRawUrl() ?? "";
 
@@ -162,6 +169,8 @@ public class BilderController(
     [Route("/search")]
     public IActionResult Search(string? s)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Search");
+
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("search");
