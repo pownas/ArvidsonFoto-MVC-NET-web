@@ -29,6 +29,27 @@ public class GuestbookIntegrationTests
         _factory?.Dispose();
     }
 
+    [TestMethod]
+    public async Task ProductionSiteCss_ServesCompiledStaticFile()
+    {
+        using var factory = _factory!.WithWebHostBuilder(builder => builder
+            .UseEnvironment("Production")
+            .UseSetting("ConnectionStrings:UseInMemoryDatabase", "true"));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost"),
+            AllowAutoRedirect = false
+        });
+
+        using var response = await client.GetAsync("/css/site.css");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual("text/css", response.Content.Headers.ContentType?.MediaType);
+
+        var webRoot = factory.Services.GetRequiredService<IWebHostEnvironment>().WebRootPath;
+        var expected = await File.ReadAllBytesAsync(Path.Combine(webRoot, "css", "site.css"));
+        CollectionAssert.AreEqual(expected, await response.Content.ReadAsByteArrayAsync());
+    }
+
     #region GET /Info/Gastbok Tests
 
     [TestMethod]

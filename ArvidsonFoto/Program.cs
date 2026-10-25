@@ -200,13 +200,9 @@ public class Program
         _ = services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
                 .AddV8();
 
-        // WebOptimizer for SCSS compilation and CSS/JS minification
+        // WebOptimizer for JavaScript bundling; site.css is already compiled from site.scss.
         _ = services.AddWebOptimizer(pipeline =>
         {
-            // Compile SCSS to CSS and minify
-            _ = pipeline.AddScssBundle("/css/site.css", "wwwroot/css/site.scss")
-                .UseContentRoot();
-
             // Minify JavaScript files
             _ = pipeline.AddJavaScriptBundle("/js/site.min.js", "wwwroot/js/site.js")
                 .UseContentRoot();
