@@ -11,25 +11,6 @@
           "Azure.Core": "1.53.0"
         }
       },
-      "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection": {
-        "type": "Direct",
-        "requested": "[3.31.0, )",
-        "resolved": "3.31.0",
-        "contentHash": "ufRjMrept/DaOiBTJZKoZ3ldj3dYH2Vd+SyTvD20JtsroAWQxXx+r8UWhJQWtSR3/gb85H7t0d2chSKGIpRyJg==",
-        "dependencies": {
-          "JavaScriptEngineSwitcher.Core": "3.31.0"
-        }
-      },
-      "JavaScriptEngineSwitcher.V8": {
-        "type": "Direct",
-        "requested": "[3.35.2, )",
-        "resolved": "3.35.2",
-        "contentHash": "LM86wQcfiGtNwCZLxv44zjsMXpc/6LUnrWX7y/jPyjDyvxVfqL4Q6+1zm9jADr4fSpwaEA6cGecngKFEPFmmkQ==",
-        "dependencies": {
-          "JavaScriptEngineSwitcher.Core": "3.31.0",
-          "Microsoft.ClearScript.V8": "7.5.1.1"
-        }
-      },
       "LigerShark.WebOptimizer.Core": {
         "type": "Direct",
         "requested": "[3.0.477, )",
@@ -37,17 +18,6 @@
         "contentHash": "md8zBJMIur8Hnb5jn7krSfe9I0BZUGqCxwh2A5Y1MTR7wtY6v9gYuyW5EFNCYzQCvaaAZxlTynUk8ZsIsrBXsg==",
         "dependencies": {
           "NUglify": "1.21.15"
-        }
-      },
-      "LigerShark.WebOptimizer.Sass": {
-        "type": "Direct",
-        "requested": "[3.0.147, )",
-        "resolved": "3.0.147",
-        "contentHash": "zCpVwSHou2Y90EXNgLGAh6G1KTgZ+nEl1jVrB/XQOyyoBaF6eNHH0QGSml8AuV/qAdEr5WDQRXnqzThKfKSqdA==",
-        "dependencies": {
-          "DartSassHost": "2.0.0",
-          "JavaScriptEngineSwitcher.Core": "3.24.1",
-          "LigerShark.WebOptimizer.Core": "3.0.477"
         }
       },
       "MailKit": {
@@ -94,12 +64,6 @@
         "dependencies": {
           "Microsoft.OpenApi": "[3.10.2, 4.0.0)"
         }
-      },
-      "Microsoft.ClearScript.V8.Native.win-arm64": {
-        "type": "Direct",
-        "requested": "[7.5.1.1, )",
-        "resolved": "7.5.1.1",
-        "contentHash": "ZvAKQ+zKsn7QGmKefd8Eh1AjascYR4j5QDchNwJkEbYxlFJNY1Q9QNjdExS4NG4QDOqp2iD1WkQgR70ZX4BnIQ=="
       },
       "Microsoft.EntityFrameworkCore.Design": {
         "type": "Direct",
@@ -191,27 +155,6 @@
           "Serilog": "4.2.0"
         }
       },
-      "AdvancedStringBuilder": {
-        "type": "Transitive",
-        "resolved": "0.2.0",
-        "contentHash": "+XOjGvq+4pnmAWLLUimuINKsQTHEqxuA6eDkqUmzIBEsQH1Uz55nGmgVHE6QsocOk1BGnu1janyPeH+cOt00Tg=="
-      },
-      "DartSassHost": {
-        "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "oGYmwRdYJUcSca3DbmrKRJ7SBDNqtJNWAfSAIqVgc/KjqTrptdrwvVCDyrYVhoTnxfh1p2ea97JvhMpdKF7zWQ==",
-        "dependencies": {
-          "JavaScriptEngineSwitcher.Core": "3.24.1"
-        }
-      },
-      "JavaScriptEngineSwitcher.Core": {
-        "type": "Transitive",
-        "resolved": "3.31.0",
-        "contentHash": "IFniRChO1iFj9umQ32tm7D5+ogtJGNPFwp2opPupo+biqUsBRhr7Vz9GZyGay5wisvFdylmcnFo99gANcOileg==",
-        "dependencies": {
-          "AdvancedStringBuilder": "0.2.0"
-        }
-      },
       "Microsoft.Build.Framework": {
         "type": "Transitive",
         "resolved": "18.9.6",
@@ -219,26 +162,6 @@
         "dependencies": {
           "Microsoft.NET.StringTools": "18.9.6"
         }
-      },
-      "Microsoft.ClearScript.Core": {
-        "type": "Transitive",
-        "resolved": "7.5.1.1",
-        "contentHash": "H3R4OaqQPfwxewnZcvTU6qUFyzJ05FchBD4IlO6Z0WO3iWh8PyAWHDcnt4FUmo/t0m40o8rkgnJ7g9pDT7pwJQ=="
-      },
-      "Microsoft.ClearScript.V8": {
-        "type": "Transitive",
-        "resolved": "7.5.1.1",
-        "contentHash": "oEJxEMqzzC8XYE9kA1ajmfmloAuSlNIzNyrIfwROXkKjfeePptvUT22MqHfV6rRV4//B7XShlq7VM6o2ZM1eZQ==",
-        "dependencies": {
-          "Microsoft.ClearScript.Core": "7.5.1.1",
-          "Microsoft.ClearScript.V8.ICUData": "7.5.1.1",
-          "Newtonsoft.Json": "13.0.3"
-        }
-      },
-      "Microsoft.ClearScript.V8.ICUData": {
-        "type": "Transitive",
-        "resolved": "7.5.1.1",
-        "contentHash": "Jg3yFIWPkfsjOHzVUTbA0VgnxXBtX9BwSL00E8HIljFm3f203e+mlJYO0tTHnqetA0xZyLKbRjRuPotUP/47Nw=="
       },
       "Microsoft.CodeAnalysis.Analyzers": {
         "type": "Transitive",
@@ -706,12 +629,6 @@
           "Microsoft.IdentityModel.Tokens": "8.22.0"
         }
       },
-      "Newtonsoft.Json": {
-        "type": "CentralTransitive",
-        "requested": "[13.0.4, )",
-        "resolved": "13.0.4",
-        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
-      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
         "type": "CentralTransitive",
         "requested": "[1.19.1, )",
@@ -787,35 +704,6 @@
         "requested": "[11.0.0-rc.2.26504.105, )",
         "resolved": "11.0.0-rc.2.26504.105",
         "contentHash": "mKLT7vtB8DLF9Y5WRitC1jSpFZeFSieb7wp5cELFL02zP1AP4Aix0rf+ydJQ+xR/sNFfElodoaQ9OMk47hic4A=="
-      }
-    },
-    "net11.0/win-x86": {
-      "Microsoft.ClearScript.V8.Native.win-arm64": {
-        "type": "Direct",
-        "requested": "[7.5.1.1, )",
-        "resolved": "7.5.1.1",
-        "contentHash": "ZvAKQ+zKsn7QGmKefd8Eh1AjascYR4j5QDchNwJkEbYxlFJNY1Q9QNjdExS4NG4QDOqp2iD1WkQgR70ZX4BnIQ=="
-      },
-      "Microsoft.Data.SqlClient.SNI.runtime": {
-        "type": "Transitive",
-        "resolved": "7.1.0",
-        "contentHash": "rWunOb6Dby0lcI82PohARcRbF+4x4wNKxnKRSHXhuwZMu8/cCS68DCfhceq4bv1gUEfoL5dWXHYnfxVvLQUN+Q=="
-      },
-      "Microsoft.Data.SqlClient": {
-        "type": "CentralTransitive",
-        "requested": "[7.1.1, )",
-        "resolved": "7.1.1",
-        "contentHash": "Moz4+bba/OdEM9I4jXWggduJ4sqoNcgVAQyXG/dNnGGvnS/YDr2fTjP83fg5YX3drgRki6fRAhR94P8dAZgZtQ==",
-        "dependencies": {
-          "Microsoft.Bcl.Cryptography": "9.0.18",
-          "Microsoft.Data.SqlClient.Extensions.Abstractions": "[7.1.1, 8.0.0)",
-          "Microsoft.Data.SqlClient.Internal.Logging": "[7.1.1, 8.0.0)",
-          "Microsoft.Data.SqlClient.SNI.runtime": "[7.1.0, 8.0.0)",
-          "Microsoft.IdentityModel.JsonWebTokens": "8.16.0",
-          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.16.0",
-          "Microsoft.SqlServer.Server": "[1.0.0, 2.0.0)",
-          "System.Configuration.ConfigurationManager": "9.0.18"
-        }
       }
     }
   }

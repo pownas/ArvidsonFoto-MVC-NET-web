@@ -4,8 +4,6 @@ using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Security;
-using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
-using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -196,11 +194,7 @@ public class Program
         // OpenAPI configuration for API documentation (using .NET 10 built-in support)
         _ = services.AddOpenApi();
 
-        // Configure JavaScript engine for SCSS compilation
-        _ = services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
-                .AddV8();
-
-        // WebOptimizer for JavaScript bundling; site.css is already compiled from site.scss.
+        // WebOptimizer for JavaScript bundling and minification
         _ = services.AddWebOptimizer(pipeline =>
         {
             // Minify JavaScript files
