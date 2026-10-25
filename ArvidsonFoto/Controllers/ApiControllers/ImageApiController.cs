@@ -335,11 +335,11 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
-    [HttpGet("/api/Bilder/{*categoryPath}")]
+    [HttpGet("/api/bilder/{*categoryPath}")]
     [HttpGet("/api/images/{*categoryPath}")]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
-    [HttpGet("ByPath/Bilder/{*categoryPath}")]
+    [HttpGet("ByPath/bilder/{*categoryPath}")]
     [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
     public IActionResult GetImagesByCategoryPath(
         string categoryPath,

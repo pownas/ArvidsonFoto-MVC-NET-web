@@ -56,7 +56,7 @@ public class GuestbookIntegrationTests
     public async Task GetGastbok_ReturnsSuccessStatusCode()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok?culture=sv-SE");
+        var response = await _client!.GetAsync("/info/gastbok?culture=sv-SE");
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -66,7 +66,7 @@ public class GuestbookIntegrationTests
     public async Task GetGastbok_ReturnsHtmlContent()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok?culture=sv-SE");
+        var response = await _client!.GetAsync("/info/gastbok?culture=sv-SE");
         // Assert
         Assert.IsTrue(response.Content.Headers.ContentType?.MediaType?.Contains("text/html") ?? false);
         var document = await HtmlHelpers.GetDocumentAsync(response);
@@ -76,7 +76,7 @@ public class GuestbookIntegrationTests
     [TestMethod]
     public async Task EnglishGuestbook_TranslatesNavigationAndPreservesQueryWhenSwitching()
     {
-        var response = await _client!.GetAsync("/Info/Gastbok?culture=en-US&page=2&search=birds");
+        var response = await _client!.GetAsync("/info/gastbok?culture=en-US&page=2&search=birds");
         var document = await HtmlHelpers.GetDocumentAsync(response);
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -91,7 +91,7 @@ public class GuestbookIntegrationTests
     [TestMethod]
     public async Task Gallery_TranslatesImageCaptionsBreadcrumbsAndCount()
     {
-        var englishResponse = await _client!.GetAsync("/Bilder/birds/eurasian-three-toed-woodpecker?culture=en-US");
+        var englishResponse = await _client!.GetAsync("/images/birds/woodpeckers/eurasian-three-toed-woodpecker?culture=en-US");
         var english = await HtmlHelpers.GetDocumentAsync(englishResponse);
 
         Assert.AreEqual(HttpStatusCode.OK, englishResponse.StatusCode);
@@ -101,7 +101,7 @@ public class GuestbookIntegrationTests
         Assert.IsNotNull(english.QuerySelector("a[lang='sv'] svg[aria-hidden='true']"));
         Assert.IsNotNull(english.QuerySelector("a[lang='en'] svg[aria-hidden='true']"));
 
-        var swedishResponse = await _client.GetAsync("/Bilder/Faglar/Tretaig-hackspett?culture=sv-SE");
+        var swedishResponse = await _client.GetAsync("/bilder/faglar/tretaig-hackspett?culture=sv-SE");
         var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
         Assert.AreEqual(HttpStatusCode.OK, swedishResponse.StatusCode);
         Assert.IsTrue(swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Tretåig hackspett"));
@@ -111,7 +111,7 @@ public class GuestbookIntegrationTests
     [TestMethod]
     public async Task BeaverCategoryName_UsesEnglishEvenAfterSwedishRequest()
     {
-        var swedish = await HtmlHelpers.GetDocumentAsync(await _client!.GetAsync("/Bilder/Daggdjur/Baver?culture=sv-SE"));
+        var swedish = await HtmlHelpers.GetDocumentAsync(await _client!.GetAsync("/bilder/daggdjur/baver?culture=sv-SE"));
         var english = await HtmlHelpers.GetDocumentAsync(await _client.GetAsync("/images/mammals/beaver?culture=en-US"));
         Assert.IsTrue(swedish.QuerySelector("h1, h2")?.TextContent.Contains("Bäver") == true ||
             swedish.QuerySelector("#gallery figcaption")?.TextContent.Contains("Bäver") == true);
@@ -121,7 +121,7 @@ public class GuestbookIntegrationTests
     [TestMethod]
     public async Task BeaverGallery_UsesSelectedLanguageOnSwedishAndEnglishRoutes()
     {
-        foreach (var path in new[] { "/Bilder/mammals/beaver", "/images/mammals/beaver" })
+        foreach (var path in new[] { "/bilder/daggdjur/baver", "/images/mammals/beaver" })
         {
             using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
             var englishResponse = await client.GetAsync($"{path}?culture=en-US");
@@ -131,7 +131,7 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos") == true, path);
             Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:") == true, path);
             Assert.IsTrue(english.QuerySelector("meta[name='description']")?.GetAttribute("content")?.Contains("Beaver") == true, path);
-            Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/Bilder/daggdjur/baver']"), path);
+            Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/bilder/daggdjur/baver']"), path);
             Assert.IsTrue(english.QuerySelector(".main-nav")?.TextContent.Contains("Latest") == true, path);
             Assert.AreEqual("https://ArvidsonFoto.se/images/mammals/beaver",
                 english.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
@@ -141,7 +141,7 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(swedish.QuerySelectorAll("#gallery figcaption").Any(c => c.TextContent.Contains("Bäver")), path);
             Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:") == true, path);
             Assert.IsTrue(swedish.QuerySelector(".main-nav")?.TextContent.Contains("Senast") == true, path);
-            Assert.AreEqual("https://ArvidsonFoto.se/Bilder/daggdjur/baver",
+            Assert.AreEqual("https://ArvidsonFoto.se/bilder/daggdjur/baver",
                 swedish.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
         }
     }
@@ -168,8 +168,8 @@ public class GuestbookIntegrationTests
             AllowAutoRedirect = false,
             HandleCookies = true
         });
-        await client.GetAsync("/Bilder/mammals/beaver?culture=en-US");
-        var english = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/Bilder/mammals/beaver"));
+        await client.GetAsync("/bilder/daggdjur/baver?culture=en-US");
+        var english = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/bilder/daggdjur/baver"));
 
         Assert.IsTrue(english.QuerySelector("#gallery figcaption")?.TextContent.Contains("Beaver") == true);
         Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos") == true);
@@ -180,14 +180,14 @@ public class GuestbookIntegrationTests
     [TestMethod]
     public async Task TranslationReview_RequiresAuthentication()
     {
-        var get = await _client!.GetAsync("/TranslationReview?culture=sv-SE");
+        var get = await _client!.GetAsync("/translationreview?culture=sv-SE");
         Assert.AreEqual(HttpStatusCode.Redirect, get.StatusCode);
-        StringAssert.Contains(get.Headers.Location?.OriginalString ?? "", "/Identity/Account/Login");
+        StringAssert.Contains(get.Headers.Location?.OriginalString ?? "", "/identity/account/login");
 
-        var post = await _client.PostAsync("/TranslationReview/Save", new FormUrlEncodedContent(
+        var post = await _client.PostAsync("/translationreview/save", new FormUrlEncodedContent(
             new Dictionary<string, string> { ["table"] = "menu", ["id"] = "1", ["field"] = "name", ["reviewed"] = "true" }));
         Assert.AreEqual(HttpStatusCode.Redirect, post.StatusCode);
-        StringAssert.Contains(post.Headers.Location?.OriginalString ?? "", "/Identity/Account/Login");
+        StringAssert.Contains(post.Headers.Location?.OriginalString ?? "", "/identity/account/login");
     }
 
     [TestMethod]
@@ -213,7 +213,7 @@ public class GuestbookIntegrationTests
     {
         foreach (var (culture, expectedName) in new[] { ("en-US", "Beaver"), ("sv-SE", "Bäver") })
         {
-            var response = await _client!.GetAsync($"/api/Bilder/mammals/beaver?page=1&culture={culture}");
+            var response = await _client!.GetAsync($"/api/images/mammals/beaver?page=1&culture={culture}");
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var json = await response.Content.ReadAsStringAsync();
             StringAssert.Contains(json, expectedName);
@@ -229,10 +229,10 @@ public class GuestbookIntegrationTests
         })
         {
             using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-            var privacyPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/Home/Privacy?culture={culture}"));
+            var privacyPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/home/privacy?culture={culture}"));
             Assert.IsTrue(privacyPage.Body!.TextContent.Contains(privacy));
             Assert.IsTrue(privacyPage.QuerySelector("#theme-switcher-description")?.TextContent.Contains(theme) == true);
-            var errorPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/Home/Error?culture={culture}"));
+            var errorPage = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"/home/error?culture={culture}"));
             Assert.IsTrue(errorPage.Body!.TextContent.Contains(error));
         }
     }
@@ -247,7 +247,48 @@ public class GuestbookIntegrationTests
 
         var swedish = await client.GetAsync("/gallery.asp?ID=11&culture=sv-SE");
         Assert.AreEqual(HttpStatusCode.Redirect, swedish.StatusCode);
-        Assert.AreEqual("/Bilder/daggdjur/baver", swedish.Headers.Location?.OriginalString);
+        Assert.AreEqual("/bilder/daggdjur/baver", swedish.Headers.Location?.OriginalString);
+    }
+
+    [TestMethod]
+    public async Task LegacyCasingAndCategoryNames_RedirectToCanonicalLowercaseUrls()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        var category = await client.GetAsync("/Bilder/Däggdjur/Bäver?culture=sv-SE&sida=2");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, category.StatusCode);
+        Assert.AreEqual("/bilder/daggdjur/baver?culture=sv-SE&sida=2", category.Headers.Location?.OriginalString);
+
+        var legacyApi = await client.GetAsync("/api/Bilder/Däggdjur/Bäver?page=1");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyApi.StatusCode);
+        Assert.AreEqual("/api/bilder/daggdjur/baver?page=1", legacyApi.Headers.Location?.OriginalString);
+
+        var legacyContact = await client.GetAsync("/Info/Contact?culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyContact.StatusCode);
+        Assert.AreEqual("/info/contact?culture=sv-SE", legacyContact.Headers.Location?.OriginalString);
+
+        var canonicalContact = await client.GetAsync(legacyContact.Headers.Location);
+        Assert.AreEqual(HttpStatusCode.MovedPermanently, canonicalContact.StatusCode);
+        Assert.AreEqual("/info/kontakta", canonicalContact.Headers.Location?.OriginalString);
+        Assert.AreEqual(HttpStatusCode.OK, (await client.GetAsync(canonicalContact.Headers.Location)).StatusCode);
+    }
+
+    [TestMethod]
+    public async Task PublicPageLinks_UseLowercasePaths()
+    {
+        foreach (var path in new[] { "/", "/info", "/info/gastbok", "/search", "/latest", "/bilder/faglar" })
+        {
+            var response = await _client!.GetAsync(path);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, path);
+
+            var document = await HtmlHelpers.GetDocumentAsync(response);
+            foreach (var anchor in document.QuerySelectorAll("a[href^='/']"))
+            {
+                var href = anchor.GetAttribute("href")!;
+                var absoluteUri = new Uri(new Uri("https://localhost"), href);
+                Assert.AreEqual(absoluteUri.AbsolutePath.ToLowerInvariant(), absoluteUri.AbsolutePath, href);
+            }
+        }
     }
 
     [TestMethod]
@@ -255,7 +296,7 @@ public class GuestbookIntegrationTests
     {
         foreach (var term in new[] { "Eurasian", "Tretåig" })
         {
-            var response = await _client!.GetAsync($"/Search?s={Uri.EscapeDataString(term)}&culture=en-US");
+            var response = await _client!.GetAsync($"/search?s={Uri.EscapeDataString(term)}&culture=en-US");
             var document = await HtmlHelpers.GetDocumentAsync(response);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -282,10 +323,10 @@ public class GuestbookIntegrationTests
         }
 
         var languageLink = document.QuerySelector("a[lang='sv']")?.GetAttribute("href");
-        Assert.IsTrue(languageLink?.StartsWith("/Info/Sidkarta", StringComparison.Ordinal) == true);
-        var swedishResponse = await _client!.GetAsync("/Info/Sidkarta?culture=sv-SE");
+        Assert.IsTrue(languageLink?.StartsWith("/info/sidkarta", StringComparison.Ordinal) == true);
+        var swedishResponse = await _client!.GetAsync("/info/sidkarta?culture=sv-SE");
         var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
-        Assert.IsNotNull(swedish.QuerySelector("a[href='/Bilder/faglar/hackspettar/tretaig-hackspett']"));
+        Assert.IsNotNull(swedish.QuerySelector("a[href='/bilder/faglar/hackspettar/tretaig-hackspett']"));
     }
 
     [TestMethod]
@@ -310,10 +351,10 @@ public class GuestbookIntegrationTests
         using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         foreach (var (englishPath, englishText, swedishPath, swedishText) in new[]
         {
-            ("/information/about", "A passion for nature photography", "/Info/Om_mig", "Passion för naturfotografi"),
-            ("/information/contact", "You can contact me by email or phone.", "/Info/Kontakta", "Om du vill kontakta mig"),
-            ("/information/buy-photos", "What can I help you with?", "/Info/Kop_av_bilder", "Vad kan jag hjälpa till med?"),
-            ("/information/copyright", "All rights reserved by the photographer.", "/Info/Copyright", "Alla rättigheter förbehållna fotografen.")
+            ("/information/about", "A passion for nature photography", "/info/om_mig", "Passion för naturfotografi"),
+            ("/information/contact", "You can contact me by email or phone.", "/info/kontakta", "Om du vill kontakta mig"),
+            ("/information/buy-photos", "What can I help you with?", "/info/kop_av_bilder", "Vad kan jag hjälpa till med?"),
+            ("/information/copyright", "All rights reserved by the photographer.", "/info/copyright", "Alla rättigheter förbehållna fotografen.")
         })
         {
             var english = await HtmlHelpers.GetDocumentAsync(await client.GetAsync($"{englishPath}?culture=en-US"));
@@ -330,7 +371,7 @@ public class GuestbookIntegrationTests
         Assert.AreEqual("Name (leave blank to be anonymous)", guestbook.QuerySelector("#Name")?.GetAttribute("placeholder"));
         Assert.AreEqual("Enter a message.", guestbook.QuerySelector("#Message")?.GetAttribute("data-val-required"));
 
-        var swedishContact = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/Info/Kontakta?culture=sv-SE"));
+        var swedishContact = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/info/kontakta?culture=sv-SE"));
         Assert.AreEqual("Ditt namn", swedishContact.QuerySelector("#Name")?.GetAttribute("placeholder"));
         Assert.AreEqual("Ange ditt namn", swedishContact.QuerySelector("#Name")?.GetAttribute("data-val-required"));
         var latest = await HtmlHelpers.GetDocumentAsync(await client.GetAsync("/latest/photographed?culture=en-US"));
@@ -344,25 +385,26 @@ public class GuestbookIntegrationTests
         var document = await HtmlHelpers.GetDocumentAsync(response);
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.IsTrue(document.QuerySelector("a[lang='sv']")?.GetAttribute("href")
-            ?.Contains("/Bilder/faglar/hackspettar/tretaig-hackspett?sida=2", StringComparison.Ordinal) == true);
+            ?.Contains("/bilder/faglar/hackspettar/tretaig-hackspett?sida=2", StringComparison.Ordinal) == true);
     }
     [TestMethod]
     public async Task GetGastbok_ContainsGuestbookForm()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
+        var response = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(response);
 
         // Assert
-        var form = document.QuerySelector("form[action*='PostToGb']");
+        var form = document.QuerySelector("form[action='/info/posttogb']");
         Assert.IsNotNull(form, "Guestbook form should be present");
+        Assert.AreEqual("/info/posttogb", form!.GetAttribute("action"));
     }
 
     [TestMethod]
     public async Task GetGastbok_ContainsRequiredFields()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
+        var response = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(response);
 
         // Assert - Check for required form fields
@@ -377,7 +419,7 @@ public class GuestbookIntegrationTests
     public async Task GetGastbok_ContainsAntiForgeryToken()
     {
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
+        var response = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(response);
 
         // Assert
@@ -394,7 +436,7 @@ public class GuestbookIntegrationTests
     public async Task PostToGb_WithValidData_RedirectsToGastbok()
     {
         // Arrange - Get the form page first to obtain anti-forgery token
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -409,18 +451,18 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.IsTrue(response.Headers.Location?.ToString().Contains("Gastbok") ?? false);
+        Assert.IsTrue(response.Headers.Location?.ToString().Contains("/info/gastbok") ?? false);
     }
 
     [TestMethod]
     public async Task PostToGb_WithValidData_ShowsSuccessMessage()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -435,7 +477,7 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act - Post the form
-        var postResponse = await _client.PostAsync("/Info/PostToGb", content);
+        var postResponse = await _client.PostAsync("/info/posttogb", content);
 
         // Assert redirect happened
         Assert.AreEqual(HttpStatusCode.Redirect, postResponse.StatusCode);
@@ -456,7 +498,7 @@ public class GuestbookIntegrationTests
     public async Task PostToGb_WithInvalidCode_DoesNotRedirect()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -471,7 +513,7 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert - Should redirect back to form with error
         Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
@@ -481,7 +523,7 @@ public class GuestbookIntegrationTests
     public async Task PostToGb_WithMissingRequiredFields_ShowsValidationErrors()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -496,7 +538,7 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
@@ -518,17 +560,17 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client!.PostAsync("/Info/PostToGb", content);
+        var response = await _client!.PostAsync("/info/posttogb", content);
 
         // Assert - Should fail due to missing anti-forgery token
-        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode, response.Headers.Location?.ToString());
     }
 
     [TestMethod]
     public async Task PostToGb_WithHomepageWithoutHttps_ProcessesCorrectly()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -543,18 +585,18 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert - Should succeed and redirect
         Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.IsTrue(response.Headers.Location?.ToString().Contains("Gastbok") ?? false);
+        Assert.IsTrue(response.Headers.Location?.ToString().Contains("/info/gastbok") ?? false);
     }
 
     [TestMethod]
     public async Task PostToGb_WithLongHomepage_TruncatesCorrectly()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -569,7 +611,7 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
@@ -582,7 +624,7 @@ public class GuestbookIntegrationTests
         for (int i = 0; i < 3; i++)
         {
             // Arrange
-            var getResponse = await _client!.GetAsync("/Info/Gastbok");
+            var getResponse = await _client!.GetAsync("/info/gastbok");
             var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
             var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -597,7 +639,7 @@ public class GuestbookIntegrationTests
             var content = new FormUrlEncodedContent(formData);
 
             // Act
-            var response = await _client.PostAsync("/Info/PostToGb", content);
+            var response = await _client.PostAsync("/info/posttogb", content);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode,
@@ -616,7 +658,7 @@ public class GuestbookIntegrationTests
         // This was the original bug that caused 404 errors
 
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -631,7 +673,7 @@ public class GuestbookIntegrationTests
         var content = new FormUrlEncodedContent(formData);
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
 
         // Assert - Should NOT get 404
         Assert.AreNotEqual(HttpStatusCode.NotFound, response.StatusCode,
@@ -649,7 +691,7 @@ public class GuestbookIntegrationTests
         // indicate that GET is not a valid method for this POST-only endpoint.
 
         // Act
-        var response = await _client!.GetAsync("/Info/PostToGb");
+        var response = await _client!.GetAsync("/info/posttogb");
 
         // Assert - Should return either 405 Method Not Allowed or 404 Not Found (GET is not allowed)
         Assert.IsTrue(
@@ -675,7 +717,7 @@ public class GuestbookIntegrationTests
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
         // Act
-        var response = await _client!.GetAsync("/Info/Gastbok");
+        var response = await _client!.GetAsync("/info/gastbok");
         stopwatch.Stop();
 
         // Assert
@@ -690,7 +732,7 @@ public class GuestbookIntegrationTests
     public async Task PostToGb_RespondsWithinAcceptableTime()
     {
         // Arrange
-        var getResponse = await _client!.GetAsync("/Info/Gastbok");
+        var getResponse = await _client!.GetAsync("/info/gastbok");
         var document = await HtmlHelpers.GetDocumentAsync(getResponse);
 
         var formData = HtmlHelpers.CreateFormData(document, new Dictionary<string, string>
@@ -706,7 +748,7 @@ public class GuestbookIntegrationTests
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
         // Act
-        var response = await _client.PostAsync("/Info/PostToGb", content);
+        var response = await _client.PostAsync("/info/posttogb", content);
         stopwatch.Stop();
 
         // Assert

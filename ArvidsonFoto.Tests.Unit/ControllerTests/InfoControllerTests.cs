@@ -148,7 +148,7 @@ public class InfoControllerTests
         var routeAttribute = methodInfo!.GetCustomAttributes(typeof(RouteAttribute), false)
             .FirstOrDefault() as RouteAttribute;
         Assert.NotNull(routeAttribute);
-        Assert.Equal("Info/PostToGb", routeAttribute!.Template);
+        Assert.Equal("info/posttogb", routeAttribute!.Template);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
+using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -187,7 +188,7 @@ public class Program
         // Enable case-insensitive and URL-decoding routing
         _ = services.Configure<RouteOptions>(options =>
         {
-            options.LowercaseUrls = false; // Keep original casing in generated URLs
+            options.LowercaseUrls = true;
             options.LowercaseQueryStrings = false;
         });
 
@@ -332,6 +333,8 @@ public class Program
         _ = app.UseMiddleware<InputValidationMiddleware>();
 
         _ = app.UseRouting();
+
+        RedirectRouterController.ConfigureLowercaseUrlFallback(app);
 
         // CORS middleware - must be after UseRouting and before UseAuthorization
         _ = app.UseCors("ArvidsonFotoCorsPolicy");

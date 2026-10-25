@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
 @using ArvidsonFoto.Core.Models
 @model UploadGbViewModel
@@ -16,7 +16,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-book-half ms-1"></i></li>
     </ol>
 </nav>
@@ -64,7 +64,7 @@
                                 <div class="text-right col-6">
                                     @if (gbPost.GbReadPost is not true)
                                     {
-                                        <a title="@L["UploadAdmin.HanteraGB.MarkAsRead"]" href="/UploadAdmin/MarkGbPostAsRead?gbId=@gbPost.GbId" class="btn btn-sm btn-success my-1">
+                                        <a title="@L["UploadAdmin.HanteraGB.MarkAsRead"]" href="/uploadadmin/markgbpostasread?gbId=@gbPost.GbId" class="btn btn-sm btn-success my-1">
                                             <i class="bi bi-check2-square me-2"></i> @L["UploadAdmin.HanteraGB.MarkAsRead"]
                                         </a>
                                     }
@@ -110,7 +110,7 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                         @L["UploadAdmin.FacebookUpload.Cancel"] <i class="bi bi-x-circle"></i>
                                     </button>
-                                    <a href="/UploadAdmin/DeleteGbPost?gbId=@gbPost.GbId" class="btn btn-danger">
+                                    <a href="/uploadadmin/deletegbpost?gbId=@gbPost.GbId" class="btn btn-danger">
                                         @L["UploadAdmin.HanteraGB.Delete"] <i class="bi bi-trash"></i>
                                     </a>
                                 </div>

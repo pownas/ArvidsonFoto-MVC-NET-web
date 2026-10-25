@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
 @model FacebookUploadViewModel
 
@@ -11,7 +11,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-facebook ms-1"></i></li>
     </ol>
 </nav>
@@ -117,7 +117,7 @@
                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
                     <i class="bi bi-facebook me-2"></i>@L["UploadAdmin.FacebookUpload.PublishOnFacebook"]
                 </button>
-                <a href="/UploadAdmin" class="btn btn-secondary btn-lg">
+                <a href="/uploadadmin" class="btn btn-secondary btn-lg">
                     <i class="bi bi-x-circle me-2"></i>@L["UploadAdmin.FacebookUpload.Cancel"]
                 </a>
             </div>

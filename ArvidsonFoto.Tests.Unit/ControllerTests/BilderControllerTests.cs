@@ -59,7 +59,7 @@ public class BilderControllerTests : IDisposable
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/faglar", model.CurrentUrl);
+        Assert.Equal("/bilder/faglar", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Fåglar", model.SelectedCategory.NameSv);
     }
@@ -109,7 +109,7 @@ public class BilderControllerTests : IDisposable
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-        Assert.Equal("/Bilder/tattingar/mesar/blames", model.CurrentUrl);
+        Assert.Equal("/bilder/tattingar/mesar/blames", model.CurrentUrl);
         Assert.NotNull(model.SelectedCategory);
         Assert.Equal("Blåmes", model.SelectedCategory.NameSv);
     }
@@ -138,7 +138,7 @@ public class BilderControllerTests : IDisposable
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("/Bilder/faglar", redirectResult.Url);
+        Assert.Equal("/bilder/faglar", redirectResult.Url);
         Assert.False(redirectResult.Permanent);
     }
 
@@ -153,7 +153,7 @@ public class BilderControllerTests : IDisposable
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("/Bilder/insekter", redirectResult.Url);
+        Assert.Equal("/bilder/insekter", redirectResult.Url);
         Assert.False(redirectResult.Permanent);
     }
 
@@ -214,7 +214,7 @@ public class BilderControllerTests : IDisposable
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/senast/fotograferad", redirectResult.Url);
         Assert.False(redirectResult.Permanent);
     }
 
@@ -229,7 +229,7 @@ public class BilderControllerTests : IDisposable
 
         // Assert
         var redirectResult = Assert.IsType<RedirectResult>(result);
-        Assert.Equal("/Senast/Fotograferad", redirectResult.Url);
+        Assert.Equal("/senast/fotograferad", redirectResult.Url);
     }
 
     [Fact]

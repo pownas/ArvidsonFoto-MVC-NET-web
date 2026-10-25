@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.DevResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.DevResource> L
 @{
     ViewData["Title"] = L["Dev.Portal.DevelopmentAdminPortal"];
 }
@@ -47,13 +47,13 @@
                         <strong>@L["Dev.Portal.Note"]</strong> @L["Dev.Portal.AuthenticationRequired"]
                     </p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                        <a href="/UploadAdmin" class="btn btn-success btn-lg">
+                        <a href="/uploadadmin" class="btn btn-success btn-lg">
                             <i class="bi bi-gear"></i> @L["Dev.Portal.OpenAdminPanel"]
                         </a>
-                        <a href="/UploadAdmin/RedigeraBilder" class="btn btn-outline-success">
+                        <a href="/uploadadmin/redigerabilder" class="btn btn-outline-success">
                             <i class="bi bi-pencil-square"></i> @L["Dev.Portal.EditImages"]
                         </a>
-                        <a href="/UploadAdmin/HanteraGB" class="btn btn-outline-success">
+                        <a href="/uploadadmin/hanteragb" class="btn btn-outline-success">
                             <i class="bi bi-book"></i> @L["Dev.Portal.ManageGuestbook"]
                         </a>
                     </div>
@@ -82,8 +82,8 @@
                             <h5><i class="bi bi-link-45deg"></i> @L["Dev.Portal.QuickLinks"]</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/"><i class="bi bi-house"></i> @L["Dev.Portal.MainWebsite"]</a></li>
-                                <li><a href="/Info/Sidkarta"><i class="bi bi-diagram-3"></i> @L["Dev.Portal.Sitemap"]</a></li>
-                                <li><a href="/Identity/Account/Login"><i class="bi bi-box-arrow-in-right"></i> @L["Dev.Portal.Login"]</a></li>
+                                <li><a href="/info/sidkarta"><i class="bi bi-diagram-3"></i> @L["Dev.Portal.Sitemap"]</a></li>
+                                <li><a href="/identity/account/login"><i class="bi bi-box-arrow-in-right"></i> @L["Dev.Portal.Login"]</a></li>
                             </ul>
                         </div>
                     </div>

@@ -225,12 +225,12 @@ public class LocalizedContentTests
         {
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             Assert.Equal("/images/birds/woodpeckers/tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
-            Assert.Equal("/Bilder/faglar/hackspettar/tretaig-hackspett",
+            Assert.Equal("/bilder/faglar/hackspettar/tretaig-hackspett",
                 LocalizedRoutes.Switch("/images/birds/woodpeckers/Tretaig-hackspett", false, categories));
             Assert.Equal("/information/sitemap", LocalizedRoutes.Page("/Info/Sidkarta"));
 
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
-            Assert.Equal("/Bilder/faglar/hackspettar/tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
+            Assert.Equal("/bilder/faglar/hackspettar/tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
         }
         finally
         {

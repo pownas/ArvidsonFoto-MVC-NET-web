@@ -91,7 +91,7 @@ public class InfoController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Route("Info/PostToGb")]
+    [Route("info/posttogb")]
     public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookFormInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");

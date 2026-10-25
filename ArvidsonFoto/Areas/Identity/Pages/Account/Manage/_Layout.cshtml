@@ -1,4 +1,4 @@
-@{
+﻿@{
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
     {
         Layout = parentLayout as string;
@@ -14,8 +14,8 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">@L["Identity.Logout.UploadAdmin"]</a></li>
-        <li class="breadcrumb-item"><a href="/Areas/Identity/Pages/Account/Manage">@L["Identity.Manage.Layout.ManageAccount"]</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["Identity.Logout.UploadAdmin"]</a></li>
+        <li class="breadcrumb-item"><a href="/areas/identity/pages/account/manage">@L["Identity.Manage.Layout.ManageAccount"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-person ml-1"></i></li>
     </ol>
 </nav>

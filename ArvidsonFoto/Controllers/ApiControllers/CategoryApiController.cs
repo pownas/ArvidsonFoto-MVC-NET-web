@@ -134,7 +134,7 @@ public class CategoryApiController(ILogger<CategoryApiController> logger,
     [AllowAnonymous]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
-    [HttpGet("ByPath/Bilder/{*categoryPath}")]
+    [HttpGet("ByPath/bilder/{*categoryPath}")]
     [HttpGet("ByCategoryPath/{*categoryPath}")]
     public IActionResult ByCategoryPath(string categoryPath)
     {

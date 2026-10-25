@@ -47,10 +47,11 @@ async function loadNextGalleryPage() {
 
     var galleryUrl = _galleryEl.dataset.galleryUrl; // e.g. "/Bilder/Fåglar/Svanar/Sångsvan"
     // Remove the localized gallery prefix before calling the image API.
-    var apiPath = galleryUrl.replace(/^\/(?:Bilder|images)\//i, '');
+    var apiPath = galleryUrl.replace(/^\/(?:bilder|images)\//i, '');
     // Koda URL korrekt (bevara "/" men koda ÅÄÖ etc.)
     var encodedPath = apiPath.split('/').map(encodeURIComponent).join('/');
-    var apiUrl = '/api/Bilder/' + encodedPath + '?page=' + _nextPageToLoad
+     var apiPrefix = document.documentElement.lang === 'en' ? '/api/images/' : '/api/bilder/';
+     var apiUrl = apiPrefix + encodedPath + '?page=' + _nextPageToLoad
         + '&culture=' + (document.documentElement.lang === 'en' ? 'en-US' : 'sv-SE');
 
     try {

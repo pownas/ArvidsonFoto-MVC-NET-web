@@ -18,39 +18,39 @@ public static class LocalizedRoutes
             path.StartsWith("/api/bilder/", StringComparison.OrdinalIgnoreCase));
     }
 
-    public static string Gallery => LocalizedText.IsEnglish ? "/images" : "/Bilder";
-    public static string Search => LocalizedText.IsEnglish ? "/search" : "/Search";
+    public static string Gallery => LocalizedText.IsEnglish ? "/images" : "/bilder";
+    public static string Search => "/search";
 
     private static readonly (string Swedish, string English)[] Pages =
     [
-        ("/Senast/Per kategori", "/latest/by-category"),
-        ("/Senast/Fotograferad", "/latest/photographed"),
-        ("/Senast/Uppladdad", "/latest/uploaded"),
-        ("/Senast", "/latest"),
-        ("/Info/Kop_av_bilder", "/information/buy-photos"),
-        ("/Info/Gastbok", "/information/guestbook"),
-        ("/Info/Kontakta", "/information/contact"),
-        ("/Info/Om_mig", "/information/about"),
-        ("/Info/Sidkarta", "/information/sitemap"),
-        ("/Info/Copyright", "/information/copyright"),
-        ("/Info", "/information")
+        ("/senast/per kategori", "/latest/by-category"),
+        ("/senast/fotograferad", "/latest/photographed"),
+        ("/senast/uppladdad", "/latest/uploaded"),
+        ("/senast", "/latest"),
+        ("/info/kop_av_bilder", "/information/buy-photos"),
+        ("/info/gastbok", "/information/guestbook"),
+        ("/info/kontakta", "/information/contact"),
+        ("/info/om_mig", "/information/about"),
+        ("/info/sidkarta", "/information/sitemap"),
+        ("/info/copyright", "/information/copyright"),
+        ("/info", "/information")
     ];
 
     public static string Page(string swedish)
     {
         var (Swedish, English) = Pages.FirstOrDefault(p => p.Swedish.Equals(swedish, StringComparison.OrdinalIgnoreCase));
-        return LocalizedText.IsEnglish && English is not null ? English : swedish;
+        return (LocalizedText.IsEnglish && English is not null ? English : swedish).ToLowerInvariant();
     }
 
     public static string Category(params CategoryDto[] categories)
     {
-        return Gallery + "/" + string.Join("/", categories.Select(category =>
+        return (Gallery + "/" + string.Join("/", categories.Select(category =>
         {
             var segment = LocalizedText.IsEnglish
                 ? string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? category.NameSv : category.UrlCategoryPathEn
                 : category.UrlCategoryPathSv ?? category.NameSv;
             return Uri.EscapeDataString(segment?.ToLowerInvariant() ?? string.Empty);
-        }));
+        }))).ToLowerInvariant();
     }
 
     public static string CategoryForId(int id, IReadOnlyCollection<CategoryDto> categories)
@@ -80,10 +80,10 @@ public static class LocalizedRoutes
             return "/";
         }
 
-        if (segments[0].Equals("Bilder", StringComparison.OrdinalIgnoreCase) ||
+        if (segments[0].Equals("bilder", StringComparison.OrdinalIgnoreCase) ||
             segments[0].Equals("images", StringComparison.OrdinalIgnoreCase))
         {
-            var result = new List<string> { english ? "images" : "Bilder" };
+            var result = new List<string> { english ? "images" : "bilder" };
             int? parent = null;
             foreach (var segment in segments.Skip(1))
             {
@@ -108,12 +108,12 @@ public static class LocalizedRoutes
                     parent = category.CategoryId;
                 }
             }
-            return "/" + string.Join("/", result);
+            return ("/" + string.Join("/", result)).ToLowerInvariant();
         }
 
         var unescaped = Uri.UnescapeDataString(path).TrimEnd('/');
         var (Swedish, English) = Pages.FirstOrDefault(p => string.Equals(p.Swedish, unescaped, StringComparison.OrdinalIgnoreCase) ||
                                               string.Equals(p.English, unescaped, StringComparison.OrdinalIgnoreCase));
-        return Swedish is not null ? english ? English : Swedish : path;
+        return (Swedish is not null ? english ? English : Swedish : path).ToLowerInvariant();
     }
 }
