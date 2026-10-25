@@ -44,10 +44,13 @@ public static class LocalizedRoutes
 
     public static string Category(params CategoryDto[] categories)
     {
-        return Gallery + "/" + string.Join("/", categories.Select(c => Uri.EscapeDataString(
-            LocalizedText.IsEnglish
-                ? string.IsNullOrWhiteSpace(c.UrlCategoryPathEn) ? c.UrlCategoryPathSv ?? c.NameSv : c.UrlCategoryPathEn
-                : c.UrlCategoryPathSv ?? c.NameSv)));
+        return Gallery + "/" + string.Join("/", categories.Select(category =>
+        {
+            var segment = LocalizedText.IsEnglish
+                ? string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? category.NameSv : category.UrlCategoryPathEn
+                : category.UrlCategoryPathSv ?? category.NameSv;
+            return Uri.EscapeDataString(segment?.ToLowerInvariant() ?? string.Empty);
+        }));
     }
 
     public static string CategoryForId(int id, IReadOnlyCollection<CategoryDto> categories)
@@ -93,14 +96,15 @@ public static class LocalizedRoutes
                      string.Equals(c.NameSv, decoded, StringComparison.OrdinalIgnoreCase)));
                 if (category is null)
                 {
-                    result.Add(segment);
+                    result.Add(Uri.EscapeDataString(UrlSlug.ToUrlSegment(decoded)));
                     parent = null;
                 }
                 else
                 {
-                    result.Add(Uri.EscapeDataString(english
+                    var categorySegment = english
                         ? (string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? decoded : category.UrlCategoryPathEn)
-                        : category.UrlCategoryPathSv ?? decoded));
+                        : category.UrlCategoryPathSv ?? decoded;
+                    result.Add(Uri.EscapeDataString(categorySegment?.ToLowerInvariant() ?? string.Empty));
                     parent = category.CategoryId;
                 }
             }

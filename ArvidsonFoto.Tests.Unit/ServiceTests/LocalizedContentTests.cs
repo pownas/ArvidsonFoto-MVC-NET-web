@@ -74,6 +74,61 @@ public class LocalizedContentTests
     }
 
     [Theory]
+    [InlineData("FAGLAR", 1)]
+    [InlineData("faglar", 1)]
+    [InlineData("Fåglar", 1)]
+    [InlineData("BROWN-BEAR", 2)]
+    [InlineData("brown-bear", 2)]
+    [InlineData("Björn", 2)]
+    public void CategoryService_ResolvesCaseInsensitiveSlugsAndSwedishNames(string segment, int expectedId)
+    {
+        using var db = new ArvidsonFotoCoreDbContext(new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options);
+        db.TblMenus.AddRange(
+            new TblMenu
+            {
+                Id = 1,
+                MenuCategoryId = 1,
+                MenuParentCategoryId = 0,
+                MenuDisplayName = "Fåglar",
+                MenuDisplayNameEn = "Birds",
+                MenuUrlSegment = "Faglar",
+                MenuUrlSegmentEn = "birds"
+            },
+            new TblMenu
+            {
+                Id = 2,
+                MenuCategoryId = 2,
+                MenuParentCategoryId = 1,
+                MenuDisplayName = "Björn",
+                MenuDisplayNameEn = "Brown bear",
+                MenuUrlSegment = "Bjorn",
+                MenuUrlSegmentEn = "Brown-Bear"
+            });
+        _ = db.SaveChanges();
+
+        using var cache = new MemoryCache(new MemoryCacheOptions());
+        var service = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, db, cache);
+
+        var category = service.GetByUrlSegmentWithFallback(segment);
+
+        Assert.Equal(expectedId, category.CategoryId);
+    }
+
+    [Theory]
+    [InlineData("Fåglar", "faglar")]
+    [InlineData("Tättingar", "tattingar")]
+    [InlineData("Turkos blåvinge", "turkos-blavinge")]
+    public void UrlSlug_GeneratesLowercaseAsciiSegments(string displayName, string expectedSegment)
+    {
+        var segment = UrlSlug.ToUrlSegment(displayName);
+
+        Assert.Equal(expectedSegment, segment);
+        Assert.Matches("^[a-z0-9-]+$", segment);
+    }
+
+    [Theory]
     [InlineData("sv-SE", "Fel kod angiven")]
     [InlineData("en-US", "Incorrect code.")]
     public void DirectValidation_UsesLocalizedResourceOutsideHttpRequest(string culture, string expected)
@@ -169,13 +224,13 @@ public class LocalizedContentTests
         try
         {
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-            Assert.Equal("/images/birds/woodpeckers/Tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
-            Assert.Equal("/Bilder/Faglar/Hackspettar/Tretaig-hackspett",
+            Assert.Equal("/images/birds/woodpeckers/tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
+            Assert.Equal("/Bilder/faglar/hackspettar/tretaig-hackspett",
                 LocalizedRoutes.Switch("/images/birds/woodpeckers/Tretaig-hackspett", false, categories));
             Assert.Equal("/information/sitemap", LocalizedRoutes.Page("/Info/Sidkarta"));
 
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
-            Assert.Equal("/Bilder/Faglar/Hackspettar/Tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
+            Assert.Equal("/Bilder/faglar/hackspettar/tretaig-hackspett", LocalizedRoutes.CategoryForId(3, categories));
         }
         finally
         {

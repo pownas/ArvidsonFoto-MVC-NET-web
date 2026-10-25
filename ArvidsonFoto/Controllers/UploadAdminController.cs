@@ -205,8 +205,8 @@ public class UploadAdminController(
         {
             var svSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegment)
                 ? SharedStaticFunctions.ToUrlSegment(inputModel.MenuText)
-                : inputModel.MenuUrlSegment.Trim();
-            var enSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegmentEn) ? null : inputModel.MenuUrlSegmentEn.Trim();
+                : inputModel.MenuUrlSegment.Trim().ToLowerInvariant();
+            var enSegment = string.IsNullOrWhiteSpace(inputModel.MenuUrlSegmentEn) ? null : inputModel.MenuUrlSegmentEn.Trim().ToLowerInvariant();
             if (!ValidCategorySegments(svSegment, enSegment, null))
             {
                 ModelState.AddModelError(nameof(inputModel.MenuUrlSegment), localizer["Admin.InvalidUrlSegments"]);
@@ -278,8 +278,8 @@ public class UploadAdminController(
         }
         category.MenuDisplayName = input.NameSv.Trim();
         category.MenuDisplayNameEn = string.IsNullOrWhiteSpace(input.NameEn) ? null : input.NameEn.Trim();
-        category.MenuUrlSegment = input.UrlSegmentSv.Trim();
-        category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim();
+        category.MenuUrlSegment = input.UrlSegmentSv.Trim().ToLowerInvariant();
+        category.MenuUrlSegmentEn = string.IsNullOrWhiteSpace(input.UrlSegmentEn) ? null : input.UrlSegmentEn.Trim().ToLowerInvariant();
         category.IsGameSelectable = input.IsGameSelectable;
         category.MenuDateUpdated = DateTime.UtcNow;
         _ = coreContext.SaveChanges();

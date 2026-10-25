@@ -131,7 +131,7 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(english.QuerySelector("#page-breadcrumbs")?.TextContent.Contains("Photos") == true, path);
             Assert.IsTrue(english.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Photos:") == true, path);
             Assert.IsTrue(english.QuerySelector("meta[name='description']")?.GetAttribute("content")?.Contains("Beaver") == true, path);
-            Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/Bilder/Daggdjur/Baver']"), path);
+            Assert.IsNotNull(english.QuerySelector("a[lang='sv'][href^='/Bilder/daggdjur/baver']"), path);
             Assert.IsTrue(english.QuerySelector(".main-nav")?.TextContent.Contains("Latest") == true, path);
             Assert.AreEqual("https://ArvidsonFoto.se/images/mammals/beaver",
                 english.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
@@ -141,7 +141,7 @@ public class GuestbookIntegrationTests
             Assert.IsTrue(swedish.QuerySelectorAll("#gallery figcaption").Any(c => c.TextContent.Contains("Bäver")), path);
             Assert.IsTrue(swedish.QuerySelector("#page-image-counter-bottom")?.TextContent.Contains("Antal bilder:") == true, path);
             Assert.IsTrue(swedish.QuerySelector(".main-nav")?.TextContent.Contains("Senast") == true, path);
-            Assert.AreEqual("https://ArvidsonFoto.se/Bilder/Daggdjur/Baver",
+            Assert.AreEqual("https://ArvidsonFoto.se/Bilder/daggdjur/baver",
                 swedish.QuerySelector("link[rel='canonical']")?.GetAttribute("href"), path);
         }
     }
@@ -247,7 +247,7 @@ public class GuestbookIntegrationTests
 
         var swedish = await client.GetAsync("/gallery.asp?ID=11&culture=sv-SE");
         Assert.AreEqual(HttpStatusCode.Redirect, swedish.StatusCode);
-        Assert.AreEqual("/Bilder/Daggdjur/Baver", swedish.Headers.Location?.OriginalString);
+        Assert.AreEqual("/Bilder/daggdjur/baver", swedish.Headers.Location?.OriginalString);
     }
 
     [TestMethod]
@@ -285,7 +285,7 @@ public class GuestbookIntegrationTests
         Assert.IsTrue(languageLink?.StartsWith("/Info/Sidkarta", StringComparison.Ordinal) == true);
         var swedishResponse = await _client!.GetAsync("/Info/Sidkarta?culture=sv-SE");
         var swedish = await HtmlHelpers.GetDocumentAsync(swedishResponse);
-        Assert.IsNotNull(swedish.QuerySelector("a[href='/Bilder/Faglar/Hackspettar/Tretaig-hackspett']"));
+        Assert.IsNotNull(swedish.QuerySelector("a[href='/Bilder/faglar/hackspettar/tretaig-hackspett']"));
     }
 
     [TestMethod]
@@ -344,7 +344,7 @@ public class GuestbookIntegrationTests
         var document = await HtmlHelpers.GetDocumentAsync(response);
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.IsTrue(document.QuerySelector("a[lang='sv']")?.GetAttribute("href")
-            ?.Contains("/Bilder/Faglar/Hackspettar/Tretaig-hackspett?sida=2", StringComparison.Ordinal) == true);
+            ?.Contains("/Bilder/faglar/hackspettar/tretaig-hackspett?sida=2", StringComparison.Ordinal) == true);
     }
     [TestMethod]
     public async Task GetGastbok_ContainsGuestbookForm()

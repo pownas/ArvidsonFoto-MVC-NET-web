@@ -35,10 +35,10 @@ public static class CategoryMappingExtensions
             UrlImage = string.IsNullOrEmpty(lastImageFilename) ? string.Empty : $"{lastImageFilename}",
             UrlCategorySv = categoryUrl,
             UrlCategoryEn = string.IsNullOrEmpty(categoryPathEn) ? string.Empty : $"images/{categoryPathEn}",
-            UrlCategoryPathSv = menu.MenuUrlSegment ?? string.Empty,
-            UrlCategoryPathEn = menu.MenuUrlSegmentEn,
-            UrlCategoryPathFullSv = string.IsNullOrEmpty(categoryPathFullSv) ? categoryPath ?? menu.MenuUrlSegment ?? string.Empty : categoryPathFullSv,
-            UrlCategoryPathFullEn = categoryPathEn,
+            UrlCategoryPathSv = menu.MenuUrlSegment?.ToLowerInvariant() ?? string.Empty,
+            UrlCategoryPathEn = menu.MenuUrlSegmentEn?.ToLowerInvariant(),
+            UrlCategoryPathFullSv = (string.IsNullOrEmpty(categoryPathFullSv) ? categoryPath ?? menu.MenuUrlSegment ?? string.Empty : categoryPathFullSv).ToLowerInvariant(),
+            UrlCategoryPathFullEn = categoryPathEn.ToLowerInvariant(),
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
@@ -61,8 +61,8 @@ public static class CategoryMappingExtensions
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.NameSv,
             MenuDisplayNameEn = categoryDto.NameEn,
-            MenuUrlSegment = categoryDto.UrlCategoryPathSv,
-            MenuUrlSegmentEn = categoryDto.UrlCategoryPathEn,
+            MenuUrlSegment = categoryDto.UrlCategoryPathSv?.Trim().ToLowerInvariant(),
+            MenuUrlSegmentEn = string.IsNullOrWhiteSpace(categoryDto.UrlCategoryPathEn) ? null : categoryDto.UrlCategoryPathEn.Trim().ToLowerInvariant(),
             MenuParentCategoryId = categoryDto.ParentCategoryId,
             MenuDateUpdated = categoryDto.DateUpdated,
             IsGameSelectable = categoryDto.IsGameSelectable

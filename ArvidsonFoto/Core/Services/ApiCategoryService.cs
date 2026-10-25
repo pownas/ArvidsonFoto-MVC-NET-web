@@ -3,6 +3,7 @@ using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Concurrent;
 using System.Net;
@@ -242,8 +243,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant() == categoryName.ToLowerInvariant());
-            category ??= _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == categoryName.ToLowerInvariant());
+            var category = FindCategoryByUrlSegment(categoryName);
+            category ??= FindCategoryByDisplayName(categoryName);
 
             if (category == null)
             {
@@ -519,7 +520,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public CategoryDto GetByUrlSegment(string urlSegment)
     {
-        if (string.IsNullOrEmpty(urlSegment))
+        if (string.IsNullOrWhiteSpace(urlSegment))
         {
             Log.Information("Empty URL segment provided to GetByUrlSegment");
             return DefaultCategoryNotFound;
@@ -527,7 +528,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment != null && c.MenuUrlSegment.ToLowerInvariant() == urlSegment.ToLowerInvariant());
+            var category = FindCategoryByUrlSegment(urlSegment);
             if (category == null)
             {
                 Log.Warning("Could not find category with URL segment: '{UrlSegment}'", urlSegment);
@@ -548,7 +549,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public int GetIdByUrlSegment(string urlSegment)
     {
-        if (string.IsNullOrEmpty(urlSegment))
+        if (string.IsNullOrWhiteSpace(urlSegment))
         {
             Log.Information("Empty URL segment provided to GetIdByUrlSegment");
             return -1;
@@ -556,9 +557,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c =>
-                c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant() ||
-                (c.MenuUrlSegmentEn != null && c.MenuUrlSegmentEn.ToLowerInvariant() == urlSegment.ToLowerInvariant()));
+            var category = FindCategoryByUrlSegment(urlSegment);
             if (category == null)
             {
                 Log.Information("Could not find category id for URL segment: {UrlSegment}", urlSegment);
@@ -575,7 +574,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public CategoryDto GetByUrlSegmentWithFallback(string urlSegment)
     {
-        if (string.IsNullOrEmpty(urlSegment))
+        if (string.IsNullOrWhiteSpace(urlSegment))
         {
             Log.Debug("Empty URL segment provided to GetByUrlSegmentWithFallback");
             return DefaultCategoryNotFound;
@@ -583,9 +582,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         try
         {
-            var category = _entityContext.TblMenus.FirstOrDefault(c =>
-                c.MenuUrlSegment!.ToLowerInvariant() == urlSegment.ToLowerInvariant() ||
-                (c.MenuUrlSegmentEn != null && c.MenuUrlSegmentEn.ToLowerInvariant() == urlSegment.ToLowerInvariant()));
+            var category = FindCategoryByUrlSegment(urlSegment);
             if (category != null)
             {
                 var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
@@ -607,7 +604,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 }
             }
 
-            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuDisplayName!.ToLowerInvariant() == urlSegment.ToLowerInvariant());
+            category = FindCategoryByDisplayName(urlSegment);
             if (category != null)
             {
                 Log.Debug("Found category by display name fallback: {Name}", urlSegment);
@@ -617,7 +614,12 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
             }
 
-            category = _entityContext.TblMenus.FirstOrDefault(c => c.MenuUrlSegment!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()) || c.MenuDisplayName!.ToLowerInvariant().Contains(urlSegment.ToLowerInvariant()));
+            var normalizedSegment = urlSegment.Trim().ToLowerInvariant();
+            category = _entityContext.TblMenus.FirstOrDefault(c =>
+                (c.MenuUrlSegment != null && c.MenuUrlSegment.ToLower().Contains(normalizedSegment)) ||
+                (c.MenuUrlSegmentEn != null && c.MenuUrlSegmentEn.ToLower().Contains(normalizedSegment)) ||
+                (c.MenuDisplayName != null && c.MenuDisplayName.ToLower().Contains(normalizedSegment)) ||
+                (c.MenuDisplayNameEn != null && c.MenuDisplayNameEn.ToLower().Contains(normalizedSegment)));
             if (category != null)
             {
                 Log.Debug("Found category by partial match: {Segment}", urlSegment);
@@ -635,6 +637,22 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             Log.Error("Error in GetByUrlSegmentWithFallback: {Message}", ex.Message);
             return DefaultCategoryNotFound;
         }
+    }
+
+    private TblMenu? FindCategoryByUrlSegment(string urlSegment)
+    {
+        var normalizedSegment = urlSegment.Trim().ToLowerInvariant();
+        return _entityContext.TblMenus.FirstOrDefault(category =>
+            (category.MenuUrlSegment != null && category.MenuUrlSegment.ToLower() == normalizedSegment) ||
+            (category.MenuUrlSegmentEn != null && category.MenuUrlSegmentEn.ToLower() == normalizedSegment));
+    }
+
+    private TblMenu? FindCategoryByDisplayName(string categoryName)
+    {
+        var normalizedName = categoryName.Trim().ToLowerInvariant();
+        return _entityContext.TblMenus.FirstOrDefault(category =>
+            (category.MenuDisplayName != null && category.MenuDisplayName.ToLower() == normalizedName) ||
+            (category.MenuDisplayNameEn != null && category.MenuDisplayNameEn.ToLower() == normalizedName));
     }
 
     internal string GetLastImageFilename(int categoryId)

@@ -81,7 +81,7 @@ public static class ArvidsonFotoCoreDbSeeder
     /// ORDER BY [Id];
     /// </code>
     /// </remarks>
-    public static List<TblMenu> DbSeed_Tbl_MenuCategories =>
+    public static List<TblMenu> DbSeed_Tbl_MenuCategories => NormalizeMenuCategorySlugs(
     [
         // Main categories (parent = 0)
         new() { Id = 1, MenuCategoryId = 1, MenuParentCategoryId = 0, MenuDisplayName = "Fåglar", MenuDisplayNameEn = "Birds", MenuUrlSegment = "Faglar", MenuUrlSegmentEn = "birds", MenuDateUpdated = DateTime.Parse("2021-03-25T20:27:00") },
@@ -636,7 +636,18 @@ public static class ArvidsonFotoCoreDbSeeder
         new() { Id = 549, MenuCategoryId = 560, MenuParentCategoryId = 47, MenuDisplayName = "Stentrast", MenuDisplayNameEn = "Ring ouzel", MenuUrlSegment = "stentrast", MenuUrlSegmentEn = "ring-ouzel", MenuDateUpdated = DateTime.Parse("2026-08-30T15:58:05") },
         new() { Id = 550, MenuCategoryId = 561, MenuParentCategoryId = 4, MenuDisplayName = "Rödgul höfjäril", MenuDisplayNameEn = "Red-golden moth", MenuUrlSegment = "rodgul-hofjaril", MenuUrlSegmentEn = "red-golden-moth", MenuDateUpdated = DateTime.Parse("2026-08-30T16:08:11") },
         new() { Id = 551, MenuCategoryId = 562, MenuParentCategoryId = 22, MenuDisplayName = "Ökenlöpare", MenuDisplayNameEn = "Desert runner", MenuUrlSegment = "okenlopare", MenuUrlSegmentEn = "desert-runner", MenuDateUpdated = DateTime.Parse("2026-10-17T09:14:50") },
-    ];
+    ]);
+
+    private static List<TblMenu> NormalizeMenuCategorySlugs(List<TblMenu> categories)
+    {
+        foreach (var category in categories)
+        {
+            category.MenuUrlSegment = category.MenuUrlSegment?.ToLowerInvariant();
+            category.MenuUrlSegmentEn = category.MenuUrlSegmentEn?.ToLowerInvariant();
+        }
+
+        return categories;
+    }
 
     #endregion
 
