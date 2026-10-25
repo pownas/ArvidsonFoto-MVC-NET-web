@@ -8,6 +8,17 @@ namespace ArvidsonFoto.Core.Extensions;
 /// </summary>
 public static class ImageMappingExtensions
 {
+    public static string ToPhysicalImageUrl(string categoryDisplayPath, string? imageFileName)
+    {
+        var segments = new List<string> { "bilder" };
+        segments.AddRange((categoryDisplayPath ?? string.Empty)
+            .Split('/', StringSplitOptions.RemoveEmptyEntries));
+        segments.AddRange((imageFileName ?? string.Empty)
+            .Split('/', StringSplitOptions.RemoveEmptyEntries));
+
+        return string.Join("/", segments.Select(Uri.EscapeDataString));
+    }
+
     /// <summary>
     /// Converts a TblImage to an ImageDto
     /// </summary>

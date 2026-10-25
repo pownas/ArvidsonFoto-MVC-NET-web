@@ -263,6 +263,13 @@ public class GuestbookIntegrationTests
         Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyApi.StatusCode);
         Assert.AreEqual("/api/bilder/daggdjur/baver?page=1", legacyApi.Headers.Location?.OriginalString);
 
+        var encodedCategory = await client.GetAsync("/bilder/Resor/2010%20Turkiet%2C%20Istanbul");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, encodedCategory.StatusCode);
+        Assert.AreEqual("/bilder/resor/2010-turkiet-istanbul", encodedCategory.Headers.Location?.OriginalString);
+        var lowercaseEscapeCategory = await client.GetAsync("/bilder/resor/2010-turkiet%2c-istanbul");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, lowercaseEscapeCategory.StatusCode);
+        Assert.AreEqual("/bilder/resor/2010-turkiet-istanbul", lowercaseEscapeCategory.Headers.Location?.OriginalString);
+
         var legacyContact = await client.GetAsync("/Info/Contact?culture=sv-SE");
         Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyContact.StatusCode);
         Assert.AreEqual("/info/contact?culture=sv-SE", legacyContact.Headers.Location?.OriginalString);
@@ -273,10 +280,23 @@ public class GuestbookIntegrationTests
         Assert.AreEqual(HttpStatusCode.OK, (await client.GetAsync(canonicalContact.Headers.Location)).StatusCode);
     }
 
+    [DataTestMethod]
+    [DataRow("/bilder/insekter/fjarilar/brun-blavinge", "Brun blåvinge")]
+    [DataRow("/bilder/daggdjur/bjorn", "Björn")]
+    [DataRow("/bilder/faglar/vadare/morkulla", "Morkulla")]
+    public async Task TransliteratedCategorySlugs_ResolveToExpectedCategory(string path, string categoryName)
+    {
+        var response = await _client!.GetAsync($"{path}?culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        var document = await HtmlHelpers.GetDocumentAsync(response);
+        Assert.IsTrue(document.Body!.TextContent.Contains(categoryName, StringComparison.Ordinal));
+    }
+
     [TestMethod]
     public async Task PublicPageLinks_UseLowercasePaths()
     {
-        foreach (var path in new[] { "/", "/info", "/info/gastbok", "/search", "/latest", "/bilder/faglar" })
+        foreach (var path in new[] { "/", "/info", "/info/gastbok", "/search", "/sok", "/latest", "/bilder/faglar" })
         {
             var response = await _client!.GetAsync(path);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, path);
@@ -286,9 +306,36 @@ public class GuestbookIntegrationTests
             {
                 var href = anchor.GetAttribute("href")!;
                 var absoluteUri = new Uri(new Uri("https://localhost"), href);
-                Assert.AreEqual(absoluteUri.AbsolutePath.ToLowerInvariant(), absoluteUri.AbsolutePath, href);
+                var decodedPath = Uri.UnescapeDataString(absoluteUri.AbsolutePath);
+                Assert.AreEqual(decodedPath.ToLowerInvariant(), decodedPath, href);
             }
         }
+    }
+
+    [TestMethod]
+    public async Task SwedishAndEnglishSearch_UseDistinctCanonicalPaths()
+    {
+        using var client = _factory!.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        var swedish = await client.GetAsync("/sok?culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.OK, swedish.StatusCode);
+        var swedishDocument = await HtmlHelpers.GetDocumentAsync(swedish);
+        Assert.AreEqual("/sok", swedishDocument.QuerySelector("form[role='search']")?.GetAttribute("action"));
+        Assert.AreEqual("https://ArvidsonFoto.se/sok", swedishDocument.QuerySelector("link[rel='canonical']")?.GetAttribute("href"));
+
+        var english = await client.GetAsync("/search?culture=en-US");
+        Assert.AreEqual(HttpStatusCode.OK, english.StatusCode);
+        var englishDocument = await HtmlHelpers.GetDocumentAsync(english);
+        Assert.AreEqual("/search", englishDocument.QuerySelector("form[role='search']")?.GetAttribute("action"));
+        Assert.AreEqual("https://ArvidsonFoto.se/search", englishDocument.QuerySelector("link[rel='canonical']")?.GetAttribute("href"));
+
+        var legacySwedish = await client.GetAsync("/Search?culture=sv-SE");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacySwedish.StatusCode);
+        Assert.AreEqual("/sok?culture=sv-SE", legacySwedish.Headers.Location?.OriginalString);
+
+        var legacyEnglish = await client.GetAsync("/Search?culture=en-US");
+        Assert.AreEqual(HttpStatusCode.PermanentRedirect, legacyEnglish.StatusCode);
+        Assert.AreEqual("/search?culture=en-US", legacyEnglish.Headers.Location?.OriginalString);
     }
 
     [TestMethod]

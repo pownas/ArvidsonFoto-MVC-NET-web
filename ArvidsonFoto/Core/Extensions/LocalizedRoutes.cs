@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.DTOs;
+using System.Text;
 
 namespace ArvidsonFoto.Core.Extensions;
 
@@ -19,7 +20,29 @@ public static class LocalizedRoutes
     }
 
     public static string Gallery => LocalizedText.IsEnglish ? "/images" : "/bilder";
-    public static string Search => "/search";
+    public static string Search => LocalizedText.IsEnglish ? "/search" : "/sok";
+
+    public static string NormalizePathCasing(string path)
+    {
+        var normalized = new StringBuilder(path.Length);
+        for (var index = 0; index < path.Length; index++)
+        {
+            if (path[index] == '%' && index + 2 < path.Length &&
+                Uri.IsHexDigit(path[index + 1]) && Uri.IsHexDigit(path[index + 2]))
+            {
+                normalized.Append('%');
+                normalized.Append(char.ToUpperInvariant(path[index + 1]));
+                normalized.Append(char.ToUpperInvariant(path[index + 2]));
+                index += 2;
+            }
+            else
+            {
+                normalized.Append(char.ToLowerInvariant(path[index]));
+            }
+        }
+
+        return normalized.ToString();
+    }
 
     private static readonly (string Swedish, string English)[] Pages =
     [
@@ -39,18 +62,53 @@ public static class LocalizedRoutes
     public static string Page(string swedish)
     {
         var (Swedish, English) = Pages.FirstOrDefault(p => p.Swedish.Equals(swedish, StringComparison.OrdinalIgnoreCase));
-        return (LocalizedText.IsEnglish && English is not null ? English : swedish).ToLowerInvariant();
+        return NormalizePathCasing(LocalizedText.IsEnglish && English is not null ? English : swedish);
     }
 
     public static string Category(params CategoryDto[] categories)
     {
-        return (Gallery + "/" + string.Join("/", categories.Select(category =>
+        return NormalizePathCasing(Gallery + "/" + string.Join("/", categories.Select(CategorySegment)));
+    }
+
+    public static string CategorySegment(CategoryDto category)
+    {
+        var segment = LocalizedText.IsEnglish
+            ? string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? category.NameSv : category.UrlCategoryPathEn
+            : category.UrlCategoryPathSv ?? category.NameSv;
+        return Uri.EscapeDataString(UrlSlug.ToUrlSegment(segment));
+    }
+
+    public static CategoryDto? ResolveCategoryPath(IEnumerable<string?> pathSegments, IReadOnlyCollection<CategoryDto> categories)
+    {
+        CategoryDto? resolvedCategory = null;
+        int? parentCategoryId = null;
+
+        foreach (var pathSegment in pathSegments.Where(segment => !string.IsNullOrWhiteSpace(segment)))
         {
-            var segment = LocalizedText.IsEnglish
-                ? string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? category.NameSv : category.UrlCategoryPathEn
-                : category.UrlCategoryPathSv ?? category.NameSv;
-            return Uri.EscapeDataString(segment?.ToLowerInvariant() ?? string.Empty);
-        }))).ToLowerInvariant();
+            var decodedSegment = Uri.UnescapeDataString(pathSegment!);
+            if (resolvedCategory is null &&
+                (decodedSegment.Equals("bilder", StringComparison.OrdinalIgnoreCase) ||
+                 decodedSegment.Equals("images", StringComparison.OrdinalIgnoreCase)))
+            {
+                continue;
+            }
+
+            var candidates = categories.Where(category => parentCategoryId is null
+                ? category.ParentCategoryId is null or 0
+                : category.ParentCategoryId == parentCategoryId);
+
+            resolvedCategory = candidates.FirstOrDefault(category => CategoryMatchesSegment(category, decodedSegment, useSlugNormalization: false))
+                ?? candidates.FirstOrDefault(category => CategoryMatchesSegment(category, decodedSegment, useSlugNormalization: true));
+
+            if (resolvedCategory?.CategoryId is not int categoryId)
+            {
+                return null;
+            }
+
+            parentCategoryId = categoryId;
+        }
+
+        return resolvedCategory;
     }
 
     public static string CategoryForId(int id, IReadOnlyCollection<CategoryDto> categories)
@@ -88,12 +146,10 @@ public static class LocalizedRoutes
             foreach (var segment in segments.Skip(1))
             {
                 var decoded = Uri.UnescapeDataString(segment);
-                var category = categories.FirstOrDefault(c =>
-                    (parent is null ? c.ParentCategoryId is null or 0 : c.ParentCategoryId == parent) &&
-                    (string.Equals(c.UrlCategoryPathSv, decoded, StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(c.UrlCategoryPathEn, decoded, StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(c.NameEn, decoded, StringComparison.OrdinalIgnoreCase) ||
-                     string.Equals(c.NameSv, decoded, StringComparison.OrdinalIgnoreCase)));
+                var candidates = categories.Where(c =>
+                    (parent is null ? c.ParentCategoryId is null or 0 : c.ParentCategoryId == parent));
+                var category = candidates.FirstOrDefault(c => CategoryMatchesSegment(c, decoded, useSlugNormalization: false))
+                    ?? candidates.FirstOrDefault(c => CategoryMatchesSegment(c, decoded, useSlugNormalization: true));
                 if (category is null)
                 {
                     result.Add(Uri.EscapeDataString(UrlSlug.ToUrlSegment(decoded)));
@@ -104,16 +160,25 @@ public static class LocalizedRoutes
                     var categorySegment = english
                         ? (string.IsNullOrWhiteSpace(category.UrlCategoryPathEn) ? category.UrlCategoryPathSv ?? decoded : category.UrlCategoryPathEn)
                         : category.UrlCategoryPathSv ?? decoded;
-                    result.Add(Uri.EscapeDataString(categorySegment?.ToLowerInvariant() ?? string.Empty));
+                    result.Add(Uri.EscapeDataString(UrlSlug.ToUrlSegment(categorySegment)));
                     parent = category.CategoryId;
                 }
             }
-            return ("/" + string.Join("/", result)).ToLowerInvariant();
+            return NormalizePathCasing("/" + string.Join("/", result));
         }
 
         var unescaped = Uri.UnescapeDataString(path).TrimEnd('/');
         var (Swedish, English) = Pages.FirstOrDefault(p => string.Equals(p.Swedish, unescaped, StringComparison.OrdinalIgnoreCase) ||
                                               string.Equals(p.English, unescaped, StringComparison.OrdinalIgnoreCase));
-        return (Swedish is not null ? english ? English : Swedish : path).ToLowerInvariant();
+        return NormalizePathCasing(Swedish is not null ? english ? English : Swedish : path);
+    }
+
+    private static bool CategoryMatchesSegment(CategoryDto category, string segment, bool useSlugNormalization)
+    {
+        var values = new[] { category.UrlCategoryPathSv, category.UrlCategoryPathEn, category.NameSv, category.NameEn };
+        return values.Any(value => !string.IsNullOrWhiteSpace(value) &&
+            (useSlugNormalization
+                ? UrlSlug.ToUrlSegment(value).Equals(UrlSlug.ToUrlSegment(segment), StringComparison.OrdinalIgnoreCase)
+                : value.Equals(segment, StringComparison.OrdinalIgnoreCase)));
     }
 }

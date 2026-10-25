@@ -67,7 +67,7 @@
                 @foreach (var category in Model.SubCategories)
                 {
                     <li class="my-2">
-                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + category.UrlCategoryPathSv)">@category.NameSv</a>
+                        <a class="btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + ArvidsonFoto.Core.Extensions.LocalizedRoutes.CategorySegment(category))">@category.NameSv</a>
                     </li>
                 }
             </ul>

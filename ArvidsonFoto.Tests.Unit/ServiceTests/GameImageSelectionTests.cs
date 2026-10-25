@@ -102,4 +102,93 @@ public class GameImageSelectionTests
         Assert.False(Assert.Single(paginatedCategoryImages).IsGameSelectable);
         Assert.Contains("\"isGameSelectable\":false", JsonSerializer.Serialize(Assert.Single(regularCategoryImages), JsonSerializerOptions.Web));
     }
+
+    [Fact]
+    public void PaginatedImages_UseDisplayNamesForPhysicalFilesAndAsciiSlugsForCategoryLinks()
+    {
+        var options = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        using var dbContext = new ArvidsonFotoCoreDbContext(options);
+        using var memoryCache = new MemoryCache(new MemoryCacheOptions());
+        dbContext.TblMenus.AddRange(
+            new TblMenu
+            {
+                Id = 1,
+                MenuCategoryId = 2,
+                MenuParentCategoryId = 0,
+                MenuDisplayName = "Däggdjur",
+                MenuUrlSegment = "Däggdjur",
+                MenuUrlSegmentEn = "Mammals"
+            },
+            new TblMenu
+            {
+                Id = 2,
+                MenuCategoryId = 10,
+                MenuParentCategoryId = 2,
+                MenuDisplayName = "Björn",
+                MenuUrlSegment = "Björn",
+                MenuUrlSegmentEn = "Brown Bear"
+            },
+            new TblMenu
+            {
+                Id = 3,
+                MenuCategoryId = 1,
+                MenuParentCategoryId = 0,
+                MenuDisplayName = "Fåglar",
+                MenuUrlSegment = "Fåglar",
+                MenuUrlSegmentEn = "Birds"
+            },
+            new TblMenu
+            {
+                Id = 4,
+                MenuCategoryId = 11,
+                MenuParentCategoryId = 1,
+                MenuDisplayName = "Vadare",
+                MenuUrlSegment = "Vadare",
+                MenuUrlSegmentEn = "Waders"
+            },
+            new TblMenu
+            {
+                Id = 5,
+                MenuCategoryId = 12,
+                MenuParentCategoryId = 11,
+                MenuDisplayName = "Morkulla",
+                MenuUrlSegment = "Morkulla",
+                MenuUrlSegmentEn = "Woodcock"
+            });
+        dbContext.TblImages.AddRange(
+            new TblImage
+            {
+                Id = 1,
+                ImageId = 100,
+                ImageCategoryId = 10,
+                ImageUrlName = "Bear 01"
+            },
+            new TblImage
+            {
+                Id = 2,
+                ImageId = 101,
+                ImageCategoryId = 12,
+                ImageUrlName = "Woodcock 01"
+            });
+        dbContext.SaveChanges();
+
+        var categoryService = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, dbContext, memoryCache);
+        var imageService = new ApiImageService(
+            NullLogger<ApiImageService>.Instance,
+            dbContext,
+            new ConfigurationBuilder().Build(),
+            categoryService);
+
+        var image = Assert.Single(imageService.GetImagesByCategoryIDPaginated(10, 1, 48));
+        var birdImage = Assert.Single(imageService.GetImagesByCategoryIDPaginated(12, 1, 48));
+
+        Assert.Equal("bilder/D%C3%A4ggdjur/Bj%C3%B6rn/Bear%2001", image.UrlImage);
+        Assert.Equal("bilder/daggdjur/bjorn", image.UrlCategorySv);
+        Assert.Equal("images/mammals/brown-bear", image.UrlCategoryEn);
+        Assert.Equal("bilder/Vadare/Morkulla/Woodcock%2001", birdImage.UrlImage);
+        Assert.Equal("bilder/faglar/vadare/morkulla", birdImage.UrlCategorySv);
+        Assert.Equal("images/birds/waders/woodcock", birdImage.UrlCategoryEn);
+    }
 }

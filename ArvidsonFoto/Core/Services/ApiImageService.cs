@@ -788,6 +788,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         {
             var image = images[index];
             var imageDto = imageDtos[index];
+            imageDto.UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(
+                BuildPhysicalCategoryPath(image.ImageCategoryId, categories), image.ImageUrlName);
             imageDto.IsGameSelectable = image.IsGameSelectable
                 && IsCategoryTreeGameSelectable(image.ImageCategoryId, categories);
 
@@ -796,24 +798,44 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             {
                 imageDto.CategoryNameSv = category.MenuDisplayName ?? string.Empty;
                 imageDto.CategoryNameEn = category.MenuDisplayNameEn;
-                imageDto.UrlCategoryEn = $"images/{BuildCategoryPath(image.ImageCategoryId.Value, categories)}";
+                imageDto.UrlCategorySv = $"bilder/{BuildCategoryPath(image.ImageCategoryId.Value, categories, english: false)}";
+                imageDto.UrlCategoryEn = $"images/{BuildCategoryPath(image.ImageCategoryId.Value, categories, english: true)}";
             }
         }
         return imageDtos;
     }
 
-    private static string BuildCategoryPath(int categoryId, IReadOnlyDictionary<int, TblMenu> categories)
+    private static string BuildCategoryPath(int categoryId, IReadOnlyDictionary<int, TblMenu> categories, bool english)
     {
         var segments = new List<string>();
         var visited = new HashSet<int>();
         while (categoryId > 0 && visited.Add(categoryId) && categories.TryGetValue(categoryId, out var category))
         {
-            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegmentEn ?? category.MenuUrlSegment))
+            var segment = english ? category.MenuUrlSegmentEn ?? category.MenuUrlSegment : category.MenuUrlSegment;
+            if (!string.IsNullOrWhiteSpace(segment))
             {
-                segments.Insert(0, (category.MenuUrlSegmentEn ?? category.MenuUrlSegment)!.ToLowerInvariant());
+                segments.Insert(0, UrlSlug.ToUrlSegment(segment));
             }
 
             categoryId = category.MenuParentCategoryId ?? 0;
+        }
+
+        return string.Join("/", segments);
+    }
+
+    private static string BuildPhysicalCategoryPath(int? categoryId, IReadOnlyDictionary<int, TblMenu> categories)
+    {
+        var segments = new List<string>();
+        var visited = new HashSet<int>();
+
+        while (categoryId is > 0 && visited.Add(categoryId.Value) && categories.TryGetValue(categoryId.Value, out var category))
+        {
+            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuDisplayName))
+            {
+                segments.Insert(0, category.MenuDisplayName);
+            }
+
+            categoryId = category.MenuParentCategoryId;
         }
 
         return string.Join("/", segments);

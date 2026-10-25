@@ -150,6 +150,13 @@ public class LocalizedContentTests
         }
     }
 
+    [Fact]
+    public void NormalizePathCasing_PreservesEncodedBytesAndLowercasesPathText()
+    {
+        Assert.Equal("/bilder/2010-turkiet%2C%20istanbul", LocalizedRoutes.NormalizePathCasing("/Bilder/2010-Turkiet%2c%20Istanbul"));
+        Assert.Equal("/bilder/d%C3%A4ggdjur", LocalizedRoutes.NormalizePathCasing("/Bilder/D%C3%A4ggdjur"));
+    }
+
     [Theory]
     [InlineData("sv-SE", "Fåglar", "faglar", "Svensk beskrivning")]
     [InlineData("en-US", "Birds", "birds", "English description")]
@@ -235,6 +242,32 @@ public class LocalizedContentTests
         finally
         {
             CultureInfo.CurrentUICulture = original;
+        }
+    }
+
+    [Fact]
+    public void CategoryResolution_TransliteratesSlugsAndRespectsParentCategories()
+    {
+        var categories = new List<CategoryDto>
+        {
+            new() { CategoryId = 1, ParentCategoryId = 0, NameSv = "Fåglar", UrlCategoryPathSv = "Fåglar" },
+            new() { CategoryId = 2, ParentCategoryId = 0, NameSv = "Däggdjur", UrlCategoryPathSv = "Däggdjur" },
+            new() { CategoryId = 11, ParentCategoryId = 1, NameSv = "Björn", UrlCategoryPathSv = "Björn" },
+            new() { CategoryId = 12, ParentCategoryId = 2, NameSv = "Björn", UrlCategoryPathSv = "bjorn" }
+        };
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+
+            Assert.Equal(11, LocalizedRoutes.ResolveCategoryPath(["faglar", "bjorn"], categories)?.CategoryId);
+            Assert.Equal(12, LocalizedRoutes.ResolveCategoryPath(["daggdjur", "bjorn"], categories)?.CategoryId);
+            Assert.Equal("/bilder/daggdjur/bjorn", LocalizedRoutes.Switch("/bilder/Däggdjur/Björn", false, categories));
+            Assert.Equal("/bilder/faglar/bjorn", LocalizedRoutes.CategoryForId(11, categories));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
         }
     }
 

@@ -53,7 +53,7 @@
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/search</loc>
+    <loc>https://arvidsonfoto.se/sok</loc>
   </url>
 
   <url><loc>https://arvidsonfoto.se/latest/photographed</loc></url>
@@ -65,6 +65,6 @@
   <url><loc>https://arvidsonfoto.se/information/about</loc></url>
   <url><loc>https://arvidsonfoto.se/information/sitemap</loc></url>
   <url><loc>https://arvidsonfoto.se/information/copyright</loc></url>
-  <url><loc>https://arvidsonfoto.se/search</loc></url>
+  <url><loc>https://arvidsonfoto.se/sok</loc></url>
 
 </urlset>

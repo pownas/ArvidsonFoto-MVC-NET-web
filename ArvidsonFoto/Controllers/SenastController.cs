@@ -67,6 +67,8 @@ public class SenastController(
                     img.ImageMainFamilyId == cat.MenuCategoryId))
                 .Select(cat => cat.MenuCategoryId)
                 .ToList();
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(
+                categoriesWithImages.Where(categoryId => categoryId.HasValue).Select(categoryId => categoryId!.Value).ToList());
 
             // Fetch one image per category in a single optimized query
             foreach (var categoryId in categoriesWithImages)
@@ -94,6 +96,7 @@ public class SenastController(
                     var categoryName = category?.MenuDisplayName ?? string.Empty;
                     // Use display path with ÅÄÖ to match physical folder structure
                     var categoryPath = _categoryService.GetCategoryDisplayPathForImage(categoryId ?? 0);
+                    var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId ?? 0, string.Empty);
                     // Use the image's own category path for the actual file location,
                     // which may be in a subcategory folder (e.g. "Dagrovfåglar/Röd glada")
                     var imagePath = _categoryService.GetCategoryDisplayPathForImage(image.ImageCategoryId ?? 0);
@@ -104,8 +107,8 @@ public class SenastController(
                         CategoryId = image.ImageCategoryId ?? 0,
                         CategoryNameSv = categoryName,
                         CategoryNameEn = category?.MenuDisplayNameEn,
-                        UrlImage = $"bilder/{imagePath}/{image.ImageUrlName}",
-                        UrlCategorySv = $"bilder/{categoryPath}",
+                        UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(imagePath, image.ImageUrlName),
+                        UrlCategorySv = $"bilder/{categoryUrlPath}",
                         DateImageTaken = image.ImageDate,
                         DateUploaded = image.ImageUpdate,
                         DescriptionSv = image.ImageDescription ?? string.Empty,
@@ -157,12 +160,13 @@ public class SenastController(
                 .Distinct()
                 .ToList();
 
-            // Use display paths (with ÅÄÖ) for physical folder structure - switch later to GetCategoryPathForImage
+            // Use display paths (with ÅÄÖ) for physical folder structure
             var categoryDisplayPaths = new Dictionary<int, string>();
             foreach (var catId in categoryIds)
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(categoryIds);
 
             // Use bulk category name lookup to avoid N+1 queries
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
@@ -171,6 +175,7 @@ public class SenastController(
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
+                var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
 
                 return new Core.DTOs.ImageDto
@@ -179,8 +184,8 @@ public class SenastController(
                     CategoryId = categoryId,
                     CategoryNameSv = categoryName,
                     CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
-                    UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategorySv = $"bilder/{categoryPath}",
+                    UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, image.ImageUrlName),
+                    UrlCategorySv = $"bilder/{categoryUrlPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
                     DescriptionSv = image.ImageDescription ?? string.Empty,
@@ -234,6 +239,7 @@ public class SenastController(
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(categoryIds);
 
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
 
@@ -241,6 +247,7 @@ public class SenastController(
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
+                var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
 
                 return new Core.DTOs.ImageDto
@@ -249,8 +256,8 @@ public class SenastController(
                     CategoryId = categoryId,
                     CategoryNameSv = categoryName,
                     CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
-                    UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategorySv = $"bilder/{categoryPath}",
+                    UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, image.ImageUrlName),
+                    UrlCategorySv = $"bilder/{categoryUrlPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
                     DescriptionSv = image.ImageDescription ?? string.Empty,

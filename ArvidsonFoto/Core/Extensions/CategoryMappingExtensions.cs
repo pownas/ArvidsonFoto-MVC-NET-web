@@ -35,10 +35,10 @@ public static class CategoryMappingExtensions
             UrlImage = string.IsNullOrEmpty(lastImageFilename) ? string.Empty : $"{lastImageFilename}",
             UrlCategorySv = categoryUrl,
             UrlCategoryEn = string.IsNullOrEmpty(categoryPathEn) ? string.Empty : $"images/{categoryPathEn}",
-            UrlCategoryPathSv = menu.MenuUrlSegment?.ToLowerInvariant() ?? string.Empty,
-            UrlCategoryPathEn = menu.MenuUrlSegmentEn?.ToLowerInvariant(),
-            UrlCategoryPathFullSv = (string.IsNullOrEmpty(categoryPathFullSv) ? categoryPath ?? menu.MenuUrlSegment ?? string.Empty : categoryPathFullSv).ToLowerInvariant(),
-            UrlCategoryPathFullEn = categoryPathEn.ToLowerInvariant(),
+            UrlCategoryPathSv = UrlSlug.ToUrlSegment(menu.MenuUrlSegment),
+            UrlCategoryPathEn = string.IsNullOrWhiteSpace(menu.MenuUrlSegmentEn) ? null : UrlSlug.ToUrlSegment(menu.MenuUrlSegmentEn),
+            UrlCategoryPathFullSv = ToSlugPath(string.IsNullOrEmpty(categoryPathFullSv) ? categoryPath ?? menu.MenuUrlSegment ?? string.Empty : categoryPathFullSv),
+            UrlCategoryPathFullEn = ToSlugPath(categoryPathEn),
             DateUpdated = DateTime.UtcNow, // TblMenu doesn't have a date field, using current time
             //Description = string.Empty, // TblMenu doesn't have a description field
             ParentCategoryId = menu.MenuParentCategoryId,
@@ -61,12 +61,19 @@ public static class CategoryMappingExtensions
             MenuCategoryId = categoryDto.CategoryId,
             MenuDisplayName = categoryDto.NameSv,
             MenuDisplayNameEn = categoryDto.NameEn,
-            MenuUrlSegment = categoryDto.UrlCategoryPathSv?.Trim().ToLowerInvariant(),
-            MenuUrlSegmentEn = string.IsNullOrWhiteSpace(categoryDto.UrlCategoryPathEn) ? null : categoryDto.UrlCategoryPathEn.Trim().ToLowerInvariant(),
+            MenuUrlSegment = UrlSlug.ToUrlSegment(categoryDto.UrlCategoryPathSv),
+            MenuUrlSegmentEn = string.IsNullOrWhiteSpace(categoryDto.UrlCategoryPathEn) ? null : UrlSlug.ToUrlSegment(categoryDto.UrlCategoryPathEn),
             MenuParentCategoryId = categoryDto.ParentCategoryId,
             MenuDateUpdated = categoryDto.DateUpdated,
             IsGameSelectable = categoryDto.IsGameSelectable
         };
+    }
+
+    private static string ToSlugPath(string? path)
+    {
+        return string.Join("/", (path ?? string.Empty)
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Select(UrlSlug.ToUrlSegment));
     }
 
     /// <summary>

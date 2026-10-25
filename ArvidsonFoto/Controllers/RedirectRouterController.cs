@@ -46,8 +46,12 @@ public class RedirectRouterController() : Controller
                 return;
             }
 
-            var canonicalPath = path.ToLowerInvariant();
-            if (controllerAction?.ControllerName == "Bilder" && controllerAction.ActionName == "Index")
+            var canonicalPath = LocalizedRoutes.NormalizePathCasing(path);
+            if (path.Equals("/search", StringComparison.OrdinalIgnoreCase) && !path.Equals("/search", StringComparison.Ordinal))
+            {
+                canonicalPath = LocalizedRoutes.Search;
+            }
+            else if (controllerAction?.ControllerName == "Bilder" && controllerAction.ActionName == "Index")
             {
                 var isEnglishGalleryPath = path.StartsWith("/images/", StringComparison.OrdinalIgnoreCase);
                 var categories = context.RequestServices.GetRequiredService<IApiCategoryService>().GetAll();
@@ -64,7 +68,7 @@ public class RedirectRouterController() : Controller
                 canonicalPath = "/api" + LocalizedRoutes.Switch(galleryPath, isEnglishGalleryPath, categories);
             }
 
-            if (!string.Equals(path, canonicalPath, StringComparison.Ordinal))
+            if (!string.Equals(Uri.UnescapeDataString(path), Uri.UnescapeDataString(canonicalPath), StringComparison.Ordinal))
             {
                 context.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
                 context.Response.Headers.Location = string.Concat(
@@ -88,7 +92,7 @@ public class RedirectRouterController() : Controller
                 relativePathEnd = location.Length;
             }
 
-            return string.Concat(location[..relativePathEnd].ToLowerInvariant(), location[relativePathEnd..]);
+            return string.Concat(LocalizedRoutes.NormalizePathCasing(location[..relativePathEnd]), location[relativePathEnd..]);
         }
 
         if (Uri.TryCreate(location, UriKind.Absolute, out var absoluteUri))
@@ -111,7 +115,7 @@ public class RedirectRouterController() : Controller
                 suffixStart = location.Length;
             }
 
-            return string.Concat(location[..pathStart], location[pathStart..suffixStart].ToLowerInvariant(), location[suffixStart..]);
+            return string.Concat(location[..pathStart], LocalizedRoutes.NormalizePathCasing(location[pathStart..suffixStart]), location[suffixStart..]);
         }
 
         return location;
@@ -132,18 +136,17 @@ public class RedirectRouterController() : Controller
 
     [Route("/Sk")]
     [Route("/Sök")]
-    [Route("/sok")]
     [Route("/Sökning")]
     [Route("/Searching")]
     [Route("/Search.asp")]
-    public RedirectToActionResult RedirectToBilderSearch()
+    public RedirectResult RedirectToBilderSearch()
     {
         ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         //var url = Url.ActionContext.HttpContext;
         //string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
 
-        return RedirectToActionPermanent(actionName: nameof(BilderController.Search), controllerName: nameof(BilderController).Replace("Controller", ""));
+        return RedirectPermanent(LocalizedRoutes.Search + Request.QueryString.Value);
     }
 
     [Route("/Latest.asp")]

@@ -37,8 +37,10 @@
 
 @{
   List<CategoryDto> subCategories = new List<CategoryDto>();
+  List<CategoryDto> allCategories = new List<CategoryDto>();
   try
   {
+    allCategories = _categoryService.GetAll();
     subCategories = _categoryService.GetSubsList(Model!.SelectedCategory.CategoryId ?? 0)
                                     .OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))
                                     .ToList();
@@ -59,7 +61,7 @@
   }
 
   // Helper function to get popover attributes for a category
-  string GetPopoverAttributes(CategoryDto category, string imagePath)
+  string GetPopoverAttributes(CategoryDto category)
   {
     var image = _imageService.GetOneImageFromCategory(category.CategoryId ?? 0);
     if (image == null || string.IsNullOrWhiteSpace(image.UrlImage))
@@ -67,13 +69,7 @@
       return "";
     }
 
-    // Extract filename from UrlImage path (e.g., "bilder/kategori/filnamn" -> "filnamn")
-    string fileName = image.UrlImage.Split('/').Last();
-
-    // Sanitize the image URL to prevent path traversal
-    string safeImageUrl = fileName.Replace("..", "").Replace("\\", "/");
-
-    string imageUrl = imagePath + "/" + safeImageUrl + ".thumb.jpg";
+    string imageUrl = $"/{image.UrlImage}.thumb.jpg";
 
     // Build the popover content - escape the values but not the HTML structure
     string escapedCategoryName = WebUtility.HtmlEncode(LocalizedText.Select(category.NameSv, category.NameEn)) ?? string.Empty;
@@ -89,11 +85,17 @@
     @{
       string[] splittUrl = Model.CurrentUrl.Split('/', StringSplitOptions.RemoveEmptyEntries);
       string currentUrl = "";
+      var breadcrumbSegments = new List<string>();
       for (int i = 0; i < splittUrl.Length; i++)
       {
         currentUrl += "/" + splittUrl[i];
+        if (i > 0)
+        {
+          breadcrumbSegments.Add(splittUrl[i]);
+        }
+        var breadcrumbCategory = i == 0 ? null : ArvidsonFoto.Core.Extensions.LocalizedRoutes.ResolveCategoryPath(breadcrumbSegments, allCategories);
         var label = i == 0 ? T["Navigation.Photos"].Value :
-          LocalizedText.Select(_categoryService.GetByUrlSegmentWithFallback(splittUrl[i]).NameSv, _categoryService.GetByUrlSegmentWithFallback(splittUrl[i]).NameEn) is { Length: > 0 } name ? name : splittUrl[i];
+          breadcrumbCategory is not null ? LocalizedText.Select(breadcrumbCategory.NameSv, breadcrumbCategory.NameEn) : splittUrl[i];
         if (i == splittUrl.Length - 1)
         {
           <li class="breadcrumb-item active" aria-current="page">@label</li>
@@ -126,11 +128,8 @@ else
   <div class="categories">
   @foreach (var category in subCategories)
   {
-    string segment = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish && !string.IsNullOrWhiteSpace(category.UrlCategoryPathEn)
-      ? category.UrlCategoryPathEn
-      : category.UrlCategoryPathSv ?? string.Empty;
-    string imgPath = "https://arvidsonfoto.se" + Model.CurrentUrl + "/" + segment;
-    string popoverAttrs = GetPopoverAttributes(category, imgPath);
+    string segment = ArvidsonFoto.Core.Extensions.LocalizedRoutes.CategorySegment(category);
+    string popoverAttrs = GetPopoverAttributes(category);
     <a id="MenuId-@category.CategoryId" class="my-1 p-1 btn btn-light btn-outline-primary text-dark" href="@(Model.CurrentUrl + "/" + segment)" @Html.Raw(popoverAttrs)>@LocalizedText.Select(category.NameSv, category.NameEn)</a>
   }
   </div>

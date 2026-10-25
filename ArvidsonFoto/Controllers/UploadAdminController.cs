@@ -356,11 +356,8 @@ public class UploadAdminController(
             inputModel.IsGameSelectable = item.IsGameSelectable;
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
-            // Get category path using the service method
-            var categoryPath = _categoryService.GetCategoryPathForImage(inputModel.ImageArt);
-
-            // Build the full source URL with the correct path
-            inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/bilder/{categoryPath}/{inputModel.ImageUrl}";
+            var categoryPath = _categoryService.GetCategoryDisplayPathForImage(inputModel.ImageArt);
+            inputModel.ImageUrlFullSrc = $"/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, inputModel.ImageUrl)}";
 
             viewModel.DisplayImagesList.Add(inputModel);
         }

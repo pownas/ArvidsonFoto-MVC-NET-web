@@ -92,8 +92,12 @@ public class BilderController(
 
         if (categoryName != null)
         {
-            // Try to find category by name (case-insensitive via GetByName)
-            var selectedCategory = _categoryService.GetByName(categoryName);
+            var pathCategory = LocalizedRoutes.ResolveCategoryPath(
+                [subLevel1, subLevel2, subLevel3, subLevel4],
+                _categoryService.GetAll());
+            var selectedCategory = pathCategory?.CategoryId is int categoryId
+                ? _categoryService.GetById(categoryId)
+                : _categoryService.GetByName(categoryName);
 
             // If not found by display name, try by URL segment with fallback
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
@@ -167,6 +171,7 @@ public class BilderController(
     }
 
     [Route("/search")]
+    [Route("/sok")]
     public IActionResult Search(string? s)
     {
         using var activity = ActivitySource.StartActivity("BilderController.Search");
@@ -206,7 +211,7 @@ public class BilderController(
             viewModel.DisplayImagesList = listOfFirstSearchedImages;
             viewModel.SelectedCategory = CategoryDto.CreateEmpty();
             viewModel.SelectedCategory.NameSv = "SearchFor: " + s;
-            viewModel.SelectedCategory.UrlCategoryPathSv = "/Search";
+            viewModel.SelectedCategory.UrlCategoryPathSv = "/sok";
 
             if (listOfFirstSearchedImages.Count == 0)
             {

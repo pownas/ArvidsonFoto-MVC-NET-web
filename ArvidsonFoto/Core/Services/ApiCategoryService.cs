@@ -343,10 +343,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {currentId}";
             }
 
-            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
-            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            if (!string.IsNullOrWhiteSpace(category.MenuUrlSegment))
             {
-                segments.Insert(0, category.MenuUrlSegment);
+                segments.Insert(0, UrlSlug.ToUrlSegment(category.MenuUrlSegment));
             }
 
             currentId = category.MenuParentCategoryId;
@@ -357,7 +356,7 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             return $"{(int)HttpStatusCode.NotFound}-{HttpStatusCode.NotFound}. Could not find category or parent with ID: {id}";
         }
 
-        var url = "/" + string.Join("/", segments).Trim().ToLowerInvariant();
+        var url = "/" + string.Join("/", segments);
         return url;
     }
 
@@ -642,9 +641,18 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
     private TblMenu? FindCategoryByUrlSegment(string urlSegment)
     {
         var normalizedSegment = urlSegment.Trim().ToLowerInvariant();
-        return _entityContext.TblMenus.FirstOrDefault(category =>
+        var exactMatch = _entityContext.TblMenus.FirstOrDefault(category =>
             (category.MenuUrlSegment != null && category.MenuUrlSegment.ToLower() == normalizedSegment) ||
             (category.MenuUrlSegmentEn != null && category.MenuUrlSegmentEn.ToLower() == normalizedSegment));
+        if (exactMatch is not null)
+        {
+            return exactMatch;
+        }
+
+        var normalizedSlug = UrlSlug.ToUrlSegment(urlSegment);
+        return _entityContext.TblMenus.AsEnumerable().FirstOrDefault(category =>
+            UrlSlug.ToUrlSegment(category.MenuUrlSegment) == normalizedSlug ||
+            UrlSlug.ToUrlSegment(category.MenuUrlSegmentEn) == normalizedSlug);
     }
 
     private TblMenu? FindCategoryByDisplayName(string categoryName)
@@ -693,10 +701,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 break;
             }
 
-            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
-            if (category.MenuCategoryId != 1 && !string.IsNullOrWhiteSpace(category.MenuUrlSegment))
+            if (!string.IsNullOrWhiteSpace(category.MenuUrlSegment))
             {
-                segments.Insert(0, category.MenuUrlSegment);
+                segments.Insert(0, UrlSlug.ToUrlSegment(category.MenuUrlSegment));
             }
 
             currentId = category.MenuParentCategoryId.GetValueOrDefault();
@@ -727,14 +734,10 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 break;
             }
 
-            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
-            if (category.MenuCategoryId != 1)
+            var segment = UrlSlug.ToUrlSegment(category.MenuUrlSegmentEn ?? category.MenuUrlSegment);
+            if (!string.IsNullOrWhiteSpace(segment))
             {
-                var segment = category.MenuUrlSegmentEn ?? category.MenuUrlSegment;
-                if (!string.IsNullOrWhiteSpace(segment))
-                {
-                    segments.Insert(0, segment.ToLowerInvariant());
-                }
+                segments.Insert(0, segment);
             }
 
             currentId = category.MenuParentCategoryId ?? 0;
@@ -854,10 +857,9 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
         while (currentId > 0 && categoryLookup.TryGetValue(currentId, out var category))
         {
-            // Skip "Fåglar" category (ID = 1) as it's not a physical folder
-            if (currentId != 1 && !string.IsNullOrWhiteSpace(category.UrlSegment))
+            if (!string.IsNullOrWhiteSpace(category.UrlSegment))
             {
-                segments.Insert(0, category.UrlSegment);
+                segments.Insert(0, UrlSlug.ToUrlSegment(category.UrlSegment));
             }
 
             currentId = category.ParentId.GetValueOrDefault();

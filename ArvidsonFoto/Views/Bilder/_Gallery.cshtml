@@ -109,7 +109,7 @@ else
       DateTime imgDate = img.DateImageTaken ?? new DateTime(1900, 01, 01);
       string imgDateDisplay = imgDate.Year == 1900 ? G["Gallery.Image.Missing"].Value : imgDate.ToString("yyyy-MM-dd");
 
-      if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPathSv is not null && Model.SelectedCategory.UrlCategoryPathSv.Equals("/Search"))
+      if (Model.SelectedCategory is not null && Model.SelectedCategory.UrlCategoryPathSv is not null && Model.SelectedCategory.UrlCategoryPathSv.Equals("/sok", StringComparison.OrdinalIgnoreCase))
       {
         <figure id="ImgId-@img.ImageId" class="figure @rowSizeClass p-2">
           <a href="@imgHref" rel="nofollow" class="rounded btn btn-light thumb-a-class" title="@G["Gallery.Image.ViewAllOf", imgTitle]@imgDesc">
