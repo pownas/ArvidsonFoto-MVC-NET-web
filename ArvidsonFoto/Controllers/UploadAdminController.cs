@@ -55,40 +55,29 @@ public class UploadAdminController(
             ImageInputModel = UploadImageInputDto.CreateEmpty()
         };
 
-        var selectedCategory = CategoryDto.CreateEmpty();
         var subCategories = new List<CategoryDto>();
+        var categoryPathSegments = new[] { subLevel1, subLevel2, subLevel3, subLevel4 }
+            .Where(segment => !string.IsNullOrWhiteSpace(segment))
+            .ToArray();
 
-        if (subLevel4 is not null)
+        if (categoryPathSegments.Length > 0)
         {
-            selectedCategory = _categoryService.GetByName(subLevel4);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
-        }
-        else if (subLevel3 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel3);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
-        }
-        else if (subLevel2 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel2);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2;
-        }
-        else if (subLevel1 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel1);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1;
+            var selectedCategory = LocalizedRoutes.ResolveCategoryPath(categoryPathSegments, _categoryService.GetAll());
+            if (selectedCategory?.CategoryId is not int selectedCategoryId)
+            {
+                return NotFound();
+            }
+
+            viewModel.SelectedCategory = selectedCategory;
+            subCategories = _categoryService.GetSubsList(selectedCategoryId);
         }
         else
         {
             subCategories = _categoryService.GetSubsList(0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild";
         }
 
-        viewModel.SelectedCategory = selectedCategory;
+        var currentPath = Request.PathBase.Add(Request.Path).Value;
+        viewModel.CurrentUrl = string.IsNullOrEmpty(currentPath) ? "/UploadAdmin/NyBild" : currentPath.TrimEnd('/');
         viewModel.SubCategories = [.. subCategories.OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
 
         return View(viewModel);
