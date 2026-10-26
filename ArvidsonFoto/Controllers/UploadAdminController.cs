@@ -75,15 +75,7 @@ public class UploadAdminController(
                 selectedCategoryId,
                 LocalizedText.Select(selectedCategory.NameSv, selectedCategory.NameEn),
                 selectedCategory.NameEn ?? string.Empty);
-            var imagePathSegments = latestImage.UrlImage.Split('/');
-            if (latestImage.ImageId > 0 &&
-                imagePathSegments.Length > 1 &&
-                string.Equals(imagePathSegments[0], "bilder", StringComparison.OrdinalIgnoreCase) &&
-                imagePathSegments.Skip(1).All(segment => !string.IsNullOrEmpty(segment) && segment is not ("." or "..")))
-            {
-                viewModel.LatestCategoryImageUrl = "/" +
-                    string.Join("/", imagePathSegments.Select(Uri.EscapeDataString)) + ".thumb.jpg";
-            }
+            viewModel.LatestCategoryImageUrl = BuildThumbnailUrl(latestImage);
         }
         else
         {
@@ -95,6 +87,32 @@ public class UploadAdminController(
         viewModel.SubCategories = [.. subCategories.OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
 
         return View(viewModel);
+    }
+
+    internal static string? BuildThumbnailUrl(ImageDto image)
+    {
+        if (image.ImageId <= 0 || string.IsNullOrWhiteSpace(image.UrlImage))
+        {
+            return null;
+        }
+
+        var imagePathSegments = image.UrlImage
+            .Split('/')
+            .Select(Uri.UnescapeDataString)
+            .ToArray();
+        if (imagePathSegments.Length < 2 ||
+            !string.Equals(imagePathSegments[0], "bilder", StringComparison.OrdinalIgnoreCase) ||
+            imagePathSegments.Any(segment =>
+                string.IsNullOrWhiteSpace(segment) ||
+                segment is "." or ".." ||
+                segment.Contains('/') ||
+                segment.Contains('\\')))
+        {
+            return null;
+        }
+
+        return "/" +
+            string.Join("/", imagePathSegments.Select(Uri.EscapeDataString)) + ".thumb.jpg";
     }
 
     [HttpPost, ValidateAntiForgeryToken]
