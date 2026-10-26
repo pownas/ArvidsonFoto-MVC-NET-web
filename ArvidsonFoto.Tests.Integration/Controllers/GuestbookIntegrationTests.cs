@@ -1,4 +1,6 @@
 ﻿using ArvidsonFoto.Tests.Integration.Helpers;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net.Sockets;
@@ -83,12 +85,82 @@ public class GuestbookIntegrationTests
             categoryActivity.TagObjects.Select(tag => tag.Key).ToArray());
     }
 
+    [TestMethod]
+    public async Task RelationalDatabaseCommands_CreateChildSpansWithoutParameterValues()
+    {
+        using var factory = new KestrelWebApplicationFactory();
+        using var bootstrapClient = factory.CreateClient();
+        var activities = new ConcurrentBag<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source =>
+                source.Name.Contains("EntityFrameworkCore", StringComparison.Ordinal),
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = activities.Add
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        using var applicationSource = new ActivitySource("ArvidsonFoto");
+        using var applicationActivity = applicationSource.StartActivity("database.trace-test")
+            ?? throw new AssertFailedException("The application trace should be recorded.");
+        const string sensitiveValue = "private-test-value";
+
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<DatabaseTraceTestContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var database = new DatabaseTraceTestContext(options);
+        await database.Database.EnsureCreatedAsync();
+        database.Records.Add(new DatabaseTraceTestRecord { Value = sensitiveValue });
+        _ = await database.SaveChangesAsync();
+        Assert.AreEqual(1, await database.Records.CountAsync(record => record.Value == sensitiveValue));
+
+        var commandActivities = activities
+            .Where(activity =>
+                activity.Source.Name.Contains("EntityFrameworkCore", StringComparison.Ordinal)
+                && activity.TraceId == applicationActivity.TraceId)
+            .ToArray();
+        Assert.IsTrue(commandActivities.Length >= 3, "Schema creation, insert, and query should each produce command spans.");
+        Assert.IsTrue(commandActivities.All(activity =>
+        {
+            for (var parent = activity.Parent; parent is not null; parent = parent.Parent)
+            {
+                if (parent.SpanId == applicationActivity.SpanId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }));
+        Assert.IsTrue(commandActivities.Any(activity =>
+            activity.TagObjects.Any(tag => tag.Key is "db.statement" or "db.query.text")));
+        Assert.IsFalse(commandActivities
+            .SelectMany(activity => activity.TagObjects)
+            .Any(tag => tag.Value?.ToString()?.Contains(sensitiveValue, StringComparison.Ordinal) == true));
+    }
+
     private sealed class KestrelWebApplicationFactory : ArvidsonFotoWebApplicationFactory
     {
         public KestrelWebApplicationFactory()
         {
             UseKestrel(0);
         }
+    }
+
+    private sealed class DatabaseTraceTestContext(DbContextOptions<DatabaseTraceTestContext> options)
+        : DbContext(options)
+    {
+        public DbSet<DatabaseTraceTestRecord> Records => Set<DatabaseTraceTestRecord>();
+    }
+
+    private sealed class DatabaseTraceTestRecord
+    {
+        public int Id { get; set; }
+
+        public string Value { get; set; } = string.Empty;
     }
 
     [TestMethod]
