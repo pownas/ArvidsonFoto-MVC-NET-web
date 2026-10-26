@@ -885,6 +885,71 @@ body {
         margin-left: 0;
     }
 
+    .upload-image-link-content > p {
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-image-category-summary {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(11rem, 40%);
+        align-items: center;
+        gap: 1rem;
+        min-height: 8.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .upload-image-category-summary h3 {
+        margin: 0;
+        font-size: clamp(1.25rem, 2vw, 1.75rem);
+    }
+
+    .upload-image-category-summary .upload-category-preview {
+        margin: 0;
+        text-align: center;
+    }
+
+    .upload-image-category-summary .upload-category-preview img {
+        width: 100%;
+        height: 8rem;
+        object-fit: contain;
+    }
+
+    .upload-image-category-summary .upload-category-preview figcaption {
+        margin-top: 0.2rem;
+        font-size: 0.85rem;
+    }
+
+    .upload-image-link-content .upload-admin-form {
+        max-width: none;
+        padding: 0.75rem 1rem;
+    }
+
+    .upload-image-date-game-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .upload-image-date-game-row .form-check {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .upload-image-date-game-row .form-check-input {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    .upload-image-date-game-row .form-check-label {
+        margin: 0;
+    }
+
+    .upload-image-link-submit {
+        margin-top: 0.5rem;
+    }
+
     .row > nav.nav-pills {
         display: block;
     }
@@ -1276,6 +1341,11 @@ body {
 
 @media (max-width: 767.98px) {
     .upload-admin-page {
+        .upload-image-category-summary {
+            grid-template-columns: minmax(0, 1fr) minmax(9rem, 35%);
+            gap: 0.5rem;
+        }
+
         .row > nav.nav-pills {
             margin-bottom: 1rem;
         }
@@ -1314,6 +1384,19 @@ body {
 
         .upload-review-fields {
             grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    .upload-admin-page {
+        .upload-image-category-summary,
+        .upload-image-date-game-row {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .upload-image-category-summary .upload-category-preview img {
+            height: 7rem;
         }
     }
 }

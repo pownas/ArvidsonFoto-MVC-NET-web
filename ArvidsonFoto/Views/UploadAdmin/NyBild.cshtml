@@ -14,6 +14,10 @@
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
         <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
+        @if (Model?.SelectedCategory is not null)
+        {
+            <li class="breadcrumb-item">@ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)</li>
+        }
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-file-image ms-1"></i></li>
     </ol>
 </nav>
@@ -25,7 +29,7 @@
             <partial name="_NavUploadAdmin" />
         </ul>
     </nav>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 upload-image-link-content">
         <p>@L["UploadAdmin.NyBild.HereYouCanLinkANewTheSite"]</p>
         
         @* Visa framgångsmeddelande från TempData *@
@@ -46,14 +50,16 @@
         
         @if (Model!.ImageInputModel is not null && Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
-            <h3>@L["Admin.SelectedCategory", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</h3>
-            @if (!string.IsNullOrWhiteSpace(Model.LatestCategoryImageUrl))
-            {
-                <figure class="upload-category-preview">
-                    <img src="@Model.LatestCategoryImageUrl" alt="@ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)" loading="lazy" />
-                    <figcaption>@L["UploadAdmin.NyBild.LatestCategoryImage", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</figcaption>
-                </figure>
-            }
+            <div class="upload-image-category-summary">
+                <h3>@L["Admin.SelectedCategory", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</h3>
+                @if (!string.IsNullOrWhiteSpace(Model.LatestCategoryImageUrl))
+                {
+                    <figure class="upload-category-preview">
+                        <img src="@Model.LatestCategoryImageUrl" alt="@ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)" loading="lazy" />
+                        <figcaption>@L["UploadAdmin.NyBild.LatestCategoryImage", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</figcaption>
+                    </figure>
+                }
+            </div>
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {

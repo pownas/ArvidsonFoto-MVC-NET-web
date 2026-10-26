@@ -6,38 +6,40 @@
     <input asp-for="ImageHuvudfamilj" hidden />
     <input asp-for="ImageFamilj" hidden />
     <input asp-for="ImageArt" hidden />
-    <div class="form-group mb-3">
+    <div class="form-group mb-2">
         <label asp-for="ImageUrl" class="control-label"></label>
         <div>
             <input asp-for="ImageUrl" placeholder="@L["UploadAdmin.EditImageInputForm.FileNameWITHOUTJpgEGTA11234"]" class="form-control" />
             <span asp-validation-for="ImageUrl"></span>
         </div>
     </div>
-    <div class="form-check mb-3">
-        <input asp-for="IsGameSelectable" class="form-check-input" />
-        <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="ImageDate" class="control-label"></label>
-        <div>
-            <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="@L["UploadAdmin.EditImageInputForm.YYYYMMDD"]" class="form-control" />
-            <span asp-validation-for="ImageDate"></span>
+    <div class="upload-image-date-game-row">
+        <div class="form-group mb-2">
+            <label asp-for="ImageDate" class="control-label"></label>
+            <div>
+                <input asp-for="ImageDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="@L["UploadAdmin.EditImageInputForm.YYYYMMDD"]" class="form-control" />
+                <span asp-validation-for="ImageDate"></span>
+            </div>
+        </div>
+        <div class="form-check mb-2">
+            <input asp-for="IsGameSelectable" class="form-check-input" />
+            <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
         </div>
     </div>
-    <div class="form-group mb-3">
+    <div class="form-group mb-2">
         <label asp-for="ImageDescription" class="control-label"></label>
         <div>
             <input asp-for="ImageDescription" placeholder="" class="form-control" />
             <span asp-validation-for="ImageDescription"></span>
         </div>
-        <div class="form-group mt-3">
-            <label asp-for="ImageDescriptionEn" class="control-label"></label>
-            <input asp-for="ImageDescriptionEn" class="form-control" />
-            <span asp-validation-for="ImageDescriptionEn"></span>
-        </div>
+    </div>
+    <div class="form-group mb-2">
+        <label asp-for="ImageDescriptionEn" class="control-label"></label>
+        <input asp-for="ImageDescriptionEn" class="form-control" />
+        <span asp-validation-for="ImageDescriptionEn"></span>
     </div>
     <div class="form-group">
-        <div class="m-3 p-2">
+        <div class="upload-image-link-submit">
             <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> @L["UploadAdmin.ImageInputForm.LinkImage"]</button>
         </div>
     </div>
