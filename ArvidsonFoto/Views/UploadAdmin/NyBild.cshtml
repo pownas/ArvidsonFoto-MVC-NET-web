@@ -67,7 +67,7 @@
                 @foreach (var category in Model.SubCategories)
                 {
                     <li class="my-2">
-                        <a class="btn upload-category-choice" href="@(Model.CurrentUrl + "/" + ArvidsonFoto.Core.Extensions.LocalizedRoutes.CategorySegment(category) + Context.Request.QueryString)">
+                        <a class="btn upload-category-choice has-category-tooltip" data-category-id="@category.CategoryId" data-category-name="@ArvidsonFoto.Core.Extensions.LocalizedText.Select(category.NameSv, category.NameEn)" href="@(Model.CurrentUrl + "/" + ArvidsonFoto.Core.Extensions.LocalizedRoutes.CategorySegment(category) + Context.Request.QueryString)">
                             <i class="bi bi-folder2-open" aria-hidden="true"></i>
                             <span>@category.NameSv</span>
                             <i class="bi bi-arrow-right ms-auto" aria-hidden="true"></i>
