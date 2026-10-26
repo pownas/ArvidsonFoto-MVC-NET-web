@@ -1,5 +1,6 @@
 ﻿using ArvidsonFoto.Core.ApiResponses;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -134,32 +135,45 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public List<CategoryDto> GetAll()
     {
-        if (_cache.TryGetValue(ALL_CATEGORIES_CACHE_KEY, out List<CategoryDto>? cachedCategories) && cachedCategories != null)
+        using var activity = AppTelemetry.ActivitySource.StartActivity("category.list");
+        try
         {
-            Log.Debug("All categories retrieved from cache ({Count} categories)", cachedCategories.Count);
-            return cachedCategories;
+            if (_cache.TryGetValue(ALL_CATEGORIES_CACHE_KEY, out List<CategoryDto>? cachedCategories) && cachedCategories != null)
+            {
+                activity?.SetTag("arvidsonfoto.cache.hit", true);
+                activity?.SetTag("arvidsonfoto.result.count", cachedCategories.Count);
+                Log.Debug("All categories retrieved from cache ({Count} categories)", cachedCategories.Count);
+                return cachedCategories;
+            }
+
+            var categories = _entityContext.TblMenus.ToList();
+
+            // OPTIMIZED: Bulk load all category IDs to pre-cache paths
+            var allCategoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
+            if (allCategoryIds.Count != 0)
+            {
+                _ = GetCategoryPathsBulk(allCategoryIds);
+            }
+
+            // OPTIMIZED: Build lightweight CategoryDtos without last image (expensive query)
+            // Last image is only needed when displaying category details, not for listing
+            var categoryDtos = categories.Select(category =>
+            {
+                var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
+                return category.ToCategoryDto(categoryPath, string.Empty, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1)); // Empty string for lastImageFilename
+            }).ToList();
+
+            _ = _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
+            activity?.SetTag("arvidsonfoto.cache.hit", false);
+            activity?.SetTag("arvidsonfoto.result.count", categoryDtos.Count);
+            Log.Debug("All categories cached ({Count} categories)", categoryDtos.Count);
+            return categoryDtos;
         }
-
-        var categories = _entityContext.TblMenus.ToList();
-
-        // OPTIMIZED: Bulk load all category IDs to pre-cache paths
-        var allCategoryIds = categories.Select(c => c.MenuCategoryId ?? 0).Where(id => id > 0).ToList();
-        if (allCategoryIds.Count != 0)
+        catch (Exception exception)
         {
-            _ = GetCategoryPathsBulk(allCategoryIds);
+            AppTelemetry.RecordError(activity, exception);
+            throw;
         }
-
-        // OPTIMIZED: Build lightweight CategoryDtos without last image (expensive query)
-        // Last image is only needed when displaying category details, not for listing
-        var categoryDtos = categories.Select(category =>
-        {
-            var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
-            return category.ToCategoryDto(categoryPath, string.Empty, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1)); // Empty string for lastImageFilename
-        }).ToList();
-
-        _ = _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
-        Log.Debug("All categories cached ({Count} categories)", categoryDtos.Count);
-        return categoryDtos;
     }
 
     public List<CategoryDto> GetChildrenByParentId(int categoryID)

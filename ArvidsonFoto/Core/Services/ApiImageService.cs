@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -200,28 +201,40 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>A list of all images as DTOs.</returns>
     public List<ImageDto> GetAll()
     {
-        var images = _entityContext.TblImages.ToList();
-
-        // Get category paths for all images
-        var imageDtos = new List<ImageDto>();
-        foreach (var image in images)
+        using var activity = AppTelemetry.ActivitySource.StartActivity("image.list");
+        try
         {
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
-            var categoryPath = "";
-            if (featureNewGalleryCategory?.Enabled == true)
+            var images = _entityContext.TblImages.ToList();
+
+            // Get category paths for all images
+            var imageDtos = new List<ImageDto>();
+            foreach (var image in images)
             {
-                categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
-            }
-            else
-            {
-                // Otherwise, use the old category path
-                categoryPath = GetOldCategoryPathForImage(image);
+                // If the new gallery category feature is enabled, use the new category path
+                var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
+                var categoryPath = "";
+                if (featureNewGalleryCategory?.Enabled == true)
+                {
+                    categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
+                }
+                else
+                {
+                    // Otherwise, use the old category path
+                    categoryPath = GetOldCategoryPathForImage(image);
+                }
+
+                imageDtos.Add(image.ToImageDto(categoryPath));
             }
 
-            imageDtos.Add(image.ToImageDto(categoryPath));
+            var result = ApplyEffectiveGameSelection(images, imageDtos);
+            activity?.SetTag("arvidsonfoto.result.count", result.Count);
+            return result;
         }
-        return ApplyEffectiveGameSelection(images, imageDtos);
+        catch (Exception exception)
+        {
+            AppTelemetry.RecordError(activity, exception);
+            throw;
+        }
     }
 
     /// <summary> Används på startsidan för random antal av bilder. </summary>
