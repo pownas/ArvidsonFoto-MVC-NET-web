@@ -3,42 +3,102 @@
 @model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
 @using ArvidsonFoto.Core.Models
 @{
-    var categories = ViewData["Categories"] as List<TblMenu> ?? [];
+    var categories = ViewData["Categories"] as List<(TblMenu Category, int Level)> ?? [];
+    var search = ViewData["Search"]?.ToString() ?? "";
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraKategori;
 }
 <h1 class="upload-admin-title">@ViewData["Title"]</h1>
 <nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
     <partial name="_NavUploadAdmin" />
 </nav>
-<form method="get" asp-action="RedigeraKategori" class="upload-review-search">
-    <label for="search">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
-    <input id="search" name="search" value="@ViewData["Search"]" class="form-control mb-2" />
-    <button type="submit" class="btn btn-outline-primary">@L["UploadAdmin.RedigeraKategori.Search"]</button>
-</form>
-<ul>
-@foreach (var category in categories)
-{
-    <li class="mb-2"><a class="btn btn-outline-secondary" asp-action="RedigeraKategori" asp-route-id="@category.MenuCategoryId">@category.MenuDisplayName (@category.MenuDisplayNameEn)</a></li>
-}
-</ul>
+<section class="category-editor mb-4" aria-labelledby="category-list-heading">
+    <h2 id="category-list-heading" class="h4">@L["UploadAdmin.RedigeraKategori.CategoryList"]</h2>
+    <div class="category-filter">
+        <label for="category-filter">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
+        <input id="category-filter" type="search" value="@search" class="form-control"
+               placeholder="@L["UploadAdmin.RedigeraKategori.Search"]" aria-controls="category-tree" />
+        <p id="category-filter-count" class="form-text mb-2" aria-live="polite"></p>
+    </div>
+    <ul id="category-tree" class="category-tree" aria-label="@L["UploadAdmin.RedigeraKategori.CategoryList"]">
+        @foreach (var row in categories)
+        {
+            var category = row.Category;
+            var categoryId = category.MenuCategoryId.GetValueOrDefault();
+            var isRoot = row.Level == 0;
+            var icon = isRoot ? "bi-folder2-open" : row.Level == 1 ? "bi-folder" : "bi-tag";
+            var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
+            <li class="category-tree__item @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
+                data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
+                <i class="bi @icon category-tree__icon" aria-hidden="true"></i>
+                <span class="category-tree__level">@L["UploadAdmin.RedigeraKategori.Level", row.Level + 1]</span>
+                <span class="category-tree__names">
+                    <strong>@category.MenuDisplayName</strong>
+                    @if (!string.IsNullOrWhiteSpace(category.MenuDisplayNameEn))
+                    {
+                        <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
+                    }
+                </span>
+                <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
+                   asp-route-id="@categoryId" asp-route-search="@search"
+                   aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>
+            </li>
+        }
+    </ul>
+</section>
 @if (Model.CategoryId > 0)
 {
-    <form method="post" asp-action="SaveCategory" class="upload-admin-form">
+    <form method="post" asp-action="SaveCategory" class="upload-admin-form category-edit-form">
         @Html.AntiForgeryToken()
         <input asp-for="CategoryId" type="hidden" />
+        <input type="hidden" name="search" value="@search" />
         <div asp-validation-summary="All" class="text-danger"></div>
+        <h2 class="h4">@L["UploadAdmin.RedigeraKategori.EditCategory"] — @Model.NameSv</h2>
         <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
-        <input asp-for="NameSv" maxlength="50" />
+        <input asp-for="NameSv" maxlength="50" class="form-control mb-3" />
         <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
-        <input asp-for="NameEn" maxlength="50" />
+        <input asp-for="NameEn" maxlength="50" class="form-control mb-3" />
         <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
-        <input asp-for="UrlSegmentSv" maxlength="50" />
+        <input asp-for="UrlSegmentSv" maxlength="50" class="form-control mb-3" />
         <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
-        <input asp-for="UrlSegmentEn" maxlength="50" />
-        <div class="form-check">
+        <input asp-for="UrlSegmentEn" maxlength="50" class="form-control mb-3" />
+        <div class="form-check mb-3">
             <input asp-for="IsGameSelectable" class="form-check-input" />
             <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
         </div>
-        <button type="submit">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
+        <button type="submit" class="btn btn-primary">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
     </form>
+}
+@section Scripts {
+    <script>
+        (() => {
+            const filter = document.getElementById('category-filter');
+            const items = Array.from(document.querySelectorAll('.category-tree__item'));
+            const count = document.getElementById('category-filter-count');
+            const countTemplate = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.RedigeraKategori.FilterResults"].Value));
+            const noResults = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.RedigeraKategori.NoResults"].Value));
+            const byId = new Map(items.map(item => [item.dataset.categoryId, item]));
+
+            function applyFilter() {
+                const query = filter.value.trim().toLocaleLowerCase();
+                const visible = new Set();
+                const matches = items.filter(item => !query || item.dataset.search.toLocaleLowerCase().includes(query));
+
+                matches.forEach(item => {
+                    let current = item;
+                    while (current && !visible.has(current)) {
+                        visible.add(current);
+                        current = byId.get(current.dataset.parentId);
+                    }
+                });
+
+                items.forEach(item => { item.hidden = !visible.has(item); });
+                count.textContent = matches.length === 0
+                    ? noResults
+                    : countTemplate.replace('{0}', matches.length);
+            }
+
+            filter.addEventListener('input', applyFilter);
+            applyFilter();
+        })();
+    </script>
 }

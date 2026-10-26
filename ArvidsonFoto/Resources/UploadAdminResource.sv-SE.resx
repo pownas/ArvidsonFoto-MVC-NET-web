@@ -495,4 +495,9 @@
   <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Föregående</value></data>
   <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Nästa</value></data>
   <data name="UploadAdmin.GameSelectable" xml:space="preserve"><value>Kan användas i spel (t.ex. memory och gissa bilden)</value></data>
+  <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve"><value>Kategorier och arter</value></data>
+  <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve"><value>Nivå {0}</value></data>
+  <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve"><value>Redigera kategori</value></data>
+  <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} kategorier matchar</value></data>
+  <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>Inga kategorier matchar sökningen.</value></data>
 </root>

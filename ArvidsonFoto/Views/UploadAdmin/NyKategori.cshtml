@@ -9,6 +9,34 @@
 }
 @{
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.NyKategori;
+    var allCategories = _categoryService.GetAll();
+    var categoriesByParent = allCategories.ToLookup(category => category.ParentCategoryId ?? 0);
+    var categoryOptions = new List<(CategoryDto Category, int Level)>();
+    var visitedCategoryIds = new HashSet<int>();
+
+    void AddCategoryOptions(int parentId, int level)
+    {
+        foreach (var category in categoriesByParent[parentId].OrderBy(category => LocalizedText.Select(category.NameSv, category.NameEn)))
+        {
+            if (category.CategoryId is not int categoryId || !visitedCategoryIds.Add(categoryId))
+            {
+                continue;
+            }
+
+            categoryOptions.Add((category, level));
+            AddCategoryOptions(categoryId, level + 1);
+        }
+    }
+
+    AddCategoryOptions(0, 0);
+    foreach (var category in allCategories.OrderBy(item => LocalizedText.Select(item.NameSv, item.NameEn)))
+    {
+        if (category.CategoryId is int categoryId && visitedCategoryIds.Add(categoryId))
+        {
+            categoryOptions.Add((category, 0));
+            AddCategoryOptions(categoryId, 1);
+        }
+    }
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -35,11 +63,11 @@
             @Html.AntiForgeryToken()
             <div class="form-group col-md-6">
                 <label asp-for="MainMenuId">@L["UploadAdmin.NyKategori.WhichCategoryShouldItBelongTo"]</label>
-                <select asp-for="MainMenuId" class="form-control">
+                <select asp-for="MainMenuId" class="form-select">
                     <option selected disabled value="">@L["UploadAdmin.NyKategori.ChooseACategory"]</option>
-                    @foreach (var category in _categoryService.GetAll().OrderBy(c => c.NameSv))
+                    @foreach (var option in categoryOptions)
                     {
-                        <option value="@category.CategoryId">@category.NameSv</option>
+                        <option value="@option.Category.CategoryId">@L["UploadAdmin.RedigeraKategori.Level", option.Level + 1] · @LocalizedText.Select(option.Category.NameSv, option.Category.NameEn)</option>
                     }
                 </select>
                 <span asp-validation-for="MainMenuId"></span>
@@ -65,7 +93,7 @@
                 <span asp-validation-for="MenuUrlSegmentEn"></span>
             </div>
             <div class="form-group col-md-6">
-                <button type="submit" class="btn btn-light btn-outline-primary text-dark">@L["UploadAdmin.NyKategori.CreateCategory"]</button>
+                <button type="submit" class="btn btn-primary">@L["UploadAdmin.NyKategori.CreateCategory"]</button>
             </div>
         </form>
     </div>

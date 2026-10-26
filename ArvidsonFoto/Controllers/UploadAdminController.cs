@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers;
@@ -237,13 +238,7 @@ public class UploadAdminController(
     public IActionResult RedigeraKategori(int? id, string? search)
     {
         ViewData["Title"] = localizer["Admin.CategoriesTitle"];
-        ViewData["Search"] = search;
-        var categories = coreContext.TblMenus.AsEnumerable()
-            .Where(c => string.IsNullOrWhiteSpace(search) ||
-                (c.MenuDisplayName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (c.MenuDisplayNameEn?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
-            .OrderBy(c => c.MenuDisplayName).Take(100).ToList();
-        ViewData["Categories"] = categories;
+        PopulateCategoryEditor(search);
         var selected = id.HasValue ? coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id) : null;
         return View(new EditCategoryInputDto
         {
@@ -257,7 +252,7 @@ public class UploadAdminController(
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult SaveCategory(EditCategoryInputDto input)
+    public IActionResult SaveCategory(EditCategoryInputDto input, string? search)
     {
         ViewData["Title"] = localizer["Admin.CategoriesTitle"];
         var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
@@ -273,7 +268,7 @@ public class UploadAdminController(
 
         if (!ModelState.IsValid)
         {
-            ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
+            PopulateCategoryEditor(search);
             return View("RedigeraKategori", input);
         }
         category.MenuDisplayName = input.NameSv.Trim();
@@ -284,7 +279,43 @@ public class UploadAdminController(
         category.MenuDateUpdated = DateTime.UtcNow;
         _ = coreContext.SaveChanges();
         _categoryService.ClearCache();
-        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId });
+        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId, search });
+    }
+
+    private void PopulateCategoryEditor(string? search)
+    {
+        var categories = coreContext.TblMenus.AsNoTracking().ToList();
+        var childrenByParent = categories.ToLookup(category => category.MenuParentCategoryId ?? 0);
+        var orderedCategories = new List<(Core.Models.TblMenu Category, int Level)>();
+        var visited = new HashSet<int>();
+
+        void AddChildren(int parentId, int level)
+        {
+            foreach (var child in childrenByParent[parentId]
+                .OrderBy(category => LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn)))
+            {
+                if (child.MenuCategoryId is not int categoryId || !visited.Add(categoryId))
+                {
+                    continue;
+                }
+
+                orderedCategories.Add((child, level));
+                AddChildren(categoryId, level + 1);
+            }
+        }
+
+        AddChildren(0, 0);
+        foreach (var category in categories.OrderBy(item => LocalizedText.Select(item.MenuDisplayName, item.MenuDisplayNameEn)))
+        {
+            if (category.MenuCategoryId is int categoryId && visited.Add(categoryId))
+            {
+                orderedCategories.Add((category, 0));
+                AddChildren(categoryId, 1);
+            }
+        }
+
+        ViewData["Categories"] = orderedCategories;
+        ViewData["Search"] = search;
     }
 
     private bool ValidCategorySegments(string? swedish, string? english, int? excludeId)
