@@ -53,7 +53,8 @@
                     <th scope="col">@L["UploadAdmin.RedigeraBilder.Family"]</th>
                     <th scope="col">@L["UploadAdmin.RedigeraBilder.MainFamily"]</th>
                     <th scope="col">@L["UploadAdmin.RedigeraBilder.PhotoDate"]</th>
-                    <th scope="col">@L["UploadAdmin.RedigeraBilder.Description"]</th>
+                    <th scope="col">@L["UploadAdmin.Review.Swedish"]</th>
+                    <th scope="col">@L["UploadAdmin.Review.English"]</th>
                     <th scope="col">@L["UploadAdmin.RedigeraBilder.Edit"]</th>
                 </tr>
             </thead>
@@ -71,6 +72,7 @@
                             <td>@image.ImageHuvudfamiljNamn</td>
                             <td>@image.ImageDate.ToString("yyyy-MM-dd")</td>
                             <td>@image.ImageDescription</td>
+                            <td>@image.ImageDescriptionEn</td>
                             <td>
                                 <p class="m-0 mb-3">
                                     <button title="@L["UploadAdmin.Images.EditTitle", image.ImageUrl]" type="button" class="btn btn-sm btn-primary" style="width:6rem;" data-bs-toggle="modal" data-bs-target="#EditImage-@image.ImageId">
@@ -89,7 +91,7 @@
                 catch (Exception ex)
                 {
                     <tr>
-                        <td colspan="8">@L["UploadAdmin.RedigeraBilder.NoImagesFound"]</td>
+                        <td colspan="9">@L["UploadAdmin.RedigeraBilder.NoImagesFound"]</td>
                     </tr>
                     Log.Error("Något gick fel på RedigeraBilder-sidan. Felmeddelande: " + ex.Message);
                 }

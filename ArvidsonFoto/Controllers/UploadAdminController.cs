@@ -371,8 +371,12 @@ public class UploadAdminController(
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
-            inputModel.ImageDescription = item.ImageDescription ?? localizer["Admin.Missing"];
-            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
+            inputModel.ImageDescription = IsMissingDescription(item.ImageDescription, "saknas")
+                ? string.Empty
+                : item.ImageDescription ?? string.Empty;
+            inputModel.ImageDescriptionEn = IsMissingDescription(item.ImageDescriptionEn, "Missing")
+                ? string.Empty
+                : item.ImageDescriptionEn;
             inputModel.IsGameSelectable = item.IsGameSelectable;
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
@@ -384,6 +388,9 @@ public class UploadAdminController(
 
         return View(viewModel);
     }
+
+    private static bool IsMissingDescription(string? description, string placeholder) =>
+        string.Equals(description?.Trim(), placeholder, StringComparison.OrdinalIgnoreCase);
 
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
