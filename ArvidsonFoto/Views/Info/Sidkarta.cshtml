@@ -44,25 +44,32 @@
     </li>
     @foreach (var head in byParent[0].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
     {
-        <li class="sitemap-category-level-0"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head)"><i class="bi bi-folder2-open" aria-hidden="true"></i> @LocalizedText.Select(head.NameSv, head.NameEn)</a>
-            @if (byParent[head.CategoryId.GetValueOrDefault()].Any())
+        var headId = head.CategoryId.GetValueOrDefault();
+        var headHasChildren = byParent[headId].Any();
+        <li class="sitemap-category-level-0"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head)"><i class="bi @CategoryIconHelper.GetIconClass(headHasChildren, isRoot: true)" aria-hidden="true"></i> @LocalizedText.Select(head.NameSv, head.NameEn)</a>
+            @if (headHasChildren)
             {
                 <ul class="sitemap">
                 @foreach (var child in byParent[head.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                 {
-                    <li class="sitemap-category-level-1"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child)"><i class="bi bi-folder" aria-hidden="true"></i> @LocalizedText.Select(child.NameSv, child.NameEn)</a>
-                        @if (byParent[child.CategoryId.GetValueOrDefault()].Any())
+                    var childId = child.CategoryId.GetValueOrDefault();
+                    var childHasChildren = byParent[childId].Any();
+                    <li class="sitemap-category-level-1"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child)"><i class="bi @CategoryIconHelper.GetIconClass(childHasChildren)" aria-hidden="true"></i> @LocalizedText.Select(child.NameSv, child.NameEn)</a>
+                        @if (childHasChildren)
                         {
                             <ul class="sitemap">
                             @foreach (var grandchild in byParent[child.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                             {
-                                <li class="sitemap-category-level-2"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child, grandchild)"><i class="bi bi-folder" aria-hidden="true"></i> @LocalizedText.Select(grandchild.NameSv, grandchild.NameEn)</a>
-                                    @if (byParent[grandchild.CategoryId.GetValueOrDefault()].Any())
+                                var grandchildId = grandchild.CategoryId.GetValueOrDefault();
+                                var grandchildHasChildren = byParent[grandchildId].Any();
+                                <li class="sitemap-category-level-2"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child, grandchild)"><i class="bi @CategoryIconHelper.GetIconClass(grandchildHasChildren)" aria-hidden="true"></i> @LocalizedText.Select(grandchild.NameSv, grandchild.NameEn)</a>
+                                    @if (grandchildHasChildren)
                                     {
                                         <ul class="sitemap">
                                         @foreach (var leaf in byParent[grandchild.CategoryId.GetValueOrDefault()].OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn)))
                                         {
-                                            <li class="sitemap-category-level-3"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child, grandchild, leaf)"><i class="bi bi-tag" aria-hidden="true"></i> @LocalizedText.Select(leaf.NameSv, leaf.NameEn)</a></li>
+                                            var leafHasChildren = byParent[leaf.CategoryId.GetValueOrDefault()].Any();
+                                            <li class="sitemap-category-level-3"><a class="sitemap-category-link" href="@LocalizedRoutes.Category(head, child, grandchild, leaf)"><i class="bi @CategoryIconHelper.GetIconClass(leafHasChildren)" aria-hidden="true"></i> @LocalizedText.Select(leaf.NameSv, leaf.NameEn)</a></li>
                                         }
                                         </ul>
                                     }

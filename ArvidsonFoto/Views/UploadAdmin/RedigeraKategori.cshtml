@@ -2,8 +2,10 @@
 @using ArvidsonFoto.Views.Shared
 @model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
 @using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Core.Extensions
 @{
     var categories = ViewData["Categories"] as List<(TblMenu Category, int Level)> ?? [];
+    var parentCategoryIds = categories.Select(row => row.Category.MenuParentCategoryId).OfType<int>().ToHashSet();
     var search = ViewData["Search"]?.ToString() ?? "";
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraKategori;
 }
@@ -48,7 +50,7 @@
             var category = row.Category;
             var categoryId = category.MenuCategoryId.GetValueOrDefault();
             var isRoot = row.Level == 0;
-            var icon = isRoot ? "bi-folder2-open" : row.Level == 1 ? "bi-folder" : "bi-tag";
+            var icon = CategoryIconHelper.GetIconClass(parentCategoryIds.Contains(categoryId), isRoot);
             var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
             <li class="category-tree__item category-tree__item--level-@Math.Min(row.Level, 3) @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
                 data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
