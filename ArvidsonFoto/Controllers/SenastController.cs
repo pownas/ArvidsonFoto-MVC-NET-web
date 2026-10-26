@@ -8,6 +8,13 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ArvidsonFoto.Controllers;
 
+internal enum LatestSortOrder
+{
+    Fotograferad,
+    Uppladdad,
+    PerKategori
+}
+
 public class SenastController(
     ArvidsonFotoCoreDbContext coreContext,
     ILogger<ApiImageService> imageLogger,
@@ -32,23 +39,31 @@ public class SenastController(
             sida = 1;
         }
 
-        sortOrder = sortOrder?.Trim().ToLowerInvariant() switch
+        var selectedSortOrder = NormalizeSortOrder(sortOrder);
+        if (selectedSortOrder is null)
         {
-            "photographed" or "fotograferad" => "Fotograferad",
-            "uploaded" or "uppladdad" => "Uppladdad",
-            "by-category" or "per kategori" => "Per kategori",
-            _ => sortOrder?.Trim()
+            var url = Url.ActionContext.HttpContext;
+            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Information("Unknown latest sort order {SortOrder} from {Url}; redirecting to photographed.", sortOrder, visitedUrl);
+            return RedirectToAction("Index", new { sortOrder = LatestSortOrder.Fotograferad.ToString() });
+        }
+
+        var latestSortOrder = selectedSortOrder.Value;
+        var sortTitle = latestSortOrder switch
+        {
+            LatestSortOrder.Uppladdad => "Uppladdad",
+            LatestSortOrder.PerKategori => "Per kategori",
+            _ => "Fotograferad"
         };
-        sortOrder ??= "Fotograferad";
+        ViewData["Title"] = sortTitle;
 
         viewModel.CurrentPage = (int)sida;
 
-        if (sortOrder.Equals("Per kategori"))
+        if (latestSortOrder == LatestSortOrder.PerKategori)
         {
-            ViewData["Title"] = "Per kategori";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Per kategori");
+                _pageCounterService.AddPageCount("senast-per kategori");
             }
 
             // OPTIMIZED: Use SQL-level query to get one image per category efficiently
@@ -123,12 +138,11 @@ public class SenastController(
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
                 .Take(pageSize)];
         }
-        else if (sortOrder.Equals("Uppladdad"))
+        else if (latestSortOrder == LatestSortOrder.Uppladdad)
         {
-            ViewData["Title"] = "Uppladdad";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Uppladdad");
+                _pageCounterService.AddPageCount("senast-uppladdad");
             }
 
             // OPTIMIZED: Get total count first
@@ -195,12 +209,11 @@ public class SenastController(
 
             viewModel.AllImagesList = []; // Don't load all images
         }
-        else if (sortOrder.Equals("Fotograferad", StringComparison.OrdinalIgnoreCase))
+        else
         {
-            ViewData["Title"] = "Fotograferad";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Fotograferad");
+                _pageCounterService.AddPageCount("senast-fotograferad");
             }
 
             // OPTIMIZED: Get total count first
@@ -267,19 +280,22 @@ public class SenastController(
 
             viewModel.AllImagesList = []; // Don't load all images
         }
-        else
-        {
-            var url = Url.ActionContext.HttpContext;
-            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
-
-            return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
-        }
-
-        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { NameSv = sortOrder };
+        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { NameSv = sortTitle };
         viewModel.CurrentUrl = HttpContext?.Request.Path.Value ??
-            ("/Senast/" + sortOrder);
+            ("/senast/" + sortTitle);
 
         return View(viewModel);
+    }
+
+    private static LatestSortOrder? NormalizeSortOrder(string? sortOrder)
+    {
+        return sortOrder?.Trim().ToLowerInvariant() switch
+        {
+            null or "" => LatestSortOrder.Fotograferad,
+            "photographed" or "fotograferad" => LatestSortOrder.Fotograferad,
+            "uploaded" or "uppladdad" => LatestSortOrder.Uppladdad,
+            "by-category" or "per kategori" or "perkategori" => LatestSortOrder.PerKategori,
+            _ => null
+        };
     }
 }
