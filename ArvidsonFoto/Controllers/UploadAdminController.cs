@@ -321,6 +321,17 @@ public class UploadAdminController(
                 (!string.IsNullOrWhiteSpace(english) && string.Equals(existing, english, StringComparison.OrdinalIgnoreCase))));
     }
 
+    private string GetOptionalFamilyName(int? categoryId)
+    {
+        if (categoryId is null or <= 0)
+        {
+            return string.Empty;
+        }
+
+        var name = _categoryService.GetNameById(categoryId);
+        return string.IsNullOrWhiteSpace(name) ? string.Empty : name;
+    }
+
     public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
     {
         ViewData["Title"] = localizer["Admin.EditImagesTitle"];
@@ -364,9 +375,9 @@ public class UploadAdminController(
             UploadImageInputDto inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
-            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageHuvudfamiljNamn = GetOptionalFamilyName(item.ImageMainFamilyId);
             inputModel.ImageFamilj = item.ImageFamilyId;
-            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageFamiljNamn = GetOptionalFamilyName(item.ImageFamilyId);
             inputModel.ImageArt = item.ImageCategoryId ?? -1;
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
@@ -516,9 +527,9 @@ public class UploadAdminController(
             var inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
-            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageHuvudfamiljNamn = GetOptionalFamilyName(item.ImageMainFamilyId);
             inputModel.ImageFamilj = item.ImageFamilyId;
-            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageFamiljNamn = GetOptionalFamilyName(item.ImageFamilyId);
             inputModel.ImageArt = item.ImageCategoryId ?? -1;
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
