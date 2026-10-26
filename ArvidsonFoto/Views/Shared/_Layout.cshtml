@@ -17,6 +17,10 @@
             ?.InformationalVersion ?? "unknown";
         var appVersionInfo = appVersion.Split('+');
         var commitId = appVersionInfo.Length > 1 ? appVersionInfo[1] : appVersion;
+        if (commitId.StartsWith("commit.", StringComparison.OrdinalIgnoreCase))
+        {
+            commitId = commitId["commit.".Length..];
+        }
 
         var assemblyPath = typeof(ArvidsonFoto.Controllers.HomeController).Assembly.Location;
         var lastModifiedUtc = !string.IsNullOrWhiteSpace(assemblyPath) && System.IO.File.Exists(assemblyPath)
