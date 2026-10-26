@@ -11,7 +11,7 @@ public static class PasskeyEndpointRouteBuilderExtensions
             .MapGroup("/Account")
             .ExcludeFromDescription();
 
-        group.MapPost("/PasskeyCreationOptions", async (
+        _ = group.MapPost("/PasskeyCreationOptions", async (
                 HttpContext context,
                 UserManager<ArvidsonFotoUser> userManager,
                 SignInManager<ArvidsonFotoUser> signInManager) =>
@@ -37,7 +37,7 @@ public static class PasskeyEndpointRouteBuilderExtensions
             .RequireAuthorization()
             .DisableAntiforgery();
 
-        group.MapPost("/PasskeyRequestOptions", async (
+        _ = group.MapPost("/PasskeyRequestOptions", async (
                 SignInManager<ArvidsonFotoUser> signInManager,
                 UserManager<ArvidsonFotoUser> userManager,
                 string? username) =>

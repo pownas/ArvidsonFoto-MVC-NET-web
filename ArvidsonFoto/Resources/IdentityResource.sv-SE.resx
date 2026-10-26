@@ -1,0 +1,645 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Identity.Manage.TwoFactorAuthentication.YouMust" xml:space="preserve">
+    <value>Du måste</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.AuthenticatorApp" xml:space="preserve">
+    <value>Autentiseringsapp</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.AddNewPasskey" xml:space="preserve">
+    <value>Lägg till ny passkey</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.ResetRecoveryCodes" xml:space="preserve">
+    <value>Återställ återställningskoder</value>
+  </data>
+  <data name="Identity.LoginWith2fa.LogInWithARecoveryCode" xml:space="preserve">
+    <value>logga in med en återställningskod</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.IntoYourTwoFactorAuthenticatorAppNotMatter" xml:space="preserve">
+    <value>i din autentiseringsapp. Mellanslag och stora eller små bokstäver spelar ingen roll.</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.DownloadATwoFactorAuthenticatorAppAuthenticatorFor" xml:space="preserve">
+    <value>Ladda ner en autentiseringsapp, till exempel Microsoft Authenticator för</value>
+  </data>
+  <data name="Identity.Manage.GenerateRecoveryCodes.PutTheseCodesInASafePlace" xml:space="preserve">
+    <value>Förvara koderna på en säker plats.</value>
+  </data>
+  <data name="Identity.Manage.Index.Save" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Identity.Manage.ManageNav.ExternalLogins" xml:space="preserve">
+    <value>Externa inloggningar</value>
+  </data>
+  <data name="Identity.Manage.Disable2fa.Disable2FA" xml:space="preserve">
+    <value>Inaktivera tvåfaktorsautentisering</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.ToUseAnAuthenticatorAppGoFollowingSteps" xml:space="preserve">
+    <value>Följ dessa steg för att använda en autentiseringsapp:</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.TheseDocs" xml:space="preserve">
+    <value>dokumentationen</value>
+  </data>
+  <data name="Identity.Error.Development" xml:space="preserve">
+    <value>Utveckling</value>
+  </data>
+  <data name="Identity.Logout.LogOut" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="Identity.Manage.Layout.ThesePagesAreNotFinished" xml:space="preserve">
+    <value>(Dessa sidorna är inte klara...)</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.ResetPasswordConfirmation" xml:space="preserve">
+    <value>Bekräftelse på återställt lösenord</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.PleaseCheckYourEmailToResetYourPassword" xml:space="preserve">
+    <value>Kontrollera din e-post för att återställa lösenordet.</value>
+  </data>
+  <data name="Identity.Login.TheseLinksRequireContactingJonas" xml:space="preserve">
+    <value>Dessa länkar kräver kontakt med Jonas:</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.Save" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Identity.Manage.DeletePersonalData.DeleteDataAndCloseMyAccount" xml:space="preserve">
+    <value>Radera uppgifter och stäng mitt konto</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.YouShould" xml:space="preserve">
+    <value>Du bör</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.YouHave1RecoveryCodeLeft" xml:space="preserve">
+    <value>Du har en återställningskod kvar.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.AddAnotherServiceToLogIn" xml:space="preserve">
+    <value>Lägg till en annan inloggningstjänst.</value>
+  </data>
+  <data name="Identity.Manage.Disable2fa.ThisActionOnlyDisables2FA" xml:space="preserve">
+    <value>Detta inaktiverar endast tvåfaktorsautentisering.</value>
+  </data>
+  <data name="Identity.Manage.ShowRecoveryCodes.RecoveryCodes" xml:space="preserve">
+    <value>Återställningskoder</value>
+  </data>
+  <data name="Identity.Manage.SetPassword.SetYourPassword" xml:space="preserve">
+    <value>Ange ditt lösenord</value>
+  </data>
+  <data name="Identity.Manage.Disable2fa.DisableTwoFactorAuthentication2FA" xml:space="preserve">
+    <value>Inaktivera tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.MyPasskey" xml:space="preserve">
+    <value>Min passkey</value>
+  </data>
+  <data name="Identity.Manage.Email.SendVerificationEmail" xml:space="preserve">
+    <value>Skicka verifieringsmeddelande</value>
+  </data>
+  <data name="Identity.Manage.ChangePassword.ChangePassword" xml:space="preserve">
+    <value>Ändra lösenord</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.YouHaveNoRecoveryCodesLeft" xml:space="preserve">
+    <value>Du har inga återställningskoder kvar.</value>
+  </data>
+  <data name="Identity.Error.DevelopmentEnvironmentShouldNotBeEnabledDeployedApplications" xml:space="preserve">
+    <value>Utvecklingsläge bör inte vara aktiverat i produktionsmiljö</value>
+  </data>
+  <data name="Identity.Manage.ManageNav.PersonalData" xml:space="preserve">
+    <value>Personuppgifter</value>
+  </data>
+  <data name="Identity.Lockout.ThisAccountHasBeenLockedOutAgainLater" xml:space="preserve">
+    <value>Det här kontot är låst. Försök igen senare.</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.LearnHowTo" xml:space="preserve">
+    <value>Läs om hur du kan</value>
+  </data>
+  <data name="Identity.Manage.Layout.ManageYourAccount" xml:space="preserve">
+    <value>Hantera ditt konto</value>
+  </data>
+  <data name="Identity.Manage.ResetAuthenticator.ResetAuthenticatorKey" xml:space="preserve">
+    <value>Återställ autentiseringsnyckel</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.VerificationCode" xml:space="preserve">
+    <value>Verifieringskod</value>
+  </data>
+  <data name="Identity.Manage.SetPassword.SetPassword" xml:space="preserve">
+    <value>Ange lösenord</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.ResetAuthenticatorApp" xml:space="preserve">
+    <value>Återställ autentiseringsapp</value>
+  </data>
+  <data name="Identity.Error.Error" xml:space="preserve">
+    <value>Fel</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.EnableQRCodeGeneration" xml:space="preserve">
+    <value>aktivera generering av QR-koder</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.Delete" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.And" xml:space="preserve">
+    <value>och</value>
+  </data>
+  <data name="Identity.Manage.GenerateRecoveryCodes.GenerateRecoveryCodes" xml:space="preserve">
+    <value>Skapa återställningskoder</value>
+  </data>
+  <data name="Identity.Manage.GenerateRecoveryCodes.GenerateTwoFactorAuthentication2FARecoveryCodes" xml:space="preserve">
+    <value>Skapa återställningskoder för tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Identity.Error.Error2" xml:space="preserve">
+    <value>Fel.</value>
+  </data>
+  <data name="Identity.Login.ForgotYourPassword" xml:space="preserve">
+    <value>Glömt ditt lösenord? 😣</value>
+  </data>
+  <data name="Identity.ConfirmEmail.ConfirmEmail" xml:space="preserve">
+    <value>Bekräfta e-postadress</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.SetupAuthenticatorApp" xml:space="preserve">
+    <value>Konfigurera autentiseringsapp</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.ScanTheQRCodeOrEnterThisKey" xml:space="preserve">
+    <value>Skanna QR-koden eller ange den här nyckeln</value>
+  </data>
+  <data name="Identity.Manage.PersonalData.PersonalData" xml:space="preserve">
+    <value>Personuppgifter</value>
+  </data>
+  <data name="Identity.ForgotPassword.ForgotYourPassword" xml:space="preserve">
+    <value>Glömt ditt lösenord?</value>
+  </data>
+  <data name="Identity.ExternalLogin.ContactJonasToResolveThis" xml:space="preserve">
+    <value>Kontakta Jonas för att lösa detta...</value>
+  </data>
+  <data name="Identity.Manage.StatusMessage.Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Identity.Error.RequestID" xml:space="preserve">
+    <value>Begärans ID:</value>
+  </data>
+  <data name="Identity.Manage.DeletePersonalData.DeletingThisDataWillPermanentlyRemoveBeRecovered" xml:space="preserve">
+    <value>Om du raderar dessa uppgifter tas kontot bort permanent och kan inte återställas.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.RegisteredLogins" xml:space="preserve">
+    <value>Registrerade inloggningar</value>
+  </data>
+  <data name="Identity.Login.RegisterANewUser" xml:space="preserve">
+    <value>Registrera en ny användare...</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.ManageYourExternalLogins" xml:space="preserve">
+    <value>Hantera externa inloggningar</value>
+  </data>
+  <data name="Identity.ResetPassword.ResetYourPassword" xml:space="preserve">
+    <value>Återställ ditt lösenord.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.ClickHereToConfirmYourAccount" xml:space="preserve">
+    <value>Klicka här för att bekräfta ditt konto</value>
+  </data>
+  <data name="Identity.LoginWith2fa.YourLoginIsProtectedWithAnCodeBelow" xml:space="preserve">
+    <value>Din inloggning skyddas av en autentiseringsapp. Ange koden nedan.</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.ForgotPasswordConfirmation" xml:space="preserve">
+    <value>Bekräftelse på glömt lösenord</value>
+  </data>
+  <data name="Identity.Error.ASPNETCOREENVIRONMENT" xml:space="preserve">
+    <value>ASPNETCORE_ENVIRONMENT</value>
+  </data>
+  <data name="Identity.Logout.YouHaveBeenLoggedOut" xml:space="preserve">
+    <value>Du har loggats ut.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.YourPasswordHasBeenResetPlease" xml:space="preserve">
+    <value>Ditt lösenord har återställts. Vänligen</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.Rename" xml:space="preserve">
+    <value>Byt namn</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.YouHaveReachedTheMaximumNumberNewOne" xml:space="preserve">
+    <value>Du har nått det maximala antalet tillåtna passkeys. Ta bort en innan du lägger till en ny.</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.ForgetThisBrowser" xml:space="preserve">
+    <value>Glöm den här webbläsaren</value>
+  </data>
+  <data name="Identity.Manage.ManageNav.Email" xml:space="preserve">
+    <value>E-postadress</value>
+  </data>
+  <data name="Identity.Error.EnvironmentWillDisplayMoreDetailedInformationThatOccurred" xml:space="preserve">
+    <value>visas mer information om felet.</value>
+  </data>
+  <data name="Identity.ResendEmailConfirmation.EnterYourEmail" xml:space="preserve">
+    <value>Ange din e-postadress.</value>
+  </data>
+  <data name="Identity.Manage.Disable2fa.ResetYourAuthenticatorKeys" xml:space="preserve">
+    <value>återställa dina autentiseringsnycklar.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.PleaseCheckYourEmailToConfirmYourAccount" xml:space="preserve">
+    <value>Kontrollera din e-post för att bekräfta ditt konto.</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.AddAuthenticatorApp" xml:space="preserve">
+    <value>Lägg till autentiseringsapp</value>
+  </data>
+  <data name="Identity.Manage.GenerateRecoveryCodes.IfYouLoseYourDeviceAndYourAccount" xml:space="preserve">
+    <value>Om du förlorar enheten och saknar återställningskoderna förlorar du tillgången till ditt konto.</value>
+  </data>
+  <data name="Identity.Manage.PersonalData.YourAccountContainsPersonalDataThatThatData" xml:space="preserve">
+    <value>Ditt konto innehåller personuppgifter som du har lämnat till oss. Här kan du ladda ner eller radera dem.</value>
+  </data>
+  <data name="Identity.Lockout.LockedOut" xml:space="preserve">
+    <value>Kontot är låst</value>
+  </data>
+  <data name="Identity.LoginWith2fa.DonTHaveAccessToYourYouCan" xml:space="preserve">
+    <value>Har du inte tillgång till din autentiseringsenhet? Du kan</value>
+  </data>
+  <data name="Identity.Manage.DownloadPersonalData.DownloadYourData" xml:space="preserve">
+    <value>Ladda ner dina uppgifter</value>
+  </data>
+  <data name="Identity.Login.UseAnAccountToLogIn" xml:space="preserve">
+    <value>Använd ett konto för att logga in.</value>
+  </data>
+  <data name="Identity.LoginWithRecoveryCode.RecoveryCodeVerification" xml:space="preserve">
+    <value>Verifiera återställningskod</value>
+  </data>
+  <data name="Identity.LoginWith2fa.TwoFactorAuthentication" xml:space="preserve">
+    <value>Tvåfaktorsautentisering</value>
+  </data>
+  <data name="Identity.Error.AnErrorOccurredWhileProcessingYourRequest" xml:space="preserve">
+    <value>Ett fel uppstod när din begäran behandlades.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.ThisAppDoesNotCurrentlyHaveRegisteredSee" xml:space="preserve">
+    <value>Den här appen har ingen riktig e-posttjänst konfigurerad. Se</value>
+  </data>
+  <data name="Identity.Logout.ClickHereToLogOut" xml:space="preserve">
+    <value>Klicka här för att logga ut</value>
+  </data>
+  <data name="Identity.Manage.Email.ManageEmail" xml:space="preserve">
+    <value>Hantera e-postadress</value>
+  </data>
+  <data name="Identity.ExternalLogin.Register" xml:space="preserve">
+    <value>Registrera</value>
+  </data>
+  <data name="Identity.Manage.ResetAuthenticator.IfYouResetYourAuthenticatorKeyReconfigureIt" xml:space="preserve">
+    <value>Om du återställer autentiseringsnyckeln fungerar appen inte förrän du konfigurerar den på nytt.</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.YouCan" xml:space="preserve">
+    <value>Du kan</value>
+  </data>
+  <data name="Identity.LoginWith2fa.LogIn" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Identity.Register.RegisterANewUser" xml:space="preserve">
+    <value>Registrera ny användare</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.Remove" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.BeforeYouCanLogInWithRecoveryCode" xml:space="preserve">
+    <value>innan du kan logga in med en återställningskod.</value>
+  </data>
+  <data name="Identity.Manage.ManageNav.Passkeys" xml:space="preserve">
+    <value>Passkeys</value>
+  </data>
+  <data name="Identity.Error.SwappingTo" xml:space="preserve">
+    <value>Om du växlar till</value>
+  </data>
+  <data name="Identity.AccessDenied.AccessDenied" xml:space="preserve">
+    <value>Åtkomst nekad</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.RegisterConfirmation" xml:space="preserve">
+    <value>Registreringsbekräftelse</value>
+  </data>
+  <data name="Identity.Error.DevelopmentMode" xml:space="preserve">
+    <value>Utvecklingsläge</value>
+  </data>
+  <data name="Identity.ConfirmEmailChange.ConfirmEmailChange" xml:space="preserve">
+    <value>Bekräfta ändring av e-postadress</value>
+  </data>
+  <data name="Identity.Manage.Layout.ManageAccount" xml:space="preserve">
+    <value>Hantera kontot</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.EnterANameForYourPasskey" xml:space="preserve">
+    <value>Ange ett namn för din passkey</value>
+  </data>
+  <data name="Identity.Manage.Index.Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Identity.Manage.PersonalData.Download" xml:space="preserve">
+    <value>Ladda ner</value>
+  </data>
+  <data name="Identity.Register.ContactJonasToRegister" xml:space="preserve">
+    <value>Kontakta Jonas för att registrera dig...</value>
+  </data>
+  <data name="Identity.ResendEmailConfirmation.ResendEmailConfirmation" xml:space="preserve">
+    <value>Skicka bekräftelse igen</value>
+  </data>
+  <data name="Identity.Manage.DeletePersonalData.DeletePersonalData" xml:space="preserve">
+    <value>Radera personuppgifter</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.ConfigureAuthenticatorApp" xml:space="preserve">
+    <value>Konfigurera autentiseringsapp</value>
+  </data>
+  <data name="Identity.ResetPassword.ResetPassword" xml:space="preserve">
+    <value>Återställ lösenord</value>
+  </data>
+  <data name="Identity.Logout.UploadAdmin" xml:space="preserve">
+    <value>Uppladdningsadministration</value>
+  </data>
+  <data name="Identity.AccessDenied.YouDoNotHaveAccessToThisResource" xml:space="preserve">
+    <value>Du har inte åtkomst till den här resursen.</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.RenamePasskey" xml:space="preserve">
+    <value>Byt namn på passkey</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.TwoFactorAuthentication2FA" xml:space="preserve">
+    <value>Tvåfaktorsautentisering (2FA)</value>
+  </data>
+  <data name="Identity.Manage.ManageNav.Password" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.NoPasskeysAreRegistered" xml:space="preserve">
+    <value>Inga passkeys är registrerade.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.ClickHereToLogIn" xml:space="preserve">
+    <value>klicka här för att logga in</value>
+  </data>
+  <data name="Identity.ForgotPassword.ContactJonasToChangeYourPassword" xml:space="preserve">
+    <value>Kontakta Jonas för att ändra ditt lösenord...</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.Verify" xml:space="preserve">
+    <value>Verifiera</value>
+  </data>
+  <data name="Identity.Manage.Layout.ChangeAccountSettings" xml:space="preserve">
+    <value>Ändra konto-inställningar:</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.GenerateANewSetOfRecoveryCodes" xml:space="preserve">
+    <value>skapa nya återställningskoder</value>
+  </data>
+  <data name="Identity.Login.LogInWithAPasskey" xml:space="preserve">
+    <value>Logga in med passkey</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.Cancel" xml:space="preserve">
+    <value>Avbryt</value>
+  </data>
+  <data name="Identity.Manage.ChangePassword.UpdatePassword" xml:space="preserve">
+    <value>Uppdatera lösenord</value>
+  </data>
+  <data name="Identity.Manage.Email.ChangeEmail" xml:space="preserve">
+    <value>Ändra e-postadress</value>
+  </data>
+  <data name="Identity.ExternalLogin.ErrorFromExternalProvider0" xml:space="preserve">
+    <value>Fel från extern leverantör: {0}</value>
+  </data>
+  <data name="Identity.ExternalLogin.ErrorLoadingExternalLoginInformation" xml:space="preserve">
+    <value>Det gick inte att läsa den externa inloggningsinformationen.</value>
+  </data>
+  <data name="Identity.ExternalLogin.ErrorLoadingExternalLoginInformationDuringConfirmation" xml:space="preserve">
+    <value>Det gick inte att läsa den externa inloggningsinformationen vid bekräftelsen.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.ThankYouForConfirmingYourEmail" xml:space="preserve">
+    <value>Tack för att du bekräftade din e-postadress.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.ErrorConfirmingYourEmail" xml:space="preserve">
+    <value>Fel: E-postadressen kunde inte bekräftas.</value>
+  </data>
+  <data name="Identity.ConfirmEmailChange.ErrorChangingEmail" xml:space="preserve">
+    <value>Fel: E-postadressen kunde inte ändras.</value>
+  </data>
+  <data name="Identity.ConfirmEmailChange.ErrorChangingUserName" xml:space="preserve">
+    <value>Fel: Användarnamnet kunde inte ändras.</value>
+  </data>
+  <data name="Identity.ConfirmEmailChange.ThankYouForConfirmingYourEmailChange" xml:space="preserve">
+    <value>Tack för att du bekräftade ändringen av din e-postadress.</value>
+  </data>
+  <data name="Identity.Manage.Email.VerificationEmailSentPleaseCheckYourEmail" xml:space="preserve">
+    <value>Verifieringsmeddelandet har skickats. Kontrollera din e-post.</value>
+  </data>
+  <data name="Identity.LoginWithRecoveryCode.InvalidRecoveryCodeEntered" xml:space="preserve">
+    <value>Ogiltig återställningskod.</value>
+  </data>
+  <data name="Identity.LoginWith2fa.InvalidAuthenticatorCode" xml:space="preserve">
+    <value>Ogiltig autentiseringskod.</value>
+  </data>
+  <data name="Identity.Login.PasskeyFel0" xml:space="preserve">
+    <value>Passkey error: {0}</value>
+  </data>
+  <data name="Identity.Login.OgiltigPasskeyInloggning" xml:space="preserve">
+    <value>Invalid passkey sign-in.</value>
+  </data>
+  <data name="Identity.Login.InvalidLoginAttempt" xml:space="preserve">
+    <value>Ogiltigt inloggningsförsök.</value>
+  </data>
+  <data name="Identity.ResetPassword.ACodeMustBeSuppliedForPasswordReset" xml:space="preserve">
+    <value>Du måste ange en kod för att återställa lösenordet.</value>
+  </data>
+  <data name="Identity.Manage.ChangePassword.YourPasswordHasBeenChanged" xml:space="preserve">
+    <value>Ditt lösenord har ändrats.</value>
+  </data>
+  <data name="Identity.Manage.SetPassword.YourPasswordHasBeenSet" xml:space="preserve">
+    <value>Ditt lösenord har angetts.</value>
+  </data>
+  <data name="Identity.Manage.Email.ConfirmationLinkToChangeEmailSentYourEmail" xml:space="preserve">
+    <value>Bekräftelselänken för ändring av e-postadress har skickats. Kontrollera din e-post.</value>
+  </data>
+  <data name="Identity.Manage.Email.YourEmailIsUnchanged" xml:space="preserve">
+    <value>Din e-postadress är oförändrad.</value>
+  </data>
+  <data name="Identity.Manage.GenerateRecoveryCodes.YouHaveGeneratedNewRecoveryCodes" xml:space="preserve">
+    <value>Du har skapat nya återställningskoder.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.TheExternalLoginWasNotRemoved" xml:space="preserve">
+    <value>Den externa inloggningen kunde inte tas bort.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.TheExternalLoginWasRemoved" xml:space="preserve">
+    <value>Den externa inloggningen har tagits bort.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.TheExternalLoginWasNotAddedOneAccount" xml:space="preserve">
+    <value>Den externa inloggningen kunde inte läggas till. Den kan bara kopplas till ett konto.</value>
+  </data>
+  <data name="Identity.Manage.ExternalLogins.TheExternalLoginWasAdded" xml:space="preserve">
+    <value>Den externa inloggningen har lagts till.</value>
+  </data>
+  <data name="Identity.Manage.Disable2fa.Number2faHasBeenDisabledYouCanAuthenticatorApp" xml:space="preserve">
+    <value>Tvåfaktorsautentisering har inaktiverats. Du kan aktivera den igen när du konfigurerar en autentiseringsapp.</value>
+  </data>
+  <data name="Identity.Manage.Index.UnexpectedErrorWhenTryingToSetPhoneNumber" xml:space="preserve">
+    <value>Fel: Telefonnummer kunde inte sparas.</value>
+  </data>
+  <data name="Identity.Manage.Index.YourProfileHasBeenUpdated" xml:space="preserve">
+    <value>Din profil har uppdaterats.</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.VerificationCodeIsInvalid" xml:space="preserve">
+    <value>Verifieringskoden är ogiltig.</value>
+  </data>
+  <data name="Identity.Manage.EnableAuthenticator.YourAuthenticatorAppHasBeenVerified" xml:space="preserve">
+    <value>Din autentiseringsapp har verifierats.</value>
+  </data>
+  <data name="Identity.Manage.TwoFactorAuthentication.TheCurrentBrowserHasBeenForgotten2faCode" xml:space="preserve">
+    <value>Den här webbläsaren har glömts bort. Vid nästa inloggning får du ange din tvåfaktorskod.</value>
+  </data>
+  <data name="Identity.Manage.DeletePersonalData.IncorrectPassword" xml:space="preserve">
+    <value>Fel lösenord.</value>
+  </data>
+  <data name="Identity.Manage.ResetAuthenticator.YourAuthenticatorAppKeyHasBeenNewKey" xml:space="preserve">
+    <value>Autentiseringsnyckeln har återställts. Konfigurera appen med den nya nyckeln.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.Error0" xml:space="preserve">
+    <value>Fel: {0}</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorTheBrowserDidNotProvideAPasskey" xml:space="preserve">
+    <value>Fel: Webbläsaren skickade ingen passkey.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorYouHaveReachedTheMaximumAllowedPasskeys" xml:space="preserve">
+    <value>Fel: Du har nått maximalt antal tillåtna passkeys.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorCouldNotAddThePasskey0" xml:space="preserve">
+    <value>Fel: Det gick inte att lägga till passkey: {0}</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorThePasskeyCouldNotBeYourAccount" xml:space="preserve">
+    <value>Fel: Passkey kunde inte läggas till på ditt konto.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorTheSpecifiedPasskeyIDHadInvalidFormat" xml:space="preserve">
+    <value>Fel: Passkey-ID har ett ogiltigt format.</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.ErrorTheSpecifiedPasskeyCouldNotBeFound" xml:space="preserve">
+    <value>Fel: Den angivna passkey kunde inte hittas.</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.ErrorThePasskeyCouldNotBeUpdated" xml:space="preserve">
+    <value>Fel: Passkey kunde inte uppdateras.</value>
+  </data>
+  <data name="Identity.Manage.RenamePasskey.PasskeyUpdatedSuccessfully" xml:space="preserve">
+    <value>Passkey uppdaterades.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.ErrorThePasskeyCouldNotBeDeleted" xml:space="preserve">
+    <value>Fel: Passkey kunde inte tas bort.</value>
+  </data>
+  <data name="Identity.Manage.Passkeys.PasskeyDeletedSuccessfully" xml:space="preserve">
+    <value>Passkey togs bort.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.UnableToLoadUserWithID0" xml:space="preserve">
+    <value>Kunde inte läsa in användaren med ID '{0}'.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.UnableToLoadUserWithEmail0" xml:space="preserve">
+    <value>Kunde inte läsa in användaren med e-postadressen '{0}'.</value>
+  </data>
+  <data name="Identity.ExternalLogin.ConfirmYourEmail" xml:space="preserve">
+    <value>Bekräfta din e-postadress</value>
+  </data>
+  <data name="Identity.ForgotPassword.ResetPassword" xml:space="preserve">
+    <value>Återställ lösenord</value>
+  </data>
+  <data name="Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA" xml:space="preserve">
+    <value>Bekräfta ditt konto genom att &lt;a href='{0}'&gt;klicka här&lt;/a&gt;.</value>
+  </data>
+  <data name="Identity.ForgotPassword.PleaseResetYourPasswordByAHereA" xml:space="preserve">
+    <value>Återställ ditt lösenord genom att &lt;a href='{0}'&gt;klicka här&lt;/a&gt;.</value>
+  </data>
+  <data name="Identity.Manage.Email.EmailNotFound" xml:space="preserve">
+    <value>E-postadress saknas</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-postadress</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Bekräfta lösenord</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Kom ihåg inloggningen?</value>
+  </data>
+  <data name="TwoFactorCode" xml:space="preserve">
+    <value>Autentiseringskod</value>
+  </data>
+  <data name="RememberMachine" xml:space="preserve">
+    <value>Kom ihåg den här enheten</value>
+  </data>
+  <data name="RecoveryCode" xml:space="preserve">
+    <value>Återställningskod</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Nuvarande lösenord</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nytt lösenord</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Bekräfta nytt lösenord</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Ny e-postadress</value>
+  </data>
+  <data name="VerificationCode" xml:space="preserve">
+    <value>Verifieringskod</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Telefonnummer</value>
+  </data>
+  <data name="PasskeyName" xml:space="preserve">
+    <value>Passkey-namn</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>{0} måste innehålla minst {2} och högst {1} tecken.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Lösenordet och bekräftelsen stämmer inte överens.</value>
+  </data>
+  <data name="NewPasswordMismatch" xml:space="preserve">
+    <value>Det nya lösenordet och bekräftelsen stämmer inte överens.</value>
+  </data>
+  <data name="PasskeyNameLength" xml:space="preserve">
+    <value>Passkey-namn får inte vara längre än {1} tecken.</value>
+  </data>
+  <data name="Manage.Passkeys" xml:space="preserve">
+    <value>Hantera passkeys</value>
+  </data>
+  <data name="Manage.UnnamedPasskey" xml:space="preserve">
+    <value>Namnlös passkey</value>
+  </data>
+  <data name="Manage.ConfirmDeletePasskey" xml:space="preserve">
+    <value>Är du säker på att du vill ta bort den här passkeyn?</value>
+  </data>
+  <data name="Manage.RenameExistingPasskey" xml:space="preserve">
+    <value>Ange ett nytt namn för "{0}"-passkeyen</value>
+  </data>
+  <data name="Error.DevelopmentDetails" xml:space="preserve">
+    <value>, eftersom känsliga uppgifter från felmeddelanden då kan visas för användare. Vid lokal felsökning kan utvecklingsläge aktiveras genom att ange</value>
+  </data>
+  <data name="Error.Restart" xml:space="preserve">
+    <value>, och starta om applikationen.</value>
+  </data>
+  <data name="Error.EnvironmentVariable" xml:space="preserve">
+    <value>som miljövariabel med värdet</value>
+  </data>
+  <data name="Manage.Disable2faWarning" xml:space="preserve">
+    <value>Att inaktivera tvåfaktorsautentisering ändrar inte nycklarna i autentiseringsappar. Om du vill ändra nyckeln bör du</value>
+  </data>
+  <data name="Manage.GenerateCodesWarning" xml:space="preserve">
+    <value>Att skapa nya återställningskoder ändrar inte nycklarna i autentiseringsappar. Om du vill ändra nyckeln bör du</value>
+  </data>
+  <data name="Manage.OrGoogleAuthenticator" xml:space="preserve">
+    <value>eller Google Authenticator för</value>
+  </data>
+  <data name="Manage.AuthenticatorCodeInstructions" xml:space="preserve">
+    <value>När du har skannat QR-koden eller angett nyckeln visas en unik kod i appen. Ange koden nedan.</value>
+  </data>
+  <data name="Manage.ResetAuthenticatorWarning" xml:space="preserve">
+    <value>Tvåfaktorsautentisering inaktiveras tills du verifierar appen. Om du inte slutför konfigurationen kan du förlora tillgången till kontot.</value>
+  </data>
+  <data name="Register.ConfigureEmailSender" xml:space="preserve">
+    <value>om hur du konfigurerar en riktig e-posttjänst.</value>
+  </data>
+  <data name="Register.NormallyEmailed" xml:space="preserve">
+    <value>Normalt skulle följande skickas via e-post:</value>
+  </data>
+  <data name="Account.AssociateProvider" xml:space="preserve">
+    <value>Koppla ditt {0}-konto.</value>
+  </data>
+  <data name="Manage.RemoveProvider" xml:space="preserve">
+    <value>Ta bort inloggningen med {0} från ditt konto</value>
+  </data>
+  <data name="Manage.LoginWithProvider" xml:space="preserve">
+    <value>Logga in med ditt {0}-konto</value>
+  </data>
+  <data name="Manage.RecoveryCodesLeft" xml:space="preserve">
+    <value>Du har {0} återställningskoder kvar.</value>
+  </data>
+  <data name="Identity.Login.Header.Title" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Identity.Login.Form.Submit" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+</root>

@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /* .css filen ska INTE uppdateras, skriv CSS-koden i .scss filen istället och kompilera om .css filen ifrån .scss filen 
     (Använder NuGet-paketet: BuildWebCompiler, för detta). 
 
@@ -80,6 +80,32 @@ button.accept-policy {
 
 header {
   background-color: #111;
+}
+
+.site-pre-footer-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 6rem;
+}
+
+.page-language-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.theme-switcher {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.theme-switcher p {
+  margin: 0;
 }
 
 /* Sticky footer styles
@@ -486,7 +512,6 @@ body {
     margin-bottom: 0;
   }
 }
-
 /* Liten liggande mobil-vy - ännu mer kompakt (t.ex. telefoner i liggande läge) */
 @media (orientation: landscape) and (max-height: 450px) {
   .glightbox-mobile .glightbox-container .gslide-description {
@@ -501,7 +526,6 @@ body {
     font-size: 0.75em;
   }
 }
-
 /* ----------end of glightbox config------------ */
 /* ---------- Gallery-fix på mobil ------------- */
 /* Make the thumbnail card a container for CSS Container Queries,

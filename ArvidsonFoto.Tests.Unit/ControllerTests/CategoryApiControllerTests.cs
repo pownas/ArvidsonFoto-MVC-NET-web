@@ -41,8 +41,8 @@ public class CategoryApiControllerTests
         // Arrange
         var category = new CategoryDto
         {
-            Name = "Test Category",
-            UrlCategoryPath = "test-category"
+            NameSv = "Test Category",
+            UrlCategoryPathSv = "test-category"
         };
 
         // Act
@@ -77,9 +77,22 @@ public class CategoryApiControllerTests
         Assert.IsType<List<CategoryDto>>(result);
         Assert.True(result.Count > 0);
         // Använd verkliga kategorier från DbSeederExtension
-        Assert.Contains(result, c => c.Name == "Fåglar");
-        Assert.Contains(result, c => c.Name == "Däggdjur");
-        Assert.Contains(result, c => c.Name == "Insekter");
+        Assert.Contains(result, c => c.NameSv == "Fåglar");
+        Assert.Contains(result, c => c.NameSv == "Däggdjur");
+        Assert.Contains(result, c => c.NameSv == "Insekter");
+    }
+
+    [Fact]
+    public void GetGameSelectableCategories_ExcludesCategoriesNotEnabledForGames()
+    {
+        _mockCategoryService.GetById(1).IsGameSelectable = false;
+        var childCategoryId = _mockCategoryService.GetChildrenByParentId(1).First().CategoryId;
+
+        var result = _controller.GetGameSelectableCategories();
+
+        Assert.DoesNotContain(result, category => category.CategoryId == 1);
+        Assert.DoesNotContain(result, category => category.CategoryId == childCategoryId);
+        Assert.Contains(result, category => category.CategoryId == 2);
     }
 
     [Fact]
@@ -107,7 +120,7 @@ public class CategoryApiControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
         Assert.Equal(categoryId, category.CategoryId);
-        Assert.Equal("Fåglar", category.Name);
+        Assert.Equal("Fåglar", category.NameSv);
     }
 
     [Fact]
@@ -152,7 +165,7 @@ public class CategoryApiControllerTests
 
         // Assert
         Assert.IsType<CategoryDto>(result);
-        Assert.Equal("Blåmes", result.Name);
+        Assert.Equal("Blåmes", result.NameSv);
         Assert.Equal(243, result.CategoryId); // MenuId från DbSeederExtension (Id=238, MenuId=243)
     }
 
@@ -168,7 +181,7 @@ public class CategoryApiControllerTests
         // Assert
         Assert.IsType<CategoryDto>(result);
         Assert.Equal(-1, result.CategoryId);
-        Assert.Equal("Not found", result.Name);
+        Assert.Equal("Not found", result.NameSv);
     }
 
     [Fact]
@@ -185,8 +198,8 @@ public class CategoryApiControllerTests
         var subcategories = Assert.IsType<List<CategoryDto>>(okResult.Value);
         Assert.True(subcategories.Count > 0);
         // Tättingar (MenuId=23) är en underkategori till Fåglar
-        Assert.Contains(subcategories, c => c.Name == "Tättingar");
-        Assert.Contains(subcategories, c => c.Name == "Dagrovfåglar");
+        Assert.Contains(subcategories, c => c.NameSv == "Tättingar");
+        Assert.Contains(subcategories, c => c.NameSv == "Dagrovfåglar");
     }
 
     [Fact]
@@ -218,8 +231,8 @@ public class CategoryApiControllerTests
         var children = Assert.IsType<List<CategoryDto>>(okResult.Value);
         Assert.True(children.Count > 0);
         // Mesar (MenuId=208) är en underkategori till Tättingar
-        Assert.Contains(children, c => c.Name == "Mesar");
-        Assert.Contains(children, c => c.Name == "Finkar och siskor");
+        Assert.Contains(children, c => c.NameSv == "Mesar");
+        Assert.Contains(children, c => c.NameSv == "Finkar och siskor");
     }
 
     [Fact]
@@ -287,7 +300,7 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal("Blåmes", category.NameSv);
         Assert.Equal(243, category.CategoryId);
     }
 
@@ -332,7 +345,7 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal("Blåmes", category.NameSv);
         Assert.Equal(243, category.CategoryId);
     }
 
@@ -348,7 +361,7 @@ public class CategoryApiControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var category = Assert.IsType<CategoryDto>(okResult.Value);
-        Assert.Equal("Blåmes", category.Name);
+        Assert.Equal("Blåmes", category.NameSv);
         Assert.Equal(243, category.CategoryId);
     }
 

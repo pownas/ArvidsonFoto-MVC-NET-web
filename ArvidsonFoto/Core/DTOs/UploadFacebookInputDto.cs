@@ -10,18 +10,18 @@ public class UploadFacebookInputDto
     /// <summary>
     /// Lista med valda bild-ID:n (1-10 bilder)
     /// </summary>
-    [Required(ErrorMessage = "Välj minst en bild")]
-    [MinLength(1, ErrorMessage = "Välj minst en bild")]
-    [MaxLength(10, ErrorMessage = "Du kan välja max 10 bilder")]
-    public List<int> SelectedImageIds { get; set; } = new();
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImageRequired), ErrorMessageResourceType = typeof(ValidationResource))]
+    [MinLength(1, ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImageRequired), ErrorMessageResourceType = typeof(ValidationResource))]
+    [MaxLength(10, ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookImagesTooMany), ErrorMessageResourceType = typeof(ValidationResource))]
+    public List<int> SelectedImageIds { get; set; } = [];
 
     /// <summary>
     /// Text som ska följa med inlägget
     /// </summary>
-    [Required(ErrorMessage = "Skriv ett meddelande")]
+    [Required(ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookMessageRequired), ErrorMessageResourceType = typeof(ValidationResource))]
     [DataType(DataType.MultilineText)]
-    [MaxLength(5000, ErrorMessage = "Meddelandet får max vara 5000 tecken")]
-    [Display(Name = "Meddelande")]
+    [MaxLength(5000, ErrorMessageResourceName = nameof(ValidationResource.AdminFacebookMessageTooLong), ErrorMessageResourceType = typeof(ValidationResource))]
+    [Display(Name = nameof(ValidationResource.AdminFacebookMessageLabel), ResourceType = typeof(ValidationResource))]
     public string Message { get; set; } = string.Empty;
 
     /// <summary>
@@ -32,7 +32,7 @@ public class UploadFacebookInputDto
     {
         return new UploadFacebookInputDto
         {
-            SelectedImageIds = new List<int>(),
+            SelectedImageIds = [],
             Message = string.Empty
         };
     }

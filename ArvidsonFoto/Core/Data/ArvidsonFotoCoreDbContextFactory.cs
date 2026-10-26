@@ -24,7 +24,7 @@ public class ArvidsonFotoCoreDbContextFactory : IDesignTimeDbContextFactory<Arvi
         // or by providing connection string through command line arguments
         var connectionString = GetConnectionString(args);
 
-        optionsBuilder.UseSqlServer(connectionString);
+        _ = optionsBuilder.UseSqlServer(connectionString);
 
         return new ArvidsonFotoCoreDbContext(optionsBuilder.Options);
     }

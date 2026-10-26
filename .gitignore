@@ -354,3 +354,5 @@ MigrationBackup/
 
 # Application logs directory
 ArvidsonFoto/[Ll]ogs/
+# Playwright CLI output (may contain credentials)
+.playwright-cli/

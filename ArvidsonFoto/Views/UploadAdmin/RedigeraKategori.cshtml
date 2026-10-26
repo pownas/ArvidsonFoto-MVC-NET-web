@@ -1,0 +1,40 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
+@using ArvidsonFoto.Core.Models
+@{
+    var categories = ViewData["Categories"] as List<TblMenu> ?? [];
+}
+<h1>@ViewData["Title"]</h1>
+<partial name="_NavUploadAdmin" />
+<form method="get" asp-action="RedigeraKategori">
+    <label for="search">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
+    <input id="search" name="search" value="@ViewData["Search"]" />
+    <button type="submit">@L["UploadAdmin.RedigeraKategori.Search"]</button>
+</form>
+<ul>
+@foreach (var category in categories)
+{
+    <li><a asp-action="RedigeraKategori" asp-route-id="@category.MenuCategoryId">@category.MenuDisplayName (@category.MenuDisplayNameEn)</a></li>
+}
+</ul>
+@if (Model.CategoryId > 0)
+{
+    <form method="post" asp-action="SaveCategory">
+        @Html.AntiForgeryToken()
+        <input asp-for="CategoryId" type="hidden" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
+        <input asp-for="NameSv" maxlength="50" />
+        <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
+        <input asp-for="NameEn" maxlength="50" />
+        <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
+        <input asp-for="UrlSegmentSv" maxlength="50" />
+        <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
+        <input asp-for="UrlSegmentEn" maxlength="50" />
+        <div class="form-check">
+            <input asp-for="IsGameSelectable" class="form-check-input" />
+            <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
+        </div>
+        <button type="submit">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
+    </form>
+}

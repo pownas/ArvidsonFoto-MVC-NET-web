@@ -1,12 +1,12 @@
-﻿@page
+@page
 @section MetaData { <meta name="robots" content="noindex" /> }
 @model RegisterModel
 @{
-    ViewData["Title"] = "Registrera ny användare";
+    ViewData["Title"] = L["Identity.Register.RegisterANewUser"];
 }
 
 <h2>@ViewData["Title"]</h2>
-<p>Kontakta Jonas för att registrera dig...</p>
+<p>@L["Identity.Register.ContactJonasToRegister"]</p>
 @*
 <div class="row">
     <div class="col-md-4">

@@ -36,7 +36,7 @@ public partial class EmailModel(
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "New email")]
+        [Display(Name = nameof(IdentityResource.NewEmail), ResourceType = typeof(IdentityResource))]
         public string NewEmail { get; set; } = null!;
     }
 
@@ -58,7 +58,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await LoadAsync(user);
@@ -70,7 +70,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -88,18 +88,18 @@ public partial class EmailModel(
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmailChange",
                 pageHandler: null,
-                values: new { userId = userId, email = Input.NewEmail, code = code },
+                values: new { userId, email = Input.NewEmail, code },
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.NewEmail,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+                IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-            StatusMessage = "Confirmation link to change email sent. Please check your email.";
+            StatusMessage = IdentityResource.Get("Identity.Manage.Email.ConfirmationLinkToChangeEmailSentYourEmail");
             return RedirectToPage();
         }
 
-        StatusMessage = "Your email is unchanged.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.Email.YourEmailIsUnchanged");
         return RedirectToPage();
     }
 
@@ -108,7 +108,7 @@ public partial class EmailModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -118,20 +118,20 @@ public partial class EmailModel(
         }
 
         var userId = await _userManager.GetUserIdAsync(user);
-        var email = await _userManager.GetEmailAsync(user) ?? "Email - not found";
+        var email = await _userManager.GetEmailAsync(user) ?? IdentityResource.Get("Identity.Manage.Email.EmailNotFound");
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Url.Page(
             "/Account/ConfirmEmail",
             pageHandler: null,
-            values: new { area = "Identity", userId = userId, code = code },
+            values: new { area = "Identity", userId, code },
             protocol: Request.Scheme);
         await _emailSender.SendEmailAsync(
             email: email,
-            subject: "Confirm your email",
-            htmlMessage: $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+            subject: IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+            htmlMessage: string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
-        StatusMessage = "Verification email sent. Please check your email.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.Email.VerificationEmailSentPleaseCheckYourEmail");
         return RedirectToPage();
     }
 }

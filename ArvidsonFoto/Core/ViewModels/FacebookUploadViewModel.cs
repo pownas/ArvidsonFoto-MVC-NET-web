@@ -10,7 +10,7 @@ public class FacebookUploadViewModel
     /// <summary>
     /// Lista med de senaste bilderna (max 25)
     /// </summary>
-    public List<UploadImageInputDto> RecentImages { get; set; } = new();
+    public List<UploadImageInputDto> RecentImages { get; set; } = [];
 
     /// <summary>
     /// Meddelande att visa för användaren (success/error)

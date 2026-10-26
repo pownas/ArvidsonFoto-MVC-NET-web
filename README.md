@@ -43,6 +43,16 @@ dotnet ef database update --context ArvidsonFotoIdentityContext
 ## Skapa nya Migrations
 För att skapa någon ny migration om en data-modell ändras på, kör kommandot: 
 ```dotnet-ef migrations add DatabaseSeed --context ArvidsonFotoDbContext```
+
+Engelska innehållskolumner, språkval, fallback och migrations-/rollback-steg beskrivs i [inventeringen](wiki/EnglishContentInventory.md).
+
+Inloggade administratörer kan granska databasöversättningar på `/TranslationReview`: välj kategorier, bilder eller gästbok och jämför varje svenskt fält med dess engelska motsvarighet. Vyn visar antalet ogranskade fält, kan filtrera fram dem och paginerar posterna. Spara en ändrad översättning först; markera den därefter som granskad. Saknade engelska värden kan inte markeras som granskade. Om svensk eller engelsk text senare ändras nollställs dess granskningsstatus automatiskt. Migrationen `AddTranslationReviewStatus` skapar fem separata bit-kolumner som börjar på `false`, även för tidigare översättningar. RESX-översättningar omfattas inte av databaskontrollen och publik svensk fallback påverkas inte.
+
+Redaktörer kan söka efter kategorier och arter på `/UploadAdmin/RedigeraKategori` och ändra svenska och engelska namn samt URL-segment. Nya kategorier får motsvarande fält på `/UploadAdmin/NyKategori`; bildens engelska beskrivning kan ändras under `/UploadAdmin/RedigeraBilder`. Bilder har ingen egen rubrik: visat namn kommer från kategorin/arten. Svenska texter används som fallback när engelska saknas. Seed-översättningar påverkar bara nya databaser; översätt befintligt innehåll separat via admin efter granskning. Var försiktig med att ändra publicerade URL-segment: gamla direktlänkar får ännu ingen automatisk omdirigering.
+
+Publika engelska länkar använder `/images`, `/latest` och `/information` med engelska sidnamn och kategorisegment. Svenska `/bilder`, `/Senast` och `/Info` fungerar fortfarande; språkväxlaren byter också URL och behåller queryparametrar. Den synliga webbkartan visar länkar på valt språk och `wwwroot/sitemap.xml` listar fasta sidlänkar på båda språken. Sökvägar till faktiska bildfiler i `/bilder` är oförändrade.
+
+Statiska översättningar finns i `ArvidsonFoto/Resources/*Resource.{sv-SE,en-US}.resx`, uppdelade i gemensam navigation/formuläretiketter samt `Home`, `Gallery`, `Search`, `Latest`, `Info`, `Site`, `Identity`, `UploadAdmin`, `Dev` och `Validation`. Nycklar anger sida, del och användning, till exempel `Gallery.Metadata.Description`, `Gallery.Counter.Images` och `Contact.Form.Placeholder.Name`. Lägg till samma nyckel i båda språkfilerna och använd motsvarande `IStringLocalizer<TResource>` i vy eller controller. Formulärvalidering har dessutom en neutral svensk `ValidationResource.resx` för validering utanför HTTP-förfrågningar. Galleriets JavaScript och kategoripopupen får sina statiska texter via lokaliserade data-attribut från vyerna, inte hårdkodade strängar. Översatt databasinnehåll och URL-segment lagras **inte** i resursfilerna: deras valfria `En`-fält faller tillbaka till svenska via `LocalizedText.Select`.
   
   
 ## Fel vid körning med EF-core

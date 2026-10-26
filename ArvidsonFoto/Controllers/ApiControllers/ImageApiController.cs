@@ -121,7 +121,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 return string.Empty;
             }
 
-            var path = category.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
+            var path = category.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
 
             // Get parent categories if any
             if (category.ParentCategoryId.HasValue && category.ParentCategoryId.Value > 0)
@@ -129,7 +129,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 var parent = categoryService.GetById(category.ParentCategoryId.Value);
                 if (parent != null && parent.CategoryId > 0)
                 {
-                    path = (parent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
+                    path = (parent.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
 
                     // Get grandparent if any
                     if (parent.ParentCategoryId.HasValue && parent.ParentCategoryId.Value > 0)
@@ -137,7 +137,7 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                         var grandparent = categoryService.GetById(parent.ParentCategoryId.Value);
                         if (grandparent != null && grandparent.CategoryId > 0)
                         {
-                            path = (grandparent.UrlCategoryPath?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
+                            path = (grandparent.UrlCategoryPathSv?.ToLower(CultureInfo.InvariantCulture) ?? "") + "/" + path;
                         }
                     }
                 }
@@ -216,6 +216,15 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         return imageService.GetRandomNumberOfImages(count);
     }
 
+    [AllowAnonymous]
+    [HttpGet("/api/game/images")]
+    [ProducesResponseType<List<ImageDto>>(StatusCodes.Status200OK)]
+    public List<ImageDto> GetGameSelectableImages([FromQuery] int count = 20, [FromQuery] int? categoryId = null)
+    {
+        logger.LogInformation("Game API - GetGameSelectableImages called.");
+        return imageService.GetGameSelectableImages(count, categoryId);
+    }
+
     /// <summary>
     /// Retrieves the latest images from the database.
     /// </summary>
@@ -289,15 +298,21 @@ public class ImageApiController(ILogger<ImageApiController> logger,
         existingImage.ImageMainFamilyId = image.ImageHuvudfamilj;
         existingImage.ImageFamilyId = image.ImageFamilj;
         existingImage.ImageDescription = image.ImageDescription;
+        if (image.ImageDescriptionEn != null)
+        {
+            existingImage.ImageDescriptionEn = image.ImageDescriptionEn;
+        }
+
         existingImage.ImageDate = image.ImageDate;
         existingImage.ImageCategoryId = image.ImageArt;
+        existingImage.IsGameSelectable = image.IsGameSelectable;
         existingImage.ImageUpdate = DateTime.Now;
         existingImage.ImageUrlName = image.ImageUrl;
         existingImage.Name = image.ImageArtNamn;
         //TODO: Kanske uppdatera fler fält om det behövs
 
         // Save changes to the database
-        entityContext.SaveChanges();
+        _ = entityContext.SaveChanges();
 
         return true; // Update successful
     }
@@ -320,10 +335,11 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// <param name="cancellationToken">Token to cancel the operation</param>
     /// <returns>A <see cref="ImageListResponse"/> with a list of <see cref="ImageDto"/> objects representing the images in the specified category path</returns>
     [AllowAnonymous]
-    [HttpGet("/api/Bilder/{*categoryPath}")]
+    [HttpGet("/api/bilder/{*categoryPath}")]
+    [HttpGet("/api/images/{*categoryPath}")]
     [HttpGet("Bilder/{*categoryPath}")]
     [HttpGet("ByPath/{*categoryPath}")]
-    [HttpGet("ByPath/Bilder/{*categoryPath}")]
+    [HttpGet("ByPath/bilder/{*categoryPath}")]
     [ProducesResponseType<ImageListResponse>(StatusCodes.Status200OK)]
     public IActionResult GetImagesByCategoryPath(
         string categoryPath,
@@ -367,7 +383,11 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 // If this is the first segment, find the main category
                 if (currentCategoryId == null)
                 {
-                    currentCategoryId = categoryService.GetIdByName(segment);
+                    currentCategoryId = categoryService.GetByUrlSegmentWithFallback(segment).CategoryId;
+                    if (currentCategoryId <= 0)
+                    {
+                        currentCategoryId = categoryService.GetIdByName(segment);
+                    }
                     if (currentCategoryId <= 0)
                     {
                         return NotFound($"Category '{segment}' not found");
@@ -378,8 +398,10 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                     // Find the child category under the current parent
                     var children = categoryService.GetChildrenByParentId(currentCategoryId.Value);
                     matchingChildCategory = children.FirstOrDefault(c =>
-                        c.UrlCategoryPath!.Equals(segment, StringComparison.OrdinalIgnoreCase) ||
-                        c.Name!.Equals(segment, StringComparison.OrdinalIgnoreCase));
+                        string.Equals(c.UrlCategoryPathSv, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.UrlCategoryPathEn, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.NameSv, segment, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(c.NameEn, segment, StringComparison.OrdinalIgnoreCase));
 
                     if (matchingChildCategory == null)
                     {
@@ -400,19 +422,13 @@ public class ImageApiController(ILogger<ImageApiController> logger,
 
                 // When a single-segment path is used (e.g. "Fåglar"), matchingChildCategory is null.
                 // In that case look up the category by ID so we can populate name and URL correctly.
-                string categoryName;
-                string categoryUrl;
-                if (matchingChildCategory != null)
-                {
-                    categoryName = matchingChildCategory.Name ?? "Unknown";
-                    categoryUrl = matchingChildCategory.UrlCategoryPathFull ?? "Unknown";
-                }
-                else
-                {
-                    var resolvedCategory = categoryService.GetById(currentCategoryId.Value);
-                    categoryName = resolvedCategory.Name ?? "Unknown";
-                    categoryUrl = resolvedCategory.UrlCategoryPath ?? "Unknown";
-                }
+                var resolvedCategory = matchingChildCategory ?? categoryService.GetById(currentCategoryId.Value);
+                var categoryNameSv = resolvedCategory.NameSv;
+                var categoryNameEn = resolvedCategory.NameEn;
+                var categoryUrlSv = matchingChildCategory != null
+                    ? matchingChildCategory.UrlCategoryPathFullSv ?? "Unknown"
+                    : resolvedCategory.UrlCategoryPathFullSv ?? "Unknown";
+                var categoryUrlEn = matchingChildCategory?.UrlCategoryPathFullEn ?? resolvedCategory.UrlCategoryPathFullEn ?? string.Empty;
 
                 List<ImageDto> resultImages;
                 int currentPage;
@@ -440,9 +456,10 @@ public class ImageApiController(ILogger<ImageApiController> logger,
                 var response = new ImageListResponse
                 {
                     CategoryId = currentCategoryId.Value,
-                    CategoryName = categoryName,
-                    CategoryUrl = categoryUrl,
-                    CategoryUrlWithAAO = Uri.EscapeDataString(categoryPath),
+                    CategoryNameSv = categoryNameSv,
+                    CategoryNameEn = categoryNameEn,
+                    UrlCategorySv = $"bilder/{categoryUrlSv}",
+                    UrlCategoryEn = $"images/{categoryUrlEn}",
                     ImageCategoryTotalCount = totalCategoryImageCount,
                     ImageResultCount = resultImages.Count,
                     Images = resultImages,
@@ -471,37 +488,26 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     private static List<ImageDto> ApplySortingAndLimit(List<ImageDto> images, string sortBy, string sortOrder, int limit)
     {
         // Apply sorting
-        IOrderedEnumerable<ImageDto> sortedImages;
-
-        switch (sortBy)
+        IOrderedEnumerable<ImageDto> sortedImages = sortBy switch
         {
-            case "imagetaken":
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.DateImageTaken)
-                    : images.OrderByDescending(i => i.DateImageTaken);
-                break;
-
-            case "categoryname":
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.UrlCategory)
-                    : images.OrderByDescending(i => i.UrlCategory);
-                break;
-
-            case "uploaded":
-            default:
-                sortedImages = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
-                    ? images.OrderBy(i => i.DateUploaded)
-                    : images.OrderByDescending(i => i.DateUploaded);
-                break;
-        }
+            "imagetaken" => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.DateImageTaken)
+                                : images.OrderByDescending(i => i.DateImageTaken),
+            "categoryname" => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.UrlCategorySv)
+                                : images.OrderByDescending(i => i.UrlCategorySv),
+            _ => sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                                ? images.OrderBy(i => i.DateUploaded)
+                                : images.OrderByDescending(i => i.DateUploaded),
+        };
 
         // if limit = 0, then no limit
         if (limit == 0)
         {
-            return sortedImages.ToList();
+            return [.. sortedImages];
         }
 
         // else retur with Applied limit
-        return sortedImages.Take(limit).ToList();
+        return [.. sortedImages.Take(limit)];
     }
 }

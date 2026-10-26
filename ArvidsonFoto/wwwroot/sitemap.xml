@@ -8,52 +8,63 @@
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Senast/Fotograferad</loc>
+    <loc>https://arvidsonfoto.se/senast/fotograferad</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Senast/Uppladdad</loc>
+    <loc>https://arvidsonfoto.se/senast/uppladdad</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Senast/Per%20kategori</loc>
+    <loc>https://arvidsonfoto.se/senast/per%20kategori</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Kop_av_bilder</loc>
+    <loc>https://arvidsonfoto.se/info/kop_av_bilder</loc>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Gastbok</loc>
+    <loc>https://arvidsonfoto.se/info/gastbok</loc>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Kontakta</loc>
+    <loc>https://arvidsonfoto.se/info/kontakta</loc>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Om_mig</loc>
+    <loc>https://arvidsonfoto.se/info/om_mig</loc>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Sidkarta</loc>
+    <loc>https://arvidsonfoto.se/info/sidkarta</loc>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Info/Copyright</loc>
+    <loc>https://arvidsonfoto.se/info/copyright</loc>
   </url>
 
   <url>
-    <loc>https://arvidsonfoto.se/Search</loc>
+    <loc>https://arvidsonfoto.se/sok</loc>
   </url>
+
+  <url><loc>https://arvidsonfoto.se/latest/photographed</loc></url>
+  <url><loc>https://arvidsonfoto.se/latest/uploaded</loc></url>
+  <url><loc>https://arvidsonfoto.se/latest/by-category</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/buy-photos</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/guestbook</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/contact</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/about</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/sitemap</loc></url>
+  <url><loc>https://arvidsonfoto.se/information/copyright</loc></url>
+  <url><loc>https://arvidsonfoto.se/sok</loc></url>
 
 </urlset>

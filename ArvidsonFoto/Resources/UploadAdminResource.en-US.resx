@@ -1,0 +1,498 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="UploadAdmin.RedigeraBilder.PhotoDate" xml:space="preserve">
+    <value>Photo date</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="UploadAdmin.Statistik.AllTimePageViews" xml:space="preserve">
+    <value>All-time page views</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.CreateCategory" xml:space="preserve">
+    <value>Create category</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.Reply" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="UploadAdmin.Statistik.LastVisited" xml:space="preserve">
+    <value>Last visited</value>
+  </data>
+  <data name="UploadAdmin.Index.WelcomeToUploadAdmin" xml:space="preserve">
+    <value>Welcome to Upload Admin!</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ShareImagesOnFacebook" xml:space="preserve">
+    <value>Share images on Facebook</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.LatestLogYesterday" xml:space="preserve">
+    <value>Latest log (yesterday)</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.FailedToEditImageNumber" xml:space="preserve">
+    <value>Failed to edit image number:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.ClickImagesToSelectOrDeselect10Images" xml:space="preserve">
+    <value>Click images to select or deselect them. You can choose 1 to 10 images.</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ShareOnFacebook" xml:space="preserve">
+    <value>Share on Facebook</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.PublishOnFacebook" xml:space="preserve">
+    <value>Publish on Facebook</value>
+  </data>
+  <data name="UploadAdmin.Navigation.LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.TheSiteSLogsAreShownBelow" xml:space="preserve">
+    <value>The site's logs are shown below:</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.DeletedGuestbookEntryNumber" xml:space="preserve">
+    <value>Deleted guestbook entry number:</value>
+  </data>
+  <data name="UploadAdmin.Navigation.LinkANewImageOnTheSite" xml:space="preserve">
+    <value>Link a new image on the site</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.CheckThatAllRequiredFieldsAreInCorrectly" xml:space="preserve">
+    <value>Check that all required fields are filled in correctly.</value>
+  </data>
+  <data name="UploadAdmin.Navigation.EditCategoriesAndSpecies" xml:space="preserve">
+    <value>Edit categories and species</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.ValidationError" xml:space="preserve">
+    <value>Validation error</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.WriteAMessageToAccompanyTheOnFacebook" xml:space="preserve">
+    <value>Write a message to accompany the images on Facebook...</value>
+  </data>
+  <data name="UploadAdmin.Navigation.EditImages" xml:space="preserve">
+    <value>Edit images</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.PreviousMonth" xml:space="preserve">
+    <value>Previous month</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.Species" xml:space="preserve">
+    <value>Species:</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ManageYourAccount" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="UploadAdmin.Navigation.NewCategory" xml:space="preserve">
+    <value>New category</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.Select110RecentlyUploadedImagesToFacebookPost" xml:space="preserve">
+    <value>Select 1–10 recently uploaded images to create a Facebook post:</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.SwedishURLSegment" xml:space="preserve">
+    <value>Swedish URL segment</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.YYYYMMDD" xml:space="preserve">
+    <value>YYYY-MM-DD</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.AnUnexpectedErrorOccurredTryAgainLater" xml:space="preserve">
+    <value>An unexpected error occurred. Try again later.</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.ChooseACategory" xml:space="preserve">
+    <value>Choose a category...</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.ImageName" xml:space="preserve">
+    <value>Image name</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.FileNameWITHOUTJpgEGTA11234" xml:space="preserve">
+    <value>File name WITHOUT .jpg, e.g. 'TA1_1234'</value>
+  </data>
+  <data name="UploadAdmin.NyBild.TheImageWasLinked" xml:space="preserve">
+    <value>The image was linked:</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.FileName" xml:space="preserve">
+    <value>File name:</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.YouMustSelectAtLeastOneToShare" xml:space="preserve">
+    <value>You must select at least one image to share.</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.EditTheLatestImagesBelow" xml:space="preserve">
+    <value>Edit the latest images below:</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.EnglishName" xml:space="preserve">
+    <value>English name</value>
+  </data>
+  <data name="UploadAdmin.Index.HereAreSomeSiteStatistics" xml:space="preserve">
+    <value>Here are some site statistics:</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Species" xml:space="preserve">
+    <value>Species</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.FailedToMarkGuestbookEntryNumberAsRead" xml:space="preserve">
+    <value>Failed to mark guestbook entry number as read:</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ReadTheLogbookAndErrorLogs" xml:space="preserve">
+    <value>Read the logbook and error logs</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.MarkedGuestbookEntryNumberAsRead" xml:space="preserve">
+    <value>Marked guestbook entry number as read:</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Family" xml:space="preserve">
+    <value>Family</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.Maximum5000Characters" xml:space="preserve">
+    <value>Maximum 5000 characters</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.SaveCategory" xml:space="preserve">
+    <value>Save category</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.HereYouCanAddANewTheSite" xml:space="preserve">
+    <value>Here you can add a new category to the site:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months" xml:space="preserve">
+    <value>Page views in the last 6 months</value>
+  </data>
+  <data name="UploadAdmin.Statistik.HereYouCanSeeSiteStatistics" xml:space="preserve">
+    <value>Here you can see site statistics:</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.WrongSpecies" xml:space="preserve">
+    <value>Wrong species?</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.ThePostWasPublishedOnFacebook" xml:space="preserve">
+    <value>The post was published on Facebook!</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.MainFamily" xml:space="preserve">
+    <value>Main family</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies" xml:space="preserve">
+    <value>Search for a category or species</value>
+  </data>
+  <data name="UploadAdmin.Navigation.AddANewCategoryOnTheSite" xml:space="preserve">
+    <value>Add a new category on the site</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.Received" xml:space="preserve">
+    <value>Received:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.Number0Selected" xml:space="preserve">
+    <value>0 selected</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.HideFilteredLogs" xml:space="preserve">
+    <value>Hide filtered logs</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.FacebookIsNotConfigured" xml:space="preserve">
+    <value>Facebook is not configured</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.ChooseADayToView" xml:space="preserve">
+    <value>Choose a day to view:</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ReadLogs" xml:space="preserve">
+    <value>Read logs</value>
+  </data>
+  <data name="UploadAdmin.Navigation.SiteStatistics" xml:space="preserve">
+    <value>Site statistics</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.PostMessage" xml:space="preserve">
+    <value>Post message</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.SavedChangesForImage" xml:space="preserve">
+    <value>Saved changes for image:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.CommunicationWithFacebookFailedCheckTheTryAgain" xml:space="preserve">
+    <value>Communication with Facebook failed. Check the settings and try again.</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.ShowAllLogs" xml:space="preserve">
+    <value>Show all logs</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.ImageNumber" xml:space="preserve">
+    <value>Image number:</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.SaveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ViewSiteStatistics" xml:space="preserve">
+    <value>View site statistics</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.Today" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="UploadAdmin.VisaLoggboken.NoSeriousErrorsHaveOccurredToday" xml:space="preserve">
+    <value>No serious errors have occurred today.</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.NoImagesSelected" xml:space="preserve">
+    <value>No images selected</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Last" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Current2" xml:space="preserve">
+    <value>(current)</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.NoImagesFound" xml:space="preserve">
+    <value>No images found</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.First" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.FailedToDeleteGuestbookEntryNumber" xml:space="preserve">
+    <value>Failed to delete guestbook entry number:</value>
+  </data>
+  <data name="UploadAdmin.Navigation.ManageGuestbookEntries" xml:space="preserve">
+    <value>Manage guestbook entries</value>
+  </data>
+  <data name="UploadAdmin.NyBild.HereYouCanLinkANewTheSite" xml:space="preserve">
+    <value>Here you can link a new image on the site:</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.YouCanScrollHorizontallyOnYourPhone" xml:space="preserve">
+    <value>(you can scroll horizontally on your phone)</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.WhichCategoryShouldItBelongTo" xml:space="preserve">
+    <value>Which category should it belong to?</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.FacebookIntegrationIsNotConfiguredContactTheAdministrator" xml:space="preserve">
+    <value>Facebook integration is not configured. Contact the administrator.</value>
+  </data>
+  <data name="UploadAdmin.Statistik.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.EnglishURLSegment" xml:space="preserve">
+    <value>English URL segment</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.Uploaded" xml:space="preserve">
+    <value>Uploaded:</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.MessageText" xml:space="preserve">
+    <value>Message text:</value>
+  </data>
+  <data name="UploadAdmin.ImageInputForm.LinkImage" xml:space="preserve">
+    <value>Link image</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.ViewPostOnFacebook" xml:space="preserve">
+    <value>View post on Facebook</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.ManageGuestbookEntriesHere" xml:space="preserve">
+    <value>Manage guestbook entries here:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.AnErrorOccurred" xml:space="preserve">
+    <value>An error occurred</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.CreatedTheNewCategory" xml:space="preserve">
+    <value>Created the new category:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.PublishingFailed" xml:space="preserve">
+    <value>Publishing failed</value>
+  </data>
+  <data name="UploadAdmin.Controller.UploadAdmin" xml:space="preserve">
+    <value>Upload Admin</value>
+  </data>
+  <data name="UploadAdmin.Statistik.Views" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.MarkAsRead" xml:space="preserve">
+    <value>Mark as read</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.ThenYouNeedTo" xml:space="preserve">
+    <value>Then you need to</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.DeletedTheLinkForImageNumber" xml:space="preserve">
+    <value>Deleted the link for image number:</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.AndCreateANewLink" xml:space="preserve">
+    <value>and create a new link.</value>
+  </data>
+  <data name="UploadAdmin.NyKategori.NewCategoryName" xml:space="preserve">
+    <value>New category name</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.SelectImages110" xml:space="preserve">
+    <value>Select images (1–10)</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.SwedishName" xml:space="preserve">
+    <value>Swedish name</value>
+  </data>
+  <data name="UploadAdmin.Navigation.NewImage" xml:space="preserve">
+    <value>New image</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="UploadAdmin.Navigation.EditRecentlyUploadedImages" xml:space="preserve">
+    <value>Edit recently uploaded images</value>
+  </data>
+  <data name="Admin.ImageTitle" xml:space="preserve">
+    <value>Link a new image</value>
+  </data>
+  <data name="Admin.CategoryTitle" xml:space="preserve">
+    <value>Link a new category</value>
+  </data>
+  <data name="Admin.CategoriesTitle" xml:space="preserve">
+    <value>Edit categories and species</value>
+  </data>
+  <data name="Admin.EditImagesTitle" xml:space="preserve">
+    <value>Edit images</value>
+  </data>
+  <data name="Admin.GuestbookTitle" xml:space="preserve">
+    <value>Manage guestbook</value>
+  </data>
+  <data name="Admin.StatisticsTitle" xml:space="preserve">
+    <value>Site statistics</value>
+  </data>
+  <data name="Admin.FacebookTitle" xml:space="preserve">
+    <value>Share images on Facebook</value>
+  </data>
+  <data name="Admin.LogTitle" xml:space="preserve">
+    <value>Reading logs for: {0:yyyy-MM-dd dddd}</value>
+  </data>
+  <data name="Admin.ImageCreationError" xml:space="preserve">
+    <value>An error occurred while creating the image.</value>
+  </data>
+  <data name="Admin.InvalidUrlSegments" xml:space="preserve">
+    <value>URL segments must be unique and valid.</value>
+  </data>
+  <data name="Admin.Missing" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+  <data name="Admin.SelectedCount" xml:space="preserve">
+    <value>{0} selected</value>
+  </data>
+  <data name="Admin.MaxImages" xml:space="preserve">
+    <value>You can select at most {0} images!</value>
+  </data>
+  <data name="Admin.SelectOne" xml:space="preserve">
+    <value>You must select at least one image!</value>
+  </data>
+  <data name="Admin.MessageRequired" xml:space="preserve">
+    <value>You must write a message!</value>
+  </data>
+  <data name="Admin.Publishing" xml:space="preserve">
+    <value>Publishing...</value>
+  </data>
+  <data name="Admin.ImageCount" xml:space="preserve">
+    <value>Number of images: {0}, page {1} of {2}</value>
+  </data>
+  <data name="Admin.EditImage" xml:space="preserve">
+    <value>Edit image: {0} in {1}</value>
+  </data>
+  <data name="Admin.DeleteImage" xml:space="preserve">
+    <value>Delete image: {0} in {1}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteImage" xml:space="preserve">
+    <value>Do you want to remove this image in {0}?</value>
+  </data>
+  <data name="Admin.ConfirmDeleteGuestbook" xml:space="preserve">
+    <value>Delete the message from {0}?</value>
+  </data>
+  <data name="Admin.Unread" xml:space="preserve">
+    <value>{0} unread</value>
+  </data>
+  <data name="Admin.Account" xml:space="preserve">
+    <value>Manage account: {0}</value>
+  </data>
+  <data name="Admin.ThisMonthPageViews" xml:space="preserve">
+    <value>Page views per page this month ({0})</value>
+  </data>
+  <data name="Admin.ThisMonthCategories" xml:space="preserve">
+    <value>Top 10 categories this month ({0})</value>
+  </data>
+  <data name="Admin.ChartFallback" xml:space="preserve">
+    <value>Monthly statistics (Chart.js could not be loaded)</value>
+  </data>
+  <data name="Admin.ChartTitle" xml:space="preserve">
+    <value>Page views per month (last 6 months)</value>
+  </data>
+  <data name="Admin.Views" xml:space="preserve">
+    <value>Page views</value>
+  </data>
+  <data name="Admin.CategoryViews" xml:space="preserve">
+    <value>Category views</value>
+  </data>
+  <data name="Admin.Week" xml:space="preserve">
+    <value>Wk</value>
+  </data>
+  <data name="Admin.Mon" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="Admin.Tue" xml:space="preserve">
+    <value>Tu</value>
+  </data>
+  <data name="Admin.Wed" xml:space="preserve">
+    <value>We</value>
+  </data>
+  <data name="Admin.Thu" xml:space="preserve">
+    <value>Th</value>
+  </data>
+  <data name="Admin.Fri" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Admin.Sat" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Admin.Sun" xml:space="preserve">
+    <value>Su</value>
+  </data>
+  <data name="Admin.Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Admin.SelectedCategory" xml:space="preserve">
+    <value>Selected category: {0}</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.Anonymous" xml:space="preserve"><value>Anonymous user</value></data>
+  <data name="UploadAdmin.Guestbook.ReplyOutlook" xml:space="preserve"><value>Reply via Outlook</value></data>
+  <data name="UploadAdmin.Guestbook.ReplySubject" xml:space="preserve"><value>Reply to your guestbook entry on ArvidsonFoto.se</value></data>
+  <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Edit {0}</value></data>
+  <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Delete {0}</value></data>
+  <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Page navigation</value></data>
+  <data name="UploadAdmin.Review.Title" xml:space="preserve"><value>Review translations</value></data>
+  <data name="UploadAdmin.Review.Tables" xml:space="preserve"><value>Tables</value></data>
+  <data name="UploadAdmin.Review.Categories" xml:space="preserve"><value>Categories</value></data>
+  <data name="UploadAdmin.Review.Images" xml:space="preserve"><value>Images</value></data>
+  <data name="UploadAdmin.Review.Guestbook" xml:space="preserve"><value>Guestbook</value></data>
+  <data name="UploadAdmin.Review.Remaining" xml:space="preserve"><value>Unreviewed fields: {0} of {1}</value></data>
+  <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Total unreviewed fields: {0} of {1}</value></data>
+  <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Save changed text first. Then mark existing, non-empty translations as reviewed.</value></data>
+  <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Show unreviewed only</value></data>
+  <data name="UploadAdmin.Review.MissingOnly" xml:space="preserve"><value>Missing English translation</value></data>
+  <data name="UploadAdmin.Review.MissingCount" xml:space="preserve"><value>Images without an English description: {0}</value></data>
+  <data name="UploadAdmin.Review.Missing" xml:space="preserve"><value>Missing translation</value></data>
+  <data name="UploadAdmin.Review.Filter" xml:space="preserve"><value>Filter review status</value></data>
+  <data name="UploadAdmin.Review.SearchImages" xml:space="preserve"><value>Find image by ID, filename or Swedish description</value></data>
+  <data name="UploadAdmin.Review.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="UploadAdmin.Review.NoResults" xml:space="preserve"><value>No entries match the filter.</value></data>
+  <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Show all</value></data>
+  <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Entry {0}</value></data>
+  <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Category name</value></data>
+  <data name="UploadAdmin.Review.Field.menu.url" xml:space="preserve"><value>URL segment</value></data>
+  <data name="UploadAdmin.Review.Field.images.description" xml:space="preserve"><value>Photo description</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.name" xml:space="preserve"><value>Guestbook name</value></data>
+  <data name="UploadAdmin.Review.Field.guestbook.text" xml:space="preserve"><value>Guestbook text</value></data>
+  <data name="UploadAdmin.Review.Swedish" xml:space="preserve"><value>Swedish original</value></data>
+  <data name="UploadAdmin.Review.English" xml:space="preserve"><value>English translation</value></data>
+  <data name="UploadAdmin.Review.Reviewed" xml:space="preserve"><value>Reviewed</value></data>
+  <data name="UploadAdmin.Review.NotReviewed" xml:space="preserve"><value>Not reviewed</value></data>
+  <data name="UploadAdmin.Review.Save" xml:space="preserve"><value>Save (not reviewed)</value></data>
+  <data name="UploadAdmin.Review.MarkReviewed" xml:space="preserve"><value>Mark as reviewed</value></data>
+  <data name="UploadAdmin.Review.Pages" xml:space="preserve"><value>Pages</value></data>
+  <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Next</value></data>
+  <data name="UploadAdmin.GameSelectable" xml:space="preserve"><value>Available for games (e.g. memory and image guessing)</value></data>
+</root>

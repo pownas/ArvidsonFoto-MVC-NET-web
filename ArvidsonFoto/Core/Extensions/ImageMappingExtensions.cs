@@ -8,14 +8,24 @@ namespace ArvidsonFoto.Core.Extensions;
 /// </summary>
 public static class ImageMappingExtensions
 {
+    public static string ToPhysicalImageUrl(string categoryDisplayPath, string? imageFileName)
+    {
+        var segments = new List<string> { "bilder" };
+        segments.AddRange((categoryDisplayPath ?? string.Empty)
+            .Split('/', StringSplitOptions.RemoveEmptyEntries));
+        segments.AddRange((imageFileName ?? string.Empty)
+            .Split('/', StringSplitOptions.RemoveEmptyEntries));
+
+        return string.Join("/", segments.Select(Uri.EscapeDataString));
+    }
+
     /// <summary>
     /// Converts a TblImage to an ImageDto
     /// </summary>
     /// <param name="image">The TblImage to convert</param>
     /// <param name="categoryPath">Optional category path for URL generation</param>
-    /// <param name="categoryName">Optional category name to use as image name</param>
     /// <returns>An ImageDto representation of the TblImage</returns>
-    public static ImageDto ToImageDto(this TblImage image, string categoryPath = "", string categoryName = "")
+    public static ImageDto ToImageDto(this TblImage image, string categoryPath = "")
     {
         if (image == null)
         {
@@ -26,22 +36,18 @@ public static class ImageMappingExtensions
             ? $"bilder/{image.ImageUrlName}"
             : $"bilder/{categoryPath}/{image.ImageUrlName}";
 
-        // Use categoryName if provided, otherwise fall back to ImageUrlName
-        var name = !string.IsNullOrEmpty(categoryName)
-            ? categoryName
-            : (image.Name ?? image.ImageUrlName ?? string.Empty);
-
         return new ImageDto
         {
             ImageId = image.ImageId ?? 0,
             CategoryId = image.ImageCategoryId ?? -1,
-            Name = name,
-            CategoryName = categoryName ?? string.Empty,
             UrlImage = imgUrl,
-            UrlCategory = string.IsNullOrEmpty(categoryPath) ? string.Empty : $"bilder/{categoryPath}",
+            UrlCategorySv = string.IsNullOrEmpty(categoryPath) ? string.Empty : $"bilder/{categoryPath}",
+            UrlCategoryEn = string.Empty,
             DateImageTaken = image.ImageDate,
             DateUploaded = image.ImageUpdate,
-            Description = image.ImageDescription ?? string.Empty
+            DescriptionSv = image.ImageDescription ?? string.Empty,
+            DescriptionEn = image.ImageDescriptionEn,
+            IsGameSelectable = image.IsGameSelectable
         };
     }
 
@@ -52,19 +58,19 @@ public static class ImageMappingExtensions
     /// <returns>A TblImage representation of the ImageDto</returns>
     public static TblImage ToTblImage(this ImageDto imageDto)
     {
-        if (imageDto == null)
-        {
-            return new TblImage();
-        }
-
-        return new TblImage
+        var imageFileName = imageDto?.UrlImage?.Split('/').LastOrDefault();
+        return imageDto == null
+            ? new TblImage()
+            : new TblImage
         {
             ImageId = imageDto.ImageId,
             ImageCategoryId = imageDto.CategoryId == -1 ? null : imageDto.CategoryId,
-            ImageUrlName = imageDto.Name,
+            ImageUrlName = imageFileName,
             ImageDate = imageDto.DateImageTaken,
             ImageUpdate = imageDto.DateUploaded ?? DateTime.UtcNow,
-            ImageDescription = imageDto.Description
+            ImageDescription = imageDto.DescriptionSv,
+            ImageDescriptionEn = imageDto.DescriptionEn,
+            IsGameSelectable = imageDto.IsGameSelectable
         };
     }
 }

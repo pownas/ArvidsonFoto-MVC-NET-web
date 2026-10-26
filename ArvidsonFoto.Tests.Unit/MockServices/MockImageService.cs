@@ -14,16 +14,16 @@ public class MockImageService : IApiImageService
     public ImageDto GetById(int imageId) => new()
     {
         ImageId = imageId,
-        Name = "Test Image",
+        CategoryNameSv = "Test Image",
         UrlImage = "bilder/test/test-image",
         CategoryId = 1
     };
 
-    public ImageDto GetOneImageFromCategory(int categoryId, string categoryName = "") => new()
+    public ImageDto GetOneImageFromCategory(int categoryId, string categoryNameSv = "", string categoryNameEn = "") => new()
     {
         ImageId = 1,
         CategoryId = categoryId,
-        Name = "Test Category Image",
+        CategoryNameSv = "Test Category Image",
         UrlImage = "bilder/test/category-image"
     };
 
@@ -32,7 +32,7 @@ public class MockImageService : IApiImageService
         new ImageDto
         {
             ImageId = 1,
-            Name = "Test Image 1",
+            CategoryNameSv = "Test Image 1",
             UrlImage = "bilder/test/image1",
             CategoryId = 1
         }
@@ -44,7 +44,7 @@ public class MockImageService : IApiImageService
         {
             ImageId = 1,
             CategoryId = categoryID,
-            Name = "Test Image",
+            CategoryNameSv = "Test Image",
             UrlImage = "bilder/test/image"
         }
     };
@@ -57,11 +57,14 @@ public class MockImageService : IApiImageService
         .Select(i => new ImageDto
         {
             ImageId = i,
-            Name = $"Random Image {i}",
+            CategoryNameSv = $"Random Image {i}",
             UrlImage = $"bilder/test/random{i}",
             CategoryId = 1
         })
         .ToList();
+
+    public List<ImageDto> GetGameSelectableImages(int count, int? categoryId = null) =>
+        GetRandomNumberOfImages(Math.Min(count, 100));
 
     public int GetCountedAllImages() => 100;
 
@@ -73,7 +76,7 @@ public class MockImageService : IApiImageService
         .Select(i => new ImageDto
         {
             ImageId = i,
-            Name = $"Latest Image {i}",
+            CategoryNameSv = $"Latest Image {i}",
             UrlImage = $"bilder/test/latest{i}",
             CategoryId = 1,
             DateUploaded = DateTime.Now.AddDays(-i)

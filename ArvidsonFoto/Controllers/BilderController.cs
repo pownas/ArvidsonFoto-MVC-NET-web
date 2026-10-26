@@ -1,4 +1,6 @@
-﻿using ArvidsonFoto.Core.DTOs;
+﻿using System.Diagnostics;
+using ArvidsonFoto.Core.DTOs;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using ArvidsonFoto.Views.Shared;
@@ -10,17 +12,26 @@ public class BilderController(
     IApiCategoryService categoryService,
     IPageCounterService pageCounterService) : Controller
 {
+    private static readonly ActivitySource ActivitySource = new("ArvidsonFoto");
+
     private readonly IApiImageService _imageService = imageService;
     private readonly IApiCategoryService _categoryService = categoryService;
     private readonly IPageCounterService _pageCounterService = pageCounterService;
 
-    [Route("/[controller]/{subLevel1}")]
-    [Route("/[controller]/{subLevel1}/{subLevel2}")]
-    [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}")]
-    [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
-    [Route("/[controller]/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
+    [Route("/bilder/{subLevel1}")]
+    [Route("/images/{subLevel1}")]
+    [Route("/bilder/{subLevel1}/{subLevel2}")]
+    [Route("/images/{subLevel1}/{subLevel2}")]
+    [Route("/bilder/{subLevel1}/{subLevel2}/{subLevel3}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}")]
+    [Route("/bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}")]
+    [Route("/bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
+    [Route("/images/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}")]
     public IActionResult Index(string? subLevel1, string? subLevel2, string? subLevel3, string? subLevel4, string? subLevel5ImageName, int? sida)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Index");
+
         GalleryViewModel viewModel = new();
         int pageSize = 48;
         viewModel.PageSize = pageSize;
@@ -61,28 +72,32 @@ public class BilderController(
         if (subLevel4 is not null)
         {
             categoryName = subLevel4;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4);
         }
         else if (subLevel3 is not null)
         {
             categoryName = subLevel3;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/bilder/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3);
         }
         else if (subLevel2 is not null)
         {
             categoryName = subLevel2;
-            currentUrl = "/Bilder/" + subLevel1 + "/" + subLevel2;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/bilder/" + subLevel1 + "/" + subLevel2);
         }
         else if (subLevel1 is not null)
         {
             categoryName = subLevel1;
-            currentUrl = "/Bilder/" + subLevel1;
+            currentUrl = HttpContext?.Request.Path.Value ?? ("/bilder/" + subLevel1);
         }
 
         if (categoryName != null)
         {
-            // Try to find category by name (case-insensitive via GetByName)
-            var selectedCategory = _categoryService.GetByName(categoryName);
+            var pathCategory = LocalizedRoutes.ResolveCategoryPath(
+                [subLevel1, subLevel2, subLevel3, subLevel4],
+                _categoryService.GetAll());
+            var selectedCategory = pathCategory?.CategoryId is int categoryId
+                ? _categoryService.GetById(categoryId)
+                : _categoryService.GetByName(categoryName);
 
             // If not found by display name, try by URL segment with fallback
             if (selectedCategory == null || selectedCategory.CategoryId == null || selectedCategory.CategoryId == -1)
@@ -97,7 +112,8 @@ public class BilderController(
             }
 
             viewModel.SelectedCategory = selectedCategory;
-            viewModel.CurrentUrl = currentUrl ?? string.Empty;
+            viewModel.CurrentUrl = LocalizedRoutes.Switch(
+                currentUrl ?? string.Empty, LocalizedText.IsEnglish, _categoryService.GetAll());
 
             // OPTIMIZED: Use count method instead of loading all images into memory
             var totalImageCount = _imageService.GetCountedCategoryId(selectedCategory.CategoryId.Value);
@@ -115,48 +131,51 @@ public class BilderController(
                 pageSize);
 
             // Set AllImagesList to empty list to save memory (we don't need all images in memory)
-            viewModel.AllImagesList = new List<ImageDto>();
+            viewModel.AllImagesList = [];
         }
 
         if (subLevel5ImageName is not null)
         {
-            Log.Fatal($"User navigated to strange URL: /Bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
+            Log.Fatal($"User navigated to strange URL: /bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}/{subLevel5ImageName}");
         }
 
-        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null && viewModel.SelectedCategory.CategoryId.HasValue && viewModel.SelectedCategory.Name != null)
+        if (User?.Identity?.IsAuthenticated is false && viewModel.SelectedCategory != null && viewModel.SelectedCategory.CategoryId.HasValue)
         {
             _pageCounterService.AddPageCount("Bilder");
-            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.Name);
+            _pageCounterService.AddCategoryCount(viewModel.SelectedCategory.CategoryId.Value, viewModel.SelectedCategory.NameSv);
         }
 
-        if (viewModel.DisplayImagesList == null)
-        {
-            viewModel.DisplayImagesList = new List<ImageDto>();
-        }
+        viewModel.DisplayImagesList ??= [];
 
         return View(viewModel);
     }
 
-    [Route("/Bilder/")]
+    [Route("/bilder/")]
+    [Route("/images/")]
     [Route("/gallery.asp")]
     [Route("/showimagecategory.asp")]
     public IActionResult Bilder(int? ID)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Bilder");
+
         var url = Url.ActionContext.HttpContext;
         string visitedUrl = url?.GetRawUrl() ?? "";
 
         if (ID is not null && ID > 0 && ID < _categoryService.GetLastId())
         {
-            string redirectUrl = "/Bilder/" + _categoryService.GetNameById(ID);
+            string redirectUrl = LocalizedRoutes.CategoryForId(ID.Value, _categoryService.GetAll());
             Log.Fatal($"Redirect from page: {visitedUrl}, to page: {redirectUrl}");
-            return RedirectPermanent(redirectUrl);
+            return Redirect(redirectUrl);
         }
-        return Redirect("./Senast/Fotograferad");
+        return Redirect(LocalizedRoutes.Page("/Senast/Fotograferad"));
     }
 
     [Route("/search")]
+    [Route("/sok")]
     public IActionResult Search(string? s)
     {
+        using var activity = ActivitySource.StartActivity("BilderController.Search");
+
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("search");
@@ -177,20 +196,22 @@ public class BilderController(
             ViewData["Title"] = "Söker efter: " + s;
             s = s.Trim();
             s = s.Replace("+", " ");
-            List<CategoryDto> allCategories = _categoryService.GetAll().OrderBy(c => c.Name).ToList();
-            List<ImageDto> listOfFirstSearchedImages = new();
+            List<CategoryDto> allCategories = [.. _categoryService.GetAll().OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
+            List<ImageDto> listOfFirstSearchedImages = [];
             foreach (var category in allCategories)
             {
-                if (category.Name != null && category.Name.Contains(s, StringComparison.CurrentCultureIgnoreCase) && category.CategoryId.HasValue)
+                if (category.CategoryId.HasValue &&
+                    ((category.NameSv?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+                     (category.NameEn?.Contains(s, StringComparison.CurrentCultureIgnoreCase) ?? false)))
                 {
-                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, category.Name);
+                    var imageDto = _imageService.GetOneImageFromCategory(category.CategoryId.Value, LocalizedText.Select(category.NameSv, category.NameEn));
                     listOfFirstSearchedImages.Add(imageDto);
                 }
             }
             viewModel.DisplayImagesList = listOfFirstSearchedImages;
             viewModel.SelectedCategory = CategoryDto.CreateEmpty();
-            viewModel.SelectedCategory.Name = "SearchFor: " + s;
-            viewModel.SelectedCategory.UrlCategoryPath = "/Search";
+            viewModel.SelectedCategory.NameSv = "SearchFor: " + s;
+            viewModel.SelectedCategory.UrlCategoryPathSv = "/sok";
 
             if (listOfFirstSearchedImages.Count == 0)
             {

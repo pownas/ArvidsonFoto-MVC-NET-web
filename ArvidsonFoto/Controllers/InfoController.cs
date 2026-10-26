@@ -7,6 +7,7 @@ using ArvidsonFoto.Core.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -17,6 +18,8 @@ public class InfoController : Controller
     private readonly ArvidsonFotoCoreDbContext _coreContext;
     private readonly IConfiguration _configuration;
     private readonly SmtpSettings _smtpSettings;
+    private readonly IStringLocalizer<SharedResource> _text;
+    private readonly IStringLocalizer<InfoResource> _infoText;
     internal IApiCategoryService _categoryService;
     internal IApiImageService _imageService;
     internal IGuestBookService _guestbookService;
@@ -27,6 +30,8 @@ public class InfoController : Controller
         ArvidsonFotoCoreDbContext coreContext,
         IConfiguration configuration,
         IOptions<SmtpSettings> smtpSettings,
+        IStringLocalizer<SharedResource>? text = null,
+        IStringLocalizer<InfoResource>? infoText = null,
         ILogger<ApiImageService>? imageLogger = null,
         ILogger<ApiCategoryService>? categoryLogger = null,
         IMemoryCache? memoryCache = null)
@@ -34,6 +39,12 @@ public class InfoController : Controller
         _coreContext = coreContext;
         _configuration = configuration;
         _smtpSettings = smtpSettings.Value;
+        _text = text ?? new StringLocalizer<SharedResource>(new ResourceManagerStringLocalizerFactory(
+            Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }),
+            LoggerFactory.Create(b => b.AddConsole())));
+        _infoText = infoText ?? new StringLocalizer<InfoResource>(new ResourceManagerStringLocalizerFactory(
+            Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }),
+            LoggerFactory.Create(b => b.AddConsole())));
 
         // Support both DI and manual instantiation (for tests)
         _categoryService = new ApiCategoryService(
@@ -65,7 +76,7 @@ public class InfoController : Controller
 
     public IActionResult Gastbok(GuestbookFormInputDto inputModel)
     {
-        ViewData["Title"] = "Gästbok";
+        ViewData["Title"] = _text["Navigation.Guestbook"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Gästbok");
@@ -80,7 +91,7 @@ public class InfoController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Route("Info/PostToGb")]
+    [Route("info/posttogb")]
     public IActionResult PostToGb([Bind("Code,Name,Email,Homepage,Message,FormSubmitDate")] GuestbookFormInputDto inputModel)
     {
         Log.Information("A user trying to post to the Guestbook...");
@@ -105,7 +116,7 @@ public class InfoController : Controller
 
                 TblGb postToPublish = new()
                 {
-                    GbId = (_guestbookService.GetLastGbId() + 1),
+                    GbId = _guestbookService.GetLastGbId() + 1,
                     GbName = string.IsNullOrWhiteSpace(inputModel.Name) ? null : inputModel.Name,
                     GbEmail = string.IsNullOrWhiteSpace(inputModel.Email) ? null : inputModel.Email,
                     GbHomepage = homePage,
@@ -182,7 +193,7 @@ public class InfoController : Controller
             catch (Exception dbEx)
             {
                 Log.Error(dbEx, "Failed to save contact form to database");
-                errorMessage = "Database error: " + dbEx.Message;
+                _ = "Database error: " + dbEx.Message;
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
 
@@ -227,7 +238,7 @@ public class InfoController : Controller
                     client.Connect(_smtpSettings.Server, _smtpSettings.Port,
                         _smtpSettings.EnableSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
                     client.Authenticate(_smtpSettings.SenderEmail, _smtpSettings.SenderPassword);
-                    client.Send(message);
+                    _ = client.Send(message);
                     client.Disconnect(true);
                     Log.Information("Email sent successfully!");
                     emailSent = true;
@@ -259,7 +270,7 @@ public class InfoController : Controller
             {
                 try
                 {
-                    _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
+                    _ = _contactService.UpdateEmailStatus(savedContactId.Value, emailSent, errorMessage);
                     Log.Information("Updated contact record {ContactId} - EmailSent: {EmailSent}", savedContactId, emailSent);
                 }
                 catch (Exception updateEx)
@@ -295,7 +306,7 @@ public class InfoController : Controller
 
     public IActionResult Kontakta(ContactFormInputDto contactFormModel)
     {
-        ViewData["Title"] = "Kontaktinformation";
+        ViewData["Title"] = _text["Navigation.Contact"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Kontaktinformation");
@@ -323,7 +334,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = "Meddelande \n (Skriv gärna vad ni önskar kontakt om)", // \n = newLine
+                MessagePlaceholder = _infoText["Contact.Form.Placeholder.Message"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kontakta"
@@ -339,7 +350,7 @@ public class InfoController : Controller
 
     public IActionResult Kop_av_bilder(ContactFormInputDto contactFormModel, string imgId)
     {
-        ViewData["Title"] = "Köp av bilder";
+        ViewData["Title"] = _text["Navigation.BuyPhotos"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Köp av bilder");
@@ -367,7 +378,7 @@ public class InfoController : Controller
                 Subject = string.Empty,
                 Message = string.Empty,
                 FormSubmitDate = DateTime.Now,
-                MessagePlaceholder = "Meddelande \n (Skriv gärna bildnamn på de bilderna ni är intresserade av)", // \n = newLine
+                MessagePlaceholder = _infoText["Buy.Form.Placeholder.Message"].Value,
                 DisplayEmailSent = false,
                 DisplayErrorSending = false,
                 ReturnPageUrl = "Kop_av_bilder"
@@ -389,17 +400,17 @@ public class InfoController : Controller
                     var imageFileName = image.UrlImage.Split('/').Last() + ".jpg";
 
                     // Build the message with both image name and category
-                    var messageParts = new List<string> { "Hej! Jag är intresserad av att köpa bilden: " };
+                    var messageParts = new List<string> { _infoText["Buy.Form.Prefill.Intro"].Value };
 
                     if (!string.IsNullOrEmpty(categoryName) && categoryName != "Not found")
                     {
-                        messageParts.Add($"  - Bildnamn: {imageFileName}");
-                        messageParts.Add($"  - Från kategorin: {categoryName}");
-                        contactFormModel.Subject = $"Intresse att köpa en bild i kategorin: {categoryName}";
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.ImageName"]} {imageFileName}");
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.Category"]} {categoryName}");
+                        contactFormModel.Subject = _infoText["Buy.Form.Prefill.Subject", categoryName].Value;
                     }
                     else
                     {
-                        messageParts.Add($"  - Bildnamn: {imageFileName}");
+                        messageParts.Add($"  - {_infoText["Buy.Form.Prefill.ImageName"]} {imageFileName}");
                     }
                     messageParts.Add($" ");
 
@@ -421,7 +432,7 @@ public class InfoController : Controller
 
     public IActionResult Om_mig()
     {
-        ViewData["Title"] = "Om mig, Torbjörn Arvidson";
+        ViewData["Title"] = _text["Navigation.About"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Om mig");
@@ -432,7 +443,7 @@ public class InfoController : Controller
 
     public IActionResult Sidkarta()
     {
-        ViewData["Title"] = "Sidkarta";
+        ViewData["Title"] = _text["Navigation.Sitemap"].Value;
         if (User?.Identity?.IsAuthenticated is false)
         {
             _pageCounterService.AddPageCount("Sidkarta");

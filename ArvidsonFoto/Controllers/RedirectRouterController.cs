@@ -1,9 +1,126 @@
 ﻿using ArvidsonFoto.Views.Shared;
+using ArvidsonFoto.Core.Extensions;
+using ArvidsonFoto.Core.Interfaces;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ArvidsonFoto.Controllers;
 
 public class RedirectRouterController() : Controller
 {
+    public static void ConfigureLowercaseUrlFallback(WebApplication app)
+    {
+        app.Use(async (context, next) =>
+        {
+            if (context.Features.Get<IStatusCodeReExecuteFeature>() is not null)
+            {
+                await next();
+                return;
+            }
+
+            var endpoint = context.GetEndpoint();
+            var isPageEndpoint = endpoint?.Metadata.GetMetadata<PageActionDescriptor>() is not null;
+            var controllerAction = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
+            if (!isPageEndpoint && controllerAction is null)
+            {
+                await next();
+                return;
+            }
+
+            context.Response.OnStarting(() =>
+            {
+                var location = context.Response.Headers.Location.ToString();
+                if (location.Length > 0)
+                {
+                    context.Response.Headers.Location = LowercaseLocalLocationPath(location, context.Request.Host);
+                }
+
+                return Task.CompletedTask;
+            });
+
+            var path = context.Request.Path.Value;
+            if (string.IsNullOrEmpty(path))
+            {
+                await next();
+                return;
+            }
+
+            var canonicalPath = LocalizedRoutes.NormalizePathCasing(path);
+            if (path.Equals("/search", StringComparison.OrdinalIgnoreCase) && !path.Equals("/search", StringComparison.Ordinal))
+            {
+                canonicalPath = LocalizedRoutes.Search;
+            }
+            else if (controllerAction?.ControllerName == "Bilder" && controllerAction.ActionName == "Index")
+            {
+                var isEnglishGalleryPath = path.StartsWith("/images/", StringComparison.OrdinalIgnoreCase);
+                var categories = context.RequestServices.GetRequiredService<IApiCategoryService>().GetAll();
+                canonicalPath = LocalizedRoutes.Switch(path, isEnglishGalleryPath, categories);
+            }
+            else if (controllerAction?.ControllerName == "ImageApi" &&
+                     controllerAction.ActionName == "GetImagesByCategoryPath" &&
+                     (path.StartsWith("/api/bilder/", StringComparison.OrdinalIgnoreCase) ||
+                      path.StartsWith("/api/images/", StringComparison.OrdinalIgnoreCase)))
+            {
+                var galleryPath = path[4..];
+                var isEnglishGalleryPath = galleryPath.StartsWith("/images/", StringComparison.OrdinalIgnoreCase);
+                var categories = context.RequestServices.GetRequiredService<IApiCategoryService>().GetAll();
+                canonicalPath = "/api" + LocalizedRoutes.Switch(galleryPath, isEnglishGalleryPath, categories);
+            }
+
+            if (!string.Equals(Uri.UnescapeDataString(path), Uri.UnescapeDataString(canonicalPath), StringComparison.Ordinal))
+            {
+                context.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
+                context.Response.Headers.Location = string.Concat(
+                    context.Request.PathBase.Value,
+                    canonicalPath,
+                    context.Request.QueryString.Value);
+                return;
+            }
+
+            await next();
+        });
+    }
+
+    private static string LowercaseLocalLocationPath(string location, HostString requestHost)
+    {
+        if (location.StartsWith("/", StringComparison.Ordinal))
+        {
+            var relativePathEnd = location.IndexOfAny(['?', '#']);
+            if (relativePathEnd < 0)
+            {
+                relativePathEnd = location.Length;
+            }
+
+            return string.Concat(LocalizedRoutes.NormalizePathCasing(location[..relativePathEnd]), location[relativePathEnd..]);
+        }
+
+        if (Uri.TryCreate(location, UriKind.Absolute, out var absoluteUri))
+        {
+            if (!absoluteUri.Host.Equals(requestHost.Host, StringComparison.OrdinalIgnoreCase))
+            {
+                return location;
+            }
+
+            var authorityEnd = location.IndexOf("//", StringComparison.Ordinal) + 2;
+            var pathStart = location.IndexOf('/', authorityEnd);
+            if (pathStart < authorityEnd)
+            {
+                return location;
+            }
+
+            var suffixStart = location.IndexOfAny(['?', '#'], pathStart);
+            if (suffixStart < 0)
+            {
+                suffixStart = location.Length;
+            }
+
+            return string.Concat(location[..pathStart], LocalizedRoutes.NormalizePathCasing(location[pathStart..suffixStart]), location[suffixStart..]);
+        }
+
+        return location;
+    }
+
     [Route("/Index.html")]
     [Route("/Default.asp")]
     [Route("/Default.aspx")]
@@ -19,24 +136,23 @@ public class RedirectRouterController() : Controller
 
     [Route("/Sk")]
     [Route("/Sök")]
-    [Route("/sok")]
     [Route("/Sökning")]
     [Route("/Searching")]
     [Route("/Search.asp")]
-    public RedirectToActionResult RedirectToBilderSearch()
+    public RedirectResult RedirectToBilderSearch()
     {
         ////Kommentera på/av för att aktivera/inaktivera loggning av denna redirect:
         //var url = Url.ActionContext.HttpContext;
         //string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
         //Log.Fatal($"Redirect from page: {visitedUrl} , To page: /Sök");
 
-        return RedirectToActionPermanent(actionName: nameof(BilderController.Search), controllerName: nameof(BilderController).Replace("Controller", ""));
+        return RedirectPermanent(LocalizedRoutes.Search + Request.QueryString.Value);
     }
 
     [Route("/Latest.asp")]
     [Route("/Bild_kalender.asp")]
-    [Route("/Bilder/Senast")]
-    [Route("/Bilder/Senast/{sortering}")]
+    [Route("/bilder/Senast")]
+    [Route("/bilder/Senast/{sortering}")]
     [Route("/Senast")]
     [Route("/Senast/Index.html")]
     [Route("/Senast/Default.asp")]
