@@ -32,10 +32,12 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             Page = Math.Max(1, page),
             AllPendingCount = db.TblMenus.Count(m => !m.MenuDisplayNameEnReviewed) +
                 db.TblMenus.Count(m => !m.MenuUrlSegmentEnReviewed) +
-                db.TblImages.Count(i => !i.ImageDescriptionEnReviewed) +
+                db.TblImages.Count(i => i.ImageDescription != null && i.ImageDescription.Trim() != "" && !i.ImageDescriptionEnReviewed) +
                 db.TblGbs.Count(g => !g.GbNameEnReviewed) +
                 db.TblGbs.Count(g => !g.GbTextEnReviewed),
-            AllFieldsCount = (2 * db.TblMenus.Count()) + db.TblImages.Count() + (2 * db.TblGbs.Count())
+            AllFieldsCount = (2 * db.TblMenus.Count()) +
+                db.TblImages.Count(i => i.ImageDescription != null && i.ImageDescription.Trim() != "") +
+                (2 * db.TblGbs.Count())
         };
         if (table == "menu")
         {
@@ -63,7 +65,8 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
         }
         else if (table == "images")
         {
-            var query = db.TblImages.AsNoTracking().Where(i => i.ImageId != null);
+            var query = db.TblImages.AsNoTracking()
+                .Where(i => i.ImageId != null && i.ImageDescription != null && i.ImageDescription.Trim() != "");
             if (!string.IsNullOrEmpty(search))
             {
                 var imageId = int.TryParse(search, out var parsedId) ? parsedId : -1;

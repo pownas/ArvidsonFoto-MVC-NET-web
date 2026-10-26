@@ -3,19 +3,23 @@
 @{
     ViewData["Title"] = L["UploadAdmin.Review.Title"];
 }
-<h1>@ViewData["Title"]</h1>
-<partial name="_NavUploadAdmin" />
-<nav aria-label="@L["UploadAdmin.Review.Tables"]">
-    <a asp-action="Index" asp-route-table="menu" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Categories"]</a> |
-    <a asp-action="Index" asp-route-table="images" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly">@L["UploadAdmin.Review.Images"]</a> |
-    <a asp-action="Index" asp-route-table="guestbook" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Guestbook"]</a>
+<h1 class="upload-admin-title">@ViewData["Title"]</h1>
+<nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
+    <partial name="_NavUploadAdmin" />
 </nav>
-<p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
-<p>@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
+<nav aria-label="@L["UploadAdmin.Review.Tables"]" class="nav nav-pills upload-review-tabs mb-3">
+    <a class="nav-link @(Model.Table == "menu" ? "active" : "")" aria-current="@(Model.Table == "menu" ? "page" : null)" asp-action="Index" asp-route-table="menu" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Categories"]</a>
+    <a class="nav-link @(Model.Table == "images" ? "active" : "")" aria-current="@(Model.Table == "images" ? "page" : null)" asp-action="Index" asp-route-table="images" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly">@L["UploadAdmin.Review.Images"]</a>
+    <a class="nav-link @(Model.Table == "guestbook" ? "active" : "")" aria-current="@(Model.Table == "guestbook" ? "page" : null)" asp-action="Index" asp-route-table="guestbook" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Guestbook"]</a>
+</nav>
+<div class="upload-review-summary" role="status">
+    <p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
+    <p class="mb-0">@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
+</div>
 @if (Model.Table == "images")
 {
     <p>@L["UploadAdmin.Review.MissingCount", Model.MissingCount]</p>
-    <form asp-action="Index" method="get" class="mb-3">
+    <form asp-action="Index" method="get" class="mb-3 upload-review-search">
         <input type="hidden" name="table" value="images" />
         <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
         <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
@@ -25,7 +29,7 @@
     </form>
 }
 <p>@L["UploadAdmin.Review.Instructions"]</p>
-<nav aria-label="@L["UploadAdmin.Review.Filter"]" class="mb-3">
+<nav aria-label="@L["UploadAdmin.Review.Filter"]" class="mb-3 d-flex flex-wrap gap-2">
     <a class="btn @(Model.PendingOnly && !Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
        asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="true" asp-route-search="@Model.Search">@L["UploadAdmin.Review.PendingOnly"] (@Model.PendingCount)</a>
     @if (Model.Table == "images")
@@ -42,7 +46,7 @@
 }
 @foreach (var item in Model.Items)
 {
-    <form asp-action="Save" method="post" class="card p-3 mb-3">
+    <form asp-action="Save" method="post" class="card p-3 mb-3 upload-review-card">
         @Html.AntiForgeryToken()
         <input type="hidden" name="table" value="@Model.Table" />
         <input type="hidden" name="id" value="@item.Id" />
@@ -54,7 +58,7 @@
         <input type="hidden" name="search" value="@Model.Search" />
         <input type="hidden" name="page" value="@Model.Page" />
         <h2 class="h5">@L["UploadAdmin.Review.Record", item.Id] – @L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h2>
-        <label>@L["UploadAdmin.Review.Swedish"]</label>
+        <div class="form-label">@L["UploadAdmin.Review.Swedish"]</div>
         <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
         <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
         @if (Model.Table == "guestbook" && item.Field == "text")
@@ -67,7 +71,7 @@
                    maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
         }
         <p>
-            <span class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
+            <span role="status" class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
                 @(string.IsNullOrWhiteSpace(item.English) ? L["UploadAdmin.Review.Missing"] : item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])
             </span>
         </p>

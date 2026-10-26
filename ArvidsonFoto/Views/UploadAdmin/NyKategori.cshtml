@@ -31,7 +31,7 @@
         {
             <h5 class="alert alert-success bg-success text-dark">@L["UploadAdmin.NyKategori.CreatedTheNewCategory"] <span class="text-light">@Model.MenuText</span></h5>
         }
-        <form method="post" asp-action="@(nameof(UploadAdminController.CreateCategory))">
+        <form method="post" asp-action="@(nameof(UploadAdminController.CreateCategory))" class="upload-admin-form row g-3">
             @Html.AntiForgeryToken()
             <div class="form-group col-md-6">
                 <label asp-for="MainMenuId">@L["UploadAdmin.NyKategori.WhichCategoryShouldItBelongTo"]</label>

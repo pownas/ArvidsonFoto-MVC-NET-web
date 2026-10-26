@@ -1,25 +1,29 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @model ArvidsonFoto.Core.DTOs.EditCategoryInputDto
 @using ArvidsonFoto.Core.Models
 @{
     var categories = ViewData["Categories"] as List<TblMenu> ?? [];
+    ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraKategori;
 }
-<h1>@ViewData["Title"]</h1>
-<partial name="_NavUploadAdmin" />
-<form method="get" asp-action="RedigeraKategori">
+<h1 class="upload-admin-title">@ViewData["Title"]</h1>
+<nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
+    <partial name="_NavUploadAdmin" />
+</nav>
+<form method="get" asp-action="RedigeraKategori" class="upload-review-search">
     <label for="search">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
-    <input id="search" name="search" value="@ViewData["Search"]" />
-    <button type="submit">@L["UploadAdmin.RedigeraKategori.Search"]</button>
+    <input id="search" name="search" value="@ViewData["Search"]" class="form-control mb-2" />
+    <button type="submit" class="btn btn-outline-primary">@L["UploadAdmin.RedigeraKategori.Search"]</button>
 </form>
 <ul>
 @foreach (var category in categories)
 {
-    <li><a asp-action="RedigeraKategori" asp-route-id="@category.MenuCategoryId">@category.MenuDisplayName (@category.MenuDisplayNameEn)</a></li>
+    <li class="mb-2"><a class="btn btn-outline-secondary" asp-action="RedigeraKategori" asp-route-id="@category.MenuCategoryId">@category.MenuDisplayName (@category.MenuDisplayNameEn)</a></li>
 }
 </ul>
 @if (Model.CategoryId > 0)
 {
-    <form method="post" asp-action="SaveCategory">
+    <form method="post" asp-action="SaveCategory" class="upload-admin-form">
         @Html.AntiForgeryToken()
         <input asp-for="CategoryId" type="hidden" />
         <div asp-validation-summary="All" class="text-danger"></div>

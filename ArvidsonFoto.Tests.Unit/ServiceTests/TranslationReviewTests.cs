@@ -87,7 +87,9 @@ public class TranslationReviewTests
             new TblImage { Id = 1, ImageId = 11, ImageUrlName = "A.jpg", ImageDescription = "Bäver", ImageDescriptionEn = null },
             new TblImage { Id = 2, ImageId = 12, ImageUrlName = "B.jpg", ImageDescription = "Utter", ImageDescriptionEn = "   " },
             new TblImage { Id = 3, ImageId = 13, ImageUrlName = "C.jpg", ImageDescription = "Älg", ImageDescriptionEn = "Moose" },
-            new TblImage { Id = 4, ImageId = 14, ImageUrlName = "D.jpg", ImageDescription = "Räv", ImageDescriptionEn = "Fox", ImageDescriptionEnReviewed = true });
+            new TblImage { Id = 4, ImageId = 14, ImageUrlName = "D.jpg", ImageDescription = "Räv", ImageDescriptionEn = "Fox", ImageDescriptionEnReviewed = true },
+            new TblImage { Id = 5, ImageId = 15, ImageUrlName = "E.jpg", ImageDescription = "", ImageDescriptionEn = null },
+            new TblImage { Id = 6, ImageId = 16, ImageUrlName = "F.jpg", ImageDescription = "   ", ImageDescriptionEn = null });
         db.SaveChanges();
         var controller = new TranslationReviewController(db);
 
@@ -97,6 +99,8 @@ public class TranslationReviewTests
         Assert.Equal(2, missing.MissingCount);
         Assert.Equal(3, missing.PendingCount);
         Assert.Equal(4, missing.TotalCount);
+        Assert.Equal(3, missing.AllPendingCount);
+        Assert.Equal(4, missing.AllFieldsCount);
 
         var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
             controller.Index("images")).Model);

@@ -812,3 +812,250 @@ body {
     }
 }
 /* -------- End Info Pages Modern Design -------- */
+
+/* -------- Upload administration -------- */
+.upload-admin-page {
+    --upload-admin-panel: #17191c;
+    --upload-admin-border: #383d42;
+    --upload-admin-muted: #b8c0c8;
+    --upload-admin-focus: #9ac7ff;
+
+    #page-breadcrumbs {
+        margin-top: 1rem;
+    }
+
+    h1,
+    h2.offset-md-4 {
+        margin: 0 0 1.25rem;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    h2.offset-md-4 {
+        margin-left: 0;
+    }
+
+    .row > nav.nav-pills {
+        display: block;
+    }
+
+    .row > nav.nav-pills > ul {
+        width: 100%;
+        margin: 0;
+        list-style: none;
+    }
+
+    .upload-admin-navigation {
+        display: block;
+    }
+
+    .upload-admin-navigation > a,
+    .upload-admin-navigation > ul > li > a {
+        display: flex;
+        align-items: center;
+    }
+
+    .upload-admin-navigation > ul {
+        width: 100%;
+        padding: 0;
+        list-style: none;
+    }
+
+    .nav-pills .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-height: 2.75rem;
+        margin-bottom: 0.25rem;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+        color: #b7d5ff;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            border-color: var(--upload-admin-border);
+            background-color: #20252b;
+            color: #fff;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--upload-admin-focus);
+            outline-offset: 2px;
+        }
+
+        &.active {
+            border-color: #3788df;
+            background-color: #1768b5;
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+
+    .card,
+    .upload-admin-form,
+    .upload-review-summary {
+        border: 1px solid var(--upload-admin-border);
+        border-radius: 0.65rem;
+        background-color: var(--upload-admin-panel);
+        color: #f1f3f5;
+    }
+
+    .upload-review-summary {
+        margin-bottom: 1rem;
+        padding: 0.85rem 1rem;
+        border-left: 4px solid #45c5d0;
+    }
+
+    .upload-review-summary p {
+        margin-bottom: 0.35rem;
+    }
+
+    .upload-review-tabs {
+        gap: 0.35rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid var(--upload-admin-border);
+    }
+
+    .upload-review-search,
+    .upload-admin-form {
+        max-width: 48rem;
+        padding: 1rem;
+    }
+
+    .upload-review-card {
+        gap: 0.5rem;
+    }
+
+    .form-label,
+    label {
+        color: #f1f3f5;
+        font-weight: 600;
+    }
+
+    .form-text,
+    .text-muted {
+        color: var(--upload-admin-muted) !important;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 2.75rem;
+        border-color: #626a72;
+        background-color: #101214;
+        color: #f5f7f9;
+
+        &:focus {
+            border-color: var(--upload-admin-focus);
+            box-shadow: 0 0 0 0.2rem rgba(154, 199, 255, 0.25);
+        }
+    }
+
+    input[type="checkbox"].form-check-input {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .table-responsive {
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--upload-admin-border);
+        border-radius: 0.5rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table > :not(caption) > * > * {
+        border-color: var(--upload-admin-border);
+    }
+
+    .upload-admin-chart {
+        position: relative;
+        min-height: 19rem;
+        height: min(55vh, 28rem);
+    }
+
+    .admin-log-entry {
+        margin-bottom: 0.35rem;
+        padding: 0.55rem 0.75rem;
+        border-left: 4px solid transparent;
+        border-radius: 0.25rem;
+        background-color: #202428;
+        color: #f1f3f5;
+    }
+
+    .admin-log-entry--info {
+        border-left-color: #45c5d0;
+        background-color: #12363d;
+        color: #d5f7fa;
+    }
+
+    .admin-log-entry--warning {
+        border-left-color: #ffd166;
+        background-color: #493900;
+        color: #fff3c4;
+    }
+
+    .admin-log-entry--error {
+        border-left-color: #ff8290;
+        background-color: #4a2028;
+        color: #ffe3e7;
+    }
+
+    .badge.bg-warning.text-dark {
+        border: 1px solid #b58b00;
+        background-color: #493900 !important;
+        color: #fff3c4 !important;
+    }
+
+    .alert-warning {
+        border-color: #8a6d00;
+        background-color: #493900;
+        color: #fff3c4;
+    }
+
+    .alert-success,
+    .bg-success.text-dark {
+        border-color: #2c805c;
+        background-color: #174a34 !important;
+        color: #d8ffea !important;
+    }
+
+    .alert-danger,
+    .bg-danger.text-light {
+        border-color: #9b3c4d;
+        background-color: #4a2028 !important;
+        color: #ffe3e7 !important;
+    }
+
+    .alert-info {
+        border-color: #2d7c86;
+        background-color: #12363d;
+        color: #d5f7fa;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .upload-admin-page {
+        .row > nav.nav-pills {
+            margin-bottom: 1rem;
+        }
+
+        .upload-admin-chart {
+            min-height: 16rem;
+            height: 18rem;
+        }
+
+        .table {
+            min-width: 34rem;
+        }
+
+        .btn {
+            white-space: normal;
+        }
+    }
+}
+/* -------- End Upload administration -------- */
