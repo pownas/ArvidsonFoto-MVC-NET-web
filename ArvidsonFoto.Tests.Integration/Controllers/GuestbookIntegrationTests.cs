@@ -1,4 +1,8 @@
 ﻿using ArvidsonFoto.Tests.Integration.Helpers;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Net.Sockets;
+using System.Text;
 
 namespace ArvidsonFoto.Tests.Integration.Controllers;
 
@@ -11,6 +15,11 @@ public class GuestbookIntegrationTests
 {
     private static ArvidsonFotoWebApplicationFactory? _factory;
     private static HttpClient? _client;
+    private static readonly string[] ExpectedCategorySpanTags =
+    [
+        "arvidsonfoto.cache.hit",
+        "arvidsonfoto.result.count"
+    ];
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
@@ -27,6 +36,59 @@ public class GuestbookIntegrationTests
     {
         _client?.Dispose();
         _factory?.Dispose();
+    }
+
+    [TestMethod]
+    public async Task GetGameCategories_ContinuesW3CTraceContextIntoServiceSpan()
+    {
+        using var factory = new KestrelWebApplicationFactory();
+        using var bootstrapClient = factory.CreateClient();
+        var endpoint = bootstrapClient.BaseAddress!;
+
+        var activities = new ConcurrentBag<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = _ => true,
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = activities.Add
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        var traceId = ActivityTraceId.CreateRandom();
+        var remoteParentSpanId = ActivitySpanId.CreateRandom();
+        using var tcpClient = new TcpClient();
+        await tcpClient.ConnectAsync(endpoint.Host, endpoint.Port);
+        using var stream = tcpClient.GetStream();
+        var request = Encoding.ASCII.GetBytes(
+            $"GET /api/game/categories HTTP/1.1\r\nHost: {endpoint.Authority}\r\ntraceparent: 00-{traceId.ToHexString()}-{remoteParentSpanId.ToHexString()}-01\r\nConnection: close\r\n\r\n");
+        await stream.WriteAsync(request);
+        using var reader = new StreamReader(stream, Encoding.ASCII, leaveOpen: true);
+        var response = await reader.ReadToEndAsync();
+
+        Assert.IsTrue(response.StartsWith("HTTP/1.1 200", StringComparison.Ordinal), response);
+        var serverActivity = activities.SingleOrDefault(activity =>
+            activity.TraceId == traceId
+            && activity.ParentSpanId == remoteParentSpanId)
+            ?? throw new AssertFailedException(
+                $"The incoming W3C context should parent a server span. Observed: {string.Join(", ", activities.Select(activity => $"{activity.Source.Name}:{activity.OperationName}:{activity.TraceId}"))}");
+
+        var categoryActivity = activities.SingleOrDefault(activity =>
+            activity.Source.Name == "ArvidsonFoto"
+            && activity.OperationName == "category.list"
+            && activity.TraceId == traceId)
+            ?? throw new AssertFailedException("The category service span should remain in the incoming trace.");
+        Assert.AreEqual(serverActivity.SpanId, categoryActivity.ParentSpanId);
+        CollectionAssert.AreEquivalent(
+            ExpectedCategorySpanTags,
+            categoryActivity.TagObjects.Select(tag => tag.Key).ToArray());
+    }
+
+    private sealed class KestrelWebApplicationFactory : ArvidsonFotoWebApplicationFactory
+    {
+        public KestrelWebApplicationFactory()
+        {
+            UseKestrel(0);
+        }
     }
 
     [TestMethod]

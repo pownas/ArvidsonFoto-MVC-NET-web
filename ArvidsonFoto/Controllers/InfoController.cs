@@ -1,5 +1,6 @@
 ﻿using ArvidsonFoto.Core.Configuration;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
@@ -204,6 +205,7 @@ public class InfoController : Controller
             }
 
             // STEP 2: Try to send email
+            var emailActivity = AppTelemetry.ActivitySource.StartActivity("smtp.send", System.Diagnostics.ActivityKind.Client);
             try
             {
                 // Validate SMTP configuration
@@ -259,10 +261,15 @@ public class InfoController : Controller
             }
             catch (Exception emailEx)
             {
+                AppTelemetry.RecordError(emailActivity, emailEx);
                 contactFormModel.DisplayErrorSending = true;
                 contactFormModel.DisplayEmailSent = false;
                 errorMessage = emailEx.Message;
                 Log.Error(emailEx, "Error sending email from contact form");
+            }
+            finally
+            {
+                emailActivity?.Dispose();
             }
 
             // STEP 3: Update database record with email status
