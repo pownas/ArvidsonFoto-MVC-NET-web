@@ -61,6 +61,10 @@
                         <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
                     }
                 </span>
+                <span class="category-tree__game-status @(category.IsGameSelectable ? "category-tree__game-status--enabled" : "category-tree__game-status--disabled")">
+                    <i class="bi @(category.IsGameSelectable ? "bi-check-circle-fill" : "bi-x-circle-fill")" aria-hidden="true"></i>
+                    @(category.IsGameSelectable ? L["UploadAdmin.RedigeraKategori.GameSelectableEnabled"] : L["UploadAdmin.RedigeraKategori.GameSelectableDisabled"])
+                </span>
                 <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
                    asp-route-id="@categoryId" asp-route-search="@search"
                    aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>

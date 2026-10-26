@@ -501,6 +501,8 @@
   <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve"><value>Categories and species</value></data>
   <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve"><value>Level {0}</value></data>
   <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve"><value>Edit category</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableEnabled" xml:space="preserve"><value>Available for games</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve"><value>Unavailable for games</value></data>
   <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} categories match</value></data>
   <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>No categories match your search.</value></data>
 </root>

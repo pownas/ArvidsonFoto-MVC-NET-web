@@ -501,6 +501,8 @@
   <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve"><value>Kategorier och arter</value></data>
   <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve"><value>Nivå {0}</value></data>
   <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve"><value>Redigera kategori</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableEnabled" xml:space="preserve"><value>Aktiv för spel</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve"><value>Inte aktiv för spel</value></data>
   <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} kategorier matchar</value></data>
   <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>Inga kategorier matchar sökningen.</value></data>
 </root>
