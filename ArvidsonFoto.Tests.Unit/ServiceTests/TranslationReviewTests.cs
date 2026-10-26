@@ -17,7 +17,7 @@ public class TranslationReviewTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
 
     [Fact]
-    public void AdminListsFieldsIndividuallyAndFiltersReviewed()
+    public void AdminGroupsFieldsByRecordAndRetainsReviewedFieldForPendingRecord()
     {
         using var db = CreateContext();
         db.TblMenus.Add(new TblMenu
@@ -34,8 +34,9 @@ public class TranslationReviewTests
 
         var controller = new TranslationReviewController(db);
         var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index()).Model);
-        Assert.Single(pending.Items);
-        Assert.Equal("url", pending.Items[0].Field);
+        Assert.Equal(2, pending.Items.Count);
+        Assert.Equal(new[] { "name", "url" }, pending.Items.Select(item => item.Field));
+        Assert.True(pending.Items[0].Reviewed);
         Assert.Equal(1, pending.PendingCount);
         Assert.Equal(2, pending.TotalCount);
 
@@ -192,6 +193,8 @@ public class TranslationReviewTests
         var images = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index("images")).Model);
         Assert.Single(images.Items);
         Assert.Equal("Vatten", images.Items[0].Swedish);
+        var guestbook = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index("guestbook")).Model);
+        Assert.Equal(new[] { "name", "text" }, guestbook.Items.Select(item => item.Field));
         Assert.IsType<RedirectToActionResult>(controller.Save("images", 7, "description", "Water", "Vatten", "Water", true));
         Assert.True(image.ImageDescriptionEnReviewed);
 

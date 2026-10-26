@@ -44,42 +44,50 @@
 {
     <p>@L["UploadAdmin.Review.NoResults"]</p>
 }
-@foreach (var item in Model.Items)
+@foreach (var record in Model.Items.GroupBy(item => item.Id))
 {
-    <form asp-action="Save" method="post" class="card p-3 mb-3 upload-review-card">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="table" value="@Model.Table" />
-        <input type="hidden" name="id" value="@item.Id" />
-        <input type="hidden" name="field" value="@item.Field" />
-        <input type="hidden" name="swedish" value="@item.Swedish" />
-        <input type="hidden" name="previousEnglish" value="@item.English" />
-        <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
-        <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
-        <input type="hidden" name="search" value="@Model.Search" />
-        <input type="hidden" name="page" value="@Model.Page" />
-        <h2 class="h5">@L["UploadAdmin.Review.Record", item.Id] – @L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h2>
-        <div class="form-label">@L["UploadAdmin.Review.Swedish"]</div>
-        <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
-        <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
-        @if (Model.Table == "guestbook" && item.Field == "text")
-        {
-            <textarea id="translation-@Model.Table-@item.Id-@item.Field" name="english" class="form-control">@item.English</textarea>
-        }
-        else
-        {
-            <input id="translation-@Model.Table-@item.Id-@item.Field" name="english" value="@item.English" class="form-control"
-                   maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
-        }
-        <p>
-            <span role="status" class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
-                @(string.IsNullOrWhiteSpace(item.English) ? L["UploadAdmin.Review.Missing"] : item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])
-            </span>
-        </p>
-        <div>
-            <button type="submit" name="reviewed" value="false" class="btn btn-outline-primary">@L["UploadAdmin.Review.Save"]</button>
-            <button type="submit" name="reviewed" value="true" class="btn btn-primary">@L["UploadAdmin.Review.MarkReviewed"]</button>
+    <section class="upload-review-record mb-3" aria-labelledby="review-record-@Model.Table-@record.Key">
+        <h2 id="review-record-@Model.Table-@record.Key" class="h5">@L["UploadAdmin.Review.Record", record.Key]</h2>
+        <div class="upload-review-fields @(Model.Table == "images" ? "upload-review-fields--single" : "")">
+            @foreach (var item in record)
+            {
+                <form asp-action="Save" method="post" class="card p-3 upload-review-card">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="table" value="@Model.Table" />
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="hidden" name="field" value="@item.Field" />
+                    <input type="hidden" name="swedish" value="@item.Swedish" />
+                    <input type="hidden" name="previousEnglish" value="@item.English" />
+                    <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
+                    <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
+                    <input type="hidden" name="search" value="@Model.Search" />
+                    <input type="hidden" name="page" value="@Model.Page" />
+                    <h3 class="h6">@L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h3>
+                    <div class="form-label">@L["UploadAdmin.Review.Swedish"]</div>
+                    <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
+                    <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
+                    @if (Model.Table == "guestbook" && item.Field == "text")
+                    {
+                        <textarea id="translation-@Model.Table-@item.Id-@item.Field" name="english" class="form-control">@item.English</textarea>
+                    }
+                    else
+                    {
+                        <input id="translation-@Model.Table-@item.Id-@item.Field" name="english" value="@item.English" class="form-control"
+                               maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
+                    }
+                    <p>
+                        <span role="status" class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
+                            @(string.IsNullOrWhiteSpace(item.English) ? L["UploadAdmin.Review.Missing"] : item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])
+                        </span>
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mt-auto">
+                        <button type="submit" name="reviewed" value="false" class="btn btn-outline-primary">@L["UploadAdmin.Review.Save"]</button>
+                        <button type="submit" name="reviewed" value="true" class="btn btn-primary">@L["UploadAdmin.Review.MarkReviewed"]</button>
+                    </div>
+                </form>
+            }
         </div>
-    </form>
+    </section>
 }
 @if (Model.TotalPages > 1)
 {

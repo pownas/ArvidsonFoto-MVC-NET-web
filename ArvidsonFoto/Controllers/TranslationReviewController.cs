@@ -53,14 +53,8 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             var rows = query.OrderBy(m => m.MenuCategoryId).Skip((model.Page - 1) * PageSize).Take(PageSize).ToList();
             foreach (var row in rows)
             {
-                if (!pendingOnly || !row.MenuDisplayNameEnReviewed)
-                {
-                    model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed));
-                }
-                if (!pendingOnly || !row.MenuUrlSegmentEnReviewed)
-                {
-                    model.Items.Add(new(row.MenuCategoryId!.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed));
-                }
+                model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed));
+                model.Items.Add(new(row.MenuCategoryId.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed));
             }
         }
         else if (table == "images")
@@ -102,14 +96,8 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             var rows = query.OrderBy(g => g.Id).Skip((model.Page - 1) * PageSize).Take(PageSize).ToList();
             foreach (var row in rows)
             {
-                if (!pendingOnly || !row.GbNameEnReviewed)
-                {
-                    model.Items.Add(new(row.Id, "name", row.GbName ?? "", row.GbNameEn, row.GbNameEnReviewed));
-                }
-                if (!pendingOnly || !row.GbTextEnReviewed)
-                {
-                    model.Items.Add(new(row.Id, "text", row.GbText ?? "", row.GbTextEn, row.GbTextEnReviewed));
-                }
+                model.Items.Add(new(row.Id, "name", row.GbName ?? "", row.GbNameEn, row.GbNameEnReviewed));
+                model.Items.Add(new(row.Id, "text", row.GbText ?? "", row.GbTextEn, row.GbTextEnReviewed));
             }
         }
         return View(model);

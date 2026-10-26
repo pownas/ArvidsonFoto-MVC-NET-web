@@ -975,7 +975,30 @@ body {
     }
 
     .upload-review-card {
+        display: flex;
+        flex-direction: column;
         gap: 0.5rem;
+        min-width: 0;
+        height: 100%;
+    }
+
+    .upload-review-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .upload-review-fields--single {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 48rem;
+    }
+
+    .upload-review-card .form-control {
+        width: 100%;
+    }
+
+    .upload-review-card textarea.form-control {
+        min-height: 8rem;
     }
 
     .category-editor {
@@ -1249,6 +1272,10 @@ body {
         .category-tree__names {
             flex-direction: column;
             gap: 0.1rem;
+        }
+
+        .upload-review-fields {
+            grid-template-columns: minmax(0, 1fr);
         }
     }
 }
