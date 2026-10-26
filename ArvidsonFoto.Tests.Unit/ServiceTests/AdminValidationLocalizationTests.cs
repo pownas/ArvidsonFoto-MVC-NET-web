@@ -67,9 +67,9 @@ public class AdminValidationLocalizationTests
     }
 
     [Theory]
-    [InlineData("sv-SE", "Filnamn", "Fotodatum", "Beskrivning", "Description (English)", "Meddelande")]
+    [InlineData("sv-SE", "Filnamn", "Fotodatum", "Beskrivning", "Beskrivning (engelska)", "Meddelande")]
     [InlineData("en-US", "Filename", "Photo date", "Description", "Description (English)", "Message")]
-    [InlineData("", "Filnamn", "Fotodatum", "Beskrivning", "Description (English)", "Meddelande")]
+    [InlineData("", "Filnamn", "Fotodatum", "Beskrivning", "Beskrivning (engelska)", "Meddelande")]
     public void AdminFormLabels_UseCurrentUiCulture(string culture, string filename, string date, string description, string descriptionEn, string message)
     {
         WithCulture(culture, () =>

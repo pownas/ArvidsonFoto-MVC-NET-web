@@ -40,18 +40,19 @@
                 <span asp-validation-for="ImageDate"></span>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="ImageDescription" class="control-label"></label>
-            <div>
-                <input asp-for="ImageDescription" value="@Model.ImageDescription" class="form-control" />
+        <fieldset class="image-description-fields">
+            <legend class="h6">@L["UploadAdmin.EditImageInputForm.Descriptions"]</legend>
+            <div class="form-group mb-3">
+                <label asp-for="ImageDescription" class="control-label"></label>
+                <textarea asp-for="ImageDescription" rows="2" maxlength="150" class="form-control"></textarea>
                 <span asp-validation-for="ImageDescription"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ImageDescriptionEn" class="control-label"></label>
-                <input asp-for="ImageDescriptionEn" class="form-control" />
+                <textarea asp-for="ImageDescriptionEn" rows="2" maxlength="150" class="form-control"></textarea>
                 <span asp-validation-for="ImageDescriptionEn"></span>
             </div>
-        </div>
+        </fieldset>
         <div class="form-check">
             <input asp-for="IsGameSelectable" class="form-check-input" />
             <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>

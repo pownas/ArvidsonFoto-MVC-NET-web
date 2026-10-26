@@ -13,22 +13,22 @@
     string[] splittedUser = username!.Split("@");
     username = splittedUser[0];
 
-    <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)"><i class="bi bi-cloud-upload"></i> @L["UploadAdmin.Controller.UploadAdmin"]</a>
+    <a href="./UploadAdmin" class="nav-link @UploadAdminNavPages.IndexNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.IndexNavClass(ViewContext) is not null ? "page" : null)"><i class="bi bi-cloud-upload" aria-hidden="true"></i> @L["UploadAdmin.Controller.UploadAdmin"]</a>
     <ul class="p-0 sitemap">
-        <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.LinkANewImageOnTheSite"]"><i class="bi bi-file-image"></i> @L["UploadAdmin.Navigation.NewImage"]</a></li>
-        <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.AddANewCategoryOnTheSite"]"><i class="bi bi-file-font"></i> @L["UploadAdmin.Navigation.NewCategory"]</a></li>
-        <li><a asp-controller="UploadAdmin" asp-action="RedigeraKategori" class="nav-link"><i class="bi bi-translate"></i> @L["UploadAdmin.Navigation.EditCategoriesAndSpecies"]</a></li>
-        <li><a asp-controller="TranslationReview" asp-action="Index" class="nav-link"><i class="bi bi-check2-square"></i> @L["UploadAdmin.Review.Title"]</a></li>
+        <li><a href="./UploadAdmin/NyBild" class="nav-link @UploadAdminNavPages.NyBildNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.NyBildNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.LinkANewImageOnTheSite"]"><i class="bi bi-file-image" aria-hidden="true"></i> @L["UploadAdmin.Navigation.NewImage"]</a></li>
+        <li><a href="./UploadAdmin/NyKategori" class="nav-link @UploadAdminNavPages.NyKategoriNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.NyKategoriNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.AddANewCategoryOnTheSite"]"><i class="bi bi-folder-plus" aria-hidden="true"></i> @L["UploadAdmin.Navigation.NewCategory"]</a></li>
+        <li><a asp-controller="UploadAdmin" asp-action="RedigeraKategori" class="nav-link @UploadAdminNavPages.RedigeraKategoriNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.RedigeraKategoriNavClass(ViewContext) is not null ? "page" : null)"><i class="bi bi-diagram-3" aria-hidden="true"></i> @L["UploadAdmin.Navigation.EditCategoriesAndSpecies"]</a></li>
+        <li><a asp-controller="TranslationReview" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TranslationReview" ? "active" : "")" aria-current="@(ViewContext.RouteData.Values["controller"]?.ToString() == "TranslationReview" ? "page" : null)"><i class="bi bi-check2-square" aria-hidden="true"></i> @L["UploadAdmin.Review.Title"]</a></li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.EditRecentlyUploadedImages"]"><i class="bi bi-pencil-square"></i> @L["UploadAdmin.Navigation.EditImages"]</a>
+            <a href="./UploadAdmin/RedigeraBilder" class="nav-link @UploadAdminNavPages.RedigeraBilderNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.RedigeraBilderNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.EditRecentlyUploadedImages"]"><i class="bi bi-pencil-square" aria-hidden="true"></i> @L["UploadAdmin.Navigation.EditImages"]</a>
         </li>
         <li>
-            <a href="./UploadAdmin/FacebookUpload" class="nav-link @UploadAdminNavPages.FacebookUploadNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ShareImagesOnFacebook"]"><i class="bi bi-facebook"></i> @L["UploadAdmin.Navigation.ShareOnFacebook"]</a>
+            <a href="./UploadAdmin/FacebookUpload" class="nav-link @UploadAdminNavPages.FacebookUploadNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.FacebookUploadNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.ShareImagesOnFacebook"]"><i class="bi bi-facebook" aria-hidden="true"></i> @L["UploadAdmin.Navigation.ShareOnFacebook"]</a>
         </li>
         <li>
-            <a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ManageGuestbookEntries"]">
-                <i class="bi bi-book-half"></i> @L["UploadAdmin.Navigation.ManageGuestbookEntries"]
+            <a href="./UploadAdmin/HanteraGB" class="nav-link @UploadAdminNavPages.HanteraGBNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.HanteraGBNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.ManageGuestbookEntries"]">
+                <i class="bi bi-book-half" aria-hidden="true"></i> @L["UploadAdmin.Navigation.ManageGuestbookEntries"]
                 @if (countOfUnreadGbPosts > 0)
                 {
                     <span class="badge badge-success text-light">@L["Admin.Unread", countOfUnreadGbPosts]</span>
@@ -37,9 +37,9 @@
         </li>
         <li>
             <div class="dropdown-divider"></div>
-            <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ViewSiteStatistics"]"><i class="bi bi-speedometer2"></i> @L["UploadAdmin.Navigation.SiteStatistics"]</a>
+            <a href="./UploadAdmin/Statistik" class="nav-link @UploadAdminNavPages.StatistikNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.StatistikNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.ViewSiteStatistics"]"><i class="bi bi-speedometer2" aria-hidden="true"></i> @L["UploadAdmin.Navigation.SiteStatistics"]</a>
         </li>
-        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link @UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext)" title="@L["UploadAdmin.Navigation.ReadTheLogbookAndErrorLogs"]"><i class="bi bi-journal-code"></i> @L["UploadAdmin.Navigation.ReadLogs"]</a></li>
+        <li><a href="./UploadAdmin/VisaLoggboken?datum=@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" class="nav-link @UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext)" aria-current="@(UploadAdminNavPages.VisaLoggbokenNavClass(ViewContext) is not null ? "page" : null)" title="@L["UploadAdmin.Navigation.ReadTheLogbookAndErrorLogs"]"><i class="bi bi-journal-code" aria-hidden="true"></i> @L["UploadAdmin.Navigation.ReadLogs"]</a></li>
         <li>
             <div class="dropdown-divider"></div>
             <a asp-area="Identity" asp-page="/Account/Manage/Index" title="@L["UploadAdmin.Navigation.ManageYourAccount"]" class="nav-link @UploadAdminNavPages.HanteraKontotNavClass(ViewContext)"><i class="bi bi-file-person"></i> @L["Admin.Account", username]</a>

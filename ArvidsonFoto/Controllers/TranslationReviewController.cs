@@ -1,4 +1,5 @@
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -32,10 +33,12 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             Page = Math.Max(1, page),
             AllPendingCount = db.TblMenus.Count(m => !m.MenuDisplayNameEnReviewed) +
                 db.TblMenus.Count(m => !m.MenuUrlSegmentEnReviewed) +
-                db.TblImages.Count(i => !i.ImageDescriptionEnReviewed) +
+                db.TblImages.Count(i => i.ImageDescription != null && i.ImageDescription.Trim() != "" && !i.ImageDescriptionEnReviewed) +
                 db.TblGbs.Count(g => !g.GbNameEnReviewed) +
                 db.TblGbs.Count(g => !g.GbTextEnReviewed),
-            AllFieldsCount = (2 * db.TblMenus.Count()) + db.TblImages.Count() + (2 * db.TblGbs.Count())
+            AllFieldsCount = (2 * db.TblMenus.Count()) +
+                db.TblImages.Count(i => i.ImageDescription != null && i.ImageDescription.Trim() != "") +
+                (2 * db.TblGbs.Count())
         };
         if (table == "menu")
         {
@@ -51,19 +54,15 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             var rows = query.OrderBy(m => m.MenuCategoryId).Skip((model.Page - 1) * PageSize).Take(PageSize).ToList();
             foreach (var row in rows)
             {
-                if (!pendingOnly || !row.MenuDisplayNameEnReviewed)
-                {
-                    model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed));
-                }
-                if (!pendingOnly || !row.MenuUrlSegmentEnReviewed)
-                {
-                    model.Items.Add(new(row.MenuCategoryId!.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed));
-                }
+                var recordName = LocalizedText.Select(row.MenuDisplayName, row.MenuDisplayNameEn);
+                model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed, recordName));
+                model.Items.Add(new(row.MenuCategoryId.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed, recordName));
             }
         }
         else if (table == "images")
         {
-            var query = db.TblImages.AsNoTracking().Where(i => i.ImageId != null);
+            var query = db.TblImages.AsNoTracking()
+                .Where(i => i.ImageId != null && i.ImageDescription != null && i.ImageDescription.Trim() != "");
             if (!string.IsNullOrEmpty(search))
             {
                 var imageId = int.TryParse(search, out var parsedId) ? parsedId : -1;
@@ -99,14 +98,8 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             var rows = query.OrderBy(g => g.Id).Skip((model.Page - 1) * PageSize).Take(PageSize).ToList();
             foreach (var row in rows)
             {
-                if (!pendingOnly || !row.GbNameEnReviewed)
-                {
-                    model.Items.Add(new(row.Id, "name", row.GbName ?? "", row.GbNameEn, row.GbNameEnReviewed));
-                }
-                if (!pendingOnly || !row.GbTextEnReviewed)
-                {
-                    model.Items.Add(new(row.Id, "text", row.GbText ?? "", row.GbTextEn, row.GbTextEnReviewed));
-                }
+                model.Items.Add(new(row.Id, "name", row.GbName ?? "", row.GbNameEn, row.GbNameEnReviewed));
+                model.Items.Add(new(row.Id, "text", row.GbText ?? "", row.GbTextEn, row.GbTextEnReviewed));
             }
         }
         return View(model);

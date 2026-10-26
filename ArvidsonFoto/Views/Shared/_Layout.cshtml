@@ -52,7 +52,7 @@
             var english = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish;
         }
     </header>
-    <main class="container-md pb-5">
+    <main class="container-md pb-5 @(ViewContext.RouteData.Values["controller"]?.ToString() == "UploadAdmin" || ViewContext.RouteData.Values["controller"]?.ToString() == "TranslationReview" ? "upload-admin-page" : "")">
         @RenderBody()
     </main>
     <section class="site-pre-footer-controls" aria-label="@S["Layout.Settings.Label"]">

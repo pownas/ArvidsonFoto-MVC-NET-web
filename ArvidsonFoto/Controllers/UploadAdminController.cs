@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ArvidsonFoto.Controllers;
@@ -54,43 +55,64 @@ public class UploadAdminController(
             ImageInputModel = UploadImageInputDto.CreateEmpty()
         };
 
-        var selectedCategory = CategoryDto.CreateEmpty();
         var subCategories = new List<CategoryDto>();
+        var categoryPathSegments = new[] { subLevel1, subLevel2, subLevel3, subLevel4 }
+            .Where(segment => !string.IsNullOrWhiteSpace(segment))
+            .ToArray();
 
-        if (subLevel4 is not null)
+        if (categoryPathSegments.Length > 0)
         {
-            selectedCategory = _categoryService.GetByName(subLevel4);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3 + "/" + subLevel4;
-        }
-        else if (subLevel3 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel3);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2 + "/" + subLevel3;
-        }
-        else if (subLevel2 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel2);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1 + "/" + subLevel2;
-        }
-        else if (subLevel1 is not null)
-        {
-            selectedCategory = _categoryService.GetByName(subLevel1);
-            subCategories = _categoryService.GetSubsList(selectedCategory.CategoryId ?? 0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild/" + subLevel1;
+            var selectedCategory = LocalizedRoutes.ResolveCategoryPath(categoryPathSegments, _categoryService.GetAll());
+            if (selectedCategory?.CategoryId is not int selectedCategoryId)
+            {
+                return NotFound();
+            }
+
+            viewModel.SelectedCategory = selectedCategory;
+            subCategories = _categoryService.GetSubsList(selectedCategoryId);
+
+            var latestImage = _imageService.GetOneImageFromCategory(
+                selectedCategoryId,
+                LocalizedText.Select(selectedCategory.NameSv, selectedCategory.NameEn),
+                selectedCategory.NameEn ?? string.Empty);
+            viewModel.LatestCategoryImageUrl = BuildThumbnailUrl(latestImage);
         }
         else
         {
             subCategories = _categoryService.GetSubsList(0);
-            viewModel.CurrentUrl = "./UploadAdmin/NyBild";
         }
 
-        viewModel.SelectedCategory = selectedCategory;
+        var currentPath = Request.PathBase.Add(Request.Path).Value;
+        viewModel.CurrentUrl = string.IsNullOrEmpty(currentPath) ? "/UploadAdmin/NyBild" : currentPath.TrimEnd('/');
         viewModel.SubCategories = [.. subCategories.OrderBy(c => LocalizedText.Select(c.NameSv, c.NameEn))];
 
         return View(viewModel);
+    }
+
+    internal static string? BuildThumbnailUrl(ImageDto image)
+    {
+        if (image.ImageId <= 0 || string.IsNullOrWhiteSpace(image.UrlImage))
+        {
+            return null;
+        }
+
+        var imagePathSegments = image.UrlImage
+            .Split('/')
+            .Select(Uri.UnescapeDataString)
+            .ToArray();
+        if (imagePathSegments.Length < 2 ||
+            !string.Equals(imagePathSegments[0], "bilder", StringComparison.OrdinalIgnoreCase) ||
+            imagePathSegments.Any(segment =>
+                string.IsNullOrWhiteSpace(segment) ||
+                segment is "." or ".." ||
+                segment.Contains('/') ||
+                segment.Contains('\\')))
+        {
+            return null;
+        }
+
+        return "/" +
+            string.Join("/", imagePathSegments.Select(Uri.EscapeDataString)) + ".thumb.jpg";
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -237,13 +259,7 @@ public class UploadAdminController(
     public IActionResult RedigeraKategori(int? id, string? search)
     {
         ViewData["Title"] = localizer["Admin.CategoriesTitle"];
-        ViewData["Search"] = search;
-        var categories = coreContext.TblMenus.AsEnumerable()
-            .Where(c => string.IsNullOrWhiteSpace(search) ||
-                (c.MenuDisplayName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (c.MenuDisplayNameEn?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
-            .OrderBy(c => c.MenuDisplayName).Take(100).ToList();
-        ViewData["Categories"] = categories;
+        PopulateCategoryEditor(search);
         var selected = id.HasValue ? coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == id) : null;
         return View(new EditCategoryInputDto
         {
@@ -257,7 +273,7 @@ public class UploadAdminController(
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult SaveCategory(EditCategoryInputDto input)
+    public IActionResult SaveCategory(EditCategoryInputDto input, string? search)
     {
         ViewData["Title"] = localizer["Admin.CategoriesTitle"];
         var category = coreContext.TblMenus.FirstOrDefault(c => c.MenuCategoryId == input.CategoryId);
@@ -273,7 +289,7 @@ public class UploadAdminController(
 
         if (!ModelState.IsValid)
         {
-            ViewData["Categories"] = new List<Core.Models.TblMenu> { category };
+            PopulateCategoryEditor(search);
             return View("RedigeraKategori", input);
         }
         category.MenuDisplayName = input.NameSv.Trim();
@@ -284,7 +300,43 @@ public class UploadAdminController(
         category.MenuDateUpdated = DateTime.UtcNow;
         _ = coreContext.SaveChanges();
         _categoryService.ClearCache();
-        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId });
+        return RedirectToAction(nameof(RedigeraKategori), new { id = input.CategoryId, search });
+    }
+
+    private void PopulateCategoryEditor(string? search)
+    {
+        var categories = coreContext.TblMenus.AsNoTracking().ToList();
+        var childrenByParent = categories.ToLookup(category => category.MenuParentCategoryId ?? 0);
+        var orderedCategories = new List<(Core.Models.TblMenu Category, int Level)>();
+        var visited = new HashSet<int>();
+
+        void AddChildren(int parentId, int level)
+        {
+            foreach (var child in childrenByParent[parentId]
+                .OrderBy(category => LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn)))
+            {
+                if (child.MenuCategoryId is not int categoryId || !visited.Add(categoryId))
+                {
+                    continue;
+                }
+
+                orderedCategories.Add((child, level));
+                AddChildren(categoryId, level + 1);
+            }
+        }
+
+        AddChildren(0, 0);
+        foreach (var category in categories.OrderBy(item => LocalizedText.Select(item.MenuDisplayName, item.MenuDisplayNameEn)))
+        {
+            if (category.MenuCategoryId is int categoryId && visited.Add(categoryId))
+            {
+                orderedCategories.Add((category, 0));
+                AddChildren(categoryId, 1);
+            }
+        }
+
+        ViewData["Categories"] = orderedCategories;
+        ViewData["Search"] = search;
     }
 
     private bool ValidCategorySegments(string? swedish, string? english, int? excludeId)
@@ -299,6 +351,17 @@ public class UploadAdminController(
             new[] { c.MenuUrlSegment, c.MenuUrlSegmentEn }.Any(existing =>
                 string.Equals(existing, swedish, StringComparison.OrdinalIgnoreCase) ||
                 (!string.IsNullOrWhiteSpace(english) && string.Equals(existing, english, StringComparison.OrdinalIgnoreCase))));
+    }
+
+    private string GetOptionalFamilyName(int? categoryId)
+    {
+        if (categoryId is null or <= 0)
+        {
+            return string.Empty;
+        }
+
+        var name = _categoryService.GetNameById(categoryId);
+        return string.IsNullOrWhiteSpace(name) ? string.Empty : name;
     }
 
     public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
@@ -344,15 +407,19 @@ public class UploadAdminController(
             UploadImageInputDto inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
-            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageHuvudfamiljNamn = GetOptionalFamilyName(item.ImageMainFamilyId);
             inputModel.ImageFamilj = item.ImageFamilyId;
-            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageFamiljNamn = GetOptionalFamilyName(item.ImageFamilyId);
             inputModel.ImageArt = item.ImageCategoryId ?? -1;
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;
             inputModel.ImageUpdate = item.ImageUpdate ?? DateTime.Now;
-            inputModel.ImageDescription = item.ImageDescription ?? localizer["Admin.Missing"];
-            inputModel.ImageDescriptionEn = item.ImageDescriptionEn;
+            inputModel.ImageDescription = IsMissingDescription(item.ImageDescription, "saknas")
+                ? string.Empty
+                : item.ImageDescription ?? string.Empty;
+            inputModel.ImageDescriptionEn = IsMissingDescription(item.ImageDescriptionEn, "Missing")
+                ? string.Empty
+                : item.ImageDescriptionEn;
             inputModel.IsGameSelectable = item.IsGameSelectable;
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
 
@@ -364,6 +431,9 @@ public class UploadAdminController(
 
         return View(viewModel);
     }
+
+    private static bool IsMissingDescription(string? description, string placeholder) =>
+        string.Equals(description?.Trim(), placeholder, StringComparison.OrdinalIgnoreCase);
 
     public IActionResult HanteraGB(string DisplayMessage, string gbId)
     {
@@ -489,9 +559,9 @@ public class UploadAdminController(
             var inputModel = UploadImageInputDto.CreateEmpty();
             inputModel.ImageId = item.ImageId ?? -1;
             inputModel.ImageHuvudfamilj = item.ImageMainFamilyId;
-            inputModel.ImageHuvudfamiljNamn = _categoryService.GetNameById(item.ImageMainFamilyId);
+            inputModel.ImageHuvudfamiljNamn = GetOptionalFamilyName(item.ImageMainFamilyId);
             inputModel.ImageFamilj = item.ImageFamilyId;
-            inputModel.ImageFamiljNamn = _categoryService.GetNameById(item.ImageFamilyId);
+            inputModel.ImageFamiljNamn = GetOptionalFamilyName(item.ImageFamilyId);
             inputModel.ImageArt = item.ImageCategoryId ?? -1;
             inputModel.ImageArtNamn = _categoryService.GetNameById(item.ImageCategoryId);
             inputModel.ImageDate = imgDate;

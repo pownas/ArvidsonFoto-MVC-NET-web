@@ -114,6 +114,7 @@
   <data name="UploadAdmin.NyBild.TheImageWasLinked" xml:space="preserve">
     <value>Länkningen genomfördes för:</value>
   </data>
+  <data name="UploadAdmin.NyBild.LatestCategoryImage" xml:space="preserve"><value>Senast uppladdade bilden i {0}</value></data>
   <data name="UploadAdmin.RedigeraBilder.FileName" xml:space="preserve">
     <value>Filnamn:</value>
   </data>
@@ -224,6 +225,9 @@
   </data>
   <data name="UploadAdmin.EditImageInputForm.SaveChanges" xml:space="preserve">
     <value>Spara ändring</value>
+  </data>
+  <data name="UploadAdmin.EditImageInputForm.Descriptions" xml:space="preserve">
+    <value>Bildbeskrivningar</value>
   </data>
   <data name="UploadAdmin.Navigation.ViewSiteStatistics" xml:space="preserve">
     <value>Visa statistik på hemsidan</value>
@@ -414,6 +418,9 @@
   <data name="Admin.ThisMonthCategories" xml:space="preserve">
     <value>10 mest visade kategorierna, denna månaden ({0})</value>
   </data>
+  <data name="Admin.ShowStatisticsTable" xml:space="preserve">
+    <value>Visa statistik som tabell</value>
+  </data>
   <data name="Admin.ChartFallback" xml:space="preserve">
     <value>Månadsvis statistik (Chart.js kunde inte laddas)</value>
   </data>
@@ -495,4 +502,11 @@
   <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Föregående</value></data>
   <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Nästa</value></data>
   <data name="UploadAdmin.GameSelectable" xml:space="preserve"><value>Kan användas i spel (t.ex. memory och gissa bilden)</value></data>
+  <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve"><value>Kategorier och arter</value></data>
+  <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve"><value>Nivå {0}</value></data>
+  <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve"><value>Redigera kategori</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableEnabled" xml:space="preserve"><value>Aktiv för spel</value></data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve"><value>Inte aktiv för spel</value></data>
+  <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} kategorier matchar</value></data>
+  <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>Inga kategorier matchar sökningen.</value></data>
 </root>

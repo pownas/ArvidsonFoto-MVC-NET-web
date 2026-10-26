@@ -219,6 +219,31 @@ public class LocalizedContentTests
     }
 
     [Fact]
+    public void UploadCategoryLinks_ResolveLocalizedSegmentsAtEachHierarchyLevel()
+    {
+        var categories = new List<CategoryDto>
+        {
+            new() { CategoryId = 1, ParentCategoryId = 0, NameSv = "Fåglar", NameEn = "Birds", UrlCategoryPathSv = "faglar", UrlCategoryPathEn = "birds" },
+            new() { CategoryId = 2, ParentCategoryId = 1, NameSv = "Hackspettar", NameEn = "Woodpeckers", UrlCategoryPathSv = "hackspettar", UrlCategoryPathEn = "woodpeckers" }
+        };
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            foreach (var culture in new[] { "sv-SE", "en-US" })
+            {
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+                var segments = categories.Select(LocalizedRoutes.CategorySegment).ToArray();
+
+                Assert.Equal(2, LocalizedRoutes.ResolveCategoryPath(segments, categories)?.CategoryId);
+            }
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
+    }
+
+    [Fact]
     public void CategoryRoutes_TranslateSegmentsAndPreserveSwedishFallback()
     {
         var original = CultureInfo.CurrentUICulture;
