@@ -225,6 +225,9 @@
   <data name="UploadAdmin.EditImageInputForm.SaveChanges" xml:space="preserve">
     <value>Spara ändring</value>
   </data>
+  <data name="UploadAdmin.EditImageInputForm.Descriptions" xml:space="preserve">
+    <value>Bildbeskrivningar</value>
+  </data>
   <data name="UploadAdmin.Navigation.ViewSiteStatistics" xml:space="preserve">
     <value>Visa statistik på hemsidan</value>
   </data>

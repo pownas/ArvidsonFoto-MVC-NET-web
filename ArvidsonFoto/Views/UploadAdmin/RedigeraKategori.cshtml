@@ -11,43 +11,9 @@
 <nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
     <partial name="_NavUploadAdmin" />
 </nav>
-<section class="category-editor mb-4" aria-labelledby="category-list-heading">
-    <h2 id="category-list-heading" class="h4">@L["UploadAdmin.RedigeraKategori.CategoryList"]</h2>
-    <div class="category-filter">
-        <label for="category-filter">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
-        <input id="category-filter" type="search" value="@search" class="form-control"
-               placeholder="@L["UploadAdmin.RedigeraKategori.Search"]" aria-controls="category-tree" />
-        <p id="category-filter-count" class="form-text mb-2" aria-live="polite"></p>
-    </div>
-    <ul id="category-tree" class="category-tree" aria-label="@L["UploadAdmin.RedigeraKategori.CategoryList"]">
-        @foreach (var row in categories)
-        {
-            var category = row.Category;
-            var categoryId = category.MenuCategoryId.GetValueOrDefault();
-            var isRoot = row.Level == 0;
-            var icon = isRoot ? "bi-folder2-open" : row.Level == 1 ? "bi-folder" : "bi-tag";
-            var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
-            <li class="category-tree__item @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
-                data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
-                <i class="bi @icon category-tree__icon" aria-hidden="true"></i>
-                <span class="category-tree__level">@L["UploadAdmin.RedigeraKategori.Level", row.Level + 1]</span>
-                <span class="category-tree__names">
-                    <strong>@category.MenuDisplayName</strong>
-                    @if (!string.IsNullOrWhiteSpace(category.MenuDisplayNameEn))
-                    {
-                        <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
-                    }
-                </span>
-                <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
-                   asp-route-id="@categoryId" asp-route-search="@search"
-                   aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>
-            </li>
-        }
-    </ul>
-</section>
 @if (Model.CategoryId > 0)
 {
-    <form method="post" asp-action="SaveCategory" class="upload-admin-form category-edit-form">
+    <form method="post" asp-action="SaveCategory" class="upload-admin-form category-edit-form mb-4">
         @Html.AntiForgeryToken()
         <input asp-for="CategoryId" type="hidden" />
         <input type="hidden" name="search" value="@search" />
@@ -68,6 +34,40 @@
         <button type="submit" class="btn btn-primary">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
     </form>
 }
+<section class="category-editor mb-4" aria-labelledby="category-list-heading">
+    <h2 id="category-list-heading" class="h4">@L["UploadAdmin.RedigeraKategori.CategoryList"]</h2>
+    <div class="category-filter">
+        <label for="category-filter">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
+        <input id="category-filter" type="search" value="@search" class="form-control"
+               placeholder="@L["UploadAdmin.RedigeraKategori.Search"]" aria-controls="category-tree" />
+        <p id="category-filter-count" class="form-text mb-2" aria-live="polite"></p>
+    </div>
+    <ul id="category-tree" class="category-tree" aria-label="@L["UploadAdmin.RedigeraKategori.CategoryList"]">
+        @foreach (var row in categories)
+        {
+            var category = row.Category;
+            var categoryId = category.MenuCategoryId.GetValueOrDefault();
+            var isRoot = row.Level == 0;
+            var icon = isRoot ? "bi-folder2-open" : row.Level == 1 ? "bi-folder" : "bi-tag";
+            var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
+            <li class="category-tree__item category-tree__item--level-@Math.Min(row.Level, 3) @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
+                data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
+                <i class="bi @icon category-tree__icon" aria-hidden="true"></i>
+                <span class="category-tree__level">@L["UploadAdmin.RedigeraKategori.Level", row.Level + 1]</span>
+                <span class="category-tree__names">
+                    <strong>@category.MenuDisplayName</strong>
+                    @if (!string.IsNullOrWhiteSpace(category.MenuDisplayNameEn))
+                    {
+                        <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
+                    }
+                </span>
+                <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
+                   asp-route-id="@categoryId" asp-route-search="@search"
+                   aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>
+            </li>
+        }
+    </ul>
+</section>
 @section Scripts {
     <script>
         (() => {
