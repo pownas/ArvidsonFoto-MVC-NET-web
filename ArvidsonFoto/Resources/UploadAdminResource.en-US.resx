@@ -418,6 +418,9 @@
   <data name="Admin.ThisMonthCategories" xml:space="preserve">
     <value>Top 10 categories this month ({0})</value>
   </data>
+  <data name="Admin.ShowStatisticsTable" xml:space="preserve">
+    <value>Show statistics as a table</value>
+  </data>
   <data name="Admin.ChartFallback" xml:space="preserve">
     <value>Monthly statistics (Chart.js could not be loaded)</value>
   </data>

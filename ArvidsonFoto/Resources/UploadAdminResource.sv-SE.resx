@@ -418,6 +418,9 @@
   <data name="Admin.ThisMonthCategories" xml:space="preserve">
     <value>10 mest visade kategorierna, denna månaden ({0})</value>
   </data>
+  <data name="Admin.ShowStatisticsTable" xml:space="preserve">
+    <value>Visa statistik som tabell</value>
+  </data>
   <data name="Admin.ChartFallback" xml:space="preserve">
     <value>Månadsvis statistik (Chart.js kunde inte laddas)</value>
   </data>
