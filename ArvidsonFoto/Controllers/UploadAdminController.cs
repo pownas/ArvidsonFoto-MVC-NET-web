@@ -70,6 +70,20 @@ public class UploadAdminController(
 
             viewModel.SelectedCategory = selectedCategory;
             subCategories = _categoryService.GetSubsList(selectedCategoryId);
+
+            var latestImage = _imageService.GetOneImageFromCategory(
+                selectedCategoryId,
+                LocalizedText.Select(selectedCategory.NameSv, selectedCategory.NameEn),
+                selectedCategory.NameEn ?? string.Empty);
+            var imagePathSegments = latestImage.UrlImage.Split('/');
+            if (latestImage.ImageId > 0 &&
+                imagePathSegments.Length > 1 &&
+                string.Equals(imagePathSegments[0], "bilder", StringComparison.OrdinalIgnoreCase) &&
+                imagePathSegments.Skip(1).All(segment => !string.IsNullOrEmpty(segment) && segment is not ("." or "..")))
+            {
+                viewModel.LatestCategoryImageUrl = "/" +
+                    string.Join("/", imagePathSegments.Select(Uri.EscapeDataString)) + ".thumb.jpg";
+            }
         }
         else
         {

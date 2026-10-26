@@ -46,7 +46,14 @@
         
         @if (Model!.ImageInputModel is not null && Model.SelectedCategory is not null && Model.SelectedCategory.CategoryId.HasValue)
         {
-            <h3>@L["Admin.SelectedCategory", Model.SelectedCategory.NameSv]</h3>
+            <h3>@L["Admin.SelectedCategory", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</h3>
+            @if (!string.IsNullOrWhiteSpace(Model.LatestCategoryImageUrl))
+            {
+                <figure class="upload-category-preview">
+                    <img src="@Model.LatestCategoryImageUrl" alt="@ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)" loading="lazy" />
+                    <figcaption>@L["UploadAdmin.NyBild.LatestCategoryImage", ArvidsonFoto.Core.Extensions.LocalizedText.Select(Model.SelectedCategory.NameSv, Model.SelectedCategory.NameEn)]</figcaption>
+                </figure>
+            }
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {

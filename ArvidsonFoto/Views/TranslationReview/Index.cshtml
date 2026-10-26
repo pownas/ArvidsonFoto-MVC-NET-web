@@ -47,7 +47,13 @@
 @foreach (var record in Model.Items.GroupBy(item => item.Id))
 {
     <section class="upload-review-record mb-3" aria-labelledby="review-record-@Model.Table-@record.Key">
-        <h2 id="review-record-@Model.Table-@record.Key" class="h5">@L["UploadAdmin.Review.Record", record.Key]</h2>
+        <h2 id="review-record-@Model.Table-@record.Key" class="h5">
+            @L["UploadAdmin.Review.Record", record.Key]
+            @if (!string.IsNullOrWhiteSpace(record.First().RecordName))
+            {
+                <span class="upload-review-record__name">– @record.First().RecordName</span>
+            }
+        </h2>
         <div class="upload-review-fields @(Model.Table == "images" ? "upload-review-fields--single" : "")">
             @foreach (var item in record)
             {

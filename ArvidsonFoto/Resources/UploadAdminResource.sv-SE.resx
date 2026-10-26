@@ -114,6 +114,7 @@
   <data name="UploadAdmin.NyBild.TheImageWasLinked" xml:space="preserve">
     <value>Länkningen genomfördes för:</value>
   </data>
+  <data name="UploadAdmin.NyBild.LatestCategoryImage" xml:space="preserve"><value>Senast uppladdade bilden i {0}</value></data>
   <data name="UploadAdmin.RedigeraBilder.FileName" xml:space="preserve">
     <value>Filnamn:</value>
   </data>

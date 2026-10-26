@@ -993,6 +993,18 @@ body {
         max-width: 48rem;
     }
 
+    .upload-review-record {
+        padding: 0.85rem;
+        border: 1px solid var(--upload-admin-border);
+        border-left: 4px solid #45c5d0;
+        border-radius: 0.65rem;
+        background-color: #121619;
+    }
+
+    .upload-review-record__name {
+        color: #b7d5ff;
+    }
+
     .upload-review-card .form-control {
         width: 100%;
     }
@@ -1119,6 +1131,32 @@ body {
         &:focus-visible {
             background-color: #1a5d95;
             color: #fff;
+        }
+
+        .upload-category-preview {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            max-width: 100%;
+            margin: 0 0 1rem;
+            padding: 0.65rem;
+            border: 1px solid var(--upload-admin-border);
+            border-radius: 0.5rem;
+            background-color: var(--upload-admin-panel);
+
+            img {
+                display: block;
+                width: auto;
+                max-width: min(100%, 20rem);
+                max-height: 14rem;
+                border-radius: 0.3rem;
+                object-fit: contain;
+            }
+
+            figcaption {
+                color: var(--upload-admin-muted);
+                font-size: 0.9rem;
+            }
         }
 
         &:focus-visible {

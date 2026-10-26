@@ -1,4 +1,5 @@
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -53,8 +54,9 @@ public class TranslationReviewController(ArvidsonFotoCoreDbContext db, IApiCateg
             var rows = query.OrderBy(m => m.MenuCategoryId).Skip((model.Page - 1) * PageSize).Take(PageSize).ToList();
             foreach (var row in rows)
             {
-                model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed));
-                model.Items.Add(new(row.MenuCategoryId.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed));
+                var recordName = LocalizedText.Select(row.MenuDisplayName, row.MenuDisplayNameEn);
+                model.Items.Add(new(row.MenuCategoryId!.Value, "name", row.MenuDisplayName ?? "", row.MenuDisplayNameEn, row.MenuDisplayNameEnReviewed, recordName));
+                model.Items.Add(new(row.MenuCategoryId.Value, "url", row.MenuUrlSegment ?? "", row.MenuUrlSegmentEn, row.MenuUrlSegmentEnReviewed, recordName));
             }
         }
         else if (table == "images")
