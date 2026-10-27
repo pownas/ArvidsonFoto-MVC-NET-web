@@ -13,12 +13,14 @@ var _totalPages = -1;
 var _isLoadingMore = false;
 var _totalImages = 0;
 var _pageSize = 48;
+var _currentPage = 1;
 
 function initGalleryInfiniteScroll() {
     _galleryEl = document.getElementById('gallery');
     if (!_galleryEl) return;
 
     var currentPage = parseInt(_galleryEl.dataset.currentPage, 10) || -1;
+    _currentPage = currentPage > 0 ? currentPage : 1;
     _totalPages = parseInt(_galleryEl.dataset.totalPages, 10) || -1;
     _pageSize = parseInt(_galleryEl.dataset.pageSize, 10) || 48;
     _totalImages = parseInt(_galleryEl.dataset.totalImages, 10) || 0;
@@ -39,6 +41,17 @@ lightbox.on('slide_changed', function ({ prev, current }) {
     if (slideIndex >= totalSlides - 3) {
         loadNextGalleryPage();
     }
+});
+
+lightbox.on('close', function () {
+    if (!_galleryEl) return;
+
+    var currentPage = _currentPage + Math.floor(lightbox.getActiveSlideIndex() / _pageSize);
+    if (currentPage === _currentPage) return;
+
+    var pageUrl = new URL(window.location.href);
+    pageUrl.searchParams.set('sida', currentPage);
+    window.location.assign(pageUrl.toString());
 });
 
 async function loadNextGalleryPage() {
