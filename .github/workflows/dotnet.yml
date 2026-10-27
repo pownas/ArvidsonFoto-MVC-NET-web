@@ -18,11 +18,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 11 (RC2)
-      # Installs .NET 11 RC2 SDK
+    - name: Setup .NET SDK 11 (RC3)
+      # Installs .NET 11 RC3 SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '11.0.100-rc.2.26504.105'
+        dotnet-version: '11.0.100-rc.3.26522.148'
         cache: true
         # Provide explicit dependency files for cache key to avoid lock-file requirement error
         cache-dependency-path: |
@@ -52,10 +52,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK 11 (RC2)
+    - name: Setup .NET SDK 11 (RC3)
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '11.0.100-rc.2.26504.105'
+        dotnet-version: '11.0.100-rc.3.26522.148'
         cache: true
         cache-dependency-path: |
           **/packages.lock.json
