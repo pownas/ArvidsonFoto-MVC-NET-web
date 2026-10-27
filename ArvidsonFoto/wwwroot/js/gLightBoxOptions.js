@@ -79,7 +79,7 @@ async function loadNextGalleryPage() {
             data.images.forEach(function (img, idx) {
                 var imgNum = pageOffset + idx + 1;
                 if (!img.urlImage || !/^bilder\//i.test(img.urlImage) || img.urlImage.includes('..')) return;
-                var imgSrc = 'https://arvidsonfoto.se/' + img.urlImage.split('/').map(encodeURIComponent).join('/') + '.jpg';
+                var imgSrc = 'https://arvidsonfoto.se/' + img.urlImage + '.jpg';
                 var imgName = (img.urlImage || '').split('/').pop() + '.jpg';
                 var imgDate = img.dateImageTaken
                     ? img.dateImageTaken.substring(0, 10)
