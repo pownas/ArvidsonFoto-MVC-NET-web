@@ -172,6 +172,12 @@
   <data name="UploadAdmin.Statistics.Period" xml:space="preserve">
     <value>Tidsperiod</value>
   </data>
+  <data name="UploadAdmin.Statistics.CurrentMonth" xml:space="preserve">
+    <value>Innevarande månad</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last3Months" xml:space="preserve">
+    <value>Senaste 3 månaderna</value>
+  </data>
   <data name="UploadAdmin.Statistics.Last6Months" xml:space="preserve">
     <value>Senaste 6 månaderna</value>
   </data>

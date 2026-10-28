@@ -172,6 +172,12 @@
   <data name="UploadAdmin.Statistics.Period" xml:space="preserve">
     <value>Time period</value>
   </data>
+  <data name="UploadAdmin.Statistics.CurrentMonth" xml:space="preserve">
+    <value>Current month</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last3Months" xml:space="preserve">
+    <value>Last 3 months</value>
+  </data>
   <data name="UploadAdmin.Statistics.Last6Months" xml:space="preserve">
     <value>Last 6 months</value>
   </data>

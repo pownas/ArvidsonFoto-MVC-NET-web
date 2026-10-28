@@ -37,7 +37,8 @@ public class UploadAdminController(
     public IActionResult Index()
     {
         ViewData["Title"] = localizer["UploadAdmin.Controller.UploadAdmin"];
-        return View();
+        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        return View(BuildStatisticsViewModel("6m", currentMonth.AddMonths(-5), currentMonth, false));
     }
 
     [Route("/[controller]/NyBild")]
@@ -499,6 +500,12 @@ public class UploadAdminController(
         DateTime endDate = currentMonth;
         switch (period)
         {
+            case "month":
+                startDate = currentMonth;
+                break;
+            case "3m":
+                startDate = currentMonth.AddMonths(-2);
+                break;
             case "12m":
                 startDate = currentMonth.AddMonths(-11);
                 break;
@@ -531,9 +538,14 @@ public class UploadAdminController(
             startDate = endDate.AddMonths(-59);
         }
 
+        return View(BuildStatisticsViewModel(period ?? "6m", startDate, endDate, compare));
+    }
+
+    private StatisticsViewModel BuildStatisticsViewModel(string period, DateTime startDate, DateTime endDate, bool compare)
+    {
         var viewModel = new StatisticsViewModel
         {
-            Period = period ?? "6m",
+            Period = period,
             StartDate = startDate,
             EndDate = endDate,
             CompareWithPreviousYear = compare,
@@ -550,7 +562,7 @@ public class UploadAdminController(
             viewModel.PreviousYearCategoryViews = pageCounterService.GetMonthlyPageViewsChart(startDate.AddYears(-1), endDate.AddYears(-1), true);
         }
 
-        return View(viewModel);
+        return viewModel;
     }
 
     /// <summary>Laddar sidan "Läs loggboken" , men heter visa för att slippa ä i Läs</summary>
