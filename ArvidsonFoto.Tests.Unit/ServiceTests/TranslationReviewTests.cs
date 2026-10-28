@@ -17,7 +17,7 @@ public class TranslationReviewTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
 
     [Fact]
-    public void AdminListsFieldsIndividuallyAndFiltersReviewed()
+    public void AdminGroupsFieldsByRecordAndRetainsReviewedFieldForPendingRecord()
     {
         using var db = CreateContext();
         db.TblMenus.Add(new TblMenu
@@ -34,8 +34,10 @@ public class TranslationReviewTests
 
         var controller = new TranslationReviewController(db);
         var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index()).Model);
-        Assert.Single(pending.Items);
-        Assert.Equal("url", pending.Items[0].Field);
+        Assert.Equal(2, pending.Items.Count);
+        Assert.Equal(new[] { "name", "url" }, pending.Items.Select(item => item.Field));
+        Assert.True(pending.Items[0].Reviewed);
+        Assert.All(pending.Items, item => Assert.Equal("Bäver", item.RecordName));
         Assert.Equal(1, pending.PendingCount);
         Assert.Equal(2, pending.TotalCount);
 
@@ -87,7 +89,9 @@ public class TranslationReviewTests
             new TblImage { Id = 1, ImageId = 11, ImageUrlName = "A.jpg", ImageDescription = "Bäver", ImageDescriptionEn = null },
             new TblImage { Id = 2, ImageId = 12, ImageUrlName = "B.jpg", ImageDescription = "Utter", ImageDescriptionEn = "   " },
             new TblImage { Id = 3, ImageId = 13, ImageUrlName = "C.jpg", ImageDescription = "Älg", ImageDescriptionEn = "Moose" },
-            new TblImage { Id = 4, ImageId = 14, ImageUrlName = "D.jpg", ImageDescription = "Räv", ImageDescriptionEn = "Fox", ImageDescriptionEnReviewed = true });
+            new TblImage { Id = 4, ImageId = 14, ImageUrlName = "D.jpg", ImageDescription = "Räv", ImageDescriptionEn = "Fox", ImageDescriptionEnReviewed = true },
+            new TblImage { Id = 5, ImageId = 15, ImageUrlName = "E.jpg", ImageDescription = "", ImageDescriptionEn = null },
+            new TblImage { Id = 6, ImageId = 16, ImageUrlName = "F.jpg", ImageDescription = "   ", ImageDescriptionEn = null });
         db.SaveChanges();
         var controller = new TranslationReviewController(db);
 
@@ -97,6 +101,8 @@ public class TranslationReviewTests
         Assert.Equal(2, missing.MissingCount);
         Assert.Equal(3, missing.PendingCount);
         Assert.Equal(4, missing.TotalCount);
+        Assert.Equal(3, missing.AllPendingCount);
+        Assert.Equal(4, missing.AllFieldsCount);
 
         var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(
             controller.Index("images")).Model);
@@ -188,6 +194,8 @@ public class TranslationReviewTests
         var images = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index("images")).Model);
         Assert.Single(images.Items);
         Assert.Equal("Vatten", images.Items[0].Swedish);
+        var guestbook = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index("guestbook")).Model);
+        Assert.Equal(new[] { "name", "text" }, guestbook.Items.Select(item => item.Field));
         Assert.IsType<RedirectToActionResult>(controller.Save("images", 7, "description", "Water", "Vatten", "Water", true));
         Assert.True(image.ImageDescriptionEnReviewed);
 

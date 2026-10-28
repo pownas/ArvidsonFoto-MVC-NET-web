@@ -1,6 +1,6 @@
 namespace ArvidsonFoto.Core.ViewModels;
 
-public record TranslationReviewItem(int Id, string Field, string Swedish, string? English, bool Reviewed);
+public record TranslationReviewItem(int Id, string Field, string Swedish, string? English, bool Reviewed, string? RecordName = null);
 
 public class TranslationReviewViewModel
 {

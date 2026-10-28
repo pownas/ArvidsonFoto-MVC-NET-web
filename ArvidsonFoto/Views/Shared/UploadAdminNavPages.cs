@@ -15,6 +15,9 @@ public static class UploadAdminNavPages
     public static string NyKategori => "NyKategori";
     public static string? NyKategoriNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, NyKategori);
 
+    public static string RedigeraKategori => "RedigeraKategori";
+    public static string? RedigeraKategoriNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, RedigeraKategori);
+
     public static string RedigeraBilder => "RedigeraBilder";
     public static string? RedigeraBilderNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, RedigeraBilder);
 

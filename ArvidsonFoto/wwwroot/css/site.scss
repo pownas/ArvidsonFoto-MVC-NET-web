@@ -472,6 +472,55 @@ body {
     list-style-type: none;
 }
 
+.sitemap-category-tree {
+    padding-left: 0;
+
+    ul {
+        margin-left: 0.5rem;
+        padding-left: 1rem;
+        border-left: 1px solid #4b5866;
+    }
+
+    li {
+        margin-block: 0.2rem;
+    }
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2rem;
+        border-radius: 0.25rem;
+        color: #9cc8ff;
+
+        &:hover,
+        &:focus-visible {
+            color: #fff;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 0.15em;
+        }
+
+        &:focus-visible {
+            outline: 3px solid #9ac7ff;
+            outline-offset: 2px;
+        }
+    }
+
+    .sitemap-category-link {
+        padding: 0.2rem 0.35rem;
+        font-weight: 600;
+    }
+
+    .sitemap-category-level-0 > .sitemap-category-link { color: #b7d5ff; }
+    .sitemap-category-level-1 > .sitemap-category-link { color: #a9dce5; }
+    .sitemap-category-level-2 > .sitemap-category-link { color: #c5b8ff; }
+    .sitemap-category-level-3 > .sitemap-category-link { color: #f3c8e8; }
+
+    .sitemap-page-icon {
+        color: #d0d8e0;
+    }
+}
+
 /* Footer-xs fix på Container */
 @media (max-width: 1200px) {
     .overridden-footer {
@@ -812,3 +861,543 @@ body {
     }
 }
 /* -------- End Info Pages Modern Design -------- */
+
+/* -------- Upload administration -------- */
+.upload-admin-page {
+    --upload-admin-panel: #17191c;
+    --upload-admin-border: #383d42;
+    --upload-admin-muted: #b8c0c8;
+    --upload-admin-focus: #9ac7ff;
+
+    #page-breadcrumbs {
+        margin-top: 1rem;
+    }
+
+    h1,
+    h2.offset-md-4 {
+        margin: 0 0 1.25rem;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    h2.offset-md-4 {
+        margin-left: 0;
+    }
+
+    .upload-image-link-content > p {
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-image-category-summary {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(11rem, 40%);
+        align-items: center;
+        gap: 1rem;
+        min-height: 8.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .upload-image-category-summary h3 {
+        margin: 0;
+        font-size: clamp(1.25rem, 2vw, 1.75rem);
+    }
+
+    .upload-image-category-summary .upload-category-preview {
+        margin: 0;
+        text-align: center;
+    }
+
+    .upload-image-category-summary .upload-category-preview img {
+        width: 100%;
+        height: 8rem;
+        object-fit: contain;
+    }
+
+    .upload-image-category-summary .upload-category-preview figcaption {
+        margin-top: 0.2rem;
+        font-size: 0.85rem;
+    }
+
+    .upload-image-link-content .upload-admin-form {
+        max-width: none;
+        padding: 0.75rem 1rem;
+    }
+
+    .upload-image-date-game-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .upload-image-date-game-row .form-check {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .upload-image-date-game-row .form-check-input {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    .upload-image-date-game-row .form-check-label {
+        margin: 0;
+    }
+
+    .upload-image-link-submit {
+        margin-top: 0.5rem;
+    }
+
+    .row > nav.nav-pills {
+        display: block;
+    }
+
+    .row > nav.nav-pills > ul {
+        width: 100%;
+        margin: 0;
+        list-style: none;
+    }
+
+    .upload-admin-navigation {
+        display: block;
+    }
+
+    .upload-admin-navigation > a,
+    .upload-admin-navigation > ul > li > a {
+        display: flex;
+        align-items: center;
+    }
+
+    .upload-admin-navigation > ul {
+        width: 100%;
+        padding: 0;
+        list-style: none;
+    }
+
+    .nav-pills .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-height: 2.75rem;
+        margin-bottom: 0.25rem;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+        color: #b7d5ff;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            border-color: var(--upload-admin-border);
+            background-color: #20252b;
+            color: #fff;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--upload-admin-focus);
+            outline-offset: 2px;
+        }
+
+        &.active {
+            border-color: #3788df;
+            background-color: #1768b5;
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+
+    .card,
+    .upload-admin-form,
+    .upload-review-summary {
+        border: 1px solid var(--upload-admin-border);
+        border-radius: 0.65rem;
+        background-color: var(--upload-admin-panel);
+        color: #f1f3f5;
+    }
+
+    .upload-review-summary {
+        margin-bottom: 1rem;
+        padding: 0.85rem 1rem;
+        border-left: 4px solid #45c5d0;
+    }
+
+    .upload-review-summary p {
+        margin-bottom: 0.35rem;
+    }
+
+    .upload-review-tabs {
+        gap: 0.35rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid var(--upload-admin-border);
+    }
+
+    .upload-review-search,
+    .upload-admin-form {
+        max-width: 48rem;
+        padding: 1rem;
+    }
+
+    .upload-review-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 0;
+        height: 100%;
+    }
+
+    .upload-review-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .upload-review-fields--single {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 48rem;
+    }
+
+    .upload-review-record {
+        padding: 0.85rem;
+        border: 1px solid var(--upload-admin-border);
+        border-left: 4px solid #45c5d0;
+        border-radius: 0.65rem;
+        background-color: #121619;
+    }
+
+    .upload-review-record__name {
+        color: #b7d5ff;
+    }
+
+    .upload-review-card .form-control {
+        width: 100%;
+    }
+
+    .upload-review-card textarea.form-control {
+        min-height: 8rem;
+    }
+
+    .category-editor {
+        max-width: 60rem;
+    }
+
+    .category-filter {
+        max-width: 38rem;
+    }
+
+    .category-tree {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .category-tree__item {
+        display: grid;
+        grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 0.35rem;
+        padding: 0.65rem;
+        padding-left: calc(0.65rem + var(--category-depth) * 1.1rem);
+        border: 1px solid var(--upload-admin-border);
+        border-left: 3px solid var(--category-accent, #55718c);
+        border-radius: 0.45rem;
+        background-color: var(--upload-admin-panel);
+
+        &[hidden] {
+            display: none;
+        }
+
+        &.is-selected {
+            border-color: #6ba9e8;
+            border-left-color: var(--category-accent, #9ac7ff);
+            background-color: #1a2c3c;
+        }
+    }
+
+    .category-tree__item--level-0 { --category-accent: #b7d5ff; }
+    .category-tree__item--level-1 { --category-accent: #a9dce5; }
+    .category-tree__item--level-2 { --category-accent: #c5b8ff; }
+    .category-tree__item--level-3 { --category-accent: #f3c8e8; }
+
+    .category-tree__icon {
+        color: var(--category-accent, #b7d5ff);
+        font-size: 1.15rem;
+    }
+
+    .category-tree__level {
+        min-width: 4.25rem;
+        color: var(--category-accent, #b7d5ff);
+        font-size: 0.8rem;
+    }
+
+    .category-tree__names {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .category-tree__secondary {
+        color: var(--upload-admin-muted);
+    }
+
+    .category-tree__game-status {
+        display: inline-flex;
+        align-items: center;
+        justify-self: start;
+        gap: 0.35rem;
+        padding: 0.25rem 0.55rem;
+        border: 1px solid;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+
+        &--enabled {
+            border-color: #2c805c;
+            background-color: #174a34;
+            color: #d8ffea;
+        }
+
+        &--disabled {
+            border-color: #9b3c4d;
+            background-color: #4a2028;
+            color: #ffe3e7;
+        }
+    }
+
+    .category-tree__edit {
+        color: #b7d5ff;
+
+        &:hover,
+        &:focus-visible {
+            border-color: #9ac7ff;
+            background-color: #1768b5;
+            color: #fff;
+        }
+    }
+
+    .upload-category-choice {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        width: min(100%, 32rem);
+        min-height: 3rem;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid #8ac2ff;
+        border-radius: 0.5rem;
+        background-color: #12446f;
+        color: #fff;
+        text-align: left;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            background-color: #1a5d95;
+            color: #fff;
+        }
+
+        .upload-category-preview {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            max-width: 100%;
+            margin: 0 0 1rem;
+            padding: 0.65rem;
+            border: 1px solid var(--upload-admin-border);
+            border-radius: 0.5rem;
+            background-color: var(--upload-admin-panel);
+
+            img {
+                display: block;
+                width: auto;
+                max-width: min(100%, 20rem);
+                max-height: 14rem;
+                border-radius: 0.3rem;
+                object-fit: contain;
+            }
+
+            figcaption {
+                color: var(--upload-admin-muted);
+                font-size: 0.9rem;
+            }
+        }
+
+        &:focus-visible {
+            outline: 3px solid #c1e0ff;
+            outline-offset: 2px;
+        }
+    }
+
+    .form-label,
+    label {
+        color: #f1f3f5;
+        font-weight: 600;
+    }
+
+    .form-text,
+    .text-muted {
+        color: var(--upload-admin-muted) !important;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 2.75rem;
+        border-color: #626a72;
+        background-color: #101214;
+        color: #f5f7f9;
+
+        &:focus {
+            border-color: var(--upload-admin-focus);
+            box-shadow: 0 0 0 0.2rem rgba(154, 199, 255, 0.25);
+        }
+    }
+
+    input[type="checkbox"].form-check-input {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .table-responsive {
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--upload-admin-border);
+        border-radius: 0.5rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table > :not(caption) > * > * {
+        border-color: var(--upload-admin-border);
+    }
+
+    .upload-admin-chart {
+        position: relative;
+        min-height: 19rem;
+        height: min(55vh, 28rem);
+    }
+
+    .admin-log-entry {
+        margin-bottom: 0.35rem;
+        padding: 0.55rem 0.75rem;
+        border-left: 4px solid transparent;
+        border-radius: 0.25rem;
+        background-color: #202428;
+        color: #f1f3f5;
+    }
+
+    .admin-log-entry--info {
+        border-left-color: #45c5d0;
+        background-color: #12363d;
+        color: #d5f7fa;
+    }
+
+    .admin-log-entry--warning {
+        border-left-color: #ffd166;
+        background-color: #493900;
+        color: #fff3c4;
+    }
+
+    .admin-log-entry--error {
+        border-left-color: #ff8290;
+        background-color: #4a2028;
+        color: #ffe3e7;
+    }
+
+    .badge.bg-warning.text-dark {
+        border: 1px solid #b58b00;
+        background-color: #493900 !important;
+        color: #fff3c4 !important;
+    }
+
+    .alert-warning {
+        border-color: #8a6d00;
+        background-color: #493900;
+        color: #fff3c4;
+    }
+
+    .alert-success,
+    .bg-success.text-dark {
+        border-color: #2c805c;
+        background-color: #174a34 !important;
+        color: #d8ffea !important;
+    }
+
+    .alert-danger,
+    .bg-danger.text-light {
+        border-color: #9b3c4d;
+        background-color: #4a2028 !important;
+        color: #ffe3e7 !important;
+    }
+
+    .alert-info {
+        border-color: #2d7c86;
+        background-color: #12363d;
+        color: #d5f7fa;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .upload-admin-page {
+        .upload-image-category-summary {
+            grid-template-columns: minmax(0, 1fr) minmax(9rem, 35%);
+            gap: 0.5rem;
+        }
+
+        .row > nav.nav-pills {
+            margin-bottom: 1rem;
+        }
+
+        .upload-admin-chart {
+            min-height: 16rem;
+            height: 18rem;
+        }
+
+        .table {
+            min-width: 34rem;
+        }
+
+        .btn {
+            white-space: normal;
+        }
+
+        .category-tree__item {
+            grid-template-columns: auto auto minmax(0, 1fr);
+            gap: 0.45rem;
+        }
+
+        .category-tree__edit {
+            grid-column: 3;
+            justify-self: start;
+        }
+
+        .category-tree__game-status {
+            grid-column: 3;
+        }
+
+        .category-tree__names {
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .upload-review-fields {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    .upload-admin-page {
+        .upload-image-category-summary,
+        .upload-image-date-game-row {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .upload-image-category-summary .upload-category-preview img {
+            height: 7rem;
+        }
+    }
+}
+/* -------- End Upload administration -------- */

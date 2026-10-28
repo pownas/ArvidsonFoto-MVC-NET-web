@@ -31,6 +31,6 @@
   <data name="Admin.Image.Form.Label.Filename" xml:space="preserve"><value>Filnamn</value></data>
   <data name="Admin.Image.Form.Label.Date" xml:space="preserve"><value>Fotodatum</value></data>
   <data name="Admin.Image.Form.Label.Description" xml:space="preserve"><value>Beskrivning</value></data>
-  <data name="Admin.Image.Form.Label.DescriptionEn" xml:space="preserve"><value>Description (English)</value></data>
+  <data name="Admin.Image.Form.Label.DescriptionEn" xml:space="preserve"><value>Beskrivning (engelska)</value></data>
   <data name="Admin.Facebook.Form.Label.Message" xml:space="preserve"><value>Meddelande</value></data>
 </root>

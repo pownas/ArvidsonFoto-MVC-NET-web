@@ -507,6 +507,8 @@ public class GuestbookIntegrationTests
         var document = await HtmlHelpers.GetDocumentAsync(response);
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.IsTrue(document.Body!.TextContent.Contains("Explore all pages and photo categories"));
+        Assert.IsNotNull(document.QuerySelector(".sitemap-category-level-0 > .sitemap-category-link > .bi-folder2-open"));
+        Assert.IsNotNull(document.QuerySelector(".sitemap-category-level-1 > .sitemap-category-link > .bi-folder"));
 
         foreach (var path in new[] { "/images/birds/woodpeckers/eurasian-three-toed-woodpecker",
                      "/latest/photographed", "/information/contact", "/information/guestbook" })
