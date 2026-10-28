@@ -203,7 +203,9 @@ public class ImageApiController(ILogger<ImageApiController> logger,
     /// Retrieves a specified number of random images from the database.
     /// </summary>
     /// <remarks>This is a public endpoint that does not require authentication. Use this method to fetch a
-    /// random subset of images for display or processing.</remarks>
+    /// random subset of images for display or processing. CategoryIsGameSelectable includes the category's
+    /// ancestors; IsGameSelectable requires both the image and its category to allow games.
+    /// Images unavailable for games are still included in this response.</remarks>
     /// <param name="count">The number of random images to retrieve. Must be a positive integer.</param>
     /// <returns>A list of <see cref="ImageDto"/> objects representing the randomly selected images. If no images are available,
     /// the list will be empty.</returns>
