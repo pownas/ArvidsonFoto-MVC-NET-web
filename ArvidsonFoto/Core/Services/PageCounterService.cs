@@ -229,7 +229,9 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
             .Where(p => monthKeys.Contains(p.MonthViewed) && p.PicturePage == picturePage)
             .ToList();
         return counters
-            .GroupBy(p => picturePage ? p.CategoryId.ToString(CultureInfo.InvariantCulture) : p.PageName)
+            .GroupBy(p => picturePage && p.CategoryId != 0
+                ? $"id:{p.CategoryId.ToString(CultureInfo.InvariantCulture)}"
+                : $"name:{p.PageName}")
             .Select(group =>
             {
                 var latest = group.OrderByDescending(p => p.LastShowDate).First();

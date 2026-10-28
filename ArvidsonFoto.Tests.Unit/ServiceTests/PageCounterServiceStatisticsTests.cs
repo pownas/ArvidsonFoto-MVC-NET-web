@@ -19,7 +19,9 @@ public class PageCounterServiceStatisticsTests
             Counter("Info", 3, "2025-02"),
             Counter("Fåglar", 2, "2025-01", categoryId: 10, picturePage: true),
             Counter("Fåglar", 8, "2025-02", categoryId: 10, picturePage: true),
-            Counter("Däggdjur", 1, "2025-01", categoryId: 20, picturePage: true));
+            Counter("Däggdjur", 1, "2025-01", categoryId: 20, picturePage: true),
+            Counter("Kategori: Fåglar", 3, "2025-01", picturePage: true),
+            Counter("Kategori: Älg", 4, "2025-01", picturePage: true));
         db.SaveChanges();
 
         var service = new PageCounterService(db);
@@ -37,6 +39,9 @@ public class PageCounterServiceStatisticsTests
         Assert.Equal(3, Assert.Single(pages, page => page.PageName == "Info").PageViews);
         Assert.Equal(10, Assert.Single(categories, category => category.CategoryId == 10).PageViews);
         Assert.Equal(1, Assert.Single(categories, category => category.CategoryId == 20).PageViews);
+        Assert.Equal(3, Assert.Single(categories, category => category.PageName == "Kategori: Fåglar").PageViews);
+        Assert.Equal(4, Assert.Single(categories, category => category.PageName == "Kategori: Älg").PageViews);
+        Assert.Equal(4, categories.Count);
         Assert.Empty(service.GetPageCountsInPeriod(new DateTime(2025, 2, 1), new DateTime(2025, 1, 1), false));
     }
 
