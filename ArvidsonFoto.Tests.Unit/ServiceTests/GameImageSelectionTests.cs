@@ -195,6 +195,7 @@ public class GameImageSelectionTests
         var birdsOnly = imageService.GetGameSelectableImages(20, 1);
         var disabledCategory = imageService.GetGameSelectableImages(20, 3);
         var disabledDescendantCategory = imageService.GetGameSelectableImages(20, 4);
+        var randomImages = imageService.GetRandomNumberOfImages(20);
         var regularCategoryImages = imageService.GetImagesByCategoryID(5);
         var paginatedCategoryImages = imageService.GetImagesByCategoryIDPaginated(5, 1, 48);
 
@@ -202,6 +203,16 @@ public class GameImageSelectionTests
         Assert.Equal([100], birdsOnly.Select(image => image.ImageId));
         Assert.Empty(disabledCategory);
         Assert.Empty(disabledDescendantCategory);
+        var disabledCategoryImage = Assert.Single(randomImages.Where(image => image.ImageId == 102));
+        Assert.False(disabledCategoryImage.IsGameSelectable);
+        Assert.False(disabledCategoryImage.CategoryIsGameSelectable);
+        Assert.False(Assert.Single(randomImages.Where(image => image.ImageId == 103)).CategoryIsGameSelectable);
+        var disabledImage = Assert.Single(randomImages.Where(image => image.ImageId == 101));
+        Assert.False(disabledImage.IsGameSelectable);
+        Assert.True(disabledImage.CategoryIsGameSelectable);
+        var disabledCategoryJson = JsonSerializer.Serialize(disabledCategoryImage, JsonSerializerOptions.Web);
+        Assert.Contains("\"isGameSelectable\":false", disabledCategoryJson);
+        Assert.Contains("\"categoryIsGameSelectable\":false", disabledCategoryJson);
         Assert.False(Assert.Single(regularCategoryImages).IsGameSelectable);
         Assert.False(Assert.Single(paginatedCategoryImages).IsGameSelectable);
         Assert.Contains("\"isGameSelectable\":false", JsonSerializer.Serialize(Assert.Single(regularCategoryImages), JsonSerializerOptions.Web));
