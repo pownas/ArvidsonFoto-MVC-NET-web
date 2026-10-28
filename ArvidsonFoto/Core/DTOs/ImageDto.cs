@@ -50,8 +50,11 @@ public class ImageDto()
     /// <example>13</example>
     public int CategoryId { get; set; } = -1; // Default value when not set
 
+    /// <summary> Om kategorin och dess överordnade kategorier tillåter spel. </summary>
+    public bool CategoryIsGameSelectable { get; set; }
+
+    /// <summary> Om både bilden och dess kategori tillåter spel. </summary>
     public bool IsGameSelectable { get; set; } = true;
-    public bool IsCategoryGameSelectable { get; set; }
 
     /// <summary>
     /// Skapar en tom ImageDto med alla properties initialiserade
