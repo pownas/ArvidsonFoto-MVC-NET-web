@@ -790,8 +790,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             var imageDto = imageDtos[index];
             imageDto.UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(
                 BuildPhysicalCategoryPath(image.ImageCategoryId, categories), image.ImageUrlName);
-            imageDto.IsGameSelectable = image.IsGameSelectable
-                && IsCategoryTreeGameSelectable(image.ImageCategoryId, categories);
+            imageDto.IsCategoryGameSelectable = IsCategoryTreeGameSelectable(image.ImageCategoryId, categories);
 
             if (image.ImageCategoryId.HasValue
                 && categories.TryGetValue(image.ImageCategoryId.Value, out var category))
