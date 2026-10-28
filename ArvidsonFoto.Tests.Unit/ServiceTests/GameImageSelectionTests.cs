@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Core.Data;
+﻿using ArvidsonFoto.Controllers.ApiControllers;
+using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,109 @@ namespace ArvidsonFoto.Tests.Unit.ServiceTests;
 
 public class GameImageSelectionTests
 {
+    [Theory]
+    [InlineData(false, true, true, true)]
+    [InlineData(false, true, true, false)]
+    [InlineData(false, false, true, true)]
+    [InlineData(false, true, false, true)]
+    [InlineData(false, false, false, false)]
+    [InlineData(true, true, true, true)]
+    [InlineData(true, true, true, false)]
+    [InlineData(true, false, true, true)]
+    [InlineData(true, true, false, true)]
+    [InlineData(true, false, false, false)]
+    public void RandomEndpoint_ExposesCategoryAndEffectiveImageGameSelection(
+        bool newGalleryEnabled, bool categorySelectable, bool parentSelectable, bool imageSelectable)
+    {
+        var options = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        using var dbContext = new ArvidsonFotoCoreDbContext(options);
+        using var memoryCache = new MemoryCache(new MemoryCacheOptions());
+        dbContext.TblMenus.AddRange(
+            new TblMenu
+            {
+                Id = 1, MenuCategoryId = 10, MenuParentCategoryId = 0,
+                MenuDisplayName = "Fåglar", MenuUrlSegment = "faglar",
+                IsGameSelectable = parentSelectable
+            },
+            new TblMenu
+            {
+                Id = 2, MenuCategoryId = 11, MenuParentCategoryId = 10,
+                MenuDisplayName = "Blåmes", MenuDisplayNameEn = "Blue tit", MenuUrlSegment = "blames",
+                IsGameSelectable = categorySelectable
+            });
+        dbContext.TblImages.Add(new TblImage
+        {
+            Id = 1, ImageId = 100, ImageCategoryId = 11, ImageUrlName = "bird",
+            IsGameSelectable = imageSelectable
+        });
+        dbContext.SaveChanges();
+
+        var categoryService = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, dbContext, memoryCache);
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["FeatureFlags:NewGalleryCategory:Enabled"] = newGalleryEnabled.ToString()
+            })
+            .Build();
+        var imageService = new ApiImageService(
+            NullLogger<ApiImageService>.Instance, dbContext, configuration, categoryService);
+        var controller = new ImageApiController(
+            NullLogger<ImageApiController>.Instance, imageService, dbContext, categoryService);
+
+        var image = Assert.Single(controller.GetRandomNumberOfImages(1));
+        var expectedCategorySelection = categorySelectable && parentSelectable;
+        Assert.Equal(expectedCategorySelection, image.CategoryIsGameSelectable);
+        Assert.Equal(imageSelectable && expectedCategorySelection, image.IsGameSelectable);
+        Assert.Equal("Blåmes", image.CategoryNameSv);
+        Assert.Equal("Blue tit", image.CategoryNameEn);
+
+        using var json = JsonDocument.Parse(JsonSerializer.Serialize(image, JsonSerializerOptions.Web));
+        Assert.Equal(expectedCategorySelection, json.RootElement.GetProperty("categoryIsGameSelectable").GetBoolean());
+        Assert.Equal(image.IsGameSelectable, json.RootElement.GetProperty("isGameSelectable").GetBoolean());
+        Assert.False(json.RootElement.TryGetProperty("name", out _));
+        Assert.Equal(imageSelectable, dbContext.TblImages.AsNoTracking().Single().IsGameSelectable);
+        Assert.Equal(categorySelectable, categoryService.GetById(11).IsGameSelectable);
+
+        var gameImages = controller.GetGameSelectableImages(1);
+        if (image.IsGameSelectable)
+        {
+            Assert.True(Assert.Single(gameImages).CategoryIsGameSelectable);
+        }
+        else
+        {
+            Assert.Empty(gameImages);
+        }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData(0)]
+    [InlineData(999)]
+    public void RandomImages_WithoutExistingCategory_AreUnavailableForGames(int? categoryId)
+    {
+        var options = new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        using var dbContext = new ArvidsonFotoCoreDbContext(options);
+        using var memoryCache = new MemoryCache(new MemoryCacheOptions());
+        dbContext.TblImages.Add(new TblImage
+        {
+            Id = 1, ImageId = 100, ImageCategoryId = categoryId, ImageUrlName = "orphan"
+        });
+        dbContext.SaveChanges();
+        var categoryService = new ApiCategoryService(NullLogger<ApiCategoryService>.Instance, dbContext, memoryCache);
+        var imageService = new ApiImageService(
+            NullLogger<ApiImageService>.Instance, dbContext, new ConfigurationBuilder().Build(), categoryService);
+
+        var image = Assert.Single(imageService.GetRandomNumberOfImages(1));
+
+        Assert.False(image.CategoryIsGameSelectable);
+        Assert.False(image.IsGameSelectable);
+        Assert.True(dbContext.TblImages.AsNoTracking().Single().IsGameSelectable);
+    }
+
     [Fact]
     public void SelectionFlags_DefaultToTrue()
     {
