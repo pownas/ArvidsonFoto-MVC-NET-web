@@ -1,5 +1,6 @@
 ﻿var lightbox = GLightbox({
-    moreLength: 0 //Döljer texten: "See more" i mobil vyn. Alternativt kan man sätta den till x antal tecken... Vill man ändra See More, så är det "moreText: "Se mer...""
+    moreLength: 0, //Döljer texten: "See more" i mobil vyn. Alternativt kan man sätta den till x antal tecken... Vill man ändra See More, så är det "moreText: "Se mer...""
+    touchNavigation: true
 });
 
 lightbox.on('open', () => {
@@ -14,6 +15,7 @@ var _isLoadingMore = false;
 var _totalImages = 0;
 var _pageSize = 48;
 var _currentPage = 1;
+var _activeGalleryPage = 1;
 
 function initGalleryInfiniteScroll() {
     _galleryEl = document.getElementById('gallery');
@@ -21,6 +23,7 @@ function initGalleryInfiniteScroll() {
 
     var currentPage = parseInt(_galleryEl.dataset.currentPage, 10) || -1;
     _currentPage = currentPage > 0 ? currentPage : 1;
+    _activeGalleryPage = _currentPage;
     _totalPages = parseInt(_galleryEl.dataset.totalPages, 10) || -1;
     _pageSize = parseInt(_galleryEl.dataset.pageSize, 10) || 48;
     _totalImages = parseInt(_galleryEl.dataset.totalImages, 10) || 0;
@@ -32,6 +35,10 @@ function initGalleryInfiniteScroll() {
 }
 
 lightbox.on('slide_changed', function ({ prev, current }) {
+    if (_galleryEl) {
+        _activeGalleryPage = _currentPage + Math.floor(current.slideIndex / _pageSize);
+    }
+
     if (!_galleryEl || _isLoadingMore || _nextPageToLoad < 0 || _nextPageToLoad > _totalPages) return;
 
     var slideIndex = current.slideIndex;
@@ -46,11 +53,10 @@ lightbox.on('slide_changed', function ({ prev, current }) {
 lightbox.on('close', function () {
     if (!_galleryEl) return;
 
-    var currentPage = _currentPage + Math.floor(lightbox.getActiveSlideIndex() / _pageSize);
-    if (currentPage === _currentPage) return;
+    if (_activeGalleryPage === _currentPage) return;
 
     var pageUrl = new URL(window.location.href);
-    pageUrl.searchParams.set('sida', currentPage);
+    pageUrl.searchParams.set('sida', _activeGalleryPage);
     window.location.assign(pageUrl.toString());
 });
 
