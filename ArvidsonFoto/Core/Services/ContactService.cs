@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 
@@ -17,6 +18,7 @@ public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
     /// <returns>The ID of the saved contact record</returns>
     public int SaveContactSubmission(TblKontakt kontakt)
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("contact.save");
         try
         {
             _ = _context.TblKontakt.Add(kontakt);
@@ -27,6 +29,7 @@ public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
         }
         catch (Exception ex)
         {
+            AppTelemetry.RecordError(activity, ex);
             Log.Error(ex, "Error saving contact form to database");
             throw; // Re-throw to let controller handle
         }

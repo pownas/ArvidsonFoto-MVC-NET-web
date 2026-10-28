@@ -1,4 +1,10 @@
 ﻿using ArvidsonFoto.Tests.Integration.Helpers;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Net.Sockets;
+using System.Text;
 
 namespace ArvidsonFoto.Tests.Integration.Controllers;
 
@@ -11,6 +17,11 @@ public class GuestbookIntegrationTests
 {
     private static ArvidsonFotoWebApplicationFactory? _factory;
     private static HttpClient? _client;
+    private static readonly string[] ExpectedCategorySpanTags =
+    [
+        "arvidsonfoto.cache.hit",
+        "arvidsonfoto.result.count"
+    ];
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
@@ -27,6 +38,129 @@ public class GuestbookIntegrationTests
     {
         _client?.Dispose();
         _factory?.Dispose();
+    }
+
+    [TestMethod]
+    public async Task GetGameCategories_ContinuesW3CTraceContextIntoServiceSpan()
+    {
+        using var factory = new KestrelWebApplicationFactory();
+        using var bootstrapClient = factory.CreateClient();
+        var endpoint = bootstrapClient.BaseAddress!;
+
+        var activities = new ConcurrentBag<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = _ => true,
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = activities.Add
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        var traceId = ActivityTraceId.CreateRandom();
+        var remoteParentSpanId = ActivitySpanId.CreateRandom();
+        using var tcpClient = new TcpClient();
+        await tcpClient.ConnectAsync(endpoint.Host, endpoint.Port);
+        using var stream = tcpClient.GetStream();
+        var request = Encoding.ASCII.GetBytes(
+            $"GET /api/game/categories HTTP/1.1\r\nHost: {endpoint.Authority}\r\ntraceparent: 00-{traceId.ToHexString()}-{remoteParentSpanId.ToHexString()}-01\r\nConnection: close\r\n\r\n");
+        await stream.WriteAsync(request);
+        using var reader = new StreamReader(stream, Encoding.ASCII, leaveOpen: true);
+        var response = await reader.ReadToEndAsync();
+
+        Assert.IsTrue(response.StartsWith("HTTP/1.1 200", StringComparison.Ordinal), response);
+        var serverActivity = activities.SingleOrDefault(activity =>
+            activity.TraceId == traceId
+            && activity.ParentSpanId == remoteParentSpanId)
+            ?? throw new AssertFailedException(
+                $"The incoming W3C context should parent a server span. Observed: {string.Join(", ", activities.Select(activity => $"{activity.Source.Name}:{activity.OperationName}:{activity.TraceId}"))}");
+
+        var categoryActivity = activities.SingleOrDefault(activity =>
+            activity.Source.Name == "ArvidsonFoto"
+            && activity.OperationName == "category.list"
+            && activity.TraceId == traceId)
+            ?? throw new AssertFailedException("The category service span should remain in the incoming trace.");
+        Assert.AreEqual(serverActivity.SpanId, categoryActivity.ParentSpanId);
+        CollectionAssert.AreEquivalent(
+            ExpectedCategorySpanTags,
+            categoryActivity.TagObjects.Select(tag => tag.Key).ToArray());
+    }
+
+    [TestMethod]
+    public async Task RelationalDatabaseCommands_CreateChildSpansWithoutParameterValues()
+    {
+        using var factory = new KestrelWebApplicationFactory();
+        using var bootstrapClient = factory.CreateClient();
+        var activities = new ConcurrentBag<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source =>
+                source.Name.Contains("EntityFrameworkCore", StringComparison.Ordinal),
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = activities.Add
+        };
+        ActivitySource.AddActivityListener(listener);
+
+        using var applicationSource = new ActivitySource("ArvidsonFoto");
+        using var applicationActivity = applicationSource.StartActivity("database.trace-test")
+            ?? throw new AssertFailedException("The application trace should be recorded.");
+        const string sensitiveValue = "private-test-value";
+
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<DatabaseTraceTestContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var database = new DatabaseTraceTestContext(options);
+        await database.Database.EnsureCreatedAsync();
+        database.Records.Add(new DatabaseTraceTestRecord { Value = sensitiveValue });
+        _ = await database.SaveChangesAsync();
+        Assert.AreEqual(1, await database.Records.CountAsync(record => record.Value == sensitiveValue));
+
+        var commandActivities = activities
+            .Where(activity =>
+                activity.Source.Name.Contains("EntityFrameworkCore", StringComparison.Ordinal)
+                && activity.TraceId == applicationActivity.TraceId)
+            .ToArray();
+        Assert.IsTrue(commandActivities.Length >= 3, "Schema creation, insert, and query should each produce command spans.");
+        Assert.IsTrue(commandActivities.All(activity =>
+        {
+            for (var parent = activity.Parent; parent is not null; parent = parent.Parent)
+            {
+                if (parent.SpanId == applicationActivity.SpanId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }));
+        Assert.IsTrue(commandActivities.Any(activity =>
+            activity.TagObjects.Any(tag => tag.Key is "db.statement" or "db.query.text")));
+        Assert.IsFalse(commandActivities
+            .SelectMany(activity => activity.TagObjects)
+            .Any(tag => tag.Value?.ToString()?.Contains(sensitiveValue, StringComparison.Ordinal) == true));
+    }
+
+    private sealed class KestrelWebApplicationFactory : ArvidsonFotoWebApplicationFactory
+    {
+        public KestrelWebApplicationFactory()
+        {
+            UseKestrel(0);
+        }
+    }
+
+    private sealed class DatabaseTraceTestContext(DbContextOptions<DatabaseTraceTestContext> options)
+        : DbContext(options)
+    {
+        public DbSet<DatabaseTraceTestRecord> Records => Set<DatabaseTraceTestRecord>();
+    }
+
+    private sealed class DatabaseTraceTestRecord
+    {
+        public int Id { get; set; }
+
+        public string Value { get; set; } = string.Empty;
     }
 
     [TestMethod]
