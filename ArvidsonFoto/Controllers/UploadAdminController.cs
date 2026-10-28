@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace ArvidsonFoto.Controllers;
 
@@ -24,7 +25,8 @@ public class UploadAdminController(
     ILogger<ApiCategoryService> categoryLogger,
     IConfiguration configuration,
     IMemoryCache memoryCache,
-    IStringLocalizer<UploadAdminResource> localizer) : Controller
+    IStringLocalizer<UploadAdminResource> localizer,
+    IPageCounterService pageCounterService) : Controller
 {
     internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
     internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
@@ -487,10 +489,68 @@ public class UploadAdminController(
         return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId });
     }
 
-    public IActionResult Statistik()
+    public IActionResult Statistik(string? period, string? fromMonth, string? toMonth, bool compare = false)
     {
         ViewData["Title"] = localizer["Admin.StatisticsTitle"];
-        return View();
+        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        period = period?.ToLowerInvariant();
+
+        DateTime startDate;
+        DateTime endDate = currentMonth;
+        switch (period)
+        {
+            case "12m":
+                startDate = currentMonth.AddMonths(-11);
+                break;
+            case "year":
+                startDate = new DateTime(currentMonth.Year, 1, 1);
+                break;
+            case "custom" when DateTime.TryParseExact(fromMonth, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var from)
+                              && DateTime.TryParseExact(toMonth, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var to)
+                              && from <= to
+                              && from <= currentMonth:
+                startDate = new DateTime(from.Year, from.Month, 1);
+                endDate = new DateTime(to.Year, to.Month, 1) > currentMonth
+                    ? currentMonth
+                    : new DateTime(to.Year, to.Month, 1);
+                if (startDate > endDate)
+                {
+                    period = "6m";
+                    startDate = currentMonth.AddMonths(-5);
+                    endDate = currentMonth;
+                }
+                break;
+            default:
+                period = "6m";
+                startDate = currentMonth.AddMonths(-5);
+                break;
+        }
+
+        if (((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month >= 60)
+        {
+            startDate = endDate.AddMonths(-59);
+        }
+
+        var viewModel = new StatisticsViewModel
+        {
+            Period = period ?? "6m",
+            StartDate = startDate,
+            EndDate = endDate,
+            CompareWithPreviousYear = compare,
+            MonthlyPageViews = pageCounterService.GetMonthlyPageViewsChart(startDate, endDate, false),
+            MonthlyCategoryViews = pageCounterService.GetMonthlyPageViewsChart(startDate, endDate, true),
+            PageViews = pageCounterService.GetPageCountsInPeriod(startDate, endDate, false),
+            CategoryViews = pageCounterService.GetPageCountsInPeriod(startDate, endDate, true),
+            AllTimePageViews = pageCounterService.GetAllPageCountsGroupedByPageCount()
+        };
+
+        if (compare)
+        {
+            viewModel.PreviousYearPageViews = pageCounterService.GetMonthlyPageViewsChart(startDate.AddYears(-1), endDate.AddYears(-1), false);
+            viewModel.PreviousYearCategoryViews = pageCounterService.GetMonthlyPageViewsChart(startDate.AddYears(-1), endDate.AddYears(-1), true);
+        }
+
+        return View(viewModel);
     }
 
     /// <summary>Laddar sidan "Läs loggboken" , men heter visa för att slippa ä i Läs</summary>

@@ -169,6 +169,54 @@
   <data name="UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months" xml:space="preserve">
     <value>Sidvisningar senaste 6 månaderna</value>
   </data>
+  <data name="UploadAdmin.Statistics.Period" xml:space="preserve">
+    <value>Tidsperiod</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last6Months" xml:space="preserve">
+    <value>Senaste 6 månaderna</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last12Months" xml:space="preserve">
+    <value>Senaste 12 månaderna</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CurrentYear" xml:space="preserve">
+    <value>Innevarande år</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CustomPeriod" xml:space="preserve">
+    <value>Eget intervall</value>
+  </data>
+  <data name="UploadAdmin.Statistics.From" xml:space="preserve">
+    <value>Från månad</value>
+  </data>
+  <data name="UploadAdmin.Statistics.To" xml:space="preserve">
+    <value>Till månad</value>
+  </data>
+  <data name="UploadAdmin.Statistics.ComparePreviousYear" xml:space="preserve">
+    <value>Jämför med motsvarande period föregående år</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Show" xml:space="preserve">
+    <value>Visa statistik</value>
+  </data>
+  <data name="UploadAdmin.Statistics.SelectedPeriod" xml:space="preserve">
+    <value>Visar {0} – {1}</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearTotal" xml:space="preserve">
+    <value>Föregående år: {0}</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Trend" xml:space="preserve">
+    <value>Utveckling över tid</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PageViewsInPeriod" xml:space="preserve">
+    <value>Sidvisningar per sida för vald period (topp 10)</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CategoriesInPeriod" xml:space="preserve">
+    <value>Kategorivisningar för vald period (topp 10)</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearPageViews" xml:space="preserve">
+    <value>Sidvisningar, föregående år</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearCategoryViews" xml:space="preserve">
+    <value>Kategorivisningar, föregående år</value>
+  </data>
   <data name="UploadAdmin.Statistik.HereYouCanSeeSiteStatistics" xml:space="preserve">
     <value>Här kan du se statistik från hemsidan:</value>
   </data>
@@ -425,7 +473,7 @@
     <value>Månadsvis statistik (Chart.js kunde inte laddas)</value>
   </data>
   <data name="Admin.ChartTitle" xml:space="preserve">
-    <value>Sidvisningar per månad (senaste 6 månaderna)</value>
+    <value>Sidvisningar per månad</value>
   </data>
   <data name="Admin.Views" xml:space="preserve">
     <value>Sidvisningar</value>

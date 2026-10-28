@@ -1,15 +1,14 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Core.Interfaces
 @using ArvidsonFoto.Core.Models
+@using ArvidsonFoto.Core.ViewModels
 @using ArvidsonFoto.Views.Shared
+@model StatisticsViewModel
 @section MetaData {
     <meta name="robots" content="noindex" />
 }
-@inject IPageCounterService _pageCounterService
 @{
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.Statistik;
-
-    List<ArvidsonFoto.Core.Models.TblPageCounter> allPagesCounts = _pageCounterService.GetAllPageCountsGroupedByPageCount();
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -29,7 +28,7 @@
     <div class="col-12 col-md-8">
         <p>@L["UploadAdmin.Statistik.HereYouCanSeeSiteStatistics"]</p>
         <div id="page-statistics">
-            <partial name="_HomepageStatistics" />
+            <partial name="_HomepageStatistics" model="Model" />
 
             <h4>@L["UploadAdmin.Statistik.AllTimePageViews"]</h4>
             <div class="table-responsive">
@@ -42,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var pageViewed in allPagesCounts)
+                    @foreach (var pageViewed in Model.AllTimePageViews)
                     {
                         <tr>
                             <th scope="row">@pageViewed.PageViews</th>
