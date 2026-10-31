@@ -74,7 +74,7 @@ async function loadNextGalleryPage() {
         + '&culture=' + (document.documentElement.lang === 'en' ? 'en-US' : 'sv-SE');
 
     try {
-        var response = await fetch(apiUrl);
+        var response = await window.ArvidsonFotoTelemetry.fetch(apiUrl, undefined, 'gallery.next-page');
         if (!response.ok) throw new Error('API-svar: ' + response.status);
 
         var data = await response.json();

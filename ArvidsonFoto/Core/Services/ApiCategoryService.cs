@@ -104,6 +104,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public CategoryDto GetById(int? id)
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("category.get");
+        activity?.SetTag("arvidsonfoto.category.id", id);
         if (id is null or <= 0)
         {
             Log.Information("Invalid category id: {Id}", id);
@@ -124,10 +126,18 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             var categoryPath = GetCategoryPathForImage(category.MenuCategoryId ?? -1);
             var lastImageFilename = GetLastImageFilename(category.MenuCategoryId ?? -1);
             var categoryImageCount = _entityContext.TblImages.Where(x => x.ImageCategoryId == category.MenuCategoryId).Count();
+            activity?.SetTag("arvidsonfoto.category.name_sv", category.MenuDisplayName);
+            activity?.SetTag("arvidsonfoto.category.name_en", category.MenuDisplayNameEn);
+            activity?.SetTag("arvidsonfoto.result.count", categoryImageCount);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"category.get {id}: {category.MenuDisplayName} ({categoryImageCount} direct images)";
+            }
             return category.ToCategoryDto(categoryPath, lastImageFilename, categoryImageCount, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1));
         }
         catch (Exception ex)
         {
+            AppTelemetry.RecordError(activity, ex);
             Log.Error("Error in GetById: {Message}", ex.Message);
             return DefaultCategoryNotFound;
         }
@@ -142,7 +152,11 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             {
                 activity?.SetTag("arvidsonfoto.cache.hit", true);
                 activity?.SetTag("arvidsonfoto.result.count", cachedCategories.Count);
-                Log.Debug("All categories retrieved from cache ({Count} categories)", cachedCategories.Count);
+                if (activity is not null)
+                {
+                    activity.DisplayName = $"category.list cache ({cachedCategories.Count})";
+                }
+                AppTelemetry.LogCategories(logger, true, cachedCategories.Count);
                 return cachedCategories;
             }
 
@@ -166,7 +180,11 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
             _ = _cache.Set(ALL_CATEGORIES_CACHE_KEY, categoryDtos, _shortCacheExpiry);
             activity?.SetTag("arvidsonfoto.cache.hit", false);
             activity?.SetTag("arvidsonfoto.result.count", categoryDtos.Count);
-            Log.Debug("All categories cached ({Count} categories)", categoryDtos.Count);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"category.list database ({categoryDtos.Count})";
+            }
+            AppTelemetry.LogCategories(logger, false, categoryDtos.Count);
             return categoryDtos;
         }
         catch (Exception exception)
@@ -178,6 +196,8 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
 
     public List<CategoryDto> GetChildrenByParentId(int categoryID)
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("category.children");
+        activity?.SetTag("arvidsonfoto.category.parent_id", categoryID);
         try
         {
             var categories = _entityContext.TblMenus
@@ -199,10 +219,16 @@ public class ApiCategoryService(ILogger<ApiCategoryService> logger, ArvidsonFoto
                 return category.ToCategoryDto(categoryPath, string.Empty, categoryPathEn: GetEnglishCategoryPath(category.MenuCategoryId ?? -1)); // Empty string for lastImageFilename
             }).ToList();
 
+            activity?.SetTag("arvidsonfoto.result.count", categoryDtos.Count);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"category.children parent {categoryID} ({categoryDtos.Count})";
+            }
             return categoryDtos;
         }
         catch (Exception ex)
         {
+            AppTelemetry.RecordError(activity, ex);
             Log.Error("Error in GetChildrenByParentId: {Message}", ex.Message);
             return [];
         }

@@ -1,5 +1,9 @@
 ﻿@using ArvidsonFoto.Core.Extensions
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http.Features
 @inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
+@inject IWebHostEnvironment HostEnvironment
+@inject IConfiguration Configuration
 @inject IStringLocalizer<SiteResource> S
 <!DOCTYPE html>
 <html lang="@(ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish ? "en" : "sv")" data-bs-theme="dark">
@@ -8,6 +12,14 @@
     <meta charset="utf-8" />
     <!-- Viewport for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @{
+        var pageActivity = Context.Features.Get<IHttpActivityFeature>()?.Activity;
+    }
+    @if (HostEnvironment.IsDevelopment() && Configuration.GetValue("Telemetry:CorrelateBrowserRequests", true)
+        && pageActivity?.IdFormat == ActivityIdFormat.W3C)
+    {
+        <meta name="arvidsonfoto-traceparent" content="@pageActivity.Id" />
+    }
     <!-- Site version and last modified content -->
     @{
         var appVersion = typeof(ArvidsonFoto.Controllers.HomeController).Assembly
@@ -70,7 +82,8 @@
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
+    <script src="~/js/pageTrace.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
     <script src="~/lib/jQuery.smartmenus/jquery.smartmenus.min.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
     <script src="~/lib/jQuery.smartmenus/smartmenu.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@

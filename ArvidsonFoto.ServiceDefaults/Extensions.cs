@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
@@ -64,11 +66,46 @@ public static class HostingExtensions
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(tracing =>
-                        // Exclude health check requests from tracing
+                    {
+                        // Keep page and API traces focused on application work.
                         tracing.Filter = context =>
                             !context.Request.Path.StartsWithSegments(HealthEndpointPath, StringComparison.OrdinalIgnoreCase)
                             && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath, StringComparison.OrdinalIgnoreCase)
-                    )
+                            && (builder.Configuration.GetValue("Telemetry:IncludeJavaScriptTraces", false)
+                                || (!context.Request.Path.StartsWithSegments("/js", StringComparison.OrdinalIgnoreCase)
+                                    && !context.Request.Path.StartsWithSegments("/lib", StringComparison.OrdinalIgnoreCase)))
+                            && (!builder.Environment.IsDevelopment()
+                                || builder.Configuration.GetValue("Telemetry:IncludeDevelopmentToolTraces", false)
+                                || (!context.Request.Path.StartsWithSegments("/_vs/browserLink", StringComparison.OrdinalIgnoreCase)
+                                    && !context.Request.Path.StartsWithSegments("/_framework/aspnetcore-browser-refresh.js", StringComparison.OrdinalIgnoreCase)));
+                        tracing.EnrichWithHttpRequest = (activity, request) =>
+                        {
+                            activity.SetTag("url.path", request.Path.Value);
+                            var operation = request.Headers["X-ArvidsonFoto-Operation"].ToString();
+                            if (operation is "tooltip.prefetch" or "tooltip.hover" or "gallery.next-page" or "category.cache-load")
+                            {
+                                activity.SetTag("arvidsonfoto.browser.operation", operation);
+                            }
+                        };
+                        tracing.EnrichWithHttpResponse = (activity, response) =>
+                        {
+                            activity.SetTag("http.response.body.size", response.ContentLength);
+                            activity.SetTag("http.response.header.content-type", response.ContentType);
+                            if (response.HttpContext.GetEndpoint() is null)
+                            {
+                                activity.DisplayName = $"{response.HttpContext.Request.Method} {response.HttpContext.Request.Path}";
+                            }
+                            var summary = activity.GetTagItem("arvidsonfoto.result.summary") as string;
+                            if (activity.GetTagItem("arvidsonfoto.browser.operation") is string operation)
+                            {
+                                summary = summary is null ? operation : $"{operation}; {summary}";
+                            }
+                            if (summary is not null)
+                            {
+                                activity.DisplayName = $"{response.HttpContext.Request.Method} {response.HttpContext.Request.Path} [{summary}]";
+                            }
+                        };
+                    })
                     .AddEntityFrameworkCoreInstrumentation()
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()

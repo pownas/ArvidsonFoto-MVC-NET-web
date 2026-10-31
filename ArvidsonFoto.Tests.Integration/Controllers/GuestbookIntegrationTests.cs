@@ -79,7 +79,12 @@ public class GuestbookIntegrationTests
             && activity.OperationName == "category.list"
             && activity.TraceId == traceId)
             ?? throw new AssertFailedException("The category service span should remain in the incoming trace.");
-        Assert.AreEqual(serverActivity.SpanId, categoryActivity.ParentSpanId);
+        var actionActivity = activities.Single(activity =>
+            activity.Source.Name == "ArvidsonFoto"
+            && activity.TraceId == traceId
+            && activity.DisplayName == "mvc.action CategoryApi.GetGameSelectableCategories");
+        Assert.AreEqual(serverActivity.SpanId, actionActivity.ParentSpanId);
+        Assert.AreEqual(actionActivity.SpanId, categoryActivity.ParentSpanId);
         CollectionAssert.AreEquivalent(
             ExpectedCategorySpanTags,
             categoryActivity.TagObjects.Select(tag => tag.Key).ToArray());

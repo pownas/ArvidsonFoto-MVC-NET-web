@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Areas.Identity.Data;
 using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
@@ -162,7 +163,18 @@ public class Program
             });
         });
 
-        _ = services.AddControllersWithViews().AddDataAnnotationsLocalization(options =>
+        _ = services.AddSingleton(provider => new ImageTraceContext(
+            provider.GetRequiredService<IHostEnvironment>().IsDevelopment()
+            && provider.GetRequiredService<IConfiguration>().GetValue("Telemetry:CorrelateImageRequests", true)));
+        _ = services.AddOptions<OpenTelemetry.Instrumentation.AspNetCore.AspNetCoreTraceInstrumentationOptions>()
+            .Configure<ImageTraceContext>((options, imageTraceContext) =>
+        {
+            var originalFilter = options.Filter;
+            options.Filter = context => (originalFilter?.Invoke(context) ?? true)
+                && !imageTraceContext.TryGetParent(context.Request, out _);
+        });
+        _ = services.AddScoped<MvcTraceFilter>();
+        _ = services.AddControllersWithViews(options => options.Filters.AddService<MvcTraceFilter>()).AddDataAnnotationsLocalization(options =>
             options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(ValidationResource)));
         _ = services.AddRazorPages();
         _ = services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -299,6 +311,11 @@ public class Program
         }
 
         // WebOptimizer middleware - add before UseStaticFiles
+        if (app.Services.GetRequiredService<ImageTraceContext>().Enabled)
+        {
+            _ = app.UseMiddleware<ImageTraceMiddleware>();
+        }
+
         _ = app.UseWebOptimizer();
 
         _ = app.UseStaticFiles();
