@@ -1,35 +1,87 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Core.Models
-@using ArvidsonFoto.Core.Interfaces
-@inject IApiImageService _imageService
-@inject IApiCategoryService _categoryService
-@inject IPageCounterService _pageCounterService
+@using ArvidsonFoto.Core.ViewModels
+@model StatisticsViewModel
 @{
-    List<ArvidsonFoto.Core.Models.TblPageCounter> top10Categories = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), true)
-                                                              .OrderByDescending(c => c.PageViews)
-                                                              .Take(10)
-                                                              .ToList();
-    List<ArvidsonFoto.Core.Models.TblPageCounter> monthPagesCount = _pageCounterService.GetMonthCount(DateTime.Now.ToString("yyyy-MM"), false)
-                                                              .OrderByDescending(c => c.PageViews)
-                                                              .ToList();
-
-    // Hämta data för de senaste 6 månaderna för grafen
-    Dictionary<string, int> monthlyPageViews = _pageCounterService.GetMonthlyPageViewsChart(6, false);
-    Dictionary<string, int> monthlyCategoryViews = _pageCounterService.GetMonthlyPageViewsChart(6, true);
-
+    var monthPagesCount = Model.PageViews;
+    var top10Categories = Model.CategoryViews.Take(10).ToList();
+    var top10AllTimePageViews = Model.AllTimePageViews.Take(10).ToList();
+    var currentPageTotal = Model.MonthlyPageViews.Values.Sum();
+    var currentCategoryTotal = Model.MonthlyCategoryViews.Values.Sum();
+    var previousPageTotal = Model.PreviousYearPageViews.Values.Sum();
+    var previousCategoryTotal = Model.PreviousYearCategoryViews.Values.Sum();
 }
 
-<!-- Chart.js för sidvisningar per månad -->
-<div class="mb-4">
-    <h4>@L["UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months"]</h4>
-    <div class="upload-admin-chart">
-        <canvas id="pageViewsChart" role="img" aria-label="@L["UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months"]"></canvas>
+<form method="get" action="/uploadadmin/statistik" class="row g-2 align-items-end mb-4">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <label for="statistics-period" class="form-label">@L["UploadAdmin.Statistics.Period"]</label>
+        <select id="statistics-period" name="period" class="form-select">
+            <option value="month" selected="@(Model.Period == "month")">@L["UploadAdmin.Statistics.CurrentMonth"]</option>
+            <option value="3m" selected="@(Model.Period == "3m")">@L["UploadAdmin.Statistics.Last3Months"]</option>
+            <option value="6m" selected="@(Model.Period == "6m")">@L["UploadAdmin.Statistics.Last6Months"]</option>
+            <option value="12m" selected="@(Model.Period == "12m")">@L["UploadAdmin.Statistics.Last12Months"]</option>
+            <option value="year" selected="@(Model.Period == "year")">@L["UploadAdmin.Statistics.CurrentYear"]</option>
+            <option value="custom" selected="@(Model.Period == "custom")">@L["UploadAdmin.Statistics.CustomPeriod"]</option>
+        </select>
+    </div>
+    <div class="col-6 col-sm-3 col-lg-2">
+        <label for="statistics-from" class="form-label">@L["UploadAdmin.Statistics.From"]</label>
+        <input id="statistics-from" type="month" name="fromMonth" class="form-control" value="@Model.StartDate.ToString("yyyy-MM")" />
+    </div>
+    <div class="col-6 col-sm-3 col-lg-2">
+        <label for="statistics-to" class="form-label">@L["UploadAdmin.Statistics.To"]</label>
+        <input id="statistics-to" type="month" name="toMonth" class="form-control" value="@Model.EndDate.ToString("yyyy-MM")" />
+    </div>
+    <div class="col-12 col-lg-3">
+        <div class="form-check">
+            <input id="statistics-compare" type="checkbox" name="compare" value="true" class="form-check-input" checked="@Model.CompareWithPreviousYear" />
+            <label for="statistics-compare" class="form-check-label">@L["UploadAdmin.Statistics.ComparePreviousYear"]</label>
+        </div>
+    </div>
+    <div class="col-12 col-lg-2">
+        <button type="submit" class="btn btn-primary w-100">@L["UploadAdmin.Statistics.Show"]</button>
+    </div>
+</form>
+<p class="text-secondary">@L["UploadAdmin.Statistics.SelectedPeriod", Model.StartDate.ToString("yyyy-MM"), Model.EndDate.ToString("yyyy-MM")]</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6">
+        <div class="card bg-dark border-secondary h-100">
+            <div class="card-body">
+                <h5 class="card-title">@L["Admin.Views"]</h5>
+                <p class="display-6 mb-0">@currentPageTotal.ToString("N0")</p>
+                @if (Model.CompareWithPreviousYear)
+                {
+                    <small class="text-secondary">@L["UploadAdmin.Statistics.PreviousYearTotal", previousPageTotal.ToString("N0")]</small>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6">
+        <div class="card bg-dark border-secondary h-100">
+            <div class="card-body">
+                <h5 class="card-title">@L["Admin.CategoryViews"]</h5>
+                <p class="display-6 mb-0">@currentCategoryTotal.ToString("N0")</p>
+                @if (Model.CompareWithPreviousYear)
+                {
+                    <small class="text-secondary">@L["UploadAdmin.Statistics.PreviousYearTotal", previousCategoryTotal.ToString("N0")]</small>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
-<h4>@L["Admin.ThisMonthPageViews", DateTime.Now.ToString("yyyy-MM")]</h4>
+<!-- Chart.js för sidvisningar per månad -->
+<div class="mb-4">
+    <h4>@L["UploadAdmin.Statistics.Trend"]</h4>
+    <div class="upload-admin-chart">
+        <canvas id="pageViewsChart" role="img" aria-label="@L["UploadAdmin.Statistics.Trend"]"></canvas>
+    </div>
+</div>
+
+<h4>@L["UploadAdmin.Statistics.PageViewsInPeriod"]</h4>
 <div class="upload-admin-chart mb-2">
-    <canvas id="monthPageViewsChart" role="img" aria-label="@L["Admin.ThisMonthPageViews", DateTime.Now.ToString("yyyy-MM")]"></canvas>
+    <canvas id="monthPageViewsChart" role="img" aria-label="@L["UploadAdmin.Statistics.PageViewsInPeriod"]"></canvas>
 </div>
 <details class="mb-4">
     <summary>@L["Admin.ShowStatisticsTable"]</summary>
@@ -56,9 +108,9 @@
     </div>
 </details>
 
-<h4>@L["Admin.ThisMonthCategories", DateTime.Now.ToString("yyyy-MM")]</h4>
+<h4>@L["UploadAdmin.Statistics.CategoriesInPeriod"]</h4>
 <div class="upload-admin-chart mb-2">
-    <canvas id="monthCategoryViewsChart" role="img" aria-label="@L["Admin.ThisMonthCategories", DateTime.Now.ToString("yyyy-MM")]"></canvas>
+    <canvas id="monthCategoryViewsChart" role="img" aria-label="@L["UploadAdmin.Statistics.CategoriesInPeriod"]"></canvas>
 </div>
 <details class="mb-4">
     <summary>@L["Admin.ShowStatisticsTable"]</summary>
@@ -90,18 +142,24 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Förbereda data för grafen
-    const pageViewsData = @Html.Raw(Json.Serialize(monthlyPageViews));
-    const categoryViewsData = @Html.Raw(Json.Serialize(monthlyCategoryViews));
-    const monthPageViews = @Html.Raw(Json.Serialize(monthPagesCount.Select(page => new { label = page.PageName, value = page.PageViews })));
+    const pageViewsData = @Html.Raw(Json.Serialize(Model.MonthlyPageViews));
+    const categoryViewsData = @Html.Raw(Json.Serialize(Model.MonthlyCategoryViews));
+    const previousPageViewsData = @Html.Raw(Json.Serialize(Model.PreviousYearPageViews));
+    const previousCategoryViewsData = @Html.Raw(Json.Serialize(Model.PreviousYearCategoryViews));
+    const compareWithPreviousYear = @Html.Raw(Json.Serialize(Model.CompareWithPreviousYear));
+    const monthPageViews = @Html.Raw(Json.Serialize(monthPagesCount.Take(10).Select(page => new { label = page.PageName, value = page.PageViews })));
     const monthCategoryViews = @Html.Raw(Json.Serialize(top10Categories.Select(category => new { label = category.PageName, value = category.PageViews })));
+    const top10AllTimePageViews = @Html.Raw(Json.Serialize(top10AllTimePageViews.Select(page => new { label = page.PageName, value = page.PageViews })));
     
     const months = Object.keys(pageViewsData);
     const pageViews = Object.values(pageViewsData);
     const categoryViews = Object.values(categoryViewsData);
+    const previousPageViews = Object.values(previousPageViewsData);
+    const previousCategoryViews = Object.values(previousCategoryViewsData);
     
     // Formatera månadslabels för bättre visning
     const monthLabels = months.map(month => {
-        const date = new Date(month + '-01');
+        const date = new Date(month + '-15');
         return date.toLocaleDateString('@System.Globalization.CultureInfo.CurrentUICulture.Name', { year: 'numeric', month: 'short' });
     });
     
@@ -126,7 +184,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(255, 119, 149, 0.2)',
                     pointBackgroundColor: '#ff7795',
                     tension: 0.1
-                }]
+                }, ...(compareWithPreviousYear ? [{
+                    label: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.Statistics.PreviousYearPageViews"].Value)),
+                    data: previousPageViews,
+                    borderColor: 'rgba(69, 197, 208, 0.65)',
+                    borderDash: [6, 4],
+                    pointBackgroundColor: 'rgba(69, 197, 208, 0.65)',
+                    tension: 0.1
+                }, {
+                    label: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.Statistics.PreviousYearCategoryViews"].Value)),
+                    data: previousCategoryViews,
+                    borderColor: 'rgba(255, 119, 149, 0.65)',
+                    borderDash: [6, 4],
+                    pointBackgroundColor: 'rgba(255, 119, 149, 0.65)',
+                    tension: 0.1
+                }] : [])
+                ]
             },
             options: {
                 responsive: true,
@@ -186,6 +259,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewsLabel = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Views"].Value));
         const createHorizontalBarChart = (canvasId, data, color) => {
             const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                return;
+            }
+
             new Chart(canvas.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -243,10 +320,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         createHorizontalBarChart('monthPageViewsChart', monthPageViews, 'rgba(69, 197, 208, 0.8)');
         createHorizontalBarChart('monthCategoryViewsChart', monthCategoryViews, 'rgba(255, 119, 149, 0.85)');
+        createHorizontalBarChart('allTimePageViewsChart', top10AllTimePageViews, 'rgba(69, 197, 208, 0.8)');
     } else {
         const fallbackText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.ChartFallback"].Value));
-        ['monthPageViewsChart', 'monthCategoryViewsChart'].forEach(canvasId => {
+        ['monthPageViewsChart', 'monthCategoryViewsChart', 'allTimePageViewsChart'].forEach(canvasId => {
             const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                return;
+            }
+
             const fallback = document.createElement('p');
             fallback.className = 'alert alert-info';
             fallback.textContent = fallbackText;

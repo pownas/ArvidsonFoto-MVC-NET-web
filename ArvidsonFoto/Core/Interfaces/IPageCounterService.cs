@@ -43,4 +43,8 @@ public interface IPageCounterService
     /// <param name="picturePage">true == en bild-kategori , false == en sida</param>
     /// <returns>Dictionary med månad som nyckel och totala sidvisningar som värde</returns>
     Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage);
+
+    Dictionary<string, int> GetMonthlyPageViewsChart(DateTime startDate, DateTime endDate, bool picturePage);
+
+    List<TblPageCounter> GetPageCountsInPeriod(DateTime startDate, DateTime endDate, bool picturePage);
 }
