@@ -223,6 +223,9 @@
   <data name="UploadAdmin.Statistics.PreviousYearCategoryViews" xml:space="preserve">
     <value>Category views, previous year</value>
   </data>
+  <data name="UploadAdmin.Statistics.AllTimeTop10" xml:space="preserve">
+    <value>Top 10 pages and categories of all time</value>
+  </data>
   <data name="UploadAdmin.Statistik.HereYouCanSeeSiteStatistics" xml:space="preserve">
     <value>Here you can see site statistics:</value>
   </data>

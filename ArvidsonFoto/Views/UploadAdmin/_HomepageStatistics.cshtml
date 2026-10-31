@@ -5,6 +5,7 @@
 @{
     var monthPagesCount = Model.PageViews;
     var top10Categories = Model.CategoryViews.Take(10).ToList();
+    var top10AllTimePageViews = Model.AllTimePageViews.Take(10).ToList();
     var currentPageTotal = Model.MonthlyPageViews.Values.Sum();
     var currentCategoryTotal = Model.MonthlyCategoryViews.Values.Sum();
     var previousPageTotal = Model.PreviousYearPageViews.Values.Sum();
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const compareWithPreviousYear = @Html.Raw(Json.Serialize(Model.CompareWithPreviousYear));
     const monthPageViews = @Html.Raw(Json.Serialize(monthPagesCount.Take(10).Select(page => new { label = page.PageName, value = page.PageViews })));
     const monthCategoryViews = @Html.Raw(Json.Serialize(top10Categories.Select(category => new { label = category.PageName, value = category.PageViews })));
+    const top10AllTimePageViews = @Html.Raw(Json.Serialize(top10AllTimePageViews.Select(page => new { label = page.PageName, value = page.PageViews })));
     
     const months = Object.keys(pageViewsData);
     const pageViews = Object.values(pageViewsData);
@@ -257,6 +259,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewsLabel = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.Views"].Value));
         const createHorizontalBarChart = (canvasId, data, color) => {
             const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                return;
+            }
+
             new Chart(canvas.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -314,10 +320,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         createHorizontalBarChart('monthPageViewsChart', monthPageViews, 'rgba(69, 197, 208, 0.8)');
         createHorizontalBarChart('monthCategoryViewsChart', monthCategoryViews, 'rgba(255, 119, 149, 0.85)');
+        createHorizontalBarChart('allTimePageViewsChart', top10AllTimePageViews, 'rgba(69, 197, 208, 0.8)');
     } else {
         const fallbackText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["Admin.ChartFallback"].Value));
-        ['monthPageViewsChart', 'monthCategoryViewsChart'].forEach(canvasId => {
+        ['monthPageViewsChart', 'monthCategoryViewsChart', 'allTimePageViewsChart'].forEach(canvasId => {
             const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                return;
+            }
+
             const fallback = document.createElement('p');
             fallback.className = 'alert alert-info';
             fallback.textContent = fallbackText;

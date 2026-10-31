@@ -1,6 +1,7 @@
 using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
+using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,23 @@ public class UploadAdminStatisticsTests
         Assert.Equal(currentMonth, currentMonthResult.EndDate);
         Assert.Equal(currentMonth.AddMonths(-2), lastThreeMonthsResult.StartDate);
         Assert.Equal(currentMonth, lastThreeMonthsResult.EndDate);
+    }
+
+    [Fact]
+    public void StatisticsIncludesAllTimeViewsForTheAllTimeChart()
+    {
+        using var db = CreateContext();
+        db.TblPageCounter.AddRange(
+            new TblPageCounter { PageName = "Startsidan", PageViews = 12, MonthViewed = "2026-10", LastShowDate = DateTime.Today },
+            new TblPageCounter { PageName = "Bilder", PageViews = 7, MonthViewed = "2026-09", LastShowDate = DateTime.Today.AddMonths(-1) });
+        db.SaveChanges();
+
+        var viewModel = Assert.IsType<StatisticsViewModel>(
+            Assert.IsType<ViewResult>(CreateController(db).Statistik("month", null, null)).Model);
+
+        Assert.Equal(2, viewModel.AllTimePageViews.Count);
+        Assert.Equal("Startsidan", viewModel.AllTimePageViews[0].PageName);
+        Assert.Equal(12, viewModel.AllTimePageViews[0].PageViews);
     }
 
     private static ArvidsonFotoCoreDbContext CreateContext() =>

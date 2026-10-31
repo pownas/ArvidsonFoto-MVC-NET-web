@@ -223,6 +223,9 @@
   <data name="UploadAdmin.Statistics.PreviousYearCategoryViews" xml:space="preserve">
     <value>Kategorivisningar, föregående år</value>
   </data>
+  <data name="UploadAdmin.Statistics.AllTimeTop10" xml:space="preserve">
+    <value>Tio mest visade sidorna och kategorierna genom tiderna</value>
+  </data>
   <data name="UploadAdmin.Statistik.HereYouCanSeeSiteStatistics" xml:space="preserve">
     <value>Här kan du se statistik från hemsidan:</value>
   </data>
