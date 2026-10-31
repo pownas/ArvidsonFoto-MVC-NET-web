@@ -169,6 +169,63 @@
   <data name="UploadAdmin.HomepageStatistics.PageViewsInTheLast6Months" xml:space="preserve">
     <value>Page views in the last 6 months</value>
   </data>
+  <data name="UploadAdmin.Statistics.Period" xml:space="preserve">
+    <value>Time period</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CurrentMonth" xml:space="preserve">
+    <value>Current month</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last3Months" xml:space="preserve">
+    <value>Last 3 months</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last6Months" xml:space="preserve">
+    <value>Last 6 months</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Last12Months" xml:space="preserve">
+    <value>Last 12 months</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CurrentYear" xml:space="preserve">
+    <value>Current year</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CustomPeriod" xml:space="preserve">
+    <value>Custom range</value>
+  </data>
+  <data name="UploadAdmin.Statistics.From" xml:space="preserve">
+    <value>From month</value>
+  </data>
+  <data name="UploadAdmin.Statistics.To" xml:space="preserve">
+    <value>To month</value>
+  </data>
+  <data name="UploadAdmin.Statistics.ComparePreviousYear" xml:space="preserve">
+    <value>Compare with the same period last year</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Show" xml:space="preserve">
+    <value>Show statistics</value>
+  </data>
+  <data name="UploadAdmin.Statistics.SelectedPeriod" xml:space="preserve">
+    <value>Showing {0} – {1}</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearTotal" xml:space="preserve">
+    <value>Previous year: {0}</value>
+  </data>
+  <data name="UploadAdmin.Statistics.Trend" xml:space="preserve">
+    <value>Trend over time</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PageViewsInPeriod" xml:space="preserve">
+    <value>Page views per page for selected period (top 10)</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CategoriesInPeriod" xml:space="preserve">
+    <value>Category views for selected period (top 10)</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearPageViews" xml:space="preserve">
+    <value>Page views, previous year</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PreviousYearCategoryViews" xml:space="preserve">
+    <value>Category views, previous year</value>
+  </data>
+  <data name="UploadAdmin.Statistics.AllTimeTop10" xml:space="preserve">
+    <value>Top 10 pages and categories of all time</value>
+  </data>
   <data name="UploadAdmin.Statistik.HereYouCanSeeSiteStatistics" xml:space="preserve">
     <value>Here you can see site statistics:</value>
   </data>
@@ -425,7 +482,7 @@
     <value>Monthly statistics (Chart.js could not be loaded)</value>
   </data>
   <data name="Admin.ChartTitle" xml:space="preserve">
-    <value>Page views per month (last 6 months)</value>
+    <value>Page views per month</value>
   </data>
   <data name="Admin.Views" xml:space="preserve">
     <value>Page views</value>
