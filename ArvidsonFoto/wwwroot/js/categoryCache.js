@@ -19,7 +19,7 @@ const CategoryCache = {
     CACHE_VERSION_KEY: 'arvidsonfoto_categories_version',
     CACHE_TIMESTAMP_KEY: 'arvidsonfoto_categories_timestamp',
     CURRENT_VERSION: '1.0', // Increment this when categories are updated via UploadAdmin
-    API_ENDPOINT: '/api/category/AllLightweight',
+    API_ENDPOINT: '/api/category/alllightweight',
     
     // Cache duration in milliseconds (24 hours)
     CACHE_DURATION: 24 * 60 * 60 * 1000,
@@ -37,7 +37,7 @@ const CategoryCache = {
         
         console.log('⌛ Loading categories from server...');
         try {
-            const response = await fetch(this.API_ENDPOINT);
+            const response = await window.ArvidsonFotoTelemetry.fetch(this.API_ENDPOINT, undefined, 'category.cache-load');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

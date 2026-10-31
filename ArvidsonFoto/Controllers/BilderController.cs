@@ -147,6 +147,12 @@ public class BilderController(
 
         viewModel.DisplayImagesList ??= [];
 
+        activity?.SetTag("arvidsonfoto.category.id", viewModel.SelectedCategory?.CategoryId);
+        activity?.SetTag("arvidsonfoto.page.number", viewModel.CurrentPage);
+        activity?.SetTag("arvidsonfoto.page.size", viewModel.PageSize);
+        activity?.SetTag("arvidsonfoto.page.total", viewModel.TotalPages);
+        activity?.SetTag("arvidsonfoto.image.total", viewModel.TotalImageCount);
+        activity?.SetTag("arvidsonfoto.result.count", viewModel.DisplayImagesList.Count);
         return View(viewModel);
     }
 

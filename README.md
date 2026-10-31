@@ -27,6 +27,22 @@ dotnet run --project ArvidsonFoto.AppHost
 
 Se [ArvidsonFoto.AppHost/README.md](ArvidsonFoto.AppHost/README.md) för mer detaljer.
 
+#### Detaljerade traces och bildhämtning
+
+I Aspire visar MVC-spans controller/action, resultattyp och rendering av Razor-vyn. Galleriets controller visar kategori-id, sidnummer, sidstorlek och antal bilder. `category.list cache (antal)` respektive `category.list database (antal)` visar direkt om kategorierna kom från cache eller databas. Öppna ett span för att se attribut och exception-events; Structured Logs visar också MVC-resultat och cacheinformation när Debug-loggning är aktiverad. HTTP-spans visar sökväg, innehållstyp och tillgänglig svarsstorlek. Inga formulärvärden, cookies eller extra queryvärden läggs till av denna detaljloggning.
+
+I Development bäddar layouten även in sidans W3C-context i `arvidsonfoto-traceparent`. `pageTrace.js` använder detta för de publika API-anropen från kategoripopup, kategoricache och ljuslådans nästa sida. Anropen blir barn till sidans request-span och behåller samma trace-id, även efter att HTML-svaret har skickats. Vanliga `traceparent`-headers används utan att ändra API-URL:er, cacheinställningar eller själva bildladdningen. Context skickas bara till samma origin och aldrig till externa bildservrar. Befintlig explicit `traceparent` bevaras. Funktionen kan stängas av med `Telemetry:CorrelateBrowserRequests: false` och är avstängd i Production.
+
+`arvidsonfoto.browser.operation` skiljer `tooltip.prefetch` (automatisk förladdning), `tooltip.hover`, `category.cache-load` och `gallery.next-page`. HTTP-/MVC-spans visar dessutom kategorinamn, kategori-id, sidnummer, bildantal och, för enskilda bilder, bild-id och filnamn. `category.get`, `category.children`, `image.count` och `image.latest` förtydligar databas- och kategoriarbetet under respektive anrop. Browser Link (`/_vs/browserLink`) och Hot Reload (`/_framework/aspnetcore-browser-refresh.js`) filtreras bort från inkommande HTTP-traces i Development; sätt `Telemetry:IncludeDevelopmentToolTraces: true` om dessa behöver felsökas. Verktygen i sig stängs inte av.
+
+En hover/förladdning som startar på **föregående sida** tillhör fortfarande den sidans trace. Den flyttas inte felaktigt till den sida man sedan navigerar till. Inte heller cacheträffar som undviker ett nätverksanrop skapar ett nytt server-span.
+
+HTTP-anrop under `/js/` och `/lib/` filtreras bort från traces i alla miljöer. JavaScript-filer och biblioteksresurser serveras och cachelagras precis som tidigare; API-anropen som skripten gör spåras fortfarande. Sätt `Telemetry:IncludeJavaScriptTraces: true` om dessa filhämtningar behöver felsökas. Redan exporterade traces i Aspire ligger kvar tills de rensas eller löper ut.
+
+I **Development** lägger en Tag Helper till `af_traceparent` på lokala bilders `src` och ljuslådans bildlänkar (`href` med `data-gallery`). Bildmiddleware exporterar då ett `image.fetch /sökväg`-span med **samma trace-id och sidans request-span som parent**. Det separata, okorrelerade hosting-spannet exporteras inte för dessa anrop. Även sent laddade lokala bilder kan därför tillhöra sidans trace. Ogiltiga tracevärden loggas och behandlas som vanliga oberoende anrop.
+
+Detta kräver inget JavaScript och ändrar inte hur bilden visas. Sätt `Telemetry:CorrelateImageRequests` till `false` för att stänga av kopplingen. Funktionen är alltid avstängd i Production: ett tracevärde i bildens URL skapar en ny cache-nyckel per sidladdning i Development. Bilder som redan finns i webbläsarens cache ger inget nytt server-span. Bilder från en annan server, inklusive galleriets foton på `https://arvidsonfoto.se`, lämnas oförändrade och kan **inte** få samma server-trace-id genom den lokala appen. För dem krävs separat webbläsarinstrumentering eller stöd för trace-propagation på bildservern.
+
 ### Alternativ 2: Traditionell setup (Utan Aspire)
 
 För att starta webbsidan så är det några steg man behöver genomföra. 

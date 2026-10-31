@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.DTOs;
 using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
@@ -139,6 +140,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>An image DTO from the specified category, or a default "not found" image if no image exists.</returns>
     public ImageDto GetOneImageFromCategory(int categoryId, string categoryNameSv = "", string categoryNameEn = "")
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("image.latest");
+        activity?.SetTag("arvidsonfoto.category.requested_id", categoryId);
         try
         {
             TblImage image;
@@ -155,6 +158,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 }
 
                 int blamesId = blames.MenuCategoryId ?? 0;
+                activity?.SetTag("arvidsonfoto.category.query_id", blamesId);
 
                 image = _entityContext.TblImages
                                      .Where(i => i.ImageCategoryId.Equals(blamesId))
@@ -163,6 +167,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             }
             else
             {
+                activity?.SetTag("arvidsonfoto.category.query_id", categoryId);
                 image = _entityContext.TblImages
                                      .Where(i => i.ImageCategoryId.Equals(categoryId)
                                               || i.ImageFamilyId.Equals(categoryId)
@@ -185,10 +190,18 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
             var imageDto = image.ToImageDto(categoryPath) ?? DefaultImageDtoNotFound;
             imageDto.CategoryNameSv = categoryNameSv;
             imageDto.CategoryNameEn = categoryNameEn;
+            activity?.SetTag("arvidsonfoto.image.id", imageDto.ImageId);
+            activity?.SetTag("arvidsonfoto.image.path", imageDto.UrlImage);
+            activity?.SetTag("arvidsonfoto.result.found", imageDto.ImageId > 0);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"image.latest category {categoryId} -> {imageDto.UrlImage?.Split('/').LastOrDefault()} (image {imageDto.ImageId})";
+            }
             return ApplyEffectiveGameSelection([image], [imageDto])[0];
         }
         catch (Exception ex)
         {
+            AppTelemetry.RecordError(activity, ex);
             Log.Error("Error in GetOneImageFromCategory: {Message}", ex.Message);
             return DefaultImageDtoNotFound;
         }
@@ -200,28 +213,40 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>A list of all images as DTOs.</returns>
     public List<ImageDto> GetAll()
     {
-        var images = _entityContext.TblImages.ToList();
-
-        // Get category paths for all images
-        var imageDtos = new List<ImageDto>();
-        foreach (var image in images)
+        using var activity = AppTelemetry.ActivitySource.StartActivity("image.list");
+        try
         {
-            // If the new gallery category feature is enabled, use the new category path
-            var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
-            var categoryPath = "";
-            if (featureNewGalleryCategory?.Enabled == true)
+            var images = _entityContext.TblImages.ToList();
+
+            // Get category paths for all images
+            var imageDtos = new List<ImageDto>();
+            foreach (var image in images)
             {
-                categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
-            }
-            else
-            {
-                // Otherwise, use the old category path
-                categoryPath = GetOldCategoryPathForImage(image);
+                // If the new gallery category feature is enabled, use the new category path
+                var featureNewGalleryCategory = _configuration.GetSection("FeatureFlags:NewGalleryCategory").Get<FeatureFlag>();
+                var categoryPath = "";
+                if (featureNewGalleryCategory?.Enabled == true)
+                {
+                    categoryPath = apiCategoryService.GetCategoryPathForImage(image.ImageCategoryId ?? -1);
+                }
+                else
+                {
+                    // Otherwise, use the old category path
+                    categoryPath = GetOldCategoryPathForImage(image);
+                }
+
+                imageDtos.Add(image.ToImageDto(categoryPath));
             }
 
-            imageDtos.Add(image.ToImageDto(categoryPath));
+            var result = ApplyEffectiveGameSelection(images, imageDtos);
+            activity?.SetTag("arvidsonfoto.result.count", result.Count);
+            return result;
         }
-        return ApplyEffectiveGameSelection(images, imageDtos);
+        catch (Exception exception)
+        {
+            AppTelemetry.RecordError(activity, exception);
+            throw;
+        }
     }
 
     /// <summary> Används på startsidan för random antal av bilder. </summary>
@@ -414,6 +439,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>Paginated list of images in the specified category</returns>
     public List<ImageDto> GetImagesByCategoryIDPaginated(int categoryID, int page, int pageSize)
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("image.page");
+        activity?.SetTag("arvidsonfoto.category.id", categoryID);
         try
         {
             if (categoryID <= 0)
@@ -432,6 +459,9 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 pageSize = 48;
             }
 
+            activity?.SetTag("arvidsonfoto.page.number", page);
+            activity?.SetTag("arvidsonfoto.page.size", pageSize);
+            activity?.SetTag("arvidsonfoto.image.descendants", false);
             // Try direct category images first (materialised to avoid a second .Any() round-trip)
             var images = _entityContext.TblImages
                         .Where(i => i.ImageCategoryId == categoryID
@@ -450,6 +480,7 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                 var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryID);
                 if (descendantIds.Count != 0)
                 {
+                    activity?.SetTag("arvidsonfoto.image.descendants", true);
                     images = [.. _entityContext.TblImages
                         .Where(i => (i.ImageCategoryId.HasValue && descendantIds.Contains(i.ImageCategoryId.Value))
                                  || (i.ImageFamilyId.HasValue && descendantIds.Contains(i.ImageFamilyId.Value))
@@ -460,6 +491,13 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
                         .Take(pageSize)];
                 }
             }
+
+            activity?.SetTag("arvidsonfoto.result.count", images.Count);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"image.page category {categoryID}, page {page} ({images.Count})";
+            }
+            AppTelemetry.LogImagePage(logger, images.Count, categoryID, page, pageSize);
 
             // Early return if no images found
             if (images.Count == 0)
@@ -497,7 +535,8 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
         }
         catch (Exception ex)
         {
-            Log.Error("Error in GetImagesByCategoryIDPaginated: {Message}", ex.Message);
+            AppTelemetry.RecordError(activity, ex);
+            AppTelemetry.LogImagePageError(logger, ex, categoryID);
             return [];
         }
     }
@@ -640,25 +679,45 @@ public class ApiImageService(ILogger<ApiImageService> logger, ArvidsonFotoCoreDb
     /// <returns>A The total number of images for the.</returns>
     public int GetCountedCategoryId(int categoryId)
     {
-        var imagesCategoryCount = _entityContext.TblImages.Count(x => x.ImageCategoryId == categoryId);
-        var imagesFamilyCount = _entityContext.TblImages.Count(x => x.ImageFamilyId == categoryId);
-        var imagesMainFamilyCount = _entityContext.TblImages.Count(x => x.ImageMainFamilyId == categoryId);
-        var totalImagesForCategoryId = imagesCategoryCount + imagesFamilyCount + imagesMainFamilyCount;
-
-        // If no direct images, count from all descendant categories
-        if (totalImagesForCategoryId == 0)
+        using var activity = AppTelemetry.ActivitySource.StartActivity("image.count");
+        activity?.SetTag("arvidsonfoto.category.id", categoryId);
+        activity?.SetTag("arvidsonfoto.image.descendants", false);
+        try
         {
-            var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId);
-            if (descendantIds.Count != 0)
-            {
-                totalImagesForCategoryId = _entityContext.TblImages
-                    .Count(x => (x.ImageCategoryId.HasValue && descendantIds.Contains(x.ImageCategoryId.Value))
-                             || (x.ImageFamilyId.HasValue && descendantIds.Contains(x.ImageFamilyId.Value))
-                             || (x.ImageMainFamilyId.HasValue && descendantIds.Contains(x.ImageMainFamilyId.Value)));
-            }
-        }
+            var imagesCategoryCount = _entityContext.TblImages.Count(x => x.ImageCategoryId == categoryId);
+            var imagesFamilyCount = _entityContext.TblImages.Count(x => x.ImageFamilyId == categoryId);
+            var imagesMainFamilyCount = _entityContext.TblImages.Count(x => x.ImageMainFamilyId == categoryId);
+            var totalImagesForCategoryId = imagesCategoryCount + imagesFamilyCount + imagesMainFamilyCount;
+            activity?.SetTag("arvidsonfoto.image.direct_count", imagesCategoryCount);
+            activity?.SetTag("arvidsonfoto.image.family_count", imagesFamilyCount);
+            activity?.SetTag("arvidsonfoto.image.main_family_count", imagesMainFamilyCount);
 
-        return totalImagesForCategoryId;
+            // If no direct images, count from all descendant categories
+            if (totalImagesForCategoryId == 0)
+            {
+                var descendantIds = apiCategoryService.GetAllDescendantCategoryIds(categoryId);
+                if (descendantIds.Count != 0)
+                {
+                    activity?.SetTag("arvidsonfoto.image.descendants", true);
+                    totalImagesForCategoryId = _entityContext.TblImages
+                        .Count(x => (x.ImageCategoryId.HasValue && descendantIds.Contains(x.ImageCategoryId.Value))
+                                 || (x.ImageFamilyId.HasValue && descendantIds.Contains(x.ImageFamilyId.Value))
+                                 || (x.ImageMainFamilyId.HasValue && descendantIds.Contains(x.ImageMainFamilyId.Value)));
+                }
+            }
+
+            activity?.SetTag("arvidsonfoto.result.count", totalImagesForCategoryId);
+            if (activity is not null)
+            {
+                activity.DisplayName = $"image.count category {categoryId} ({totalImagesForCategoryId})";
+            }
+            return totalImagesForCategoryId;
+        }
+        catch (Exception exception)
+        {
+            AppTelemetry.RecordError(activity, exception);
+            throw;
+        }
     }
 
     /// <summary>

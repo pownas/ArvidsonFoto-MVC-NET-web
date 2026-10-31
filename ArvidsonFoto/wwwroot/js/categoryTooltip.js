@@ -20,7 +20,7 @@
         prefetchDelay: 2000,  // Start prefetching after 2 seconds of inactivity
         imageMaxWidth: 300,
         imageMaxHeight: 200,
-        apiEndpoint: '/api/image/GetOneImageFromCategory/',
+        apiEndpoint: '/api/image/getoneimagefromcategory/',
         imageBaseUrl: 'https://arvidsonfoto.se'
     };
     var labels = document.querySelector('.main-nav')?.dataset || {};
@@ -52,7 +52,7 @@
     /**
      * Fetches the latest image for a category from the API
      */
-    function fetchCategoryImage(categoryId) {
+    function fetchCategoryImage(categoryId, operation) {
         // Check cache first
         if (imageCache[categoryId]) {
             return Promise.resolve(imageCache[categoryId]);
@@ -65,13 +65,13 @@
 
         // Mark as pending and fetch
         var culture = document.documentElement.lang === 'en' ? 'en-US' : 'sv-SE';
-        var fetchPromise = fetch(config.apiEndpoint + encodeURIComponent(categoryId) + '?culture=' + culture, {
+        var fetchPromise = window.ArvidsonFotoTelemetry.fetch(config.apiEndpoint + encodeURIComponent(categoryId) + '?culture=' + culture, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Cache-Control': 'max-age=3600' // Cache for 1 hour
             }
-        })
+        }, operation)
         .then(function (response) {
             if (!response.ok) {
                 throw new Error('HTTP ' + response.status);
@@ -158,7 +158,7 @@
         var categoryId = Array.from(prefetchQueue)[0];
         prefetchQueue.delete(categoryId);
         
-        fetchCategoryImage(categoryId).finally(function() {
+        fetchCategoryImage(categoryId, 'tooltip.prefetch').finally(function() {
             isPrefetching = false;
             // Prefetch next in queue after a small delay
             if (prefetchQueue.size > 0) {
@@ -243,7 +243,7 @@
                         isVisible = true;
 
                         // Fetch and update
-                        fetchCategoryImage(categoryId).then(function (imageData) {
+                        fetchCategoryImage(categoryId, 'tooltip.hover').then(function (imageData) {
                             if (isVisible) {
                                 var content = generatePopoverContent(imageData, categoryName);
                                 popoverInstance.dispose();
