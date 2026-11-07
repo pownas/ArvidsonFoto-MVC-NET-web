@@ -438,10 +438,29 @@ public class UploadAdminController(
     private static bool IsMissingDescription(string? description, string placeholder) =>
         string.Equals(description?.Trim(), placeholder, StringComparison.OrdinalIgnoreCase);
 
-    public IActionResult HanteraGB(string DisplayMessage, string gbId)
+    public IActionResult HanteraGB(string DisplayMessage, string gbId, string status = "all", string sort = "newest")
     {
         ViewData["Title"] = localizer["Admin.GuestbookTitle"];
-        UploadGbViewModel viewModel = new();
+        status = status is "unread" or "read" ? status : "all";
+        sort = sort == "oldest" ? "oldest" : "newest";
+        var posts = _guestBookService.GetAll().AsEnumerable();
+        if (status == "unread")
+        {
+            posts = posts.Where(post => post.GbReadPost is not true);
+        }
+        else if (status == "read")
+        {
+            posts = posts.Where(post => post.GbReadPost is true);
+        }
+
+        UploadGbViewModel viewModel = new()
+        {
+            StatusFilter = status,
+            SortOrder = sort,
+            Posts = [.. (sort == "oldest"
+                ? posts.OrderBy(post => post.GbDate)
+                : posts.OrderByDescending(post => post.GbDate))]
+        };
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
             viewModel.DisplayMessage = "";
@@ -454,40 +473,43 @@ public class UploadAdminController(
         return View(viewModel);
     }
 
-    public IActionResult MarkGbPostAsRead(int gbId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult MarkGbPostAsRead(int gbId, string status = "all", string sort = "newest")
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.ReadGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId, status, sort });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId, status, sort });
     }
 
-    public IActionResult DeleteGbPost(int gbId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteGbPost(int gbId, string status = "all", string sort = "newest")
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.DeleteGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId, status, sort });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId, status, sort });
     }
 
-    public IActionResult DeleteImage(int imgId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteImage(int imgId, int? sida = null)
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_imageService.DeleteImgId(imgId))
             {
-                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId });
+                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId, sida });
             }
         }
-        return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId });
+        return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId, sida });
     }
 
     public IActionResult Statistik(string? period, string? fromMonth, string? toMonth, bool compare = false)

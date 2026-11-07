@@ -32,7 +32,11 @@
         }
         else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgDelete") && Model.UpdatedId is not null)
         {
-            <h5 class="alert alert-success bg-success text-dark">@L["UploadAdmin.RedigeraBilder.DeletedTheLinkForImageNumber"] <span class="text-light">@Model.UpdatedId</span></h5>
+            <h5 role="status" class="alert alert-success bg-success text-dark">@L["UploadAdmin.RedigeraBilder.DeletedTheLinkForImageNumber"] <span class="text-light">@Model.UpdatedId</span></h5>
+        }
+        else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("ErrorImgDelete") && Model.UpdatedId is not null)
+        {
+            <h5 role="alert" class="alert alert-danger bg-danger text-light">@L["UploadAdmin.RedigeraBilder.FailedToDeleteImageNumber"] <span class="text-dark">@Model.UpdatedId</span></h5>
         }
         else if (Model.DisplayMessage is not null && Model.DisplayMessage.Equals("OkImgEdit") && Model.UpdatedId is not null)
         {
@@ -131,6 +135,7 @@
                         <div class="modal-body">
                             <p class="text-center"><img src="@imgThumbSrc" alt="@image.ImageArtNamn" width="120" height="120" title="@image.ImageArtNamn"></p>
                             <p>@L["Admin.ConfirmDeleteImage", image.ImageArtNamn]</p>
+                            <p><strong>@L["UploadAdmin.EditImageInputForm.ImageNumber"]</strong> @image.ImageId</p>
                             <p><strong>@L["UploadAdmin.RedigeraBilder.FileName"]</strong> @image.ImageUrl</p>
                             <p><strong>@L["UploadAdmin.RedigeraBilder.Uploaded"]</strong> @image.ImageUpdate.ToString("yyyy-MM-dd HH:mm")</p>
                         </div>
@@ -138,9 +143,14 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 @L["UploadAdmin.FacebookUpload.Cancel"] <i class="bi bi-x-circle"></i>
                             </button>
-                            <a href="/uploadadmin/deleteimage?imgId=@image.ImageId" class="btn btn-danger">
-                                @L["UploadAdmin.HanteraGB.Delete"] <i class="bi bi-trash"></i>
-                            </a>
+                            <form asp-action="DeleteImage" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="imgId" value="@image.ImageId" />
+                                <input type="hidden" name="sida" value="@Model.CurrentPage" />
+                                <button type="submit" class="btn btn-danger">
+                                    @L["UploadAdmin.HanteraGB.Delete"] <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
                             @*<a onclick="alert('Hoppsan, denna funktionen fungerar inte än!')" class="btn btn-danger">
                                 Radera bilden <i class="bi bi-trash"></i>
                             </a>*@
