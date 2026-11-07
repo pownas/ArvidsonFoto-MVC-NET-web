@@ -75,11 +75,61 @@ Insats avser uppskattad utvecklingsinsats, inte kalenderlöfte. Börja med små 
 - **Mät:** Klick vidare från samlingen och besök i rekommenderade kategorier jämfört med en liknande period.
 - **Nulägesstöd:** [startsidan med senaste bilder och kategorier](../ArvidsonFoto/Views/Home/Index.cshtml#L63), [kategori- och söknavigering](../ArvidsonFoto/Views/Shared/_NavBar.cshtml#L28), [topplistor i statistiken](../ArvidsonFoto/Views/UploadAdmin/_HomepageStatistics.cshtml#L7).
 
+## Fler förslag för att modernisera hela webbplatsens design
+
+Följande idéer gäller besökarnas helhetsupplevelse, inte bara admin. De bygger vidare på sådant som redan finns: fotografin är innehållets huvudfokus, galleriet har ljusbox och köpvägar, och webbplatsen har svenska/engelska samt ljust/mörkt tema. Börja med klickbara skisser och testa dem på mobil och dator innan en större visuell omarbetning.
+
+### 8. Skapa ett konsekvent visuellt designsystem
+
+- **Problem:** Stilmallen blandar Bootstrap-standarder med egna mörka ytor, grå text och blå accentfärger. Befintliga delar som kort, knappar, länkar och rubriker kan därför upplevas som separata komponenter snarare än en sammanhållen fotografisk identitet.
+- **Förslag:** Definiera ett litet set återanvändbara färg-, typografi-, avstånds- och radievariabler. Ta fram en varm, diskret palett och tydlig rubrikhierarki som låter bilderna dominera; bevara ljust och mörkt tema och kontrollera kontrast i båda. Prova tokens på startsida, galleri och informationssidor innan resten av gränssnittet uppdateras.
+- **Hjälper:** Alla besökare genom tydligare läsbarhet och igenkänning; utvecklare får ett enklare sätt att hålla nya och befintliga vyer konsekventa.
+- **Prioritet / insats / effekt:** Hög / medel / hög.
+- **Mät:** Kontrastkontroll i båda teman och kort användartest där besökare får hitta galleri, kontakt och köp av bilder.
+- **Nulägesstöd:** [globala färger och tema](../ArvidsonFoto/wwwroot/css/site.scss#L37), [mörkt temastöd](../ArvidsonFoto/wwwroot/css/site.scss#L129), [kortens egna färg- och hoverregler](../ArvidsonFoto/wwwroot/css/site.scss#L772).
+
+### 9. Gör startsidan mer redaktionell och fotocentrerad
+
+- **Problem:** Startsidan kombinerar introduktion, slumpmässiga bilder och fyra likvärdigt utformade informationskort. Det ger flera möjliga ingångar men lyfter inte nödvändigtvis en aktuell bild eller en tydlig första väg in i fotoarkivet.
+- **Förslag:** Testa en luftig introduktionsyta med en utvald bild i stort format, en kort presentation och två tydliga handlingar, till exempel ”Utforska bilder” och ”Köp en bild”. Följ den med en handplockad samling eller senaste bilder. Anpassa ordning och text för svenska och engelska; undvik automatisk karusell och låt besökaren själv styra bildbyten.
+- **Hjälper:** Förstagångsbesökare som snabbt vill förstå innehållet och återkommande besökare som vill vidare till nya bilder.
+- **Prioritet / insats / effekt:** Hög / medel / hög.
+- **Mät:** Klick till galleri, senaste bilder och köpinformation samt användartest av om sidans syfte uppfattas direkt.
+- **Nulägesstöd:** [introduktion och slumpgalleri](../ArvidsonFoto/Views/Home/Index.cshtml#L31), [fyra utforskningskort](../ArvidsonFoto/Views/Home/Index.cshtml#L63).
+
+### 10. Modernisera kategorinavigeringen utan att tappa orienteringen
+
+- **Problem:** Huvudmenyn visar en flernivåstruktur av kategorier. En rik taxonomi är användbar för den som vet vad den söker, men kan bli lång och svår att överblicka, särskilt på mobil.
+- **Förslag:** Minska antalet primära val till tydliga ingångar och låt besökaren fördjupa sig stegvis i kategorier. Gör sök och ”Senaste” lätta att hitta på alla skärmstorlekar och använd brödsmulor samt en tydlig sidrubrik för att visa var i kategoriträdet besökaren befinner sig. Behåll befintliga kategorilänkar och mät användbarheten innan navigeringen ändras brett.
+- **Hjälper:** Mobilbesökare och personer som inte känner till kategorinamn; vana besökare behåller direktvägar till kategorierna.
+- **Prioritet / insats / effekt:** Hög / medel / hög.
+- **Mät:** Tid att hitta en bildkategori i användartest, användning av sök och andel återvändanden till föregående sida.
+- **Nulägesstöd:** [hierarkisk huvudmeny](../ArvidsonFoto/Views/Shared/_NavBar.cshtml#L23), [brödsmulor och kategoriingångar](../ArvidsonFoto/Views/Bilder/Index.cshtml#L82).
+
+### 11. Ge galleriet en mer genomarbetad bildrytm
+
+- **Problem:** Bildrutnätet behöver visa många fotografier och namn, men små skärmar kan ge trånga rutor och långa kategorinamn kapas. För fotografier varierar dessutom bildformat, så enhetlig beskärning riskerar att dölja motiv.
+- **Förslag:** Finjustera responsiv kolumnbredd, luft och bildtext så att galleriet känns lugnare utan att minska mängden bilder för mycket. Behåll hela motivet i miniatyrerna och gör bildtexter läsbara även när de är långa; erbjud vid behov en valbar kompakt/luftig vy. Se till att större bild, fotografiuppgifter, bildköp och stäng/nästa i ljusboxen är konsekventa och enkla att använda med tangentbord och beröring.
+- **Hjälper:** Besökare som bläddrar länge eller använder mobil; fotografen får en mer enhetlig presentation av bilder i olika format.
+- **Prioritet / insats / effekt:** Medel / medel / hög.
+- **Mät:** Mobil- och tangentbordstest av galleri/ljusbox samt jämförelse av bildöppningar och vidareklick till köp.
+- **Nulägesstöd:** [galleriets responsiva kolumner och bildtexter](../ArvidsonFoto/Views/Bilder/_Gallery.cshtml#L21), [miniatyrregler för små skärmar](../ArvidsonFoto/wwwroot/css/site.scss#L606), [bildinformation och köpväg i ljusboxen](../ArvidsonFoto/Views/Bilder/_Gallery.cshtml#L123).
+
+### 12. Förbättra typografi och läsflöde på innehållssidorna
+
+- **Problem:** Information, kontakt, köp och presentation av fotografen är separata sidor. Om rubriker, textbredd och länkar inte följer samma visuella mönster får besökaren mindre hjälp att skumma och hitta nästa steg.
+- **Förslag:** Använd en lättläst typsnittsskala med tydliga rubriknivåer, begränsad textbredd och konsekvent avstånd mellan avsnitt. Presentera relaterad kontakt- eller köpinformation i tydliga, återkommande block med en primär handling per sida. Prioritera läsbarhet och stöd för förstoring framför dekorativa effekter.
+- **Hjälper:** Besökare som läser på mobil, använder skärmförstoring eller vill hitta kontakt- och köpinformation snabbt.
+- **Prioritet / insats / effekt:** Medel / låg till medel / medel.
+- **Mät:** Tillgänglighetsgranskning av rubrikstruktur, kontrast och zoom samt användartest för att hitta kontakt- och köpinformation.
+- **Nulägesstöd:** [informationssidornas navigationsingångar](../ArvidsonFoto/Views/Info/Index.cshtml#L32), [globala text- och temastilar](../ArvidsonFoto/wwwroot/css/site.scss#L121).
+
 ## Föreslagen ordning
 
 1. Börja med tydligare statistikdefinitioner och sök/filter i bildbiblioteket; båda har avgränsad omfattning och ger snabb nytta.
-2. Lägg till kvalitetskö i adminstartsidan och förbättra loggsökning när första iterationen har utvärderats.
-3. Bestäm filpubliceringsflöde innan batchregistrering eller riktig bilduppladdning byggs.
-4. Förnya administrationslayout och testa en kuraterad besökarsektion efter att användarbehov och mätetal har bekräftats.
+2. Skissa en fotocentrerad startsida och gemensamma designtokens; testa navigering och galleri på mobil innan större omarbetning.
+3. Lägg till kvalitetskö i adminstartsidan och förbättra loggsökning när första iterationen har utvärderats.
+4. Bestäm filpubliceringsflöde innan batchregistrering eller riktig bilduppladdning byggs.
+5. Förnya adminlayout och testa kuraterade besökarsektioner efter att användarbehov och mätetal har bekräftats.
 
 För varje steg bör åtkomstskydd, tillgänglighet, svensk/engelsk text och integritet kontrolleras. Förslag som innebär ny insamling av besöksdata ska bedömas separat innan de genomförs.
