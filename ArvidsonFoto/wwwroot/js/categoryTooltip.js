@@ -186,7 +186,7 @@
         var visibleLinks = [];
         links.forEach(function(link) {
             var rect = link.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
+            if (!link.closest('.sitemap-category-tree') && rect.top < window.innerHeight && rect.bottom > 0) {
                 visibleLinks.push(link);
             }
         });
