@@ -43,6 +43,11 @@
     </div>
 </form>
 <p class="text-secondary">@L["UploadAdmin.Statistics.SelectedPeriod", Model.StartDate.ToString("yyyy-MM"), Model.EndDate.ToString("yyyy-MM")]</p>
+<p class="text-secondary">@L["UploadAdmin.Statistics.PageViewsAreNotVisitors"]</p>
+@if (Model.IsCurrentMonthIncomplete)
+{
+    <p class="alert alert-info" role="status">@L["UploadAdmin.Statistics.CurrentMonthIncomplete"]</p>
+}
 
 <div class="row g-3 mb-4">
     <div class="col-12 col-sm-6">

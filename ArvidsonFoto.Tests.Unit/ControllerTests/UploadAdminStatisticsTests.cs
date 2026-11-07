@@ -60,6 +60,32 @@ public class UploadAdminStatisticsTests
         Assert.Equal(12, viewModel.AllTimePageViews[0].PageViews);
     }
 
+    [Fact]
+    public void StatisticsCsvUsesUtf8AndIncludesTheSelectedPeriodAndPageViews()
+    {
+        using var db = CreateContext();
+        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        db.TblPageCounter.Add(new TblPageCounter
+        {
+            PageName = "Startsida",
+            PageViews = 12,
+            MonthViewed = currentMonth.ToString("yyyy-MM"),
+            LastShowDate = DateTime.Today
+        });
+        db.SaveChanges();
+
+        var result = Assert.IsType<FileContentResult>(
+            CreateController(db).ExportStatisticsCsv("month", null, null));
+        var csv = System.Text.Encoding.UTF8.GetString(result.FileContents);
+
+        Assert.True(result.FileContents.Take(3).SequenceEqual(new byte[] { 0xEF, 0xBB, 0xBF }));
+        Assert.Contains("UploadAdmin.Statistics.CsvMetric", csv);
+        Assert.Contains(currentMonth.ToString("yyyy-MM"), csv);
+        Assert.Contains("Startsida", csv);
+        Assert.Contains("12", csv);
+        Assert.Contains("text/csv", result.ContentType);
+    }
+
     private static ArvidsonFotoCoreDbContext CreateContext() =>
         new(new DbContextOptionsBuilder<ArvidsonFotoCoreDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);

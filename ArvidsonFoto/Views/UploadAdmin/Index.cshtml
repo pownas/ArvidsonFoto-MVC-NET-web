@@ -1,11 +1,13 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Views.Shared
+@using ArvidsonFoto.Core.ViewModels
 @*<!-- UploadAdmin-index -->*@
 @section MetaData { 
     <meta name="robots" content="noindex" />
 }
 @{
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.Index;
+    var actionSummary = ViewData["AdminActionSummary"] as AdminActionSummaryViewModel ?? new AdminActionSummaryViewModel();
 }
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
@@ -23,9 +25,48 @@
     </nav>
     <div class="col-12 col-md-8">
         <h3>@L["UploadAdmin.Index.WelcomeToUploadAdmin"]</h3>
+        <section class="mb-4" aria-labelledby="admin-actions-heading">
+            <h3 id="admin-actions-heading">@L["UploadAdmin.Dashboard.Title"]</h3>
+            @if (actionSummary.Items.Count > 0)
+            {
+                <div class="row row-cols-1 row-cols-sm-2 g-3">
+                    @foreach (var item in actionSummary.Items)
+                    {
+                        <div class="col">
+                            <a class="card h-100 text-decoration-none" href="@item.Url">
+                                <span class="card-body d-flex justify-content-between align-items-center gap-3">
+                                    <span>@L[item.TitleKey]</span>
+                                    <span class="badge bg-primary rounded-pill">@item.Count</span>
+                                </span>
+                                <span class="visually-hidden">@L[item.LinkKey]</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else if (actionSummary.DataUnavailable)
+            {
+                <p class="alert alert-warning" role="status">@L["UploadAdmin.Dashboard.SomeTasksUnavailable"]</p>
+            }
+            else
+            {
+                <p class="alert alert-success" role="status">@L["UploadAdmin.Dashboard.AllClear"]</p>
+            }
+            @if (actionSummary.DataUnavailable && actionSummary.Items.Count > 0)
+            {
+                <p class="text-secondary">@L["UploadAdmin.Dashboard.SomeTasksUnavailable"]</p>
+            }
+        </section>
         <p>@L["UploadAdmin.Index.HereAreSomeSiteStatistics"]</p>
+        @if (actionSummary.StatisticsUnavailable)
+        {
+            <p class="alert alert-warning" role="status">@L["UploadAdmin.Dashboard.StatisticsUnavailable"]</p>
+        }
+        else
+        {
         <div id="page-statistics">
             <partial name="_HomepageStatistics" />
         </div>
+        }
     </div>
 </div>

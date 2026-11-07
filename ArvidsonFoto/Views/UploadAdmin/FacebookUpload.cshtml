@@ -88,12 +88,28 @@
                 <p class="text-muted small">@L["UploadAdmin.FacebookUpload.ClickImagesToSelectOrDeselect10Images"]</p>
             </div>
 
+            <div class="row g-2 mb-3">
+                <div class="col-12 col-md-7">
+                    <label for="facebook-image-search" class="form-label">@L["UploadAdmin.FacebookUpload.SearchImages"]</label>
+                    <input id="facebook-image-search" type="search" class="form-control" />
+                </div>
+                <div class="col-12 col-md-5">
+                    <label for="facebook-category-filter" class="form-label">@L["UploadAdmin.FacebookUpload.FilterCategory"]</label>
+                    <select id="facebook-category-filter" class="form-select">
+                        <option value="">@L["UploadAdmin.Images.AllCategories"]</option>
+                        @foreach (var categoryName in Model.RecentImages.Select(image => image.ImageArtNamn).Where(name => !string.IsNullOrWhiteSpace(name)).Distinct().OrderBy(name => name))
+                        {
+                            <option value="@categoryName">@categoryName</option>
+                        }
+                    </select>
+                </div>
+            </div>
             <div class="row" id="imageGrid">
                 @foreach (var image in Model.RecentImages)
                 {
                     string imgThumbSrc = image.ImageUrlFullSrc + ".thumb.jpg";
                     <div class="col-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card h-100 image-selection-card" data-image-id="@image.ImageId">
+                        <div class="card h-100 image-selection-card" data-image-id="@image.ImageId" data-image-name="@image.ImageUrl" data-category-name="@image.ImageArtNamn">
                             <img src="@imgThumbSrc" class="card-img-top" alt="@image.ImageArtNamn" 
                                  style="cursor: pointer; object-fit: cover; height: 200px;">
                             <div class="card-body p-2">
@@ -112,6 +128,7 @@
                     </div>
                 }
             </div>
+            <p id="facebook-no-results" class="alert alert-info" role="status" hidden>@L["UploadAdmin.FacebookUpload.NoImagesMatch"]</p>
 
             <div class="mt-4 mb-4">
                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
@@ -132,7 +149,24 @@
             const selectedCountBadge = document.getElementById('selectedCount');
             const submitBtn = document.getElementById('submitBtn');
             const cards = document.querySelectorAll('.image-selection-card');
+            const search = document.getElementById('facebook-image-search');
+            const categoryFilter = document.getElementById('facebook-category-filter');
+            const noResults = document.getElementById('facebook-no-results');
             const maxImages = 10;
+
+            function applyFilters() {
+                const searchTerm = search.value.trim().toLocaleLowerCase();
+                const category = categoryFilter.value.toLocaleLowerCase();
+                let visibleCount = 0;
+                cards.forEach(card => {
+                    const matchesSearch = `${card.dataset.imageName} ${card.dataset.categoryName}`.toLocaleLowerCase().includes(searchTerm);
+                    const matchesCategory = !category || card.dataset.categoryName.toLocaleLowerCase() === category;
+                    const visible = matchesSearch && matchesCategory;
+                    card.parentElement.hidden = !visible;
+                    visibleCount += visible ? 1 : 0;
+                });
+                noResults.hidden = visibleCount > 0;
+            }
 
             function updateSelectedCount() {
                 const checkedCount = document.querySelectorAll('.image-checkbox:checked').length;
@@ -195,6 +229,10 @@
                     updateSelectedCount();
                 });
             });
+
+            search.addEventListener('input', applyFilters);
+            categoryFilter.addEventListener('change', applyFilters);
+            applyFilters();
 
             // Initial update
             updateSelectedCount();

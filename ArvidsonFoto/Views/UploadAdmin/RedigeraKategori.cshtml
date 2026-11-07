@@ -8,6 +8,25 @@
     var parentCategoryIds = categories.Select(row => row.Category.MenuParentCategoryId).OfType<int>().ToHashSet();
     var search = ViewData["Search"]?.ToString() ?? "";
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraKategori;
+    var categoriesById = categories
+        .Where(row => row.Category.MenuCategoryId.HasValue)
+        .ToDictionary(row => row.Category.MenuCategoryId!.Value, row => row.Category);
+    var selectedCategory = categoriesById.GetValueOrDefault(Model.CategoryId);
+    var ancestors = new List<TblMenu>();
+    var parentId = selectedCategory?.MenuParentCategoryId;
+    var visitedAncestors = new HashSet<int>();
+    while (parentId.HasValue && categoriesById.TryGetValue(parentId.Value, out var parent) && visitedAncestors.Add(parentId.Value))
+    {
+        ancestors.Insert(0, parent);
+        parentId = parent.MenuParentCategoryId;
+    }
+    var hierarchy = new List<TblMenu>(ancestors);
+    if (selectedCategory is not null)
+    {
+        hierarchy.Add(selectedCategory);
+    }
+    var parentPathSv = string.Join("/", ancestors.Select(category => category.MenuUrlSegment).Where(segment => !string.IsNullOrWhiteSpace(segment)));
+    var parentPathEn = string.Join("/", ancestors.Select(category => string.IsNullOrWhiteSpace(category.MenuUrlSegmentEn) ? category.MenuUrlSegment : category.MenuUrlSegmentEn).Where(segment => !string.IsNullOrWhiteSpace(segment)));
 }
 <h1 class="upload-admin-title">@ViewData["Title"]</h1>
 <nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
@@ -21,14 +40,36 @@
         <input type="hidden" name="search" value="@search" />
         <div asp-validation-summary="All" class="text-danger"></div>
         <h2 class="h4">@L["UploadAdmin.RedigeraKategori.EditCategory"] — @Model.NameSv</h2>
-        <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
-        <input asp-for="NameSv" maxlength="50" class="form-control mb-3" />
-        <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
-        <input asp-for="NameEn" maxlength="50" class="form-control mb-3" />
-        <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
-        <input asp-for="UrlSegmentSv" maxlength="50" class="form-control mb-3" />
-        <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
-        <input asp-for="UrlSegmentEn" maxlength="50" class="form-control mb-3" />
+        <p><strong>@L["UploadAdmin.RedigeraKategori.Hierarchy"]:</strong>
+            @if (hierarchy.Count > 0)
+            {
+                @string.Join(" › ", hierarchy.Select(category => LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn)))
+            }
+            else
+            {
+                @L["UploadAdmin.RedigeraKategori.RootCategory"]
+            }
+        </p>
+        <fieldset class="mb-3">
+            <legend class="h6">@L["UploadAdmin.RedigeraKategori.SwedishFields"]</legend>
+            <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
+            <input asp-for="NameSv" maxlength="50" class="form-control mb-1" />
+            <span asp-validation-for="NameSv" class="text-danger"></span>
+            <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
+            <input asp-for="UrlSegmentSv" maxlength="50" class="form-control mb-1" />
+            <span asp-validation-for="UrlSegmentSv" class="text-danger"></span>
+            <p class="form-text"><span>@L["UploadAdmin.RedigeraKategori.SwedishUrlPreview"]:</span> <code id="category-url-sv" data-parent-path="@parentPathSv"></code></p>
+        </fieldset>
+        <fieldset class="mb-3">
+            <legend class="h6">@L["UploadAdmin.RedigeraKategori.EnglishFields"]</legend>
+            <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
+            <input asp-for="NameEn" maxlength="50" class="form-control mb-1" />
+            <span asp-validation-for="NameEn" class="text-danger"></span>
+            <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
+            <input asp-for="UrlSegmentEn" maxlength="50" class="form-control mb-1" />
+            <span asp-validation-for="UrlSegmentEn" class="text-danger"></span>
+            <p class="form-text"><span>@L["UploadAdmin.RedigeraKategori.EnglishUrlPreview"]:</span> <code id="category-url-en" data-parent-path="@parentPathEn"></code></p>
+        </fieldset>
         <div class="form-check mb-3">
             <input asp-for="IsGameSelectable" class="form-check-input" />
             <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
@@ -75,7 +116,34 @@
     </ul>
 </section>
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
+        (() => {
+            const swedishSegment = document.getElementById('UrlSegmentSv');
+            const englishSegment = document.getElementById('UrlSegmentEn');
+            const previews = [
+                [swedishSegment, document.getElementById('category-url-sv')],
+                [englishSegment, document.getElementById('category-url-en')]
+            ];
+            previews.forEach(([input, preview]) => {
+                const update = () => {
+                    const inputSegment = input.value.trim().toLocaleLowerCase();
+                    const segment = input === englishSegment && !inputSegment
+                        ? swedishSegment.value.trim().toLocaleLowerCase()
+                        : inputSegment;
+                    const parts = [preview.dataset.parentPath, segment]
+                        .filter(Boolean);
+                    preview.textContent = `/bilder/${parts.join('/')}`;
+                };
+                input.addEventListener('input', update);
+                update();
+            });
+            swedishSegment.addEventListener('input', () => {
+                if (!englishSegment.value.trim()) {
+                    englishSegment.dispatchEvent(new Event('input'));
+                }
+            });
+        })();
         (() => {
             const filter = document.getElementById('category-filter');
             const items = Array.from(document.querySelectorAll('.category-tree__item'));

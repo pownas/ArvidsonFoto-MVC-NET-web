@@ -29,6 +29,13 @@
         <p>@L["UploadAdmin.Statistik.HereYouCanSeeSiteStatistics"]</p>
         <div id="page-statistics">
             <partial name="_HomepageStatistics" model="Model" />
+            <form method="get" asp-action="ExportStatisticsCsv" class="mb-3">
+                <input type="hidden" name="period" value="@Model.Period" />
+                <input type="hidden" name="fromMonth" value="@Model.StartDate.ToString("yyyy-MM")" />
+                <input type="hidden" name="toMonth" value="@Model.EndDate.ToString("yyyy-MM")" />
+                <input type="hidden" name="compare" value="@Model.CompareWithPreviousYear.ToString().ToLowerInvariant()" />
+                <button type="submit" class="btn btn-outline-primary">@L["UploadAdmin.Statistics.ExportCsv"]</button>
+            </form>
 
             <h4>@L["UploadAdmin.Statistik.AllTimePageViews"]</h4>
             <div class="upload-admin-chart mb-2">

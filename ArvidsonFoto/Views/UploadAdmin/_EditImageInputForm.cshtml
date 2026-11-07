@@ -21,6 +21,13 @@
             <input asp-for="ImageFamilj" hidden />
             <input asp-for="ImageArt" hidden />
             <input asp-for="ImageId" hidden />
+            <input asp-for="ReturnPage" type="hidden" />
+            <input asp-for="ReturnSearch" type="hidden" />
+            <input asp-for="ReturnCategoryId" type="hidden" />
+            <input asp-for="ReturnDateFrom" type="hidden" />
+            <input asp-for="ReturnDateTo" type="hidden" />
+            <input asp-for="ReturnMissingSwedishDescription" type="hidden" />
+            <input asp-for="ReturnMissingEnglishDescription" type="hidden" />
             <p><strong>@L["UploadAdmin.EditImageInputForm.ImageNumber"]</strong> @Model.ImageId</p>
             <p><strong>@L["UploadAdmin.EditImageInputForm.Species"]</strong> @Model.ImageArtNamn</p>
             <p class="m-0">@L["UploadAdmin.EditImageInputForm.WrongSpecies"]</p>

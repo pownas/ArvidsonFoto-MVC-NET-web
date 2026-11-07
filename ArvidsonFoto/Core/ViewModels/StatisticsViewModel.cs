@@ -8,6 +8,7 @@ public class StatisticsViewModel
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public bool CompareWithPreviousYear { get; set; }
+    public bool IsCurrentMonthIncomplete { get; set; }
     public Dictionary<string, int> MonthlyPageViews { get; set; } = [];
     public Dictionary<string, int> MonthlyCategoryViews { get; set; } = [];
     public Dictionary<string, int> PreviousYearPageViews { get; set; } = [];

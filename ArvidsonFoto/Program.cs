@@ -9,6 +9,7 @@ using ArvidsonFoto.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
@@ -141,6 +142,8 @@ public class Program
 
         // Add HttpClient for FacebookService
         _ = services.AddHttpClient<IFacebookService, FacebookService>();
+        _ = services.AddHttpClient("ImagePublication")
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 
         // Add backend API services
         _ = services.AddScoped<IApiCategoryService, ApiCategoryService>();

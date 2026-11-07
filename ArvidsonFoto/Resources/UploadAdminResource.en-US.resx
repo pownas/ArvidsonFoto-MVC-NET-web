@@ -566,4 +566,77 @@
   <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve"><value>Unavailable for games</value></data>
   <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} categories match</value></data>
   <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>No categories match your search.</value></data>
+  <data name="UploadAdmin.Images.Search" xml:space="preserve"><value>Search filename or description</value></data>
+  <data name="UploadAdmin.Images.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="UploadAdmin.Images.AllCategories" xml:space="preserve"><value>All categories</value></data>
+  <data name="UploadAdmin.Images.DateFrom" xml:space="preserve"><value>Photo date from</value></data>
+  <data name="UploadAdmin.Images.DateTo" xml:space="preserve"><value>Photo date to</value></data>
+  <data name="UploadAdmin.Images.MissingSwedish" xml:space="preserve"><value>Missing Swedish description</value></data>
+  <data name="UploadAdmin.Images.MissingEnglish" xml:space="preserve"><value>Missing English description</value></data>
+  <data name="UploadAdmin.Images.Reset" xml:space="preserve"><value>Clear filters</value></data>
+  <data name="UploadAdmin.Images.ResultCount" xml:space="preserve"><value>Matches: {0}</value></data>
+  <data name="UploadAdmin.Images.NoResults" xml:space="preserve"><value>No images match these filters.</value></data>
+  <data name="UploadAdmin.RedigeraBilder.FailedToDeleteImageNumber" xml:space="preserve"><value>Could not delete image record:</value></data>
+  <data name="UploadAdmin.Dashboard.Title" xml:space="preserve"><value>To do</value></data>
+  <data name="UploadAdmin.Dashboard.UnreadGuestbook" xml:space="preserve"><value>Unread guestbook entries</value></data>
+  <data name="UploadAdmin.Dashboard.MissingImageTranslations" xml:space="preserve"><value>Images missing an English description</value></data>
+  <data name="UploadAdmin.Dashboard.PendingCategoryTranslations" xml:space="preserve"><value>Category fields to review</value></data>
+  <data name="UploadAdmin.Dashboard.RecentErrors" xml:space="preserve"><value>Errors in the latest log</value></data>
+  <data name="UploadAdmin.Dashboard.Open" xml:space="preserve"><value>Open list</value></data>
+  <data name="UploadAdmin.Dashboard.SomeTasksUnavailable" xml:space="preserve"><value>Some action counts could not be loaded.</value></data>
+  <data name="UploadAdmin.Dashboard.AllClear" xml:space="preserve"><value>No priority actions right now.</value></data>
+  <data name="UploadAdmin.Dashboard.StatisticsUnavailable" xml:space="preserve"><value>Statistics are unavailable right now.</value></data>
+  <data name="UploadAdmin.Statistics.PageViewsAreNotVisitors" xml:space="preserve"><value>These metrics count page views, not unique visitors.</value></data>
+  <data name="UploadAdmin.Statistics.CurrentMonthIncomplete" xml:space="preserve"><value>The current month is incomplete.</value></data>
+  <data name="UploadAdmin.Statistics.ExportCsv" xml:space="preserve"><value>Export visible report as CSV</value></data>
+  <data name="UploadAdmin.Statistics.CsvMetric" xml:space="preserve"><value>Metric</value></data>
+  <data name="UploadAdmin.Statistics.CsvName" xml:space="preserve"><value>Name</value></data>
+  <data name="UploadAdmin.Statistics.CsvValue" xml:space="preserve"><value>Page views</value></data>
+  <data name="UploadAdmin.Statistics.CsvLastVisited" xml:space="preserve"><value>Last viewed</value></data>
+  <data name="UploadAdmin.Statistics.CsvPeriodStart" xml:space="preserve"><value>Period from</value></data>
+  <data name="UploadAdmin.Statistics.CsvPeriodEnd" xml:space="preserve"><value>Period to</value></data>
+  <data name="UploadAdmin.Statistics.CsvPeriod" xml:space="preserve"><value>Selected period</value></data>
+  <data name="UploadAdmin.Statistics.CsvMonthlyPageViews" xml:space="preserve"><value>Monthly page views</value></data>
+  <data name="UploadAdmin.Statistics.CsvMonthlyCategoryViews" xml:space="preserve"><value>Monthly category views</value></data>
+  <data name="UploadAdmin.Logbook.Search" xml:space="preserve"><value>Search this day's log</value></data>
+  <data name="UploadAdmin.Logbook.Level" xml:space="preserve"><value>Log level</value></data>
+  <data name="UploadAdmin.Logbook.AllLevels" xml:space="preserve"><value>All levels</value></data>
+  <data name="UploadAdmin.Logbook.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="UploadAdmin.Logbook.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="UploadAdmin.Logbook.Information" xml:space="preserve"><value>Information</value></data>
+  <data name="UploadAdmin.Logbook.ResultCount" xml:space="preserve"><value>Showing {0} log lines for the selected date.</value></data>
+  <data name="UploadAdmin.Logbook.NoResults" xml:space="preserve"><value>No log lines match the search and filters.</value></data>
+  <data name="UploadAdmin.Navigation.Images" xml:space="preserve"><value>Images</value></data>
+  <data name="UploadAdmin.Navigation.Content" xml:space="preserve"><value>Content</value></data>
+  <data name="UploadAdmin.Navigation.Monitoring" xml:space="preserve"><value>Monitoring</value></data>
+  <data name="UploadAdmin.RedigeraKategori.Hierarchy" xml:space="preserve"><value>Hierarchy</value></data>
+  <data name="UploadAdmin.RedigeraKategori.RootCategory" xml:space="preserve"><value>Root category</value></data>
+  <data name="UploadAdmin.RedigeraKategori.SwedishFields" xml:space="preserve"><value>Swedish</value></data>
+  <data name="UploadAdmin.RedigeraKategori.EnglishFields" xml:space="preserve"><value>English</value></data>
+  <data name="UploadAdmin.RedigeraKategori.SwedishUrlPreview" xml:space="preserve"><value>URL preview</value></data>
+  <data name="UploadAdmin.RedigeraKategori.EnglishUrlPreview" xml:space="preserve"><value>URL preview</value></data>
+  <data name="UploadAdmin.Review.NextUnreviewed" xml:space="preserve"><value>Continue with the next unreviewed entry</value></data>
+  <data name="UploadAdmin.Review.NextPageWithPending" xml:space="preserve"><value>Go to the next page with remaining work</value></data>
+  <data name="UploadAdmin.Guestbook.Status" xml:space="preserve"><value>Read status</value></data>
+  <data name="UploadAdmin.Guestbook.All" xml:space="preserve"><value>All entries</value></data>
+  <data name="UploadAdmin.Guestbook.Read" xml:space="preserve"><value>Read</value></data>
+  <data name="UploadAdmin.Guestbook.Unread" xml:space="preserve"><value>Unread</value></data>
+  <data name="UploadAdmin.Guestbook.SortByDate" xml:space="preserve"><value>Sort by date</value></data>
+  <data name="UploadAdmin.Guestbook.NewestFirst" xml:space="preserve"><value>Newest first</value></data>
+  <data name="UploadAdmin.Guestbook.OldestFirst" xml:space="preserve"><value>Oldest first</value></data>
+  <data name="UploadAdmin.Guestbook.NoEntries" xml:space="preserve"><value>No entries match this selection.</value></data>
+  <data name="UploadAdmin.HanteraGB.EntryNumber" xml:space="preserve"><value>Entry number:</value></data>
+  <data name="UploadAdmin.FacebookUpload.SearchImages" xml:space="preserve"><value>Search filename or category</value></data>
+  <data name="UploadAdmin.FacebookUpload.FilterCategory" xml:space="preserve"><value>Filter by category</value></data>
+  <data name="UploadAdmin.FacebookUpload.NoImagesMatch" xml:space="preserve"><value>No images match the filter.</value></data>
+  <data name="UploadAdmin.NyBild.FileMustAlreadyBePublished" xml:space="preserve"><value>This form links to an image file that has already been published; it does not upload files. Verify that both the original and thumbnail exist in the selected category's image folder.</value></data>
+  <data name="UploadAdmin.NyBild.PreviewReference" xml:space="preserve"><value>Preview image reference</value></data>
+  <data name="UploadAdmin.NyBild.PreviewInstructions" xml:space="preserve"><value>Enter a filename and check that the correct thumbnail appears before saving.</value></data>
+  <data name="UploadAdmin.NyBild.PreviewAlt" xml:space="preserve"><value>Preview of the image file</value></data>
+  <data name="UploadAdmin.NyBild.ConfirmReference" xml:space="preserve"><value>I have checked that the preview shows the correct image.</value></data>
+  <data name="UploadAdmin.NyBild.SaveVerifiedReference" xml:space="preserve"><value>Save verified image reference</value></data>
+  <data name="UploadAdmin.NyBild.InvalidReference" xml:space="preserve"><value>Enter a valid filename without a path.</value></data>
+  <data name="UploadAdmin.NyBild.PreviewLoaded" xml:space="preserve"><value>The thumbnail loaded. Confirm that it is the correct image.</value></data>
+  <data name="UploadAdmin.NyBild.PreviewFailed" xml:space="preserve"><value>The image or thumbnail could not be found. Check the filename and publication.</value></data>
+  <data name="UploadAdmin.NyBild.ImageNotPublished" xml:space="preserve"><value>The original image and thumbnail could not be verified on the image server. Nothing was saved; check the filename and publication.</value></data>
 </root>

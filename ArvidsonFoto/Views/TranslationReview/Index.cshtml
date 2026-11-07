@@ -2,6 +2,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @{
     ViewData["Title"] = L["UploadAdmin.Review.Title"];
+    var nextUnreviewed = Model.Items.FirstOrDefault(item => !item.Reviewed);
 }
 <h1 class="upload-admin-title">@ViewData["Title"]</h1>
 <nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
@@ -15,6 +16,14 @@
 <div class="upload-review-summary" role="status">
     <p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
     <p class="mb-0">@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
+    @if (nextUnreviewed is not null)
+    {
+        <a class="btn btn-primary mt-2" href="#review-record-@Model.Table-@nextUnreviewed.Id">@L["UploadAdmin.Review.NextUnreviewed"]</a>
+    }
+    else if (Model.PendingCount > 0 && Model.Page < Model.TotalPages)
+    {
+        <a class="btn btn-primary mt-2" asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.NextPageWithPending"]</a>
+    }
 </div>
 @if (Model.Table == "images")
 {
