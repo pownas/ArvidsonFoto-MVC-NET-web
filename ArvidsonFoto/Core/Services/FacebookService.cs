@@ -10,7 +10,7 @@ public class FacebookService(IConfiguration configuration, HttpClient httpClient
 {
     private readonly IConfiguration _configuration = configuration;
     private readonly HttpClient _httpClient = httpClient;
-    private const string GraphApiBaseUrl = "https://graph.facebook.com/v19.0";
+    private const string GraphApiBaseUrl = "https://graph.facebook.com/v27.0";
 
     public bool IsConfigured()
     {
@@ -73,11 +73,13 @@ public class FacebookService(IConfiguration configuration, HttpClient httpClient
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
 
-                if (jsonResponse != null && jsonResponse.ContainsKey("id"))
+                if (jsonResponse != null && jsonResponse.TryGetValue("post_id", out var postIdElement))
                 {
-                    var postId = jsonResponse["id"].GetString();
-                    // Facebook photo posts har URL-format: https://www.facebook.com/{pageId}/photos/{photoId}
-                    return $"https://www.facebook.com/{pageId}/photos/{postId}";
+                    var postId = postIdElement.GetString();
+                    if (!string.IsNullOrWhiteSpace(postId))
+                    {
+                        return $"https://www.facebook.com/{postId}";
+                    }
                 }
             }
             else

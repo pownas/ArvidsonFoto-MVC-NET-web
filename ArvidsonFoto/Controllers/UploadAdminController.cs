@@ -196,6 +196,19 @@ public class UploadAdminController(
             string.Join("/", imagePathSegments.Select(Uri.EscapeDataString)) + ".thumb.jpg";
     }
 
+    internal static string? BuildFacebookImageUrl(string categoryPath, string? imageFileName)
+    {
+        if (string.IsNullOrWhiteSpace(imageFileName) ||
+            imageFileName is "." or ".." ||
+            imageFileName.Contains('/') ||
+            imageFileName.Contains('\\'))
+        {
+            return null;
+        }
+
+        return $"https://arvidsonfoto.se/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, imageFileName)}";
+    }
+
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateImageLink(UploadImageInputDto model)
     {
@@ -1097,24 +1110,21 @@ public class UploadAdminController(
             var imageUrls = new List<string>();
             foreach (var image in selectedImages)
             {
-                string imageUrlFullSrc = "https://arvidsonfoto.se/bilder";
-
-                if (image.ImageMainFamilyId is not null)
+                if (image.ImageCategoryId is not int categoryId ||
+                    categoryId <= 0 ||
+                    _categoryService.GetById(categoryId).CategoryId != categoryId)
                 {
-                    var huvudfamiljNamn = _categoryService.GetNameById(image.ImageMainFamilyId);
-                    imageUrlFullSrc += "/" + huvudfamiljNamn;
+                    return RedirectToAction("FacebookUpload", new { DisplayMessage = "FacebookError" });
                 }
 
-                if (image.ImageFamilyId is not null)
+                var categoryPath = _categoryService.GetCategoryDisplayPathForImage(categoryId);
+                var imageUrl = BuildFacebookImageUrl(categoryPath, image.ImageUrlName);
+                if (imageUrl is null)
                 {
-                    var familjNamn = _categoryService.GetNameById(image.ImageFamilyId);
-                    imageUrlFullSrc += "/" + familjNamn;
+                    return RedirectToAction("FacebookUpload", new { DisplayMessage = "FacebookError" });
                 }
 
-                var artNamn = _categoryService.GetNameById(image.ImageCategoryId);
-                imageUrlFullSrc += "/" + artNamn + "/" + image.ImageUrlName;
-
-                imageUrls.Add(imageUrlFullSrc);
+                imageUrls.Add(imageUrl);
             }
 
             var postUrl = await _facebookService.CreatePostAsync(imageUrls, model.Message);

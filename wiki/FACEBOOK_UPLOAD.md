@@ -1,160 +1,95 @@
-# Facebook-uppladdningsfunktion
+# Facebook-uppladdning från admin
 
-## Översikt
-Facebook-uppladdningsfunktionen gör det möjligt för administratörer att enkelt dela nyuppladdade bilder direkt till företagets Facebook-sida från UploadAdmin-gränssnittet.
+## Vad funktionen gör
 
-## Funktioner
-- Välj 1-10 bilder från de 25 senast uppladdade bilderna
-- Skriv en anpassad text som följer med bilderna
-- Ladda upp direkt till Facebook-sidan via Facebook Graph API
-- Visuell feedback för val av bilder
-- Validering och felhantering
-- Länk till det skapade Facebook-inlägget efter publicering
+En inloggad administratör öppnar **Dela på Facebook** i UploadAdmin, väljer 1–10 bilder bland de 60 senaste, skriver en text och publicerar till den konfigurerade Facebook-sidan. Bilderna måste kunna hämtas anonymt över HTTPS från `https://arvidsonfoto.se`. Facebook-tjänsten använder Graph API v27.0:
 
-## Konfiguration
+- En bild: `POST /{page-id}/photos` med bildens publika `url` och texten som `caption`.
+- Flera bilder: en `POST /{page-id}/photos` per bild med `published=false`, följt av `POST /{page-id}/feed` med `attached_media`.
 
-### 1. Skapa Facebook App
-1. Gå till [Facebook for Developers](https://developers.facebook.com/)
-2. Skapa en ny app eller använd en befintlig
-3. Lägg till "Pages" och "Publish" behörigheter
+Tjänsten behöver bara en Page ID och en Page access token. Den skickar tokenen i POST-innehållet och hemligheter ska inte finnas i webbläsaren, loggar, källkod eller dokumentation.
 
-### 2. Hämta Access Token
-1. I din Facebook App, gå till Tools → Graph API Explorer
-2. Välj din Facebook-sida i dropdown-menyn
-3. Lägg till följande behörigheter:
-   - `pages_manage_posts`
-   - `pages_read_engagement`
-4. Generera en Page Access Token
-5. Spara denna token (den är endast synlig en gång)
+## Förutsättningar i Meta
 
-### 3. Konfigurera applikationen
-Lägg till följande i `appsettings.json` eller User Secrets:
+1. På [Meta for Developers](https://developers.facebook.com/) skapar eller väljer du en app och aktiverar Facebook Pages API/Facebook Login för appen.
+2. Använd ett Facebook-konto som har en roll på sidan och siduppgiften **CREATE_CONTENT**. Kontot måste kunna skapa innehåll på den aktuella sidan.
+3. Bevilja `pages_manage_posts`, som krävs för att skapa Page-inlägg. Metas aktuella Pages API-flöde för att hämta Page ID och token via Graph API Explorer använder även `pages_show_list`, `pages_manage_metadata` och `pages_manage_read_engagement` för `GET /me/accounts`. Dessa extra behörigheter behövs för det tokenhämtningsflödet, inte för webbplatsens publiceringsanrop. Bevilja inte äldre `manage_pages` eller `publish_pages`.
+4. Om appen ska användas av personer som inte har en approll måste appen vara publicerad och ha nödvändig avancerad behörighet/App Review enligt Metas krav. En app i utvecklingsläge kan bara användas av appens administratörer, utvecklare och testare. Meta kan även kräva företagsverifiering.
 
-```json
-{
-  "Facebook": {
-    "PageAccessToken": "DIN_PAGE_ACCESS_TOKEN",
-    "PageId": "DIN_FACEBOOK_SIDA_ID"
-  }
-}
-```
+Meta kan ändra behörighets- och granskningskrav. Kontrollera alltid appens aktuella status, behörigheter och krav i Meta for Developers innan produktionssättning.
 
-**Hitta ditt PageId:**
-- Gå till din Facebook-sida
-- Klicka på "About" (Om)
-- Scrolla ner till "Page ID" eller hitta det i URL:en
+## Skapa och kontrollera Page access token
 
-**Säkerhetsvarning:** Lagra **ALDRIG** tokens i versionshantering. Använd User Secrets i utveckling och miljövariabler i produktion.
+Webbplatsen använder en **Page access token**, inte app secret, app access token eller en kortlivad User access token.
 
-#### Använda User Secrets (Development)
+1. Öppna [Graph API Explorer](https://developers.facebook.com/tools/explorer/) och välj webbplatsens Meta-app.
+2. Välj de Pages-behörigheter som behövs ovan och generera en User access token för ett konto med rätt sidroll.
+3. Följ Metas aktuella flöde för att byta den kortlivade User access token mot en långlivad User access token. Den långlivade användartokenen gäller normalt omkring 60 dagar.
+4. Med den långlivade användartokenen anropar du `GET /me/accounts` och väljer rätt sida i svaret. Notera sidans `id` och dess `access_token`. Det är sidans token som ska användas i webbplatsen. Kontrollera även att sidan visar uppgiften `CREATE_CONTENT`.
+5. Klistra in Page access token i [Access Token Debugger](https://developers.facebook.com/tools/debug/accesstoken). Kontrollera att app, sida och `pages_manage_posts` är rätt och att tokenen inte redan har upphört eller återkallats. Klistra aldrig in tokenen i en issue, logg, chatt eller dokumentation.
+
+En långlivad Page access token visas normalt utan ett fast utgångsdatum, men är inte garanterat permanent. Den kan sluta fungera när behörigheter återkallas, sidåtkomst eller appstatus ändras, användaren tar bort appåtkomst eller Meta återkallar tokenen. Appen förnyar inte token automatiskt. Kontrollera den regelbundet och skapa en ny via stegen ovan när den återkallats eller inte längre fungerar. Efter tokenbyte uppdaterar du den hemliga konfigurationen och startar om/laddar om applikationen.
+
+## Konfigurera webbplatsen
+
+Applikationen läser `Facebook:PageId` och `Facebook:PageAccessToken`. App ID och App Secret används inte av uppladdningstjänsten och ska inte läggas in i dess konfiguration.
+
+Lokal utveckling (kör från projektet `ArvidsonFoto`):
+
 ```bash
-cd ArvidsonFoto
-dotnet user-secrets set "Facebook:PageAccessToken" "DIN_TOKEN"
-dotnet user-secrets set "Facebook:PageId" "DIN_SIDA_ID"
+dotnet user-secrets set "Facebook:PageId" "<PAGE_ID>"
+dotnet user-secrets set "Facebook:PageAccessToken" "<PAGE_ACCESS_TOKEN>"
 ```
 
-#### Använda Miljövariabler (Production)
+I produktion sätts motsvarande miljövariabler eller hemligheter i plattformens secret manager:
+
+```text
+Facebook__PageId=<PAGE_ID>
+Facebook__PageAccessToken=<PAGE_ACCESS_TOKEN>
+```
+
+Ersätt värdena lokalt; committa aldrig dessa värden till `appsettings*.json`, versionshantering, ärenden eller dokumentation. Begränsa åtkomst till hemligheterna till applikationens driftidentitet och behöriga administratörer. Rotera en exponerad token omedelbart.
+
+Administratören kan öppna sidan via UploadAdmin-menyn. Om konfiguration saknas visas **Facebook är inte konfigurerat**. Efter publicering visas en länk till Facebook-inlägget.
+
+## Verifiera uppladdningen
+
+En riktig publicering kräver en egen Meta-app, en Page access token med tillräcklig behörighet och en sida som kontot får publicera till. Dessa hemligheter och sidåtkomst finns inte i repo; därför ska unit-testresultat inte beskrivas som en verifierad livepublicering.
+
+1. Kontrollera att Page ID och Page access token är satta i driftmiljön och att tokenen passerar Access Token Debugger.
+2. Kontrollera att den valda sidan är den avsedda och att appen/tokenen har `pages_manage_posts` samt siduppgiften `CREATE_CONTENT`.
+3. Logga in i webbplatsens admin och öppna **Dela på Facebook**.
+4. Välj först en bild, skriv ett kort testmeddelande och publicera. Bekräfta att framgångslänken öppnar det nya inlägget på rätt sida och att bilden/texten stämmer.
+5. Om albumpublicering behövs, gör ett separat test med två bilder och kontrollera att båda visas i samma inlägg.
+6. Ta bort testinläggen vid behov. Testa inte med riktiga kundbilder utan godkännande.
+
+De automatiserade testerna körs från lösningens rot:
+
 ```bash
-export Facebook__PageAccessToken="DIN_TOKEN"
-export Facebook__PageId="DIN_SIDA_ID"
+dotnet test ArvidsonFoto.Tests.Unit/ArvidsonFoto.Tests.Unit.csproj --filter "FullyQualifiedName~FacebookServiceTests"
 ```
 
-## Användning
-
-### För administratörer
-1. Logga in på UploadAdmin
-2. Klicka på "Dela på Facebook" i navigeringsmenyn
-3. Välj 1-10 bilder genom att klicka på dem (de markeras med blå kant)
-4. Skriv en text som ska följa med bilderna
-5. Klicka på "Publicera på Facebook"
-6. Efter publicering får du en länk till det skapade Facebook-inlägget
-
-### Felmeddelanden
-- **Facebook är inte konfigurerat**: Kontakta administratören för att konfigurera Facebook-integreringen
-- **Inga bilder valda**: Välj minst en bild
-- **Fel vid publicering**: Kontrollera att Facebook-konfigurationen är korrekt och att token är giltig
-
-## Teknisk dokumentation
-
-### Arkitektur
-Funktionen består av:
-- **FacebookService**: Service för kommunikation med Facebook Graph API
-- **IFacebookService**: Interface för dependency injection
-- **FacebookUploadViewModel**: ViewModel för vyn
-- **FacebookUploadInputModel**: InputModel för formuläret
-- **FacebookUpload.cshtml**: Razor-vy med bildval och formulär
-- **UploadAdminController**: Controller-actions för GET och POST
-
-### API-anrop
-Tjänsten använder Facebook Graph API v19.0:
-- **Enkel bild**: `POST /{page-id}/photos` - Laddar upp en bild direkt
-- **Flera bilder**: 
-  1. `POST /{page-id}/photos` (med `published=false`) - Laddar upp varje bild opublicerad
-  2. `POST /{page-id}/feed` (med `attached_media`) - Skapar inlägg med alla bilder
-
-### Felhantering
-- Validering av konfiguration innan API-anrop
-- Validering av bildantal (1-10)
-- Logging av fel med Serilog
-- Användarvänliga felmeddelanden
-- Hantering av partiella misslyckanden vid multi-foto-uppladdning
-
-### Säkerhet
-- Endast autentiserade administratörer har åtkomst (via `[Authorize]` attribut)
-- CSRF-skydd via `[ValidateAntiForgeryToken]`
-- Tokens lagras säkert via Configuration (inte i kod)
-- Validering av användarinput
-- CodeQL-säkerhetsskannad
-
-## Testning
-
-### Unit Tests
-Projektet innehåller omfattande unit tests för FacebookService:
-```bash
-dotnet test --filter "FullyQualifiedName~FacebookServiceTests"
-```
-
-Tester täcker:
-- Konfigurationsvalidering
-- Hantering av tomma bildlistor
-- Lyckade uppladdningar (enkel och multi-bild)
-- Felhantering vid API-fel
-
-### Manuell testning
-1. Konfigurera Facebook-integration enligt ovan
-2. Starta applikationen
-3. Logga in som administratör
-4. Navigera till "Dela på Facebook"
-5. Testa att välja bilder och publicera
-
-## Begränsningar
-- Maximalt 10 bilder per inlägg (Facebook API-begränsning)
-- Kräver giltig Page Access Token
-- Bilder måste vara tillgängliga via publika URL:er
-- Page Access Token måste förnyas periodiskt (beroende på appkonfiguration)
+Testerna simulerar Graph API-svar och validerar inte Meta-appens behörigheter eller en verklig publicering.
 
 ## Felsökning
 
-### "Facebook är inte konfigurerat"
-- Kontrollera att `Facebook:PageAccessToken` och `Facebook:PageId` är korrekt konfigurerade
-- Verifiera att värdena inte är tomma strängar
+Admin får ett användarvänligt fel vid misslyckad publicering. Serverloggen innehåller HTTP-status och Facebooks Graph API-felsvar; använd inte loggar för att dela tokenvärden. Kontrollera:
 
-### "Fel vid publicering"
-- Kontrollera att Page Access Token är giltig
-- Verifiera att appen har rätt behörigheter (`pages_manage_posts`)
-- Kontrollera att bildernas URL:er är tillgängliga publikt
-- Granska loggar för mer detaljerad felinformation
+| Symptom | Kontroll |
+| --- | --- |
+| **Facebook är inte konfigurerat** | Kontrollera att både `Facebook:PageId` och `Facebook:PageAccessToken` finns i samma miljö/process som webbplatsen. Kontrollera stavning, secret injection och omstart. |
+| OAuth-fel, utgången/ogiltig token eller fel app | Granska tokenen i Access Token Debugger. Skapa om Page access token från rätt app och långlivad användartoken. Kontrollera att rätt app valdes i Graph API Explorer. |
+| Behörighetsfel eller sidan kan inte publicera | Kontrollera `pages_manage_posts`, appens behörighetsstatus, sidans `CREATE_CONTENT`-uppgift och att sidåtkomsten inte återkallats. |
+| Graph API säger att sidan inte hittas | Kontrollera att konfigurerat `PageId` hör till den token som används. Hämta ID och token tillsammans från `/me/accounts`. |
+| Facebook kan inte hämta bilden | Öppna bildens exakta HTTPS-URL i ett privat webbläsarfönster. Den måste fungera utan inloggning och vara tillgänglig för Facebooks servrar; kontrollera TLS, omdirigeringar, brandvägg och bildformat. |
+| Enbildsuppladdning lyckas men länken fungerar inte | Kontrollera att svaret innehåller `post_id` och att det öppnade inlägget är synligt för målgruppen. Ett foto-ID är inte samma sak som ett inläggs-ID. |
+| Nätverksfel, begränsning eller serverfel | Kontrollera driftens utgående HTTPS-anslutning och Meta-status. Försök igen senare vid tillfälliga fel; undvik täta upprepade publiceringsförsök eftersom de kan skapa dubbletter. |
 
-### Token har löpt ut
-- Generera en ny Page Access Token enligt steg 2 ovan
-- Uppdatera konfigurationen med den nya token
+Använd Metas [Graph API-felsökningsguide](https://developers.facebook.com/docs/graph-api/using-graph-api/error-handling/) och [Access Token Debugger](https://developers.facebook.com/tools/debug/accesstoken/) för felkod och tokenstatus. Dela aldrig en fullständig token i en supportbegäran.
 
-## Framtida förbättringar
-- Stöd för att schemalägga inlägg
-- Förhandsvisning av inlägget innan publicering
-- Stöd för att lägga till hashtags automatiskt
-- Koppla till Facebook Insights för statistik
-- Stöd för att publicera till Instagram samtidigt
+## Källor
 
-## Support
-För frågor eller problem, kontakta utvecklingsteamet eller skapa en issue i projektet.
+- [Meta Pages API: Getting Started](https://developers.facebook.com/documentation/pages-api/getting-started/)
+- [Meta Pages API: Posts](https://developers.facebook.com/documentation/pages-api/posts/)
+- [Meta: Long-lived access tokens](https://developers.facebook.com/documentation/facebook-login/guides/access-tokens/get-long-lived/)
+- [Meta: Graph API error handling](https://developers.facebook.com/docs/graph-api/using-graph-api/error-handling/)
