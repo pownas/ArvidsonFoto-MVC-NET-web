@@ -27,6 +27,15 @@ dotnet run --project ArvidsonFoto.AppHost
 
 Se [ArvidsonFoto.AppHost/README.md](ArvidsonFoto.AppHost/README.md) för mer detaljer.
 
+### Lokalt testkonto
+
+Vid start i `Development` skapas ett bekräftat Identity-konto automatiskt om det saknas. Öppna `https://localhost:5001/Identity/Account/Login` och logga in med:
+
+- E-post: `test@example.com`
+- Lösenord: `LocalTest123!`
+
+Kontot skapas bara i `Development` och styrs av `DatabaseSettings:SeedTestAccount` i `appsettings.Development.json`.
+
 #### Detaljerade traces och bildhämtning
 
 I Aspire visar MVC-spans controller/action, resultattyp och rendering av Razor-vyn. Galleriets controller visar kategori-id, sidnummer, sidstorlek och antal bilder. `category.list cache (antal)` respektive `category.list database (antal)` visar direkt om kategorierna kom från cache eller databas. Öppna ett span för att se attribut och exception-events; Structured Logs visar också MVC-resultat och cacheinformation när Debug-loggning är aktiverad. HTTP-spans visar sökväg, innehållstyp och tillgänglig svarsstorlek. Inga formulärvärden, cookies eller extra queryvärden läggs till av denna detaljloggning.

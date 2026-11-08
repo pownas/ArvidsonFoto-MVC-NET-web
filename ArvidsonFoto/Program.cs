@@ -18,7 +18,7 @@ namespace ArvidsonFoto;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         // Determine if we're in development mode early
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
@@ -68,6 +68,11 @@ public class Program
             ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
             var app = builder.Build();
+
+            await ArvidsonFotoIdentityDbSeeder.SeedTestAccountAsync(
+                app.Services,
+                app.Configuration,
+                app.Environment);
 
             // Configure the HTTP request pipeline
             ConfigureMiddleware(app, app.Environment, app.Configuration);
