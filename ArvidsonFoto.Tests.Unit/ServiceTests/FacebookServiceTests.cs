@@ -90,7 +90,7 @@ public class FacebookServiceTests
         _mockConfiguration.SetValue("Facebook:PageAccessToken", "test_token");
         _mockConfiguration.SetValue("Facebook:PageId", "123456789");
 
-        var responseContent = JsonSerializer.Serialize(new { id = "photo_12345" });
+        var responseContent = JsonSerializer.Serialize(new { id = "photo_12345", post_id = "123456789_67890" });
         var httpResponse = new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.OK,
@@ -107,9 +107,8 @@ public class FacebookServiceTests
         var result = await service.CreatePostAsync(imageUrls, message);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Contains("facebook.com", result);
-        Assert.Contains("photo_12345", result);
+        Assert.Equal("https://www.facebook.com/123456789_67890", result);
+        Assert.Equal("https://graph.facebook.com/v27.0/123456789/photos", _mockHttpMessageHandler.Requests[0].RequestUri?.ToString());
     }
 
     [Fact]
