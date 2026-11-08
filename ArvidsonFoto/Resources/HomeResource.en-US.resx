@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -16,12 +16,9 @@
   <data name="Home.Explore" xml:space="preserve"><value>Explore more</value></data>
   <data name="Home.LatestPhotos" xml:space="preserve"><value>Recently photographed</value></data>
   <data name="Home.LatestPhotosDetail" xml:space="preserve"><value>Discover the newest photos in the collection and explore the latest additions.</value></data>
-  <data name="Home.ViewLatest" xml:space="preserve"><value>View recent photos</value></data>
   <data name="Home.AllCategories" xml:space="preserve"><value>All categories</value></data>
   <data name="Home.AllCategoriesDetail" xml:space="preserve"><value>Browse photo categories and see the latest photos in each. Find what you are looking for.</value></data>
   <data name="Home.ViewCategories" xml:space="preserve"><value>View all categories</value></data>
   <data name="Home.BuyPhotosDetail" xml:space="preserve"><value>Interested in buying high-resolution photos? Contact me for prices and usage details.</value></data>
-  <data name="Home.ReadBuyPhotos" xml:space="preserve"><value>Learn about buying photos</value></data>
   <data name="Home.SitemapDetail" xml:space="preserve"><value>Find all photo categories and pages on the website. A complete overview of the content.</value></data>
-  <data name="Home.ViewSitemap" xml:space="preserve"><value>View sitemap</value></data>
 </root>

@@ -435,9 +435,6 @@
   <data name="UploadAdmin.Navigation.ManageGuestbookEntries" xml:space="preserve">
     <value>Manage guestbook entries</value>
   </data>
-  <data name="UploadAdmin.NyBild.HereYouCanLinkANewTheSite" xml:space="preserve">
-    <value>Here you can link a new image on the site:</value>
-  </data>
   <data name="UploadAdmin.RedigeraBilder.YouCanScrollHorizontallyOnYourPhone" xml:space="preserve">
     <value>(you can scroll horizontally on your phone)</value>
   </data>
@@ -965,9 +962,6 @@
   </data>
   <data name="UploadAdmin.FacebookUpload.NoImagesMatch" xml:space="preserve">
     <value>No images match the filter.</value>
-  </data>
-  <data name="UploadAdmin.NyBild.FileMustAlreadyBePublished" xml:space="preserve">
-    <value>This form links to an image file that has already been published; it does not upload files. Verify that both the original and thumbnail exist in the selected category's image folder.</value>
   </data>
   <data name="UploadAdmin.NyBild.PreviewReference" xml:space="preserve">
     <value>Preview image reference</value>

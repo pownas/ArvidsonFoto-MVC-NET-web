@@ -435,9 +435,6 @@
   <data name="UploadAdmin.Navigation.ManageGuestbookEntries" xml:space="preserve">
     <value>Hantera gästbokens inlägg</value>
   </data>
-  <data name="UploadAdmin.NyBild.HereYouCanLinkANewTheSite" xml:space="preserve">
-    <value>Här kan du länka till en ny bild på hemsidan:</value>
-  </data>
   <data name="UploadAdmin.RedigeraBilder.YouCanScrollHorizontallyOnYourPhone" xml:space="preserve">
     <value>(du kan scrolla i sidled på telefonen)</value>
   </data>
@@ -965,9 +962,6 @@
   </data>
   <data name="UploadAdmin.FacebookUpload.NoImagesMatch" xml:space="preserve">
     <value>Inga bilder matchar filtret.</value>
-  </data>
-  <data name="UploadAdmin.NyBild.FileMustAlreadyBePublished" xml:space="preserve">
-    <value>Formuläret länkar till en redan publicerad bildfil; det laddar inte upp filer. Kontrollera att både originalbilden och miniatyren finns i den valda kategorins bildmapp.</value>
   </data>
   <data name="UploadAdmin.NyBild.PreviewReference" xml:space="preserve">
     <value>Förhandsgranska bildreferensen</value>
