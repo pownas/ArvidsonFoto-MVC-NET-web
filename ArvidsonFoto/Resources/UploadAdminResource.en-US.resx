@@ -1,5 +1,122 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <data name="UploadAdmin.RedigeraBilder.PhotoDate" xml:space="preserve">
     <value>Photo date</value>
   </data>
@@ -114,7 +231,9 @@
   <data name="UploadAdmin.NyBild.TheImageWasLinked" xml:space="preserve">
     <value>The image was linked:</value>
   </data>
-  <data name="UploadAdmin.NyBild.LatestCategoryImage" xml:space="preserve"><value>Most recently uploaded image in {0}</value></data>
+  <data name="UploadAdmin.NyBild.LatestCategoryImage" xml:space="preserve">
+    <value>Most recently uploaded image in {0}</value>
+  </data>
   <data name="UploadAdmin.RedigeraBilder.FileName" xml:space="preserve">
     <value>File name:</value>
   </data>
@@ -315,9 +434,6 @@
   </data>
   <data name="UploadAdmin.Navigation.ManageGuestbookEntries" xml:space="preserve">
     <value>Manage guestbook entries</value>
-  </data>
-  <data name="UploadAdmin.NyBild.HereYouCanLinkANewTheSite" xml:space="preserve">
-    <value>Here you can link a new image on the site:</value>
   </data>
   <data name="UploadAdmin.RedigeraBilder.YouCanScrollHorizontallyOnYourPhone" xml:space="preserve">
     <value>(you can scroll horizontally on your phone)</value>
@@ -520,50 +636,358 @@
   <data name="Admin.SelectedCategory" xml:space="preserve">
     <value>Selected category: {0}</value>
   </data>
-  <data name="UploadAdmin.Guestbook.Anonymous" xml:space="preserve"><value>Anonymous user</value></data>
-  <data name="UploadAdmin.Guestbook.ReplyOutlook" xml:space="preserve"><value>Reply via Outlook</value></data>
-  <data name="UploadAdmin.Guestbook.ReplySubject" xml:space="preserve"><value>Reply to your guestbook entry on ArvidsonFoto.se</value></data>
-  <data name="UploadAdmin.Images.EditTitle" xml:space="preserve"><value>Edit {0}</value></data>
-  <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve"><value>Delete {0}</value></data>
-  <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve"><value>Page navigation</value></data>
-  <data name="UploadAdmin.Review.Title" xml:space="preserve"><value>Review translations</value></data>
-  <data name="UploadAdmin.Review.Tables" xml:space="preserve"><value>Tables</value></data>
-  <data name="UploadAdmin.Review.Categories" xml:space="preserve"><value>Categories</value></data>
-  <data name="UploadAdmin.Review.Images" xml:space="preserve"><value>Images</value></data>
-  <data name="UploadAdmin.Review.Guestbook" xml:space="preserve"><value>Guestbook</value></data>
-  <data name="UploadAdmin.Review.Remaining" xml:space="preserve"><value>Unreviewed fields: {0} of {1}</value></data>
-  <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve"><value>Total unreviewed fields: {0} of {1}</value></data>
-  <data name="UploadAdmin.Review.Instructions" xml:space="preserve"><value>Save changed text first. Then mark existing, non-empty translations as reviewed.</value></data>
-  <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve"><value>Show unreviewed only</value></data>
-  <data name="UploadAdmin.Review.MissingOnly" xml:space="preserve"><value>Missing English translation</value></data>
-  <data name="UploadAdmin.Review.MissingCount" xml:space="preserve"><value>Images without an English description: {0}</value></data>
-  <data name="UploadAdmin.Review.Missing" xml:space="preserve"><value>Missing translation</value></data>
-  <data name="UploadAdmin.Review.Filter" xml:space="preserve"><value>Filter review status</value></data>
-  <data name="UploadAdmin.Review.SearchImages" xml:space="preserve"><value>Find image by ID, filename or Swedish description</value></data>
-  <data name="UploadAdmin.Review.Search" xml:space="preserve"><value>Search</value></data>
-  <data name="UploadAdmin.Review.NoResults" xml:space="preserve"><value>No entries match the filter.</value></data>
-  <data name="UploadAdmin.Review.All" xml:space="preserve"><value>Show all</value></data>
-  <data name="UploadAdmin.Review.Record" xml:space="preserve"><value>Entry {0}</value></data>
-  <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve"><value>Category name</value></data>
-  <data name="UploadAdmin.Review.Field.menu.url" xml:space="preserve"><value>URL segment</value></data>
-  <data name="UploadAdmin.Review.Field.images.description" xml:space="preserve"><value>Photo description</value></data>
-  <data name="UploadAdmin.Review.Field.guestbook.name" xml:space="preserve"><value>Guestbook name</value></data>
-  <data name="UploadAdmin.Review.Field.guestbook.text" xml:space="preserve"><value>Guestbook text</value></data>
-  <data name="UploadAdmin.Review.Swedish" xml:space="preserve"><value>Swedish original</value></data>
-  <data name="UploadAdmin.Review.English" xml:space="preserve"><value>English translation</value></data>
-  <data name="UploadAdmin.Review.Reviewed" xml:space="preserve"><value>Reviewed</value></data>
-  <data name="UploadAdmin.Review.NotReviewed" xml:space="preserve"><value>Not reviewed</value></data>
-  <data name="UploadAdmin.Review.Save" xml:space="preserve"><value>Save (not reviewed)</value></data>
-  <data name="UploadAdmin.Review.MarkReviewed" xml:space="preserve"><value>Mark as reviewed</value></data>
-  <data name="UploadAdmin.Review.Pages" xml:space="preserve"><value>Pages</value></data>
-  <data name="UploadAdmin.Review.Previous" xml:space="preserve"><value>Previous</value></data>
-  <data name="UploadAdmin.Review.Next" xml:space="preserve"><value>Next</value></data>
-  <data name="UploadAdmin.GameSelectable" xml:space="preserve"><value>Available for games (e.g. memory and image guessing)</value></data>
-  <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve"><value>Categories and species</value></data>
-  <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve"><value>Level {0}</value></data>
-  <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve"><value>Edit category</value></data>
-  <data name="UploadAdmin.RedigeraKategori.GameSelectableEnabled" xml:space="preserve"><value>Available for games</value></data>
-  <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve"><value>Unavailable for games</value></data>
-  <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve"><value>{0} categories match</value></data>
-  <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve"><value>No categories match your search.</value></data>
+  <data name="UploadAdmin.Guestbook.Anonymous" xml:space="preserve">
+    <value>Anonymous user</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.ReplyOutlook" xml:space="preserve">
+    <value>Reply via Outlook</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.ReplySubject" xml:space="preserve">
+    <value>Reply to your guestbook entry on ArvidsonFoto.se</value>
+  </data>
+  <data name="UploadAdmin.Images.EditTitle" xml:space="preserve">
+    <value>Edit {0}</value>
+  </data>
+  <data name="UploadAdmin.Images.DeleteTitle" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="UploadAdmin.Images.PaginationLabel" xml:space="preserve">
+    <value>Page navigation</value>
+  </data>
+  <data name="UploadAdmin.Review.Title" xml:space="preserve">
+    <value>Review translations</value>
+  </data>
+  <data name="UploadAdmin.Review.Tables" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="UploadAdmin.Review.Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="UploadAdmin.Review.Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="UploadAdmin.Review.Guestbook" xml:space="preserve">
+    <value>Guestbook</value>
+  </data>
+  <data name="UploadAdmin.Review.Remaining" xml:space="preserve">
+    <value>Unreviewed fields: {0} of {1}</value>
+  </data>
+  <data name="UploadAdmin.Review.RemainingAll" xml:space="preserve">
+    <value>Total unreviewed fields: {0} of {1}</value>
+  </data>
+  <data name="UploadAdmin.Review.Instructions" xml:space="preserve">
+    <value>Save changed text first. Then mark existing, non-empty translations as reviewed.</value>
+  </data>
+  <data name="UploadAdmin.Review.PendingOnly" xml:space="preserve">
+    <value>Show unreviewed only</value>
+  </data>
+  <data name="UploadAdmin.Review.MissingOnly" xml:space="preserve">
+    <value>Missing English translation</value>
+  </data>
+  <data name="UploadAdmin.Review.MissingCount" xml:space="preserve">
+    <value>Images without an English description: {0}</value>
+  </data>
+  <data name="UploadAdmin.Review.Missing" xml:space="preserve">
+    <value>Missing translation</value>
+  </data>
+  <data name="UploadAdmin.Review.Filter" xml:space="preserve">
+    <value>Filter review status</value>
+  </data>
+  <data name="UploadAdmin.Review.SearchImages" xml:space="preserve">
+    <value>Find image by ID, filename or Swedish description</value>
+  </data>
+  <data name="UploadAdmin.Review.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="UploadAdmin.Review.NoResults" xml:space="preserve">
+    <value>No entries match the filter.</value>
+  </data>
+  <data name="UploadAdmin.Review.All" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <data name="UploadAdmin.Review.Record" xml:space="preserve">
+    <value>Entry {0}</value>
+  </data>
+  <data name="UploadAdmin.Review.Field.menu.name" xml:space="preserve">
+    <value>Category name</value>
+  </data>
+  <data name="UploadAdmin.Review.Field.menu.url" xml:space="preserve">
+    <value>URL segment</value>
+  </data>
+  <data name="UploadAdmin.Review.Field.images.description" xml:space="preserve">
+    <value>Photo description</value>
+  </data>
+  <data name="UploadAdmin.Review.Field.guestbook.name" xml:space="preserve">
+    <value>Guestbook name</value>
+  </data>
+  <data name="UploadAdmin.Review.Field.guestbook.text" xml:space="preserve">
+    <value>Guestbook text</value>
+  </data>
+  <data name="UploadAdmin.Review.Swedish" xml:space="preserve">
+    <value>Swedish original</value>
+  </data>
+  <data name="UploadAdmin.Review.English" xml:space="preserve">
+    <value>English translation</value>
+  </data>
+  <data name="UploadAdmin.Review.Reviewed" xml:space="preserve">
+    <value>Reviewed</value>
+  </data>
+  <data name="UploadAdmin.Review.NotReviewed" xml:space="preserve">
+    <value>Not reviewed</value>
+  </data>
+  <data name="UploadAdmin.Review.Save" xml:space="preserve">
+    <value>Save (not reviewed)</value>
+  </data>
+  <data name="UploadAdmin.Review.MarkReviewed" xml:space="preserve">
+    <value>Mark as reviewed</value>
+  </data>
+  <data name="UploadAdmin.Review.Pages" xml:space="preserve">
+    <value>Pages</value>
+  </data>
+  <data name="UploadAdmin.Review.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="UploadAdmin.Review.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="UploadAdmin.GameSelectable" xml:space="preserve">
+    <value>Available for games (e.g. memory and image guessing)</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.CategoryList" xml:space="preserve">
+    <value>Categories and species</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.Level" xml:space="preserve">
+    <value>Level {0}</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.EditCategory" xml:space="preserve">
+    <value>Edit category</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableEnabled" xml:space="preserve">
+    <value>Available for games</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.GameSelectableDisabled" xml:space="preserve">
+    <value>Unavailable for games</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.FilterResults" xml:space="preserve">
+    <value>{0} categories match</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.NoResults" xml:space="preserve">
+    <value>No categories match your search.</value>
+  </data>
+  <data name="UploadAdmin.Images.Search" xml:space="preserve">
+    <value>Search filename or description</value>
+  </data>
+  <data name="UploadAdmin.Images.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="UploadAdmin.Images.AllCategories" xml:space="preserve">
+    <value>All categories</value>
+  </data>
+  <data name="UploadAdmin.Images.DateFrom" xml:space="preserve">
+    <value>Photo date from</value>
+  </data>
+  <data name="UploadAdmin.Images.DateTo" xml:space="preserve">
+    <value>Photo date to</value>
+  </data>
+  <data name="UploadAdmin.Images.MissingSwedish" xml:space="preserve">
+    <value>Missing Swedish description</value>
+  </data>
+  <data name="UploadAdmin.Images.MissingEnglish" xml:space="preserve">
+    <value>Missing English description</value>
+  </data>
+  <data name="UploadAdmin.Images.Reset" xml:space="preserve">
+    <value>Clear filters</value>
+  </data>
+  <data name="UploadAdmin.Images.ResultCount" xml:space="preserve">
+    <value>Matches: {0}</value>
+  </data>
+  <data name="UploadAdmin.Images.NoResults" xml:space="preserve">
+    <value>No images match these filters.</value>
+  </data>
+  <data name="UploadAdmin.RedigeraBilder.FailedToDeleteImageNumber" xml:space="preserve">
+    <value>Could not delete image record:</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.Title" xml:space="preserve">
+    <value>To do</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.UnreadGuestbook" xml:space="preserve">
+    <value>Unread guestbook entries</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.MissingImageTranslations" xml:space="preserve">
+    <value>Images missing an English description</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.PendingCategoryTranslations" xml:space="preserve">
+    <value>Category fields to review</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.RecentErrors" xml:space="preserve">
+    <value>Errors in the latest log</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.Open" xml:space="preserve">
+    <value>Open list</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.SomeTasksUnavailable" xml:space="preserve">
+    <value>Some action counts could not be loaded.</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.AllClear" xml:space="preserve">
+    <value>No priority actions right now.</value>
+  </data>
+  <data name="UploadAdmin.Dashboard.StatisticsUnavailable" xml:space="preserve">
+    <value>Statistics are unavailable right now.</value>
+  </data>
+  <data name="UploadAdmin.Statistics.PageViewsAreNotVisitors" xml:space="preserve">
+    <value>These metrics count page views, not unique visitors.</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CurrentMonthIncomplete" xml:space="preserve">
+    <value>The current month is incomplete.</value>
+  </data>
+  <data name="UploadAdmin.Statistics.ExportCsv" xml:space="preserve">
+    <value>Export visible report as CSV</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvMetric" xml:space="preserve">
+    <value>Metric</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvValue" xml:space="preserve">
+    <value>Page views</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvLastVisited" xml:space="preserve">
+    <value>Last viewed</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvPeriodStart" xml:space="preserve">
+    <value>Period from</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvPeriodEnd" xml:space="preserve">
+    <value>Period to</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvPeriod" xml:space="preserve">
+    <value>Selected period</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvMonthlyPageViews" xml:space="preserve">
+    <value>Monthly page views</value>
+  </data>
+  <data name="UploadAdmin.Statistics.CsvMonthlyCategoryViews" xml:space="preserve">
+    <value>Monthly category views</value>
+  </data>
+  <data name="UploadAdmin.Logbook.Search" xml:space="preserve">
+    <value>Search this day's log</value>
+  </data>
+  <data name="UploadAdmin.Logbook.Level" xml:space="preserve">
+    <value>Log level</value>
+  </data>
+  <data name="UploadAdmin.Logbook.AllLevels" xml:space="preserve">
+    <value>All levels</value>
+  </data>
+  <data name="UploadAdmin.Logbook.Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="UploadAdmin.Logbook.Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="UploadAdmin.Logbook.Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="UploadAdmin.Logbook.ResultCount" xml:space="preserve">
+    <value>Showing {0} log lines for the selected date.</value>
+  </data>
+  <data name="UploadAdmin.Logbook.NoResults" xml:space="preserve">
+    <value>No log lines match the search and filters.</value>
+  </data>
+  <data name="UploadAdmin.Navigation.Images" xml:space="preserve">
+    <value>Images and categories</value>
+  </data>
+  <data name="UploadAdmin.Navigation.Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="UploadAdmin.Navigation.Monitoring" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.Hierarchy" xml:space="preserve">
+    <value>Hierarchy</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.RootCategory" xml:space="preserve">
+    <value>Root category</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.SwedishFields" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.EnglishFields" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.SwedishUrlPreview" xml:space="preserve">
+    <value>URL preview</value>
+  </data>
+  <data name="UploadAdmin.RedigeraKategori.EnglishUrlPreview" xml:space="preserve">
+    <value>URL preview</value>
+  </data>
+  <data name="UploadAdmin.Review.NextUnreviewed" xml:space="preserve">
+    <value>Continue with the next unreviewed entry</value>
+  </data>
+  <data name="UploadAdmin.Review.NextPageWithPending" xml:space="preserve">
+    <value>Go to the next page with remaining work</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.Status" xml:space="preserve">
+    <value>Read status</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.All" xml:space="preserve">
+    <value>All entries</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.Read" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.Unread" xml:space="preserve">
+    <value>Unread</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.SortByDate" xml:space="preserve">
+    <value>Sort by date</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.NewestFirst" xml:space="preserve">
+    <value>Newest first</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.OldestFirst" xml:space="preserve">
+    <value>Oldest first</value>
+  </data>
+  <data name="UploadAdmin.Guestbook.NoEntries" xml:space="preserve">
+    <value>No entries match this selection.</value>
+  </data>
+  <data name="UploadAdmin.HanteraGB.EntryNumber" xml:space="preserve">
+    <value>Entry number:</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.SearchImages" xml:space="preserve">
+    <value>Search filename or category</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.FilterCategory" xml:space="preserve">
+    <value>Filter by category</value>
+  </data>
+  <data name="UploadAdmin.FacebookUpload.NoImagesMatch" xml:space="preserve">
+    <value>No images match the filter.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.PreviewReference" xml:space="preserve">
+    <value>Preview image reference</value>
+  </data>
+  <data name="UploadAdmin.NyBild.PreviewInstructions" xml:space="preserve">
+    <value>Enter a filename and check that the correct thumbnail appears before saving.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.PreviewAlt" xml:space="preserve">
+    <value>Preview of the image file</value>
+  </data>
+  <data name="UploadAdmin.NyBild.ConfirmReference" xml:space="preserve">
+    <value>I have checked that the preview shows the correct image.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.SaveVerifiedReference" xml:space="preserve">
+    <value>Save verified image reference</value>
+  </data>
+  <data name="UploadAdmin.NyBild.InvalidReference" xml:space="preserve">
+    <value>Enter a valid filename without a path.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.PreviewLoaded" xml:space="preserve">
+    <value>The thumbnail loaded. Confirm that it is the correct image.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.PreviewFailed" xml:space="preserve">
+    <value>The image or thumbnail could not be found. Check the filename and publication.</value>
+  </data>
+  <data name="UploadAdmin.NyBild.ImageNotPublished" xml:space="preserve">
+    <value>The original image and thumbnail could not be verified on the image server. Nothing was saved; check the filename and publication.</value>
+  </data>
 </root>

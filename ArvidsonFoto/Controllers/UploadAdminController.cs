@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -26,7 +27,8 @@ public class UploadAdminController(
     IConfiguration configuration,
     IMemoryCache memoryCache,
     IStringLocalizer<UploadAdminResource> localizer,
-    IPageCounterService pageCounterService) : Controller
+    IPageCounterService pageCounterService,
+    IHttpClientFactory? httpClientFactory = null) : Controller
 {
     internal IApiImageService _imageService = new ApiImageService(imageLogger, coreContext, configuration, new ApiCategoryService(categoryLogger, coreContext, memoryCache));
     internal IApiCategoryService _categoryService = new ApiCategoryService(categoryLogger, coreContext, memoryCache);
@@ -38,7 +40,81 @@ public class UploadAdminController(
     {
         ViewData["Title"] = localizer["UploadAdmin.Controller.UploadAdmin"];
         var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-        return View(BuildStatisticsViewModel("6m", currentMonth.AddMonths(-5), currentMonth, false));
+        var summary = BuildAdminActionSummary();
+        StatisticsViewModel statistics;
+        try
+        {
+            statistics = BuildStatisticsViewModel("6m", currentMonth.AddMonths(-5), currentMonth, false);
+        }
+        catch
+        {
+            statistics = new StatisticsViewModel();
+            summary.StatisticsUnavailable = true;
+        }
+
+        ViewData["AdminActionSummary"] = summary;
+        return View(statistics);
+    }
+
+    private AdminActionSummaryViewModel BuildAdminActionSummary()
+    {
+        var summary = new AdminActionSummaryViewModel();
+
+        void Add(string titleKey, string linkKey, string url, Func<int> count)
+        {
+            try
+            {
+                var value = count();
+                if (value > 0)
+                {
+                    summary.Items.Add(new AdminActionItem(titleKey, linkKey, value, url));
+                }
+            }
+            catch
+            {
+                summary.DataUnavailable = true;
+            }
+        }
+
+        Add("UploadAdmin.Dashboard.UnreadGuestbook", "UploadAdmin.Dashboard.Open", "/UploadAdmin/HanteraGB?status=unread",
+            () => coreContext.TblGbs.Count(post => post.GbReadPost != true));
+        Add("UploadAdmin.Dashboard.MissingImageTranslations", "UploadAdmin.Dashboard.Open",
+            "/TranslationReview?table=images&pendingOnly=true&missingOnly=true",
+            () => coreContext.TblImages.Count(image =>
+                image.ImageDescription != null && image.ImageDescription.Trim() != "" &&
+                (image.ImageDescriptionEn == null || image.ImageDescriptionEn.Trim() == "")));
+        Add("UploadAdmin.Dashboard.PendingCategoryTranslations", "UploadAdmin.Dashboard.Open",
+            "/TranslationReview?table=menu&pendingOnly=true",
+            () => coreContext.TblMenus.Count(menu => menu.MenuCategoryId != null && !menu.MenuDisplayNameEnReviewed) +
+                coreContext.TblMenus.Count(menu => menu.MenuCategoryId != null && !menu.MenuUrlSegmentEnReviewed));
+
+        try
+        {
+            var logReader = new AppLogReaderService();
+            var latestLogDate = logReader.ExistingLogFiles()
+                .Select(value => DateTime.TryParseExact(value, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ? date : (DateTime?)null)
+                .Where(date => date.HasValue)
+                .Max();
+            if (latestLogDate.HasValue)
+            {
+                var errors = logReader.ReadData($"appLog{latestLogDate.Value:yyyyMMdd}.txt")
+                    .Count(line => line.Contains("[ERR]", StringComparison.Ordinal));
+                if (errors > 0)
+                {
+                    summary.Items.Add(new AdminActionItem(
+                        "UploadAdmin.Dashboard.RecentErrors",
+                        "UploadAdmin.Dashboard.Open",
+                        errors,
+                        $"/UploadAdmin/VisaLoggboken?datum={latestLogDate.Value:yyyy-MM-dd}&level=error"));
+                }
+            }
+        }
+        catch
+        {
+            summary.DataUnavailable = true;
+        }
+
+        return summary;
     }
 
     [Route("/[controller]/NyBild")]
@@ -73,6 +149,8 @@ public class UploadAdminController(
 
             viewModel.SelectedCategory = selectedCategory;
             subCategories = _categoryService.GetSubsList(selectedCategoryId);
+            var categoryPath = _categoryService.GetCategoryDisplayPathForImage(selectedCategoryId);
+            viewModel.ImagePreviewBaseUrl = $"https://arvidsonfoto.se/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, string.Empty).TrimEnd('/')}";
 
             var latestImage = _imageService.GetOneImageFromCategory(
                 selectedCategoryId,
@@ -119,24 +197,22 @@ public class UploadAdminController(
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CreateImageLink(UploadImageInputDto model)
+    public async Task<IActionResult> CreateImageLink(UploadImageInputDto model)
     {
         if (ModelState.IsValid)
         {
-            if (model.ImageHuvudfamilj.Equals(0))
+            if (!await IsPublishedImageAsync(model))
             {
-                model.ImageHuvudfamilj = null;
+                TempData["ImageCreated"] = false;
+                TempData["ErrorMessage"] = localizer["UploadAdmin.NyBild.ImageNotPublished"].Value;
+                return RedirectToImageCategory(model.ImageArt);
             }
 
-            if (model.ImageFamilj.Equals(0))
-            {
-                model.ImageFamilj = null;
-            }
-
-            if (model.ImageHuvudfamilj.Equals(1))
-            {
-                model.ImageHuvudfamilj = null;
-            }
+            var selectedCategory = _categoryService.GetById(model.ImageArt)!;
+            model.ImageFamilj = selectedCategory.ParentCategoryId;
+            model.ImageHuvudfamilj = selectedCategory.ParentCategoryId is int parentId
+                ? _categoryService.GetById(parentId)?.ParentCategoryId
+                : null;
 
             Core.Models.TblImage newImage = new()
             {
@@ -163,7 +239,7 @@ public class UploadAdminController(
                 TempData["ImageCategoryId"] = model.ImageArt;
                 TempData["ImageUrl"] = model.ImageUrl;
 
-                return RedirectToAction("NyBild");
+                return RedirectToImageCategory(model.ImageArt);
             }
             catch (Exception ex)
             {
@@ -175,7 +251,91 @@ public class UploadAdminController(
 
         // Om validering misslyckades, skicka tillbaka till formuläret med felmeddelanden
         TempData["ImageCreated"] = false;
-        return RedirectToAction("NyBild");
+        return RedirectToImageCategory(model.ImageArt);
+    }
+
+    private async Task<bool> IsPublishedImageAsync(UploadImageInputDto model)
+    {
+        var imageName = model.ImageUrl?.Trim();
+        if (string.IsNullOrWhiteSpace(imageName) ||
+            imageName.Length > 120 ||
+            imageName is "." or ".." ||
+            imageName.Contains('/') ||
+            imageName.Contains('\\') ||
+            imageName.Any(char.IsControl) ||
+            model.ImageArt <= 0 ||
+            httpClientFactory is null)
+        {
+            return false;
+        }
+
+        var selectedCategory = _categoryService.GetById(model.ImageArt);
+        if (selectedCategory?.CategoryId != model.ImageArt || _categoryService.GetSubsList(model.ImageArt).Count > 0)
+        {
+            return false;
+        }
+
+        var categoryPath = _categoryService.GetCategoryDisplayPathForImage(model.ImageArt);
+        if (string.IsNullOrWhiteSpace(categoryPath))
+        {
+            return false;
+        }
+
+        var path = ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, imageName);
+        var client = httpClientFactory.CreateClient("ImagePublication");
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        try
+        {
+            foreach (var suffix in new[] { ".jpg", ".thumb.jpg" })
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Head, new Uri($"https://arvidsonfoto.se/{path}{suffix}"));
+                using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, timeout.Token);
+                if (response.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotImplemented)
+                {
+                    using var getRequest = new HttpRequestMessage(HttpMethod.Get, request.RequestUri);
+                    using var getResponse = await client.SendAsync(getRequest, HttpCompletionOption.ResponseHeadersRead, timeout.Token);
+                    if (!getResponse.IsSuccessStatusCode)
+                    {
+                        return false;
+                    }
+                }
+                else if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
+            }
+        }
+        catch (HttpRequestException)
+        {
+            return false;
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private RedirectToActionResult RedirectToImageCategory(int categoryId)
+    {
+        var category = _categoryService.GetById(categoryId);
+        if (category is null)
+        {
+            return RedirectToAction(nameof(NyBild));
+        }
+
+        var path = CultureInfo.CurrentUICulture.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase)
+            ? string.IsNullOrWhiteSpace(category.UrlCategoryPathFullEn) ? category.UrlCategoryPathFullSv : category.UrlCategoryPathFullEn
+            : category.UrlCategoryPathFullSv;
+        var segments = path?.Split('/', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+        return RedirectToAction(nameof(NyBild), new
+        {
+            subLevel1 = segments.ElementAtOrDefault(0),
+            subLevel2 = segments.ElementAtOrDefault(1),
+            subLevel3 = segments.ElementAtOrDefault(2),
+            subLevel4 = segments.ElementAtOrDefault(3)
+        });
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -203,7 +363,18 @@ public class UploadAdminController(
                     existingImage.ImageUpdate = DateTime.Now;
 
                     _ = await coreContext.SaveChangesAsync();
-                    return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgEdit", imgId = model.ImageArt });
+                    return RedirectToAction(nameof(RedigeraBilder), new
+                    {
+                        DisplayMessage = "OkImgEdit",
+                        imgId = model.ImageId,
+                        sida = model.ReturnPage,
+                        search = model.ReturnSearch,
+                        categoryId = model.ReturnCategoryId,
+                        dateFrom = model.ReturnDateFrom,
+                        dateTo = model.ReturnDateTo,
+                        missingSwedishDescription = model.ReturnMissingSwedishDescription,
+                        missingEnglishDescription = model.ReturnMissingEnglishDescription
+                    });
                 }
             }
             catch (Exception ex)
@@ -287,7 +458,12 @@ public class UploadAdminController(
 
         if (!ValidCategorySegments(input.UrlSegmentSv, input.UrlSegmentEn, input.CategoryId))
         {
-            ModelState.AddModelError(nameof(input.UrlSegmentSv), localizer["Admin.InvalidUrlSegments"]);
+            var validationMessage = localizer["Admin.InvalidUrlSegments"];
+            ModelState.AddModelError(nameof(input.UrlSegmentSv), validationMessage);
+            if (!string.IsNullOrWhiteSpace(input.UrlSegmentEn))
+            {
+                ModelState.AddModelError(nameof(input.UrlSegmentEn), validationMessage);
+            }
         }
 
         if (!ModelState.IsValid)
@@ -367,7 +543,16 @@ public class UploadAdminController(
         return string.IsNullOrWhiteSpace(name) ? string.Empty : name;
     }
 
-    public IActionResult RedigeraBilder(string DisplayMessage, string imgId, int? sida)
+    public IActionResult RedigeraBilder(
+        string DisplayMessage,
+        string imgId,
+        int? sida,
+        string? search,
+        int? categoryId,
+        DateTime? dateFrom,
+        DateTime? dateTo,
+        bool missingSwedishDescription = false,
+        bool missingEnglishDescription = false)
     {
         ViewData["Title"] = localizer["Admin.EditImagesTitle"];
 
@@ -377,18 +562,72 @@ public class UploadAdminController(
             sida = 1;
         }
 
-        var coreContext = HttpContext.RequestServices.GetRequiredService<ArvidsonFotoCoreDbContext>();
-        var allImages = coreContext.TblImages.OrderByDescending(i => i.ImageId).ToList();
+        search = search?.Trim();
+        if (search?.Length > 100)
+        {
+            return BadRequest();
+        }
 
+        var imageQuery = coreContext.TblImages.AsNoTracking();
+        if (!string.IsNullOrEmpty(search))
+        {
+            imageQuery = imageQuery.Where(image =>
+                (image.ImageUrlName ?? "").Contains(search) ||
+                (image.ImageDescription ?? "").Contains(search) ||
+                (image.ImageDescriptionEn ?? "").Contains(search));
+        }
+
+        if (categoryId is > 0)
+        {
+            imageQuery = imageQuery.Where(image => image.ImageCategoryId == categoryId);
+        }
+
+        if (dateFrom.HasValue)
+        {
+            imageQuery = imageQuery.Where(image => image.ImageDate >= dateFrom.Value.Date);
+        }
+
+        if (dateTo.HasValue)
+        {
+            imageQuery = dateTo.Value.Date == DateTime.MaxValue.Date
+                ? imageQuery.Where(image => image.ImageDate <= dateTo.Value.Date)
+                : imageQuery.Where(image => image.ImageDate < dateTo.Value.Date.AddDays(1));
+        }
+
+        if (missingSwedishDescription)
+        {
+            imageQuery = imageQuery.Where(image => image.ImageDescription == null ||
+                image.ImageDescription.Trim() == "" ||
+                image.ImageDescription.Trim() == "saknas");
+        }
+
+        if (missingEnglishDescription)
+        {
+            imageQuery = imageQuery.Where(image => image.ImageDescriptionEn == null ||
+                image.ImageDescriptionEn.Trim() == "" ||
+                image.ImageDescriptionEn.Trim() == "missing");
+        }
+
+        var resultCount = imageQuery.Count();
         UploadEditImagesViewModel viewModel = new()
         {
             CurrentPage = (int)sida,
-            CurrentUrl = "./UploadAdmin/RedigeraBilder",
-            TotalPages = (int)Math.Ceiling(allImages.Count / (decimal)imagesPerPage),
-            DisplayImagesList = []
+            CurrentUrl = "/UploadAdmin/RedigeraBilder",
+            TotalPages = Math.Max(1, (int)Math.Ceiling(resultCount / (decimal)imagesPerPage)),
+            DisplayImagesList = [],
+            SearchQuery = search,
+            CategoryId = categoryId,
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            MissingSwedishDescription = missingSwedishDescription,
+            MissingEnglishDescription = missingEnglishDescription,
+            ResultCount = resultCount,
+            Categories = [.. _categoryService.GetAll().OrderBy(category => LocalizedText.Select(category.NameSv, category.NameEn))]
         };
+        viewModel.CurrentPage = Math.Min(viewModel.CurrentPage, viewModel.TotalPages);
 
-        var displayTblImages = allImages
+        var displayTblImages = imageQuery
+                                    .OrderByDescending(i => i.ImageId)
                                     .Skip((viewModel.CurrentPage - 1) * imagesPerPage)
                                     .Take(imagesPerPage)
                                     .ToList();
@@ -400,7 +639,7 @@ public class UploadAdminController(
         else
         {
             viewModel.DisplayMessage = DisplayMessage;
-            viewModel.UpdatedId = Convert.ToInt32(imgId);
+            viewModel.UpdatedId = Convert.ToInt32(imgId, CultureInfo.InvariantCulture);
         }
 
         foreach (var item in displayTblImages)
@@ -425,6 +664,13 @@ public class UploadAdminController(
                 : item.ImageDescriptionEn;
             inputModel.IsGameSelectable = item.IsGameSelectable;
             inputModel.ImageUrl = item.ImageUrlName ?? localizer["Admin.Missing"];
+            inputModel.ReturnPage = viewModel.CurrentPage;
+            inputModel.ReturnSearch = viewModel.SearchQuery;
+            inputModel.ReturnCategoryId = viewModel.CategoryId;
+            inputModel.ReturnDateFrom = viewModel.DateFrom;
+            inputModel.ReturnDateTo = viewModel.DateTo;
+            inputModel.ReturnMissingSwedishDescription = viewModel.MissingSwedishDescription;
+            inputModel.ReturnMissingEnglishDescription = viewModel.MissingEnglishDescription;
 
             var categoryPath = _categoryService.GetCategoryDisplayPathForImage(inputModel.ImageArt);
             inputModel.ImageUrlFullSrc = $"https://arvidsonfoto.se/{ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, inputModel.ImageUrl)}";
@@ -438,10 +684,29 @@ public class UploadAdminController(
     private static bool IsMissingDescription(string? description, string placeholder) =>
         string.Equals(description?.Trim(), placeholder, StringComparison.OrdinalIgnoreCase);
 
-    public IActionResult HanteraGB(string DisplayMessage, string gbId)
+    public IActionResult HanteraGB(string DisplayMessage, string gbId, string status = "all", string sort = "newest")
     {
         ViewData["Title"] = localizer["Admin.GuestbookTitle"];
-        UploadGbViewModel viewModel = new();
+        status = status is "unread" or "read" ? status : "all";
+        sort = sort == "oldest" ? "oldest" : "newest";
+        var posts = _guestBookService.GetAll().AsEnumerable();
+        if (status == "unread")
+        {
+            posts = posts.Where(post => post.GbReadPost is not true);
+        }
+        else if (status == "read")
+        {
+            posts = posts.Where(post => post.GbReadPost is true);
+        }
+
+        UploadGbViewModel viewModel = new()
+        {
+            StatusFilter = status,
+            SortOrder = sort,
+            Posts = [.. (sort == "oldest"
+                ? posts.OrderBy(post => post.GbDate)
+                : posts.OrderByDescending(post => post.GbDate))]
+        };
         if (string.IsNullOrWhiteSpace(DisplayMessage) && string.IsNullOrWhiteSpace(gbId))
         {
             viewModel.DisplayMessage = "";
@@ -454,45 +719,126 @@ public class UploadAdminController(
         return View(viewModel);
     }
 
-    public IActionResult MarkGbPostAsRead(int gbId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult MarkGbPostAsRead(int gbId, string status = "all", string sort = "newest")
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.ReadGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbRead", gbId, status, sort });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbRead", gbId, status, sort });
     }
 
-    public IActionResult DeleteGbPost(int gbId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteGbPost(int gbId, string status = "all", string sort = "newest")
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_guestBookService.DeleteGbPost(gbId))
             {
-                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId });
+                return RedirectToAction("HanteraGB", new { DisplayMessage = "OkGbDelete", gbId, status, sort });
             }
         }
-        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId });
+        return RedirectToAction("HanteraGB", new { DisplayMessage = "ErrorGbDelete", gbId, status, sort });
     }
 
-    public IActionResult DeleteImage(int imgId)
+    [HttpPost, ValidateAntiForgeryToken]
+    public IActionResult DeleteImage(
+        int imgId,
+        int? sida = null,
+        string? search = null,
+        int? categoryId = null,
+        DateTime? dateFrom = null,
+        DateTime? dateTo = null,
+        bool missingSwedishDescription = false,
+        bool missingEnglishDescription = false)
     {
         if (User?.Identity?.IsAuthenticated is true)
         {
             if (_imageService.DeleteImgId(imgId))
             {
-                return RedirectToAction("RedigeraBilder", new { DisplayMessage = "OkImgDelete", imgId });
+                return RedirectToAction(nameof(RedigeraBilder), new { DisplayMessage = "OkImgDelete", imgId, sida, search, categoryId, dateFrom, dateTo, missingSwedishDescription, missingEnglishDescription });
             }
         }
-        return RedirectToAction("RedigeraBilder", new { DisplayMessage = "ErrorImgDelete", imgId });
+        return RedirectToAction(nameof(RedigeraBilder), new { DisplayMessage = "ErrorImgDelete", imgId, sida, search, categoryId, dateFrom, dateTo, missingSwedishDescription, missingEnglishDescription });
     }
 
     public IActionResult Statistik(string? period, string? fromMonth, string? toMonth, bool compare = false)
     {
         ViewData["Title"] = localizer["Admin.StatisticsTitle"];
+        return View(CreateStatisticsViewModel(period, fromMonth, toMonth, compare));
+    }
+
+    [HttpGet]
+    public IActionResult ExportStatisticsCsv(string? period, string? fromMonth, string? toMonth, bool compare = false)
+    {
+        var model = CreateStatisticsViewModel(period, fromMonth, toMonth, compare);
+        var rows = new List<string>
+        {
+            CsvRow(localizer["UploadAdmin.Statistics.CsvMetric"].Value, localizer["UploadAdmin.Statistics.CsvName"].Value,
+                localizer["UploadAdmin.Statistics.CsvValue"].Value, localizer["UploadAdmin.Statistics.CsvLastVisited"].Value,
+                localizer["UploadAdmin.Statistics.CsvPeriodStart"].Value, localizer["UploadAdmin.Statistics.CsvPeriodEnd"].Value),
+            CsvRow(localizer["UploadAdmin.Statistics.CsvPeriod"].Value, model.Period, "", "",
+                model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))
+        };
+
+        void AddRows(string metric, IEnumerable<Core.Models.TblPageCounter> values, bool allTime = false)
+        {
+            rows.AddRange(values.Select(value => CsvRow(
+                metric, value.PageName ?? "", value.PageViews.ToString(CultureInfo.InvariantCulture),
+                value.LastShowDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                allTime ? "" : model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                allTime ? "" : model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))));
+        }
+
+        AddRows(localizer["Admin.Views"].Value, model.PageViews);
+        AddRows(localizer["Admin.CategoryViews"].Value, model.CategoryViews.Take(10));
+        AddRows(localizer["UploadAdmin.Statistik.AllTimePageViews"].Value, model.AllTimePageViews, allTime: true);
+        rows.AddRange(model.MonthlyPageViews.Select(month => CsvRow(
+            localizer["UploadAdmin.Statistics.CsvMonthlyPageViews"].Value,
+            month.Key, month.Value.ToString(CultureInfo.InvariantCulture), "",
+            model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+            model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))));
+        rows.AddRange(model.MonthlyCategoryViews.Select(month => CsvRow(
+            localizer["UploadAdmin.Statistics.CsvMonthlyCategoryViews"].Value,
+            month.Key, month.Value.ToString(CultureInfo.InvariantCulture), "",
+            model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+            model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))));
+        if (compare)
+        {
+            rows.AddRange(model.PreviousYearPageViews.Select(month => CsvRow(
+                localizer["UploadAdmin.Statistics.PreviousYearPageViews"].Value,
+                month.Key, month.Value.ToString(CultureInfo.InvariantCulture), "",
+                model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))));
+            rows.AddRange(model.PreviousYearCategoryViews.Select(month => CsvRow(
+                localizer["UploadAdmin.Statistics.PreviousYearCategoryViews"].Value,
+                month.Key, month.Value.ToString(CultureInfo.InvariantCulture), "",
+                model.StartDate.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                model.EndDate.ToString("yyyy-MM", CultureInfo.InvariantCulture))));
+        }
+
+        var csv = string.Join("\r\n", rows) + "\r\n";
+        var encoding = new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+        var content = encoding.GetPreamble().Concat(encoding.GetBytes(csv)).ToArray();
+        return File(content,
+            "text/csv; charset=utf-8", $"arvidsonfoto-statistik-{model.StartDate:yyyy-MM}-{model.EndDate:yyyy-MM}.csv");
+    }
+
+    private static string CsvRow(params string[] values) =>
+        string.Join(",", values.Select(value =>
+        {
+            var firstNonWhitespace = value.FirstOrDefault(character => !char.IsWhiteSpace(character));
+            var safeValue = firstNonWhitespace is '=' or '+' or '-' or '@' ? "'" + value : value;
+            return $"\"{safeValue.Replace("\"", "\"\"")}\"";
+        }));
+
+    private StatisticsViewModel CreateStatisticsViewModel(string? period, string? fromMonth, string? toMonth, bool compare)
+    {
         var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         period = period?.ToLowerInvariant();
 
@@ -538,7 +884,7 @@ public class UploadAdminController(
             startDate = endDate.AddMonths(-59);
         }
 
-        return View(BuildStatisticsViewModel(period ?? "6m", startDate, endDate, compare));
+        return BuildStatisticsViewModel(period ?? "6m", startDate, endDate, compare);
     }
 
     private StatisticsViewModel BuildStatisticsViewModel(string period, DateTime startDate, DateTime endDate, bool compare)
@@ -549,6 +895,7 @@ public class UploadAdminController(
             StartDate = startDate,
             EndDate = endDate,
             CompareWithPreviousYear = compare,
+            IsCurrentMonthIncomplete = endDate >= new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
             MonthlyPageViews = pageCounterService.GetMonthlyPageViewsChart(startDate, endDate, false),
             MonthlyCategoryViews = pageCounterService.GetMonthlyPageViewsChart(startDate, endDate, true),
             PageViews = pageCounterService.GetPageCountsInPeriod(startDate, endDate, false),
@@ -567,35 +914,92 @@ public class UploadAdminController(
 
     /// <summary>Laddar sidan "Läs loggboken" , men heter visa för att slippa ä i Läs</summary>
     /// <param name="datum">Format: ÅÅÅÅMMDD (t.ex: 20210126)</param>
-    public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum)
+    public async Task<IActionResult> VisaLoggbokenAsync(DateTime datum, string? level = "all")
     {
         ViewData["Title"] = localizer["Admin.LogTitle", datum];
 
         AppLogReaderService logReader = new();
         string appLogFile = $"appLog{datum:yyyyMMdd}.txt";
 
-        UploadLogReaderViewModel viewModel = new()
-        {
-            ExistingLogFiles = logReader.ExistingLogFiles(),
-            LogBook = logReader.ReadData(appLogFile),
-            DateShown = datum
-        };
-
-        ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();
-        viewModel.ShowAllLogs = user.ShowAllLogs;
-
+        var viewModel = await BuildLogbookViewModel(logReader, appLogFile, datum, null, level);
         return View(viewModel);
     }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> SearchLogbook(DateTime datum, string? search, string? level = "all")
+    {
+        if (search?.Length > 100)
+        {
+            return BadRequest();
+        }
+
+        ViewData["Title"] = localizer["Admin.LogTitle", datum];
+        var logReader = new AppLogReaderService();
+        var viewModel = await BuildLogbookViewModel(logReader, $"appLog{datum:yyyyMMdd}.txt", datum, search, level);
+        return View("VisaLoggboken", viewModel);
+    }
+
+    private async Task<UploadLogReaderViewModel> BuildLogbookViewModel(
+        AppLogReaderService logReader, string logFile, DateTime date, string? search, string? level)
+    {
+        var user = await _userManager.GetUserAsync(User) ?? new ArvidsonFotoUser();
+        var levelFilter = level is "error" or "warning" or "info" ? level : "all";
+        var lines = logReader.ReadData(logFile);
+        if (!user.ShowAllLogs)
+        {
+            lines = [.. lines.Where(IsSignificantLogLine)];
+        }
+
+        if (levelFilter != "all")
+        {
+            var levelMarker = levelFilter switch
+            {
+                "error" => "[ERR]",
+                "warning" => "[WRN]",
+                _ => "[INF]"
+            };
+            lines = [.. lines.Where(line => line.Contains(levelMarker, StringComparison.Ordinal))];
+        }
+
+        search = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+        if (search is not null)
+        {
+            lines = [.. lines.Where(line => line.Contains(search, StringComparison.OrdinalIgnoreCase))];
+        }
+
+        return new UploadLogReaderViewModel
+        {
+            ExistingLogFiles = logReader.ExistingLogFiles(),
+            LogBook = lines,
+            DateShown = date,
+            ShowAllLogs = user.ShowAllLogs,
+            SearchQuery = search,
+            LevelFilter = levelFilter,
+            FilteredCount = lines.Count
+        };
+    }
+
+    private static bool IsSignificantLogLine(string line) =>
+        !line.Contains("/images/gallery", StringComparison.Ordinal) &&
+        !line.Contains("/img/gallery", StringComparison.Ordinal) &&
+        !line.Contains("to page: /Senast/Fotograferad", StringComparison.Ordinal) &&
+        !line.Contains("Redirect from page: ", StringComparison.Ordinal) &&
+        !line.Contains("/bilder/", StringComparison.Ordinal) &&
+        !line.Contains("/GB.asp", StringComparison.Ordinal) &&
+        !line.Contains("/code/", StringComparison.Ordinal) &&
+        !line.Contains("/apple-", StringComparison.Ordinal) &&
+        !line.Contains("/wp-", StringComparison.Ordinal);
 
     /// <summary>
     /// Funktion som aktiverar/inaktiverar alla Loggar. Kanske dock borde ligga i AccountManagement annars...
     /// </summary>
     [Route("[controller]/ToggleShowAllLogs")]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleShowAllLogs(string date)
     {
         if (string.IsNullOrWhiteSpace(date))
         {
-            date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+            date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
 
         ArvidsonFotoUser user = await _userManager.GetUserAsync(User) ?? new();

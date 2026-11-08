@@ -1,4 +1,6 @@
-﻿namespace ArvidsonFoto.Core.ViewModels;
+using ArvidsonFoto.Core.Models;
+
+namespace ArvidsonFoto.Core.ViewModels;
 
 /// <summary>
 /// ViewModel for uploading guestbook entries functionality.
@@ -13,4 +15,10 @@ public class UploadGbViewModel
 
     /// <summary>Meddelande att visa för användarfeedback</summary>
     public string DisplayMessage { get; set; } = string.Empty;
+
+    public string StatusFilter { get; set; } = "all";
+
+    public string SortOrder { get; set; } = "newest";
+
+    public List<TblGb> Posts { get; set; } = [];
 }

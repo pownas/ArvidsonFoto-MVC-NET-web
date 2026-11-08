@@ -1,4 +1,4 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @using ArvidsonFoto.Core.Models
 @using ArvidsonFoto.Core.ViewModels
 @model StatisticsViewModel
@@ -12,37 +12,48 @@
     var previousCategoryTotal = Model.PreviousYearCategoryViews.Values.Sum();
 }
 
-<form method="get" action="/uploadadmin/statistik" class="row g-2 align-items-end mb-4">
-    <div class="col-12 col-sm-6 col-lg-3">
-        <label for="statistics-period" class="form-label">@L["UploadAdmin.Statistics.Period"]</label>
-        <select id="statistics-period" name="period" class="form-select">
-            <option value="month" selected="@(Model.Period == "month")">@L["UploadAdmin.Statistics.CurrentMonth"]</option>
-            <option value="3m" selected="@(Model.Period == "3m")">@L["UploadAdmin.Statistics.Last3Months"]</option>
-            <option value="6m" selected="@(Model.Period == "6m")">@L["UploadAdmin.Statistics.Last6Months"]</option>
-            <option value="12m" selected="@(Model.Period == "12m")">@L["UploadAdmin.Statistics.Last12Months"]</option>
-            <option value="year" selected="@(Model.Period == "year")">@L["UploadAdmin.Statistics.CurrentYear"]</option>
-            <option value="custom" selected="@(Model.Period == "custom")">@L["UploadAdmin.Statistics.CustomPeriod"]</option>
-        </select>
-    </div>
-    <div class="col-6 col-sm-3 col-lg-2">
-        <label for="statistics-from" class="form-label">@L["UploadAdmin.Statistics.From"]</label>
-        <input id="statistics-from" type="month" name="fromMonth" class="form-control" value="@Model.StartDate.ToString("yyyy-MM")" />
-    </div>
-    <div class="col-6 col-sm-3 col-lg-2">
-        <label for="statistics-to" class="form-label">@L["UploadAdmin.Statistics.To"]</label>
-        <input id="statistics-to" type="month" name="toMonth" class="form-control" value="@Model.EndDate.ToString("yyyy-MM")" />
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="form-check">
-            <input id="statistics-compare" type="checkbox" name="compare" value="true" class="form-check-input" checked="@Model.CompareWithPreviousYear" />
-            <label for="statistics-compare" class="form-check-label">@L["UploadAdmin.Statistics.ComparePreviousYear"]</label>
+<form method="get" action="/uploadadmin/statistik" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-lg-4">
+            <label for="statistics-period" class="form-label">@L["UploadAdmin.Statistics.Period"]</label>
+            <select id="statistics-period" name="period" class="form-select">
+                <option value="month" selected="@(Model.Period == "month")">@L["UploadAdmin.Statistics.CurrentMonth"]</option>
+                <option value="3m" selected="@(Model.Period == "3m")">@L["UploadAdmin.Statistics.Last3Months"]</option>
+                <option value="6m" selected="@(Model.Period == "6m")">@L["UploadAdmin.Statistics.Last6Months"]</option>
+                <option value="12m" selected="@(Model.Period == "12m")">@L["UploadAdmin.Statistics.Last12Months"]</option>
+                <option value="year" selected="@(Model.Period == "year")">@L["UploadAdmin.Statistics.CurrentYear"]</option>
+                <option value="custom" selected="@(Model.Period == "custom")">@L["UploadAdmin.Statistics.CustomPeriod"]</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-4">
+            <label for="statistics-from" class="form-label">@L["UploadAdmin.Statistics.From"]</label>
+            <input id="statistics-from" type="month" name="fromMonth" class="form-control" value="@Model.StartDate.ToString("yyyy-MM")" />
+        </div>
+        <div class="col-12 col-lg-4">
+            <label for="statistics-to" class="form-label">@L["UploadAdmin.Statistics.To"]</label>
+            <input id="statistics-to" type="month" name="toMonth" class="form-control" value="@Model.EndDate.ToString("yyyy-MM")" />
         </div>
     </div>
-    <div class="col-12 col-lg-2">
-        <button type="submit" class="btn btn-primary w-100">@L["UploadAdmin.Statistics.Show"]</button>
+    <div class="row g-2 align-items-start mt-1">
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input id="statistics-compare" type="checkbox" name="compare" value="true" class="form-check-input" checked="@Model.CompareWithPreviousYear" />
+                <label for="statistics-compare" class="form-check-label">@L["UploadAdmin.Statistics.ComparePreviousYear"]</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-md-end">
+            <button type="submit" class="btn btn-primary">@L["UploadAdmin.Statistics.Show"]</button>
+        </div>
     </div>
 </form>
-<p class="text-secondary">@L["UploadAdmin.Statistics.SelectedPeriod", Model.StartDate.ToString("yyyy-MM"), Model.EndDate.ToString("yyyy-MM")]</p>
+<div class="d-flex flex-wrap justify-content-between align-items-baseline gap-2 mb-3">
+    <p class="text-secondary mb-0">@L["UploadAdmin.Statistics.SelectedPeriod", Model.StartDate.ToString("yyyy-MM"), Model.EndDate.ToString("yyyy-MM")]</p>
+    <p class="text-secondary text-end mb-0">@L["UploadAdmin.Statistics.PageViewsAreNotVisitors"]</p>
+</div>
+@if (Model.IsCurrentMonthIncomplete)
+{
+    <p class="alert alert-info" role="status">@L["UploadAdmin.Statistics.CurrentMonthIncomplete"]</p>
+}
 
 <div class="row g-3 mb-4">
     <div class="col-12 col-sm-6">

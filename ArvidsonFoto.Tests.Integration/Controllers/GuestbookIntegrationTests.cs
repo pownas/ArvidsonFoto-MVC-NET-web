@@ -958,5 +958,15 @@ public class GuestbookIntegrationTests
             $"POST took {stopwatch.ElapsedMilliseconds}ms, should be less than 10000ms");
     }
 
+    [TestMethod]
+    public async Task AdminDeleteActionsRejectGetRequests()
+    {
+        var guestbookDelete = await _client!.GetAsync("/uploadadmin/deletegbpost?gbId=1");
+        var imageDelete = await _client.GetAsync("/uploadadmin/deleteimage?imgId=1");
+
+        Assert.AreEqual(HttpStatusCode.NotFound, guestbookDelete.StatusCode);
+        Assert.AreEqual(HttpStatusCode.NotFound, imageDelete.StatusCode);
+    }
+
     #endregion
 }

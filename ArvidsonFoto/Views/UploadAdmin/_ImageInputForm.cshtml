@@ -38,9 +38,73 @@
         <input asp-for="ImageDescriptionEn" class="form-control" />
         <span asp-validation-for="ImageDescriptionEn"></span>
     </div>
+    <div class="mb-3" id="image-reference-verification" data-preview-base="@ViewData["ImagePreviewBaseUrl"]">
+        <button id="preview-image-reference" type="button" class="btn btn-outline-primary">@L["UploadAdmin.NyBild.PreviewReference"]</button>
+        <figure class="mt-2 mb-0">
+            <img id="image-reference-preview" class="img-fluid rounded" alt="@L["UploadAdmin.NyBild.PreviewAlt"]" hidden />
+            <figcaption id="image-reference-status" class="form-text" role="status">@L["UploadAdmin.NyBild.PreviewInstructions"]</figcaption>
+        </figure>
+        <div class="form-check mt-2">
+            <input id="confirm-image-reference" type="checkbox" class="form-check-input" />
+            <label for="confirm-image-reference" class="form-check-label">@L["UploadAdmin.NyBild.ConfirmReference"]</label>
+        </div>
+    </div>
     <div class="form-group">
         <div class="upload-image-link-submit">
-            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark"><i class="bi bi-link-45deg"></i> @L["UploadAdmin.ImageInputForm.LinkImage"]</button>
+            <button id="SubmitButton" type="submit" class="btn btn-light btn-outline-primary text-dark" disabled><i class="bi bi-link-45deg"></i> @L["UploadAdmin.NyBild.SaveVerifiedReference"]</button>
         </div>
     </div>
 </form>
+
+<script>
+    (() => {
+        const container = document.getElementById('image-reference-verification');
+        const fileName = document.getElementById('ImageUrl');
+        const previewButton = document.getElementById('preview-image-reference');
+        const preview = document.getElementById('image-reference-preview');
+        const status = document.getElementById('image-reference-status');
+        const confirmation = document.getElementById('confirm-image-reference');
+        const submit = document.getElementById('SubmitButton');
+        let previewLoaded = false;
+
+        function updateSubmitState() {
+            submit.disabled = !previewLoaded || !confirmation.checked;
+        }
+
+        function resetPreview() {
+            previewLoaded = false;
+            preview.hidden = true;
+            confirmation.checked = false;
+            status.textContent = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.NyBild.PreviewInstructions"].Value));
+            updateSubmitState();
+        }
+
+        previewButton.addEventListener('click', () => {
+            const name = fileName.value.trim();
+            if (!name || name.includes('/') || name.includes('\\')) {
+                resetPreview();
+                status.textContent = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.NyBild.InvalidReference"].Value));
+                return;
+            }
+
+            previewLoaded = false;
+            confirmation.checked = false;
+            updateSubmitState();
+            preview.onload = () => {
+                preview.hidden = false;
+                previewLoaded = true;
+                status.textContent = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.NyBild.PreviewLoaded"].Value));
+                confirmation.focus();
+                updateSubmitState();
+            };
+            preview.onerror = () => {
+                resetPreview();
+                status.textContent = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L["UploadAdmin.NyBild.PreviewFailed"].Value));
+            };
+            preview.src = `${container.dataset.previewBase}/${encodeURIComponent(name)}.thumb.jpg`;
+        });
+
+        fileName.addEventListener('input', resetPreview);
+        confirmation.addEventListener('change', updateSubmitState);
+    })();
+</script>

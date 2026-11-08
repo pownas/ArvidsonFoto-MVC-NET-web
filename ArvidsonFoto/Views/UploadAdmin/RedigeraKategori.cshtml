@@ -8,74 +8,156 @@
     var parentCategoryIds = categories.Select(row => row.Category.MenuParentCategoryId).OfType<int>().ToHashSet();
     var search = ViewData["Search"]?.ToString() ?? "";
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.RedigeraKategori;
+    var categoriesById = categories
+        .Where(row => row.Category.MenuCategoryId.HasValue)
+        .ToDictionary(row => row.Category.MenuCategoryId!.Value, row => row.Category);
+    var selectedCategory = categoriesById.GetValueOrDefault(Model.CategoryId);
+    var ancestors = new List<TblMenu>();
+    var parentId = selectedCategory?.MenuParentCategoryId;
+    var visitedAncestors = new HashSet<int>();
+    while (parentId.HasValue && categoriesById.TryGetValue(parentId.Value, out var parent) && visitedAncestors.Add(parentId.Value))
+    {
+        ancestors.Insert(0, parent);
+        parentId = parent.MenuParentCategoryId;
+    }
+    var hierarchy = new List<TblMenu>(ancestors);
+    if (selectedCategory is not null)
+    {
+        hierarchy.Add(selectedCategory);
+    }
+    var parentPathSv = string.Join("/", ancestors.Select(category => category.MenuUrlSegment).Where(segment => !string.IsNullOrWhiteSpace(segment)));
+    var parentPathEn = string.Join("/", ancestors.Select(category => string.IsNullOrWhiteSpace(category.MenuUrlSegmentEn) ? category.MenuUrlSegment : category.MenuUrlSegmentEn).Where(segment => !string.IsNullOrWhiteSpace(segment)));
 }
-<h1 class="upload-admin-title">@ViewData["Title"]</h1>
-<nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
-    <partial name="_NavUploadAdmin" />
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-diagram-3 ms-1" aria-hidden="true"></i></li>
+    </ol>
 </nav>
-@if (Model.CategoryId > 0)
-{
-    <form method="post" asp-action="SaveCategory" class="upload-admin-form category-edit-form mb-4">
-        @Html.AntiForgeryToken()
-        <input asp-for="CategoryId" type="hidden" />
-        <input type="hidden" name="search" value="@search" />
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <h2 class="h4">@L["UploadAdmin.RedigeraKategori.EditCategory"] — @Model.NameSv</h2>
-        <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
-        <input asp-for="NameSv" maxlength="50" class="form-control mb-3" />
-        <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
-        <input asp-for="NameEn" maxlength="50" class="form-control mb-3" />
-        <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
-        <input asp-for="UrlSegmentSv" maxlength="50" class="form-control mb-3" />
-        <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
-        <input asp-for="UrlSegmentEn" maxlength="50" class="form-control mb-3" />
-        <div class="form-check mb-3">
-            <input asp-for="IsGameSelectable" class="form-check-input" />
-            <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
-        </div>
-        <button type="submit" class="btn btn-primary">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
-    </form>
-}
-<section class="category-editor mb-4" aria-labelledby="category-list-heading">
-    <h2 id="category-list-heading" class="h4">@L["UploadAdmin.RedigeraKategori.CategoryList"]</h2>
-    <div class="category-filter">
-        <label for="category-filter">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
-        <input id="category-filter" type="search" value="@search" class="form-control"
-               placeholder="@L["UploadAdmin.RedigeraKategori.Search"]" aria-controls="category-tree" />
-        <p id="category-filter-count" class="form-text mb-2" aria-live="polite"></p>
-    </div>
-    <ul id="category-tree" class="category-tree" aria-label="@L["UploadAdmin.RedigeraKategori.CategoryList"]">
-        @foreach (var row in categories)
+<h1 class="offset-md-4"><i class="bi bi-diagram-3 me-2" aria-hidden="true"></i>@ViewData["Title"]</h1>
+
+<div class="row">
+    <nav class="upload-admin-navigation nav nav-pills col-12 col-md-4 p-0" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
+        <ul class="p-0 col-11">
+            <partial name="_NavUploadAdmin" />
+        </ul>
+    </nav>
+    <div class="col-12 col-md-8">
+        @if (Model.CategoryId > 0)
         {
-            var category = row.Category;
-            var categoryId = category.MenuCategoryId.GetValueOrDefault();
-            var isRoot = row.Level == 0;
-            var icon = CategoryIconHelper.GetIconClass(parentCategoryIds.Contains(categoryId), isRoot);
-            var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
-            <li class="category-tree__item category-tree__item--level-@Math.Min(row.Level, 3) @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
-                data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
-                <i class="bi @icon category-tree__icon" aria-hidden="true"></i>
-                <span class="category-tree__level">@L["UploadAdmin.RedigeraKategori.Level", row.Level + 1]</span>
-                <span class="category-tree__names">
-                    <strong>@category.MenuDisplayName</strong>
-                    @if (!string.IsNullOrWhiteSpace(category.MenuDisplayNameEn))
+            <form method="post" asp-action="SaveCategory" class="upload-admin-form category-edit-form mb-4">
+                @Html.AntiForgeryToken()
+                <input asp-for="CategoryId" type="hidden" />
+                <input type="hidden" name="search" value="@search" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <h2 class="h4">@L["UploadAdmin.RedigeraKategori.EditCategory"] — @Model.NameSv</h2>
+                <p><strong>@L["UploadAdmin.RedigeraKategori.Hierarchy"]:</strong>
+                    @if (hierarchy.Count > 0)
                     {
-                        <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
+                        @string.Join(" › ", hierarchy.Select(category => LocalizedText.Select(category.MenuDisplayName, category.MenuDisplayNameEn)))
                     }
-                </span>
-                <span class="category-tree__game-status @(category.IsGameSelectable ? "category-tree__game-status--enabled" : "category-tree__game-status--disabled")">
-                    <i class="bi @(category.IsGameSelectable ? "bi-check-circle-fill" : "bi-x-circle-fill")" aria-hidden="true"></i>
-                    @(category.IsGameSelectable ? L["UploadAdmin.RedigeraKategori.GameSelectableEnabled"] : L["UploadAdmin.RedigeraKategori.GameSelectableDisabled"])
-                </span>
-                <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
-                   asp-route-id="@categoryId" asp-route-search="@search"
-                   aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>
-            </li>
+                    else
+                    {
+                        @L["UploadAdmin.RedigeraKategori.RootCategory"]
+                    }
+                </p>
+                <fieldset class="mb-3">
+                    <legend class="h6">@L["UploadAdmin.RedigeraKategori.SwedishFields"]</legend>
+                    <label asp-for="NameSv">@L["UploadAdmin.RedigeraKategori.SwedishName"]</label>
+                    <input asp-for="NameSv" maxlength="50" class="form-control mb-1" />
+                    <span asp-validation-for="NameSv" class="text-danger"></span>
+                    <label asp-for="UrlSegmentSv">@L["UploadAdmin.NyKategori.SwedishURLSegment"]</label>
+                    <input asp-for="UrlSegmentSv" maxlength="50" class="form-control mb-1" />
+                    <span asp-validation-for="UrlSegmentSv" class="text-danger"></span>
+                    <p class="form-text"><span>@L["UploadAdmin.RedigeraKategori.SwedishUrlPreview"]:</span> <code id="category-url-sv" data-parent-path="@parentPathSv"></code></p>
+                </fieldset>
+                <fieldset class="mb-3">
+                    <legend class="h6">@L["UploadAdmin.RedigeraKategori.EnglishFields"]</legend>
+                    <label asp-for="NameEn">@L["UploadAdmin.NyKategori.EnglishName"]</label>
+                    <input asp-for="NameEn" maxlength="50" class="form-control mb-1" />
+                    <span asp-validation-for="NameEn" class="text-danger"></span>
+                    <label asp-for="UrlSegmentEn">@L["UploadAdmin.NyKategori.EnglishURLSegment"]</label>
+                    <input asp-for="UrlSegmentEn" maxlength="50" class="form-control mb-1" />
+                    <span asp-validation-for="UrlSegmentEn" class="text-danger"></span>
+                    <p class="form-text"><span>@L["UploadAdmin.RedigeraKategori.EnglishUrlPreview"]:</span> <code id="category-url-en" data-parent-path="@parentPathEn"></code></p>
+                </fieldset>
+                <div class="form-check mb-3">
+                    <input asp-for="IsGameSelectable" class="form-check-input" />
+                    <label asp-for="IsGameSelectable" class="form-check-label">@L["UploadAdmin.GameSelectable"]</label>
+                </div>
+                <button type="submit" class="btn btn-primary">@L["UploadAdmin.RedigeraKategori.SaveCategory"]</button>
+            </form>
         }
-    </ul>
-</section>
+        <section class="category-editor mb-4" aria-labelledby="category-list-heading">
+            <h2 id="category-list-heading" class="h4">@L["UploadAdmin.RedigeraKategori.CategoryList"]</h2>
+            <div class="category-filter">
+                <label for="category-filter">@L["UploadAdmin.RedigeraKategori.SearchForACategoryOrSpecies"]</label>
+                <input id="category-filter" type="search" value="@search" class="form-control"
+                       placeholder="@L["UploadAdmin.RedigeraKategori.Search"]" aria-controls="category-tree" />
+                <p id="category-filter-count" class="form-text mb-2" aria-live="polite"></p>
+            </div>
+            <ul id="category-tree" class="category-tree" aria-label="@L["UploadAdmin.RedigeraKategori.CategoryList"]">
+                @foreach (var row in categories)
+                {
+                    var category = row.Category;
+                    var categoryId = category.MenuCategoryId.GetValueOrDefault();
+                    var isRoot = row.Level == 0;
+                    var icon = CategoryIconHelper.GetIconClass(parentCategoryIds.Contains(categoryId), isRoot);
+                    var searchText = $"{category.MenuDisplayName} {category.MenuDisplayNameEn} {category.MenuUrlSegment} {category.MenuUrlSegmentEn}";
+                    <li class="category-tree__item category-tree__item--level-@Math.Min(row.Level, 3) @(Model.CategoryId == categoryId ? "is-selected" : "")" data-category-id="@categoryId" data-parent-id="@category.MenuParentCategoryId"
+                        data-search="@searchText" style="--category-depth: @Math.Min(row.Level, 8)">
+                        <i class="bi @icon category-tree__icon" aria-hidden="true"></i>
+                        <span class="category-tree__level">@L["UploadAdmin.RedigeraKategori.Level", row.Level + 1]</span>
+                        <span class="category-tree__names">
+                            <strong>@category.MenuDisplayName</strong>
+                            @if (!string.IsNullOrWhiteSpace(category.MenuDisplayNameEn))
+                            {
+                                <span class="category-tree__secondary">@category.MenuDisplayNameEn</span>
+                            }
+                        </span>
+                        <span class="category-tree__game-status @(category.IsGameSelectable ? "category-tree__game-status--enabled" : "category-tree__game-status--disabled")">
+                            <i class="bi @(category.IsGameSelectable ? "bi-check-circle-fill" : "bi-x-circle-fill")" aria-hidden="true"></i>
+                            @(category.IsGameSelectable ? L["UploadAdmin.RedigeraKategori.GameSelectableEnabled"] : L["UploadAdmin.RedigeraKategori.GameSelectableDisabled"])
+                        </span>
+                        <a class="btn btn-sm btn-outline-primary category-tree__edit" asp-action="RedigeraKategori"
+                           asp-route-id="@categoryId" asp-route-search="@search"
+                           aria-current="@(Model.CategoryId == categoryId ? "page" : null)">@L["UploadAdmin.RedigeraKategori.EditCategory"]</a>
+                    </li>
+                }
+            </ul>
+        </section>
+    </div>
+</div>
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
+        (() => {
+            const swedishSegment = document.getElementById('UrlSegmentSv');
+            const englishSegment = document.getElementById('UrlSegmentEn');
+            const previews = [
+                [swedishSegment, document.getElementById('category-url-sv')],
+                [englishSegment, document.getElementById('category-url-en')]
+            ];
+            previews.forEach(([input, preview]) => {
+                const update = () => {
+                    const inputSegment = input.value.trim().toLocaleLowerCase();
+                    const segment = input === englishSegment && !inputSegment
+                        ? swedishSegment.value.trim().toLocaleLowerCase()
+                        : inputSegment;
+                    const parts = [preview.dataset.parentPath, segment]
+                        .filter(Boolean);
+                    preview.textContent = `/bilder/${parts.join('/')}`;
+                };
+                input.addEventListener('input', update);
+                update();
+            });
+            swedishSegment.addEventListener('input', () => {
+                if (!englishSegment.value.trim()) {
+                    englishSegment.dispatchEvent(new Event('input'));
+                }
+            });
+        })();
         (() => {
             const filter = document.getElementById('category-filter');
             const items = Array.from(document.querySelectorAll('.category-tree__item'));

@@ -30,20 +30,18 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8 upload-image-link-content">
-        <p>@L["UploadAdmin.NyBild.HereYouCanLinkANewTheSite"]</p>
-        
         @* Visa framgångsmeddelande från TempData *@
         @if (TempData["ImageCreated"] as bool? == true)
         {
             var categoryId = TempData["ImageCategoryId"] as int? ?? 0;
             var imageUrl = TempData["ImageUrl"] as string ?? "";
-            <h5 class="alert alert-success bg-success text-dark">
+            <h5 role="status" class="alert alert-success bg-success text-dark">
                 @L["UploadAdmin.NyBild.TheImageWasLinked"] <span class="text-light">@_categoryService.GetNameById(categoryId), @imageUrl</span>
             </h5>
         }
         else if (TempData["ImageCreated"] as bool? == false)
         {
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" role="alert">
                 @(TempData["ErrorMessage"] ?? L["Admin.ImageCreationError"].Value)
             </div>
         }
@@ -63,6 +61,7 @@
 
             @if (_categoryService.GetSubsList(Model.SelectedCategory.CategoryId.Value).Count.Equals(0))
             {
+                ViewData["ImagePreviewBaseUrl"] = Model.ImagePreviewBaseUrl;
                 Model.ImageInputModel.ImageArt = Model.SelectedCategory.CategoryId.Value;
                 if (Model.SelectedCategory.ParentCategoryId is not null)
                     Model.ImageInputModel.ImageFamilj = Model.SelectedCategory.ParentCategoryId;

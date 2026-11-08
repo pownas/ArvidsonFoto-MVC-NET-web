@@ -9,6 +9,7 @@ using ArvidsonFoto.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
 using IdentityContext = ArvidsonFoto.Areas.Identity.Data.ArvidsonFotoIdentityContext;
@@ -17,7 +18,7 @@ namespace ArvidsonFoto;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         // Determine if we're in development mode early
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
@@ -67,6 +68,11 @@ public class Program
             ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
             var app = builder.Build();
+
+            await ArvidsonFotoIdentityDbSeeder.SeedTestAccountAsync(
+                app.Services,
+                app.Configuration,
+                app.Environment);
 
             // Configure the HTTP request pipeline
             ConfigureMiddleware(app, app.Environment, app.Configuration);
@@ -141,6 +147,8 @@ public class Program
 
         // Add HttpClient for FacebookService
         _ = services.AddHttpClient<IFacebookService, FacebookService>();
+        _ = services.AddHttpClient("ImagePublication")
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 
         // Add backend API services
         _ = services.AddScoped<IApiCategoryService, ApiCategoryService>();

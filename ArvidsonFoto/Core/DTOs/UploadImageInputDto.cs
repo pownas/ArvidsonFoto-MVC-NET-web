@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ArvidsonFoto.Core.DTOs;
 
@@ -67,6 +68,27 @@ public class UploadImageInputDto
     public bool ImageCreated { get; set; }
 
     public bool IsGameSelectable { get; set; } = true;
+
+    [JsonIgnore]
+    public int ReturnPage { get; set; } = 1;
+
+    [JsonIgnore]
+    public string? ReturnSearch { get; set; }
+
+    [JsonIgnore]
+    public int? ReturnCategoryId { get; set; }
+
+    [JsonIgnore]
+    public DateTime? ReturnDateFrom { get; set; }
+
+    [JsonIgnore]
+    public DateTime? ReturnDateTo { get; set; }
+
+    [JsonIgnore]
+    public bool ReturnMissingSwedishDescription { get; set; }
+
+    [JsonIgnore]
+    public bool ReturnMissingEnglishDescription { get; set; }
 
     /// <summary>Datum och tid när bilden senast uppdaterades</summary>
     public DateTime ImageUpdate { get; set; } = DateTime.Now;

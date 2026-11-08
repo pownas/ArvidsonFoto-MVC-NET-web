@@ -24,4 +24,6 @@ public class UploadImageViewModel
     public string CurrentUrl { get; set; } = string.Empty;
 
     public string? LatestCategoryImageUrl { get; set; }
+
+    public string? ImagePreviewBaseUrl { get; set; }
 }
