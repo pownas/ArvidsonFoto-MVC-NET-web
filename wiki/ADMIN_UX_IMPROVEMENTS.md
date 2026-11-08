@@ -1,4 +1,4 @@
-# Förslag till sub-issues: adminernas användarupplevelse
+﻿# Förslag till sub-issues: adminernas användarupplevelse
 
 Det här dokumentet handlar endast om arbetsflöden i administrationssidorna. För besökarnas visuella upplevelse, se [förslag för webbplatsens design](WEBSITE_DESIGN_IMPROVEMENTS.md).
 
@@ -116,3 +116,29 @@ Statistiken visar månadsvisa sid- och kategorivisningar, topplistor och valfri 
 Skapa en sub-issue per A-punkt efter att omfattning och beroenden bekräftats. Börja med A1, A4 och A10 som tydliga separata leveranser. A2 måste föregås av beslut om filpublicering. A3 beror på att källor och definition av varje åtgärdsantal är klara. A6 kan delas i navigation respektive tillgänglighet om de visar sig vara för stora. A7 och A8 använder befintliga verktyg och kan planeras oberoende. A9/A11 är kompletterande, efter uppskattning av administratörernas dagliga behov.
 
 Utförlig nulägesbeskrivning och sub-issue-kandidater för besökarinriktad visuell design finns i [det separata designförslagsdokumentet](WEBSITE_DESIGN_IMPROVEMENTS.md).
+
+## Uppföljning av genomförande (2026-11-08)
+
+Följande status är en statisk kodgranskning mot acceptanskriterierna ovan. Dokumentets A1–A11 är fortfarande förslag, inte beslutade krav. Ingen fullständig manuell tillgänglighetsgenomgång eller testkörning gjordes i denna uppföljning.
+
+| Punkt | Status | Uppföljning |
+|---|---|---|
+| A1. Sök och filtrera bildposter | ✅ Uppfyllt | Filter, paginering och redigering av filtrerade resultat finns. |
+| A2. Verifierat bildflöde | 🔄️ Delvis uppfyllt | Befintlig bild och miniatyr verifieras. Förhandsvisningen och bekräftelsen efter sparande visar inte samma metadata; bekräftelsen visar kategori och filreferens. Förtydliga också kortfattat att flödet länkar en redan publicerad fil, utan att återinföra den borttagna långa instruktionstexten. |
+| A3. Åtgärdskort på adminstartsidan | ✅ Uppfyllt | Datadrivna åtgärdskort och länkar finns. |
+| A4. Statistik och CSV | ✅ Uppfyllt | Period och jämförelse följer med exporten; CSV innehåller rubriker och UTF-8-BOM. |
+| A5. Sökbar loggbok | ✅ Uppfyllt | Text- och nivåfilter skickas med POST och loggbehörigheten bibehålls. |
+| A6. Mobil och tillgänglig adminarbetsyta | 🔄️ Delvis verifierat | Responsiv layout och grupperad navigation finns. Tangentbordsflöden, skärmläsarstöd, båda teman och små vyportar behöver verifieras end-to-end. |
+| A7. Kategoriredigering | ✅ Uppfyllt | Hierarki, URL-förhandsvisning, filtrering och validering finns. |
+| A8. Översättningsgranskning | ✅ Uppfyllt | Återstående arbete och nästa ej granskade post stöds. |
+| A9. Gästbok | ✅ Uppfyllt | Filter, sortering, status/datum och skyddade POST-åtgärder finns. |
+| A10. Destruktiva åtgärder | 🔄️ Delvis uppfyllt | Radering använder POST och antiförfalskningsskydd. Befintliga tester täcker gästbokens lyckade POST, men inte avvisad GET eller bildradering enligt acceptanskriteriet. |
+| A11. Facebook-urval | ✅ Uppfyllt | Sökning och filtrering bevarar urvalet och visar en sammanfattning. |
+
+### Kvar att följa upp
+
+1. **A2:** Visa samma kategori och relevanta metadata i förhandsvisning och sparat resultat. Säkerställ att länkning av en redan publicerad fil framgår tydligt, utan att återinföra den borttagna långa hjälptexten.
+2. **A6:** Genomför och dokumentera kontroll av kärnflöden med tangentbord, skärmläsare, ljust/mörkt tema och smala vyportar.
+3. **A10:** Lägg till tester som bekräftar att GET-radering avvisas och att bildradering via giltig POST fungerar; behåll test av gästbokens POST.
+
+Statusen är en nulägesbild från granskningstillfället och bör uppdateras när kvarstående punkter verifierats eller åtgärdats.
