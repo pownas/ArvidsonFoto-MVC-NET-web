@@ -3,7 +3,7 @@
     ViewData["Title"] = L["Dev.Portal.DevelopmentAdminPortal"];
 }
 
-<div class="container mt-5">
+<div class="container mt-5 dev-portal">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="text-center mb-5">
@@ -109,6 +109,47 @@
 </div>
 
 <style>
+    .dev-portal .card-header.bg-primary {
+        background-color: #084298 !important;
+        border-bottom-color: #0b5ed7 !important;
+    }
+
+    .dev-portal .card-header.bg-success {
+        background-color: #146c43 !important;
+        border-bottom-color: #198754 !important;
+    }
+
+    .dev-portal .card-header.bg-info {
+        background-color: #087990 !important;
+        border-bottom-color: #0aa2c0 !important;
+    }
+
+    .dev-portal a.btn,
+    .dev-portal a.btn:hover,
+    .dev-portal a.btn:focus,
+    .dev-portal a.btn:active,
+    .dev-portal a.btn:visited {
+        color: #fff;
+    }
+
+    .dev-portal .btn-primary {
+        --bs-btn-bg: #0b5ed7;
+        --bs-btn-border-color: #0b5ed7;
+        --bs-btn-hover-bg: #084298;
+        --bs-btn-hover-border-color: #073b83;
+        --bs-btn-active-bg: #073b83;
+        --bs-btn-active-border-color: #062f67;
+    }
+
+    .dev-portal .btn-success {
+        --bs-btn-bg: #146c43;
+        --bs-btn-border-color: #146c43;
+        --bs-btn-hover-bg: #0f5132;
+        --bs-btn-hover-border-color: #0d452b;
+        --bs-btn-active-bg: #0d452b;
+        --bs-btn-active-border-color: #0b3923;
+    }
+
     .hover-shadow-lg:hover {
         transform: translateY(-5px);
         transition: all 0.3s ease;

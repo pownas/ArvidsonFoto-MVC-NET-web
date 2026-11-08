@@ -1,120 +1,133 @@
-@model ArvidsonFoto.Core.ViewModels.TranslationReviewViewModel
+﻿@model ArvidsonFoto.Core.ViewModels.TranslationReviewViewModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
 @{
     ViewData["Title"] = L["UploadAdmin.Review.Title"];
     var nextUnreviewed = Model.Items.FirstOrDefault(item => !item.Reviewed);
 }
-<h1 class="upload-admin-title">@ViewData["Title"]</h1>
-<nav class="upload-admin-navigation nav nav-pills mb-3" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
-    <partial name="_NavUploadAdmin" />
+<nav id="page-breadcrumbs" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark-arvidsonfoto">
+        <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-check2-square ms-1" aria-hidden="true"></i></li>
+    </ol>
 </nav>
-<nav aria-label="@L["UploadAdmin.Review.Tables"]" class="nav nav-pills upload-review-tabs mb-3">
-    <a class="nav-link @(Model.Table == "menu" ? "active" : "")" aria-current="@(Model.Table == "menu" ? "page" : null)" asp-action="Index" asp-route-table="menu" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Categories"]</a>
-    <a class="nav-link @(Model.Table == "images" ? "active" : "")" aria-current="@(Model.Table == "images" ? "page" : null)" asp-action="Index" asp-route-table="images" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly">@L["UploadAdmin.Review.Images"]</a>
-    <a class="nav-link @(Model.Table == "guestbook" ? "active" : "")" aria-current="@(Model.Table == "guestbook" ? "page" : null)" asp-action="Index" asp-route-table="guestbook" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Guestbook"]</a>
-</nav>
-<div class="upload-review-summary" role="status">
-    <p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
-    <p class="mb-0">@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
-    @if (nextUnreviewed is not null)
-    {
-        <a class="btn btn-primary mt-2" href="#review-record-@Model.Table-@nextUnreviewed.Id">@L["UploadAdmin.Review.NextUnreviewed"]</a>
-    }
-    else if (Model.PendingCount > 0 && Model.Page < Model.TotalPages)
-    {
-        <a class="btn btn-primary mt-2" asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.NextPageWithPending"]</a>
-    }
-</div>
-@if (Model.Table == "images")
-{
-    <p>@L["UploadAdmin.Review.MissingCount", Model.MissingCount]</p>
-    <form asp-action="Index" method="get" class="mb-3 upload-review-search">
-        <input type="hidden" name="table" value="images" />
-        <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
-        <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
-        <label for="image-search">@L["UploadAdmin.Review.SearchImages"]</label>
-        <input id="image-search" name="search" value="@Model.Search" class="form-control" maxlength="100" />
-        <button type="submit" class="btn btn-outline-primary mt-2">@L["UploadAdmin.Review.Search"]</button>
-    </form>
-}
-<p>@L["UploadAdmin.Review.Instructions"]</p>
-<nav aria-label="@L["UploadAdmin.Review.Filter"]" class="mb-3 d-flex flex-wrap gap-2">
-    <a class="btn @(Model.PendingOnly && !Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
-       asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="true" asp-route-search="@Model.Search">@L["UploadAdmin.Review.PendingOnly"] (@Model.PendingCount)</a>
-    @if (Model.Table == "images")
-    {
-        <a class="btn @(Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
-           asp-action="Index" asp-route-table="images" asp-route-missingOnly="true" asp-route-search="@Model.Search">@L["UploadAdmin.Review.MissingOnly"] (@Model.MissingCount)</a>
-    }
-    <a class="btn @(!Model.PendingOnly && !Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
-       asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="false" asp-route-search="@Model.Search">@L["UploadAdmin.Review.All"] (@Model.TotalCount)</a>
-</nav>
-@if (Model.Items.Count == 0)
-{
-    <p>@L["UploadAdmin.Review.NoResults"]</p>
-}
-@foreach (var record in Model.Items.GroupBy(item => item.Id))
-{
-    <section class="upload-review-record mb-3" aria-labelledby="review-record-@Model.Table-@record.Key">
-        <h2 id="review-record-@Model.Table-@record.Key" class="h5">
-            @L["UploadAdmin.Review.Record", record.Key]
-            @if (!string.IsNullOrWhiteSpace(record.First().RecordName))
+<h1 class="offset-md-4"><i class="bi bi-check2-square me-2" aria-hidden="true"></i>@ViewData["Title"]</h1>
+<div class="row">
+    <nav class="upload-admin-navigation nav nav-pills col-12 col-md-4 p-0" aria-label="@L["UploadAdmin.Controller.UploadAdmin"]">
+        <ul class="p-0 col-11">
+            <partial name="_NavUploadAdmin" />
+        </ul>
+    </nav>
+    <div class="col-12 col-md-8">
+        <nav aria-label="@L["UploadAdmin.Review.Tables"]" class="nav nav-pills upload-review-tabs mb-3">
+            <a class="nav-link @(Model.Table == "menu" ? "active" : "")" aria-current="@(Model.Table == "menu" ? "page" : null)" asp-action="Index" asp-route-table="menu" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Categories"]</a>
+            <a class="nav-link @(Model.Table == "images" ? "active" : "")" aria-current="@(Model.Table == "images" ? "page" : null)" asp-action="Index" asp-route-table="images" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly">@L["UploadAdmin.Review.Images"]</a>
+            <a class="nav-link @(Model.Table == "guestbook" ? "active" : "")" aria-current="@(Model.Table == "guestbook" ? "page" : null)" asp-action="Index" asp-route-table="guestbook" asp-route-pendingOnly="@Model.PendingOnly">@L["UploadAdmin.Review.Guestbook"]</a>
+        </nav>
+        <div class="upload-review-summary" role="status">
+            <p>@L["UploadAdmin.Review.RemainingAll", Model.AllPendingCount, Model.AllFieldsCount]</p>
+            <p class="mb-0">@L["UploadAdmin.Review.Remaining", Model.PendingCount, Model.TotalCount]</p>
+            @if (nextUnreviewed is not null)
             {
-                <span class="upload-review-record__name">– @record.First().RecordName</span>
+                <a class="btn btn-primary mt-2" href="#review-record-@Model.Table-@nextUnreviewed.Id">@L["UploadAdmin.Review.NextUnreviewed"]</a>
             }
-        </h2>
-        <div class="upload-review-fields @(Model.Table == "images" ? "upload-review-fields--single" : "")">
-            @foreach (var item in record)
+            else if (Model.PendingCount > 0 && Model.Page < Model.TotalPages)
             {
-                <form asp-action="Save" method="post" class="card p-3 upload-review-card">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="table" value="@Model.Table" />
-                    <input type="hidden" name="id" value="@item.Id" />
-                    <input type="hidden" name="field" value="@item.Field" />
-                    <input type="hidden" name="swedish" value="@item.Swedish" />
-                    <input type="hidden" name="previousEnglish" value="@item.English" />
-                    <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
-                    <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
-                    <input type="hidden" name="search" value="@Model.Search" />
-                    <input type="hidden" name="page" value="@Model.Page" />
-                    <h3 class="h6">@L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h3>
-                    <div class="form-label">@L["UploadAdmin.Review.Swedish"]</div>
-                    <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
-                    <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
-                    @if (Model.Table == "guestbook" && item.Field == "text")
-                    {
-                        <textarea id="translation-@Model.Table-@item.Id-@item.Field" name="english" class="form-control">@item.English</textarea>
-                    }
-                    else
-                    {
-                        <input id="translation-@Model.Table-@item.Id-@item.Field" name="english" value="@item.English" class="form-control"
-                               maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
-                    }
-                    <p>
-                        <span role="status" class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
-                            @(string.IsNullOrWhiteSpace(item.English) ? L["UploadAdmin.Review.Missing"] : item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])
-                        </span>
-                    </p>
-                    <div class="d-flex flex-wrap gap-2 mt-auto">
-                        <button type="submit" name="reviewed" value="false" class="btn btn-outline-primary">@L["UploadAdmin.Review.Save"]</button>
-                        <button type="submit" name="reviewed" value="true" class="btn btn-primary">@L["UploadAdmin.Review.MarkReviewed"]</button>
-                    </div>
-                </form>
+                <a class="btn btn-primary mt-2" asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.NextPageWithPending"]</a>
             }
         </div>
-    </section>
-}
-@if (Model.TotalPages > 1)
-{
-    <nav aria-label="@L["UploadAdmin.Review.Pages"]">
-        @if (Model.Page > 1)
+        @if (Model.Table == "images")
         {
-            <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page - 1)">@L["UploadAdmin.Review.Previous"]</a>
+            <p>@L["UploadAdmin.Review.MissingCount", Model.MissingCount]</p>
+            <form asp-action="Index" method="get" class="mb-3 upload-review-search">
+                <input type="hidden" name="table" value="images" />
+                <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
+                <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
+                <label for="image-search">@L["UploadAdmin.Review.SearchImages"]</label>
+                <input id="image-search" name="search" value="@Model.Search" class="form-control" maxlength="100" />
+                <button type="submit" class="btn btn-outline-primary mt-2">@L["UploadAdmin.Review.Search"]</button>
+            </form>
         }
-        @Model.Page / @Model.TotalPages
-        @if (Model.Page < Model.TotalPages)
+        <p>@L["UploadAdmin.Review.Instructions"]</p>
+        <nav aria-label="@L["UploadAdmin.Review.Filter"]" class="mb-3 d-flex flex-wrap gap-2">
+            <a class="btn @(Model.PendingOnly && !Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
+               asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="true" asp-route-search="@Model.Search">@L["UploadAdmin.Review.PendingOnly"] (@Model.PendingCount)</a>
+            @if (Model.Table == "images")
+            {
+                <a class="btn @(Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
+                   asp-action="Index" asp-route-table="images" asp-route-missingOnly="true" asp-route-search="@Model.Search">@L["UploadAdmin.Review.MissingOnly"] (@Model.MissingCount)</a>
+            }
+            <a class="btn @(!Model.PendingOnly && !Model.MissingOnly ? "btn-primary" : "btn-outline-primary")"
+               asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="false" asp-route-search="@Model.Search">@L["UploadAdmin.Review.All"] (@Model.TotalCount)</a>
+        </nav>
+        @if (Model.Items.Count == 0)
         {
-            <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.Next"]</a>
+            <p>@L["UploadAdmin.Review.NoResults"]</p>
         }
-    </nav>
-}
+        @foreach (var record in Model.Items.GroupBy(item => item.Id))
+        {
+            <section class="upload-review-record mb-3" aria-labelledby="review-record-@Model.Table-@record.Key">
+                <h2 id="review-record-@Model.Table-@record.Key" class="h5">
+                    @L["UploadAdmin.Review.Record", record.Key]
+                    @if (!string.IsNullOrWhiteSpace(record.First().RecordName))
+                    {
+                        <span class="upload-review-record__name">– @record.First().RecordName</span>
+                    }
+                </h2>
+                <div class="upload-review-fields @(Model.Table == "images" ? "upload-review-fields--single" : "")">
+                    @foreach (var item in record)
+                    {
+                        <form asp-action="Save" method="post" class="card p-3 upload-review-card">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="table" value="@Model.Table" />
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="field" value="@item.Field" />
+                            <input type="hidden" name="swedish" value="@item.Swedish" />
+                            <input type="hidden" name="previousEnglish" value="@item.English" />
+                            <input type="hidden" name="pendingOnly" value="@Model.PendingOnly.ToString().ToLowerInvariant()" />
+                            <input type="hidden" name="missingOnly" value="@Model.MissingOnly.ToString().ToLowerInvariant()" />
+                            <input type="hidden" name="search" value="@Model.Search" />
+                            <input type="hidden" name="page" value="@Model.Page" />
+                            <h3 class="h6">@L[$"UploadAdmin.Review.Field.{Model.Table}.{item.Field}"]</h3>
+                            <div class="form-label">@L["UploadAdmin.Review.Swedish"]</div>
+                            <p class="text-break" style="white-space: pre-wrap">@item.Swedish</p>
+                            <label for="translation-@Model.Table-@item.Id-@item.Field">@L["UploadAdmin.Review.English"]</label>
+                            @if (Model.Table == "guestbook" && item.Field == "text")
+                            {
+                                <textarea id="translation-@Model.Table-@item.Id-@item.Field" name="english" class="form-control">@item.English</textarea>
+                            }
+                            else
+                            {
+                                <input id="translation-@Model.Table-@item.Id-@item.Field" name="english" value="@item.English" class="form-control"
+                                       maxlength="@(Model.Table == "images" ? 150 : Model.Table == "guestbook" ? 100 : 50)" />
+                            }
+                            <p>
+                                <span role="status" class="badge @(string.IsNullOrWhiteSpace(item.English) ? "bg-danger" : item.Reviewed ? "bg-success" : "bg-warning text-dark")">
+                                    @(string.IsNullOrWhiteSpace(item.English) ? L["UploadAdmin.Review.Missing"] : item.Reviewed ? L["UploadAdmin.Review.Reviewed"] : L["UploadAdmin.Review.NotReviewed"])
+                                </span>
+                            </p>
+                            <div class="d-flex flex-wrap gap-2 mt-auto">
+                                <button type="submit" name="reviewed" value="false" class="btn btn-outline-primary">@L["UploadAdmin.Review.Save"]</button>
+                                <button type="submit" name="reviewed" value="true" class="btn btn-primary">@L["UploadAdmin.Review.MarkReviewed"]</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </section>
+        }
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="@L["UploadAdmin.Review.Pages"]">
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page - 1)">@L["UploadAdmin.Review.Previous"]</a>
+                }
+                @Model.Page / @Model.TotalPages
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a asp-action="Index" asp-route-table="@Model.Table" asp-route-pendingOnly="@Model.PendingOnly" asp-route-missingOnly="@Model.MissingOnly" asp-route-search="@Model.Search" asp-route-page="@(Model.Page + 1)">@L["UploadAdmin.Review.Next"]</a>
+                }
+            </nav>
+        }
+    </div>
+</div>
