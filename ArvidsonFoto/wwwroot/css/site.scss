@@ -38,6 +38,23 @@ a {
     background-color: #444;
 }
 
+.breadcrumb.bg-dark-arvidsonfoto {
+    --bs-breadcrumb-item-active-color: #fff;
+    --bs-breadcrumb-divider-color: #b8c0c8;
+
+    .breadcrumb-item {
+        color: #fff;
+
+        a {
+            color: #9cc8ff;
+
+            &:hover {
+                color: #fff;
+            }
+        }
+    }
+}
+
 .text-light-arvidsonfoto {
     background-color: #ddd;
 }

@@ -9,9 +9,10 @@
   <data name="Home.Welcome" xml:space="preserve"><value>Välkommen till mitt bildarkiv</value></data>
   <data name="Home.Intro" xml:space="preserve"><value>Här finner du ett urval av mina bilder.</value></data>
   <data name="Home.Photo.Alt" xml:space="preserve"><value>Porträtt av Torbjörn Arvidson</value></data>
+  <data name="Home.Photograph" xml:space="preserve"><value>Fotograf: Torbjörn Arvidson</value></data>
   <data name="Home.BuyIntro" xml:space="preserve"><value>Är du intresserad av att köpa högupplösta bilder?</value></data>
   <data name="Home.EmailIntro" xml:space="preserve"><value>Kontakta mig på</value></data>
-  <data name="Home.ReadAbout" xml:space="preserve"><value>Läs mer om mig</value></data>
+  <data name="Home.ReadAbout" xml:space="preserve"><value>Mer om mig</value></data>
   <data name="Home.RandomPhotos" xml:space="preserve"><value>Slumpmässigt utvalda bilder</value></data>
   <data name="Home.Explore" xml:space="preserve"><value>Utforska mer</value></data>
   <data name="Home.LatestPhotos" xml:space="preserve"><value>Senast fotograferade</value></data>
