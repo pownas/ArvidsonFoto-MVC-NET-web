@@ -1,5 +1,7 @@
 ﻿# Integration Tests Implementation - Sammanfattning
 
+> **Historisk testrapport:** Testantal och körresultat nedan är en ögonblicksbild från när testprojektet skapades, inte ett aktuellt resultat. Lösningen använder nu .NET 11, MSTest 4.5.2 och Microsoft Testing Platform enligt projektkonfigurationen. Kör testerna för aktuell status.
+
 ## ✅ Resultat
 
 ### Nya filer skapade

@@ -1,5 +1,7 @@
 ﻿# ✅ IMPLEMENTATION COMPLETE - Database Query Reduction
 
+> **Historisk implementeringsrapport (2025-12-30):** Resultat och teststatus nedan är från den ursprungliga ändringen och inte en aktuell benchmark eller release-checklista. Servercachens kategoriinvalidering finns numera i adminflödet; klientcachen upphör via TTL/version och invalideras inte direkt i andra webbläsare. Se [TESTING_GUIDE.md](TESTING_GUIDE.md) för aktuella kontroller.
+
 ## 🎯 Goal Achieved
 **Reduced database queries from ~350,000 to <100 per 5 minutes (99.97% reduction)**
 
@@ -102,10 +104,9 @@
 🆕 wiki/CATEGORY_CACHING_IMPLEMENTATION.md
 🆕 wiki/PERFORMANCE_OPTIMIZATION_SUMMARY.md
 🆕 wiki/TESTING_GUIDE.md
-🆕 wiki/GIT_COMMIT_MESSAGE.md
 ```
 
-**Total:** 13 files changed, 4 files created
+**Total:** 12 files changed, 3 files created
 
 ---
 
@@ -142,7 +143,7 @@
 ### 1. **Manual Testing** (Required)
 ```bash
 # Start application
-dotnet run --project ArvidsonFoto
+dotnet run --project ArvidsonFoto.AppHost
 
 # Open browser and follow wiki/TESTING_GUIDE.md
 ```
@@ -153,27 +154,8 @@ dotnet run --project ArvidsonFoto
 - Count queries for subsequent loads
 - Verify <100 queries per 5 minutes
 
-### 3. **Cache Invalidation Implementation** (Optional)
-```csharp
-// In UploadAdminController.CreateCategory():
-if (_categoryService.AddCategory(newCategory))
-{
-    _categoryService.ClearCache(); // 🆕 Add this
-    inputModel.CategoryCreated = true;
-}
-```
-
-```javascript
-// In NyKategori.cshtml after success:
-@if (Model.CategoryCreated)
-{
-    <script>
-        if (window.CategoryCache) {
-            CategoryCache.invalidateCache();
-        }
-    </script>
-}
-```
+### 3. **Cache Invalidation Status**
+Servercachen rensas efter kategoriändringar, medan andra klienters localStorage uppdateras via TTL/version och inte push-invalideras.
 
 ### 4. **Deployment**
 - Merge branch `feature/reduce-db-load-on-gallery`
@@ -190,7 +172,6 @@ All documentation is available in the `wiki/` folder:
 1. **CATEGORY_CACHING_IMPLEMENTATION.md** - Complete implementation guide
 2. **PERFORMANCE_OPTIMIZATION_SUMMARY.md** - Detailed change summary
 3. **TESTING_GUIDE.md** - Step-by-step testing instructions
-4. **GIT_COMMIT_MESSAGE.md** - Ready-to-use commit messages
 
 ---
 

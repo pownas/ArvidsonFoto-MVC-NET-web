@@ -1,4 +1,5 @@
-# SQL Injection Prevention - Implementation Summary
+﻿# SQL Injection Prevention - Implementation Summary
+> **Historisk implementeringsrapport (2025-12-14):** Rapportens test- och skanningsresultat gäller endast den tidpunkten och är inte en aktuell säkerhetsbedömning. Middleware registreras numera i `ArvidsonFoto/Program.cs` (inte `Startup.cs`). Läs [aktuella säkerhetsnoteringar](SECURITY.md) för skyddens omfattning och begränsningar.
 
 ## Issue Reference
 **Issue #**: Se till att spärra så inga SQL frågor ställs direkt  
@@ -193,15 +194,7 @@ This implementation meets:
 
 ## Conclusion
 
-**The ArvidsonFoto application is now fully protected against SQL injection attacks.**
-
-The implementation uses a defense-in-depth approach:
-1. **Primary Defense**: Entity Framework Core with parameterized queries (100% coverage)
-2. **Additional Layer**: Input validation middleware with pattern detection
-3. **Monitoring**: Comprehensive logging of all attack attempts
-4. **Testing**: 25 automated tests verifying protection
-
-All attack examples from the original issue are now blocked and logged. The application passed CodeQL security scanning with zero vulnerabilities.
+Den här historiska implementeringen lade till ett extra mönsterfilter och tester. Den garanterar inte att applikationen är skyddad mot alla SQL-injektionsförsök; se aktuella säkerhetsnoteringar.
 
 ---
 **Implementation Date**: December 14, 2025  

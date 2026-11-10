@@ -1,10 +1,12 @@
-# Facebook-uppladdningsfunktion
+﻿# Facebook-uppladdningsfunktion
+
+> Integrationen använder Graph API v19.0 enligt `FacebookService`. Detta är den version som implementationen anropar, inte en rekommendation om vilken version som fortfarande stöds av Meta. Kontrollera aktuell API-version och behörigheter före driftsättning.
 
 ## Översikt
 Facebook-uppladdningsfunktionen gör det möjligt för administratörer att enkelt dela nyuppladdade bilder direkt till företagets Facebook-sida från UploadAdmin-gränssnittet.
 
 ## Funktioner
-- Välj 1-10 bilder från de 25 senast uppladdade bilderna
+- Välj 1-10 bilder från de 60 senast uppladdade bilderna
 - Skriv en anpassad text som följer med bilderna
 - Ladda upp direkt till Facebook-sidan via Facebook Graph API
 - Visuell feedback för val av bilder
@@ -104,7 +106,6 @@ Tjänsten använder Facebook Graph API v19.0:
 - CSRF-skydd via `[ValidateAntiForgeryToken]`
 - Tokens lagras säkert via Configuration (inte i kod)
 - Validering av användarinput
-- CodeQL-säkerhetsskannad
 
 ## Testning
 
