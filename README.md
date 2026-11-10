@@ -2,6 +2,9 @@
 
 # ArvidsonFoto-MVC .NET web
 Ombyggnation av ArvidsonFoto med MVC och .NET (uppgraderad från .NET5 till .NET6 till .NET7 till .NET8 till .NET9 till .NET10 till .NET11... osv. till senaste .NET)
+
+## Release notes och versionshistorik
+Se [ändringsloggen (CHANGELOG) och release notes](CHANGELOG.md) för versionshistorik.
   
   
 ## Instruktion för att starta webbsidan lokalt
