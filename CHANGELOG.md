@@ -5,7 +5,7 @@ Alla noterade ändringar för projektets publicerade versioner. Formatet följer
 [Semantic Versioning](https://semver.org/lang/sv/). Releaser är publicerade
 på [GitHub - ArvidsonFoto-MVC-NET-web Releases](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/releases).
 
-## [Unreleased](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/compare/v4.11.0...HEAD)
+## [Unreleased](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/compare/v4.12.0...HEAD)
 
 
 ## [v4.11.0](https://github.com/pownas/ArvidsonFoto-MVC-NET-web/compare/v3.11.2...v4.11.0) - 2026-11-11
@@ -19,7 +19,8 @@ på [GitHub - ArvidsonFoto-MVC-NET-web Releases](https://github.com/pownas/Arvid
 
 ### Changed
 - Förbättrade UploadAdmin-flöden, återkoppling och formulär för bilduppladdning.
-- Uppdaterade NuGet-paket och låsfiler. .NET 11-, ASP.NET Core- och EF Core-paket är fortsatt låsta till projektets RC2-version.
+- Uppdaterade NuGet-paket och låsfiler för .NET 11, ASP.NET Core och EF Core.
+- Uppdaterade GitHub Actions till .NET SDK 11.0.100 för bygg- och testjobben.
 - Uppgraderade MailKit och MimeKit till 5.x.
 
 ### Fixed
