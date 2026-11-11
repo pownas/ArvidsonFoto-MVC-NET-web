@@ -1,4 +1,5 @@
-﻿using ArvidsonFoto.Controllers;
+﻿using System.Globalization;
+using ArvidsonFoto.Controllers;
 using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Models;
 using ArvidsonFoto.Core.Services;
@@ -19,30 +20,39 @@ public class TranslationReviewTests
     [Fact]
     public void AdminGroupsFieldsByRecordAndRetainsReviewedFieldForPendingRecord()
     {
-        using var db = CreateContext();
-        db.TblMenus.Add(new TblMenu
+        var originalUiCulture = CultureInfo.CurrentUICulture;
+        try
         {
-            Id = 1,
-            MenuCategoryId = 10,
-            MenuDisplayName = "Bäver",
-            MenuDisplayNameEn = "Beaver",
-            MenuDisplayNameEnReviewed = true,
-            MenuUrlSegment = "Baver",
-            MenuUrlSegmentEn = "beaver"
-        });
-        db.SaveChanges();
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SE");
+            using var db = CreateContext();
+            db.TblMenus.Add(new TblMenu
+            {
+                Id = 1,
+                MenuCategoryId = 10,
+                MenuDisplayName = "Bäver",
+                MenuDisplayNameEn = "Beaver",
+                MenuDisplayNameEnReviewed = true,
+                MenuUrlSegment = "Baver",
+                MenuUrlSegmentEn = "beaver"
+            });
+            db.SaveChanges();
 
-        var controller = new TranslationReviewController(db);
-        var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index()).Model);
-        Assert.Equal(2, pending.Items.Count);
-        Assert.Equal(new[] { "name", "url" }, pending.Items.Select(item => item.Field));
-        Assert.True(pending.Items[0].Reviewed);
-        Assert.All(pending.Items, item => Assert.Equal("Bäver", item.RecordName));
-        Assert.Equal(1, pending.PendingCount);
-        Assert.Equal(2, pending.TotalCount);
+            var controller = new TranslationReviewController(db);
+            var pending = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index()).Model);
+            Assert.Equal(2, pending.Items.Count);
+            Assert.Equal(new[] { "name", "url" }, pending.Items.Select(item => item.Field));
+            Assert.True(pending.Items[0].Reviewed);
+            Assert.All(pending.Items, item => Assert.Equal("Bäver", item.RecordName));
+            Assert.Equal(1, pending.PendingCount);
+            Assert.Equal(2, pending.TotalCount);
 
-        var all = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index(pendingOnly: false)).Model);
-        Assert.Equal(2, all.Items.Count);
+            var all = Assert.IsType<TranslationReviewViewModel>(Assert.IsType<ViewResult>(controller.Index(pendingOnly: false)).Model);
+            Assert.Equal(2, all.Items.Count);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalUiCulture;
+        }
     }
 
     [Fact]
