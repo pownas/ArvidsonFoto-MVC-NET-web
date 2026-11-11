@@ -290,13 +290,17 @@ public class GuestbookIntegrationTests
     {
         var english = await HtmlHelpers.GetDocumentAsync(await _client!.GetAsync("/?culture=en-US"));
         Assert.IsTrue(english.Title?.Contains("Welcome to my photo archive") == true);
+        var englishPortrait = english.QuerySelector("figure[title='Torbjörn Arvidson'] img");
+        Assert.IsNotNull(englishPortrait, "The home-page portrait should be rendered.");
         Assert.AreEqual("Portrait of Torbjörn Arvidson",
-            english.QuerySelector("img[src='./img/Torbjorn2020.jpg']")?.GetAttribute("alt"));
+            englishPortrait!.GetAttribute("alt"));
 
         var swedish = await HtmlHelpers.GetDocumentAsync(await _client.GetAsync("/?culture=sv-SE"));
         Assert.IsTrue(swedish.Title?.Contains("Välkommen till mitt bildarkiv") == true);
+        var swedishPortrait = swedish.QuerySelector("figure[title='Torbjörn Arvidson'] img");
+        Assert.IsNotNull(swedishPortrait, "The home-page portrait should be rendered.");
         Assert.AreEqual("Porträtt av Torbjörn Arvidson",
-            swedish.QuerySelector("img[src='./img/Torbjorn2020.jpg']")?.GetAttribute("alt"));
+            swedishPortrait!.GetAttribute("alt"));
     }
 
     [TestMethod]
