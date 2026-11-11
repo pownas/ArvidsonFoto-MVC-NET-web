@@ -2,6 +2,8 @@
 
 Komplett guide för att lägga till kontaktformulär-tabellen i ArvidsonFoto-databasen.
 
+> **Viktigt:** Den aktuella applikationen använder EF Core-migrationen 20261020222500_CreateTblKontaktIfMissing för att skapa tbl_kontakt och dess index om de saknas. Den här äldre manuella guiden är endast ett alternativ efter kontroll av migrationstabell och schema. Ta en separat databasbackup före ändringar; rollback-skriptets backup-tabell i samma databas är inte en ersättning för en verifierad backup.
+
 ---
 
 ## 📋 Innehållsförteckning
@@ -431,5 +433,4 @@ WHERE EmailSent = 1
 
 **Skapad**: 2025-01-20  
 **Version**: 1.0  
-**Status**: ✅ Production Ready  
-**Testad**: SQL Server 2019/2022, Azure SQL Database
+**Status**: Historisk manuell SQL-dokumentation; kontrollera aktuell migration och databas innan användning.

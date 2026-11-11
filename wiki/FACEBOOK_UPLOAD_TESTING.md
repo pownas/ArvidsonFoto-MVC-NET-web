@@ -1,4 +1,4 @@
-# Facebook Upload Feature - Manual Testing Guide
+﻿# Facebook Upload Feature - Manual Testing Guide
 
 ## Prerequisites for Testing
 Before testing, you need to configure Facebook integration:
@@ -25,8 +25,7 @@ Before testing, you need to configure Facebook integration:
 
 ### 1. Start the Application
 ```bash
-cd /home/runner/work/ArvidsonFoto-MVC-NET-web/ArvidsonFoto-MVC-NET-web/ArvidsonFoto
-dotnet run
+dotnet run --project ArvidsonFoto.AppHost
 ```
 
 ### 2. Login as Administrator
@@ -37,7 +36,7 @@ dotnet run
 - From UploadAdmin, click on "Dela på Facebook" in the navigation menu
 - You should see a page with:
   - A text area for writing a message
-  - A grid of recently uploaded images (up to 25)
+  - A grid of recently uploaded images (up to 60)
   - Each image should be clickable to select/deselect
 
 ### 4. Test Image Selection
@@ -155,7 +154,4 @@ After testing, you may want to:
 - Keep or remove the Facebook configuration from user secrets
 
 ## Notes for Developer
-- All 84 tests pass ✅
-- CodeQL security scan: 0 vulnerabilities ✅
-- Build successful with only existing warnings ✅
-- Ready for production deployment after configuration
+Testantal, skanningsresultat och build-status måste verifieras vid körning; tidigare resultat är inte en aktuell releasekontroll. FacebookService anropar Graph API v19.0; kontrollera Metas aktuella API-version, behörigheter och publiceringskrav före driftsättning.

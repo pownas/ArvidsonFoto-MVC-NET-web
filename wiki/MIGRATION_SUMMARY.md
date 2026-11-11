@@ -1,4 +1,6 @@
-# Migration Summary: Startup.cs → Program.cs
+﻿# Migration Summary: Startup.cs → Program.cs
+
+> **Historisk sammanfattning:** Detta dokument beskriver migreringen i version 3.10.3 och dess dåvarande .NET 10-status. Projektet har sedan dess uppgraderats till .NET 11 och Aspire AppHost/ServiceDefaults finns nu i lösningen. Se [README](../ReadMe.md) för aktuell konfiguration.
 
 **Datum**: 2025-12-15  
 **Version**: v3.10.2 → v3.10.3  
@@ -227,4 +229,4 @@ För frågor om migreringen eller moderniseringsrekommendationerna:
 
 ---
 
-**Slutsats**: Migreringen från Startup.cs till Program.cs är fullständig, validerad och produktionsklar. Projektet följer nu moderna .NET 10-standards och är redo för fortsatt modernisering och Aspire-integration.
+**Historisk slutsats:** Vid migreringstillfället var arbetet med Startup.cs → Program.cs klart och Aspire-integration återstod. Lösningen har därefter uppgraderats till .NET 11 och Aspire AppHost/ServiceDefaults är nu integrerade.

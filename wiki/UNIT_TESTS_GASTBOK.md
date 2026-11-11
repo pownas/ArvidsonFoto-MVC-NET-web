@@ -1,5 +1,7 @@
 ﻿# Enhetstester för Gästboksfunktionalitet
 
+> **Historisk testrapport:** Testantal, versionsnummer och resultat nedan avser testsviten när dokumentet skrevs; de ska inte tolkas som ett aktuellt körresultat. Projektet riktar sig nu mot .NET 11. Kör det angivna testkommandot för aktuell status.
+
 ## Sammanfattning
 
 Jag har skapat **21 enhetstester** för att säkerställa att gästbokens POST-funktionalitet inte går sönder igen. Alla tester passerar och använder **inga externa mock-ramverk** (som Moq).
@@ -70,7 +72,7 @@ Omfattande testsvit med **21 tester** uppdelade i 5 kategorier:
 
 ### 3. Dokumentation
 
-#### `README_GASTBOK_TESTS.md`
+#### `README_INFO_GASTBOK_TESTS.md`
 Komplett dokumentation som beskriver:
 - Testöversikt och kategorier
 - Hur man kör testerna
@@ -205,9 +207,9 @@ Förslag på ytterligare tester:
 
 ## 📚 Relaterade dokument
 
-- [README_GASTBOK_TESTS.md](./ControllerTests/README_GASTBOK_TESTS.md) - Detaljerad testdokumentation
+- [README_INFO_GASTBOK_TESTS.md](../ArvidsonFoto.Tests.Unit/ControllerTests/README_INFO_GASTBOK_TESTS.md) - Detaljerad testdokumentation
 - [InfoController.cs](../ArvidsonFoto/Controllers/InfoController.cs) - Controller-implementation
-- [GuestbookInputModel.cs](../ArvidsonFoto/Models/GuestbookInputModel.cs) - Valideringsmodell
+- [GuestbookFormInputDto.cs](../ArvidsonFoto/Core/DTOs/GuestbookFormInputDto.cs) - Valideringsmodell
 
 ---
 

@@ -1,4 +1,4 @@
-# Inventering av språkberoende databasfält
+﻿# Inventering av språkberoende databasfält
 
 Engelska kolumner är nullable. Tomma/NULL-värden visas med svensk fallback; befintlig data kopieras inte automatiskt. Nya översättningar kan fyllas i efter migrering.
 
@@ -10,7 +10,7 @@ Engelska kolumner är nullable. Tomma/NULL-värden visas med svensk fallback; be
 | `tbl_menu` | `menu_URLtext` (`MenuUrlSegment`) | `menu_URLtext_en` (`MenuUrlSegmentEn`) | `nvarchar(50) NULL` | NULL för befintliga poster, engelsk slug i dev-seed |
 | `tbl_images` | `image_description` (`ImageDescription`) | `image_description_en` (`ImageDescriptionEn`) | `nvarchar(150) NULL` | NULL för befintliga poster och tomma bildbeskrivningar; annars översatt i dev-seed |
 
-Seed-data i `ArvidsonFotoCoreDbSeeder` innehåller översättningar för alla 543 menykategorier, båda gästboksinläggen och de åtta bilder som har beskrivning. Seed används för ny test-/in-memory-databas; att ändra den uppdaterar inte redan lagrade poster i staging eller produktion. Översätt befintliga poster separat efter granskning.
+Seed-data i `ArvidsonFotoCoreDbSeeder` innehåller engelska värden för kategorier, gästboksinlägg och bildbeskrivningar. Seedern är den aktuella källan för testdata; antalet poster kan ändras. Seed används för ny test-/in-memory-databas och ändringar uppdaterar inte redan lagrade poster i staging eller produktion. Översätt befintliga poster separat efter granskning.
 
 Övriga `Tbl*`-fält granskades: `TblKontakt.Name/Subject/Message` är besökares egna inskickade uppgifter, inte redaktionella översättningar; `SourcePage`, `ErrorMessage` och `TblPageCounter.PageName/MonthViewed` är system-/statistikmetadata. `TblImage.ImageUrlName` är ett filnamn; kontaktuppgifter, ID, datum och flaggor är inte översättningsbara. Dessa får inga nya kolumner.
 

@@ -1,4 +1,6 @@
-# Moderniseringsrekommendationer för ArvidsonFoto
+﻿# Moderniseringsrekommendationer för ArvidsonFoto
+
+> **Historisk ögonblicksbild:** Genomförandestatus och paketversioner på denna sida avser den tidigare .NET 10-kodbasen och är inte aktuella paketförslag. Kontrollera alltid `Directory.Packages.props` och aktuell kod innan du använder rekommendationerna. Projektet riktar sig nu mot .NET 11; se [README](../ReadMe.md) för nuläget.
 
 Detta dokument innehåller rekommendationer för att modernisera kodbasen ytterligare efter migreringen från Startup.cs till Program.cs.
 

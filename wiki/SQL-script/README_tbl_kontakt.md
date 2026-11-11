@@ -4,6 +4,8 @@ Detta dokumentet beskriver SQL-scripten för att skapa och hantera kontaktformul
 
 ---
 
+> **Viktigt:** tbl_kontakt hanteras numera av EF Core-migrationer, inklusive 20261020222500_CreateTblKontaktIfMissing. Använd inte de manuella DDL-/rollback-skripten utan att först kontrollera migrationerna och ta en separat backup. Backup-tabellen som rollback-skriptet skapar ligger i samma databas och skyddar inte mot databasförlust.
+
 ## 📁 Filer
 
 ### 1. `01-Create-tbl_kontakt.sql`
@@ -301,4 +303,4 @@ DELETE FROM tbl_kontakt WHERE Email = 'test@example.com'
 
 **Skapad**: 2025-01-20  
 **Version**: 1.0  
-**Status**: ✅ Production Ready
+**Status**: Historisk manuell SQL-dokumentation; använd aktuella EF Core-migrationer som primär källa.

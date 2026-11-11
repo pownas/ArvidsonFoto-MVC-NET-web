@@ -1,5 +1,7 @@
 ﻿# Performance Optimization Summary - Database Query Reduction
 
+> **Historisk rapport (2025-12-30):** Antal frågor, procenttal och uppskattade laddningstider nedan är dåvarande uppskattningar och inte ett verifierat aktuellt prestandamått. Använd dem inte som acceptanskriterier utan att mäta om. Se [TESTING_GUIDE.md](TESTING_GUIDE.md) för aktuell kontroll.
+
 ## Problem
 Applikationen gjorde **~350,000 databas-queries på 5 minuter** (~9,000 per sidladdning).
 
@@ -252,14 +254,14 @@ dotnet build
 # ✅ Build successful
 ```
 
-### ⏳ Manuell Testning (TODO)
+### ⏳ Historisk manuell testning (ej verifierad i denna rapport)
 - [ ] Ladda startsidan - verifiera <100 DB queries
 - [ ] Hovra över kategori-länkar - verifiera lazy loading av bilder
 - [ ] Öppna Developer Tools Console - verifiera cache stats
 - [ ] Kontrollera localStorage - verifiera `arvidsonfoto_categories`
 - [ ] Refresh sidan - verifiera 0 DB queries (cache hit)
 
-### ⏳ Performance Monitoring (TODO)
+### ⏳ Historisk performance monitoring (ej verifierad i denna rapport)
 - [ ] SQL Server Profiler - räkna queries
 - [ ] Browser Network tab - verifiera HTTP requests
 - [ ] Serilog logs - verifiera cache hits
@@ -286,7 +288,7 @@ public IActionResult CreateCategory(UploadNewCategoryDto inputModel)
 
 **Client-side:**
 ```javascript
-// I Razor-view efter lyckad kategori-skapning
+// I Razor-view efter lyckad kategori-skapande
 if (window.CategoryCache) {
     CategoryCache.invalidateCache();
 }

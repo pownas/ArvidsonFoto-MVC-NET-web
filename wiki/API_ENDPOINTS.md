@@ -1,119 +1,74 @@
-# ArvidsonFoto API Endpoints
+﻿# API-endpoints
 
-## Image Category API Endpoints
+API-exemplen nedan motsvarar routning och DTO:er i `ArvidsonFoto/Controllers/ApiControllers`. I Development finns även Scalar på `/scalar/v1` och OpenAPI JSON på `/openapi/v1.json`.
 
-The API now supports the same hierarchical category structure as the web interface, with up to 4 levels of subcategories.
+## Bilder per kategorisökväg
 
-### Get Images by Category Levels
-
-#### Single Level
-```
-GET /api/bilder/{subLevel1}?page=1&pageSize=48
-```
-Example: `GET /api/bilder/Faglar?page=1&pageSize=48`
-
-#### Two Levels
-```
-GET /api/bilder/{subLevel1}/{subLevel2}?page=1&pageSize=48
-```
-Example: `GET /api/bilder/Faglar/Duvor?page=1&pageSize=48`
-
-#### Three Levels
-```
-GET /api/bilder/{subLevel1}/{subLevel2}/{subLevel3}?page=1&pageSize=48
-```
-Example: `GET /api/bilder/Faglar/Duvor/Skogsduva?page=1&pageSize=48`
-
-#### Four Levels
-```
-GET /api/bilder/{subLevel1}/{subLevel2}/{subLevel3}/{subLevel4}?page=1&pageSize=48
-```
-Example: `GET /api/bilder/Faglar/Duvor/Skogsduva/Vuxen?page=1&pageSize=48`
-
-### Response Format
-
-```json
-{
-  "category": {
-    "id": 123,
-    "name": "Category Name",
-    "urlName": "category-url-name"
-  },
-  "images": [
-    {
-      "id": 456,
-      "url": "image-filename.jpg",
-      "description": "Image description",
-      "date": "2023-01-01T00:00:00",
-      "imageUrl": "/api/image/image-filename.jpg",
-      "thumbnailUrl": "/api/image/image-filename.jpg"
-    }
-  ],
-  "pagination": {
-    "currentPage": 1,
-    "totalPages": 5,
-    "totalImages": 240,
-    "pageSize": 48,
-    "hasNextPage": true,
-    "hasPreviousPage": false
-  },
-  "url": "/api/bilder/Faglar/Duvor"
-}
+```http
+GET /api/bilder/{categoryPath}?page=1&limit=48
 ```
 
-### Additional Endpoints
+`/api/images/{categoryPath}` är ett alias. Kategorisökvägen kan innehålla flera segment, till exempel:
 
-#### Get All Categories
-```
-GET /api/categories
-```
-
-Returns all available categories with their hierarchical information.
-
-#### Search Categories
-```
-GET /api/search?s={searchTerm}
+```text
+GET /api/bilder/Faglar/Duvor?page=1&limit=24
 ```
 
-Search for categories by name, similar to the web interface search functionality.
+Parametrar:
 
-#### Get All Images (Root Level)
+- `page`: 1-baserad sida. Utelämnad eller `0` använder det äldre icke-paginerade flödet.
+- `limit`: antal poster per sida; standardvärde 48.
+- `sortBy`: `uploaded`, `imagetaken` eller `categoryname`.
+- `sortOrder`: `asc` eller `desc`.
+
+Svaret är ett `ImageListResponse`, inte ett objekt med nästlade `category`- och `pagination`-objekt. Fält omfattar `categoryId`, `categoryNameSv`, `categoryNameEn`, `urlCategorySv`, `urlCategoryEn`, `imageCategoryTotalCount`, `imageResultCount`, `images`, `querySortBy`, `querySortOrder`, `queryLimit`, `currentPage`, `totalPages` och `pageSize`. Varje bild är en `ImageDto`; fältnamn omfattar bland annat `imageId`, `categoryId`, `categoryNameSv`, `categoryNameEn`, `descriptionSv`, `descriptionEn`, `urlImage`, `dateImageTaken`, `dateUploaded`, `categoryIsGameSelectable` och `isGameSelectable`.
+
+Okänd kategori ger 404. Exempel:
+
+```powershell
+curl.exe "http://localhost:5000/api/bilder/Faglar/Duvor?page=1&limit=24"
 ```
-GET /api/images
+
+## Kategorier
+
+### Lättviktslista för klientcache
+
+```http
+GET /api/category/AllLightweight
 ```
 
-Returns all image filenames from the root images directory.
+Alias: `GET /api/category/Lightweight`. Endpointen är anonym och har HTTP-cache på 24 timmar. Returnerade fält är `categoryId`, `nameSv`, `nameEn`, språkspecifika URL-fält samt `parentCategoryId`.
 
-#### Get Specific Image
+### Spelkategorier
+
+```http
+GET /api/game/categories
 ```
-GET /api/image/{filename}
+
+Returnerar kategorier som kan användas av spelet. Kategorier och överordnade kategorier påverkar om bilder är tillgängliga för spel.
+
+## Bilder
+
+### Senast uppladdade
+
+```http
+GET /api/image/Latest?count=6
 ```
 
-Returns the actual image file with proper content type.
+`count` måste vara mellan 1 och 100; standardvärdet är 6. Ogiltigt antal ger HTTP 400.
 
-### Features
+### Spelbilder
 
-- **Pagination**: All category endpoints support `page` and `pageSize` parameters
-- **String Replacement**: Handles ÅÄÖ character replacement using `SharedStaticFunctions.ReplaceAAO()`
-- **Error Handling**: Proper HTTP status codes and error messages
-- **Consistent Sorting**: Images sorted by ImageId and ImageDate in descending order
-- **Category Validation**: Returns 404 if category is not found
-
-### Usage Examples
-
-```bash
-# Get first page of birds category
-curl "http://localhost:5000/api/bilder/Faglar"
-
-# Get second page with custom page size
-curl "http://localhost:5000/api/bilder/Faglar/Duvor?page=2&pageSize=24"
-
-# Search for categories containing "duva"
-curl "http://localhost:5000/api/search?s=duva"
-
-# Get all categories
-curl "http://localhost:5000/api/categories"
-
-# Get specific image
-curl "http://localhost:5000/api/image/skogsduva_001.jpg"
+```http
+GET /api/game/images?count=20&categoryId=13
 ```
+
+`categoryId` är valfritt. Resultatet innehåller `ImageDto`-fält, inklusive `isGameSelectable`.
+
+### Bild per kategori
+
+```http
+GET /api/image/GetOneImageFromCategory/{categoryId}
+```
+
+Använd denna route för den representativa bilden i kategoripopupen.
