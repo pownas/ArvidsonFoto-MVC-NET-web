@@ -1,144 +1,35 @@
-﻿# ArvidsonFoto Database Konfiguration
+﻿# Databaskonfiguration
 
-## Nuvarande Status
+## Lokal utveckling
 
-Din applikation är redan korrekt konfigurerad för att använda **in-memory database** med testdata!
+I `ArvidsonFoto/appsettings.Development.json` är `ConnectionStrings:UseInMemoryDatabase` satt till `true`. `Program.cs` väljer in-memory-provider när den inställningen är sann eller när Codespaces-miljövariabler finns. AppHost startar två instanser av webbappen och använder samma utvecklingskonfiguration.
 
-### Vad har gjorts
+Den gemensamma in-memory-databasen är temporär: innehållet försvinner när respektive appinstans avslutas. Vid uppstart skapas kärnappens testdata om tabellerna är tomma, med data från `ArvidsonFotoCoreDbSeeder`. Identity-testkontot hanteras separat av `ArvidsonFotoIdentityDbSeeder` och styrs av `DatabaseSettings:SeedTestAccount`. Testdata och antal poster kan ändras; se seedern för aktuell uppsättning i stället för att förlita dig på äldre antal i dokumentation.
 
-1. ✅ **ArvidsonFotoCoreDbSeeder.cs** - Innehåller all seed-data:
-   - 2 gästboksinlägg
-   - 543 kategorier (menyer)
-   - 44 sidräknare
-   - 100 bilder
+Starta den vanliga utvecklingsmiljön från lösningens rot:
 
-2. ✅ **Program.cs** - Seedar in-memory databasen automatiskt när applikationen startar:
-   ```csharp
-   if (useInMemoryDb)
-   {
-       using (var scope = app.Services.CreateScope())
-       {
-           var coreContext = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
-           coreContext.Database.EnsureCreated();
-           
-           // Seeda data om databasen är tom
-           if (!coreContext.TblImages.Any())
-           {
-               Log.Information("Seeding in-memory database with test data...");
-               coreContext.SeedInMemoryDatabase();
-               Log.Information("In-memory database seeded successfully...");
-           }
-       }
-   }
-   ```
-
-3. ✅ **appsettings.Development.json** - UseInMemoryDatabase är satt till "true"
-
-### När du kör applikationen
-
-Kör applikationen via Aspire AppHost:
-```bash
+```powershell
 dotnet run --project ArvidsonFoto.AppHost
 ```
 
-Du kommer att se följande i loggen:
-```
-Seeding in-memory database with test data...
-In-memory database seeded successfully with 100 images, 543 categories, 2 guestbook entries
-```
+Se [Aspire-guiden](ASPIRE.md) för appinstanser och dashboard.
 
-Applikationen kommer nu ha testdata tillgänglig på:
-- **Startsida**: Visar 12 senaste bilderna
-- **Kategorier**: 543 kategorier tillgängliga i menyn
-- **Gästbok**: 2 testinlägg
-- **Bilder**: 100 testbilder
+## Ansluta till SQL Server
 
----
+För en beständig databas behöver du:
 
-## Alternativ: Använd SQL Server istället
+1. Ställa in `ConnectionStrings:UseInMemoryDatabase` till `false`.
+2. Ange en giltig `ConnectionStrings:DefaultConnection` i lokal, ej versionshanterad konfiguration.
+3. Säkerställa att SQL Server är åtkomlig och att databasschemat har aktuella migrationer.
 
-Om du vill använda en riktig SQL Server databas istället, gör följande:
+AppHost läser dessa värden från `ArvidsonFoto`-konfigurationen och skickar anslutningssträngen vidare till appinstanserna när in-memory-läget är avstängt. AppHost skapar inte själv någon SQL Server-container.
 
-### Steg 1: Uppdatera AppHost.cs
-
-```csharp
-var builder = DistributedApplication.CreateBuilder(args);
-
-// Lägg till SQL Server container
-var sqlServer = builder.AddSqlServer("sqlserver")
-    .WithDataVolume() // Persisterar data mellan omstarter
-    .AddDatabase("arvidsonfoto-db");
-
-var arvidsonFoto = builder.AddProject<Projects.ArvidsonFoto>("arvidsonfoto")
-    .WithReference(sqlServer) // Injicerar connection string automatiskt
-    .WithExternalHttpEndpoints();
-
-builder.Build().Run();
-```
-
-### Steg 2: Uppdatera appsettings.Development.json
-
-```json
-{
-  "ConnectionStrings": {
-    "UseInMemoryDatabase": "false"
-  }
-}
-```
-
-### Steg 3: Kör migrations
-
-```bash
-cd ArvidsonFoto
-dotnet ef database update
-```
-
-### Steg 4: Seeda SQL Server med data
-
-Du kan antingen:
-
-**Alternativ A**: Använd OnModelCreating i ArvidsonFotoCoreDbContext:
-```csharp
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    base.OnModelCreating(modelBuilder);
-    
-    // Seeda data via migrations
-    modelBuilder.InitialDatabaseSeed();
-}
-```
-
-**Alternativ B**: Kör ett seed-script vid uppstart:
-```csharp
-// I Program.cs ConfigureMiddleware
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ArvidsonFotoCoreDbContext>();
-    context.Database.Migrate(); // Kör migrations
-    
-    // Seeda om tom
-    if (!context.TblImages.Any())
-    {
-        context.SeedInMemoryDatabase(); // Funkar även för SQL Server
-    }
-}
-```
-
----
+Använd User Secrets för lokal utveckling och en lämplig hemlighetshanterare eller miljövariabler i drift. Lägg aldrig lösenord eller produktionsanslutningssträngar i versionshanterade filer.
 
 ## Felsökning
 
-### Ser ingen data när applikationen körs?
-
-1. Kontrollera loggen för meddelandet: `"Seeding in-memory database with test data..."`
-2. Om meddelandet inte visas, kontrollera att `UseInMemoryDatabase` är `"true"` i appsettings.Development.json
-3. Kontrollera att Aspire AppHost körs och inte bara ArvidsonFoto projektet direkt
-
-### Vill se fler bilder?
-
-Lägg till fler bilder i `ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_Image` listan.
-
-### Behöver exportera mer data från SQL Server?
-
-Använd SQL query:erna i kommentarerna i `ArvidsonFotoCoreDbSeeder.cs` för att exportera data från din SQL Server databas.
+- **Ingen testdata:** kontrollera `ASPNETCORE_ENVIRONMENT=Development`, `UseInMemoryDatabase=true` och startloggarna för seedern.
+- **Data försvinner efter omstart:** det är förväntat med in-memory-provider.
+- **SQL Server-anslutningsfel:** kontrollera `DefaultConnection`, serveråtkomst och att migrationer har tillämpats.
+- **Identity-testkonto skapas inte:** kontrollera `DatabaseSettings:SeedTestAccount` och Identity-seederns loggning.
 

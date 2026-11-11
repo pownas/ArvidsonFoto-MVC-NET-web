@@ -21,7 +21,7 @@ public class TblPageCounter()
     /// <summary> Categori Id som uppdateras </summary>
     public int CategoryId { get; set; } = 0;
 
-    /// <summary> Kollar om det är från /Bilder/ eller inte </summary>
+    /// <summary> Kollar om det är från /bilder/ eller inte </summary>
     public bool PicturePage { get; set; }
 
     /// <summary> Innehåller månaden som sidan visades, exempel: "2021-03" </summary>

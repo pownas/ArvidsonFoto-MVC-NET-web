@@ -20,9 +20,27 @@
         prefetchDelay: 2000,  // Start prefetching after 2 seconds of inactivity
         imageMaxWidth: 300,
         imageMaxHeight: 200,
-        apiEndpoint: '/api/image/GetOneImageFromCategory/',
+        apiEndpoint: '/api/image/getoneimagefromcategory/',
         imageBaseUrl: 'https://arvidsonfoto.se'
     };
+    var labels = document.querySelector('.main-nav')?.dataset || {};
+
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, function (character) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+        });
+    }
+
+    function encodePathSegment(segment) {
+        try {
+            return encodeURIComponent(decodeURIComponent(segment));
+        } catch (error) {
+            if (!(error instanceof URIError)) {
+                throw error;
+            }
+            return encodeURIComponent(segment);
+        }
+    }
 
     /**
      * Checks if current viewport is mobile (max-width: 767px)
@@ -34,7 +52,7 @@
     /**
      * Fetches the latest image for a category from the API
      */
-    function fetchCategoryImage(categoryId) {
+    function fetchCategoryImage(categoryId, operation) {
         // Check cache first
         if (imageCache[categoryId]) {
             return Promise.resolve(imageCache[categoryId]);
@@ -46,13 +64,14 @@
         }
 
         // Mark as pending and fetch
-        var fetchPromise = fetch(config.apiEndpoint + categoryId, {
+        var culture = document.documentElement.lang === 'en' ? 'en-US' : 'sv-SE';
+        var fetchPromise = window.ArvidsonFotoTelemetry.fetch(config.apiEndpoint + encodeURIComponent(categoryId) + '?culture=' + culture, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Cache-Control': 'max-age=3600' // Cache for 1 hour
             }
-        })
+        }, operation)
         .then(function (response) {
             if (!response.ok) {
                 throw new Error('HTTP ' + response.status);
@@ -79,29 +98,30 @@
      * Generates HTML content for the popover
      */
     function generatePopoverContent(imageData, categoryName) {
-        if (!imageData || !imageData.urlImage) {
-            return '<div class="text-muted small">Ingen bild tillgänglig</div>';
+        if (!imageData || !imageData.urlImage || !/^\/?bilder\//i.test(imageData.urlImage) || imageData.urlImage.includes('..')) {
+            return '<div class="text-muted small">' + escapeHtml(labels.tooltipNoImage) + '</div>';
         }
 
-        var imagePath = imageData.urlImage;
+        var imagePath = imageData.urlImage.split('/').map(encodePathSegment).join('/');
         if (!imagePath.startsWith('/')) {
             imagePath = '/' + imagePath;
         }
         imagePath = config.imageBaseUrl + imagePath + '.thumb.jpg';
 
         var html = '<div class="category-tooltip-content">';
-        html += '<img src="' + imagePath + '" alt="' + (imageData.name || 'Preview') + '" ';
+        var localizedCategoryName = document.documentElement.lang === 'en' ? imageData.categoryNameEn : imageData.categoryNameSv;
+        html += '<img src="' + escapeHtml(imagePath) + '" alt="' + escapeHtml(categoryName || localizedCategoryName || '') + '" ';
         html += 'loading="lazy" '; // Native lazy loading
         html += 'style="max-width: ' + config.imageMaxWidth + 'px; max-height: ' + config.imageMaxHeight + 'px; width: auto; height: auto; display: block;" />';
         
         if (categoryName) {
-            html += '<div class="mt-2 fw-bold" style="color: #ddd !important;">' + categoryName + '</div>';
+            html += '<div class="mt-2 fw-bold" style="color: #ddd !important;">' + escapeHtml(categoryName) + '</div>';
         }
         
         if (imageData.dateImageTaken) {
             var date = new Date(imageData.dateImageTaken);
-            var formattedDate = date.toLocaleDateString('sv-SE');
-            html += '<div class="mt-1 small text-muted" style="color: #aaa !important;">Fotograferad: ' + formattedDate + '</div>';
+            var formattedDate = date.toLocaleDateString(document.documentElement.lang === 'en' ? 'en-US' : 'sv-SE');
+            html += '<div class="mt-1 small text-muted" style="color: #aaa !important;">' + escapeHtml(labels.tooltipDate) + ': ' + escapeHtml(formattedDate) + '</div>';
         }
         
         html += '</div>';
@@ -138,7 +158,7 @@
         var categoryId = Array.from(prefetchQueue)[0];
         prefetchQueue.delete(categoryId);
         
-        fetchCategoryImage(categoryId).finally(function() {
+        fetchCategoryImage(categoryId, 'tooltip.prefetch').finally(function() {
             isPrefetching = false;
             // Prefetch next in queue after a small delay
             if (prefetchQueue.size > 0) {
@@ -166,7 +186,7 @@
         var visibleLinks = [];
         links.forEach(function(link) {
             var rect = link.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
+            if (!link.closest('.sitemap-category-tree') && rect.top < window.innerHeight && rect.bottom > 0) {
                 visibleLinks.push(link);
             }
         });
@@ -217,13 +237,13 @@
                         isVisible = true;
                     } else {
                         // Show loading state
-                        var loadingContent = '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> Laddar...</div>';
+                        var loadingContent = '<div class="text-center"><span class="spinner-border spinner-border-sm" role="status"></span> ' + escapeHtml(labels.tooltipLoading) + '</div>';
                         popoverInstance = new bootstrap.Popover(linkElement, getPopoverConfig(loadingContent));
                         popoverInstance.show();
                         isVisible = true;
 
                         // Fetch and update
-                        fetchCategoryImage(categoryId).then(function (imageData) {
+                        fetchCategoryImage(categoryId, 'tooltip.hover').then(function (imageData) {
                             if (isVisible) {
                                 var content = generatePopoverContent(imageData, categoryName);
                                 popoverInstance.dispose();

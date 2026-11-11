@@ -1,11 +1,11 @@
-﻿@page
+@page
 @section MetaData { <meta name="robots" content="noindex" /> }
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = L["Identity.AccessDenied.AccessDenied"];
 }
 
 <header>
     <h2 class="text-danger">@ViewData["Title"]</h2>
-    <p class="text-danger">You do not have access to this resource.</p>
+    <p class="text-danger">@L["Identity.AccessDenied.YouDoNotHaveAccessToThisResource"]</p>
 </header>

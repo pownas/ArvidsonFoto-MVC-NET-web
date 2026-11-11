@@ -4,7 +4,7 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @model PasskeysModel
 @{
-    ViewData["Title"] = "Hantera passkeys";
+    ViewData["Title"] = L["Manage.Passkeys"];
     ViewData["ActivePage"] = ManageNavPages.Passkeys;
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
     var antiforgeryTokens = Antiforgery.GetTokens(ViewContext.HttpContext);
@@ -21,12 +21,12 @@
             {
                 var credentialId = Base64Url.EncodeToString(passkey.CredentialId);
                 <tr>
-                    <td>@(passkey.Name ?? "Namnlös passkey")</td>
+                    <td>@(passkey.Name ?? L["Manage.UnnamedPasskey"].Value)</td>
                     <td>
-                        <a asp-page="./RenamePasskey" asp-route-id="@credentialId" class="btn btn-sm btn-primary">Byt namn</a>
+                        <a asp-page="./RenamePasskey" asp-route-id="@credentialId" class="btn btn-sm btn-primary">@L["Identity.Manage.Passkeys.Rename"]</a>
                         <form method="post" asp-page-handler="DeletePasskey" asp-route-credentialId="@credentialId" style="display:inline">
                             <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Är du säker på att du vill ta bort den här passkeyn?')">Ta bort</button>
+                                    onclick="return confirm(@System.Text.Json.JsonSerializer.Serialize(L["Manage.ConfirmDeletePasskey"].Value))">@L["Identity.Manage.Passkeys.Delete"]</button>
                         </form>
                     </td>
                 </tr>
@@ -36,12 +36,12 @@
 }
 else
 {
-    <p>Inga passkeys är registrerade.</p>
+    <p>@L["Identity.Manage.Passkeys.NoPasskeysAreRegistered"]</p>
 }
 
 @if (Model.CurrentPasskeys.Count >= 100)
 {
-    <p class="text-danger">Du har nått det maximala antalet tillåtna passkeys. Ta bort en innan du lägger till en ny.</p>
+    <p class="text-danger">@L["Identity.Manage.Passkeys.YouHaveReachedTheMaximumNumberNewOne"]</p>
 }
 else
 {
@@ -52,7 +52,7 @@ else
             request-token-name="@antiforgeryTokens.HeaderName"
             request-token-value="@antiforgeryTokens.RequestToken">
         </passkey-submit>
-        <button type="submit" name="__passkeySubmit" class="btn btn-primary">Lägg till ny passkey</button>
+        <button type="submit" name="__passkeySubmit" class="btn btn-primary">@L["Identity.Manage.Passkeys.AddNewPasskey"]</button>
     </form>
 }
 

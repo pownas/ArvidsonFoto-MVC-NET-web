@@ -1,5 +1,7 @@
 ﻿# SQL Scripts - Snabbguide för tbl_kontakt
 
+> **Viktigt:** Applikationen hanterar schemat med EF Core-migrationer. Migrationshistoriken innehåller 20261020222500_CreateTblKontaktIfMissing, som skapar tabellen och index när de saknas. Kontrollera databasens migrationsstatus och ta en separat backup innan manuella SQL-skript används. Kör inte rollback-skript i en databas med data du behöver behålla.
+
 Alla scripts för att skapa och hantera kontaktformulär-tabellen i ArvidsonFoto-databasen.
 
 ---
@@ -156,6 +158,5 @@ Se:
 
 ---
 
-**Status**: ✅ Production Ready  
-**Testad**: SQL Server 2019/2022, Azure SQL Database  
+**Status**: Historisk manuell SQL-dokumentation; jämför alltid med aktuella EF Core-migrationer.
 **Skapad**: 2025-01-20

@@ -22,25 +22,19 @@ public class LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, IL
     public class InputModel
     {
         [Required]
-        [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(7, ErrorMessageResourceName = nameof(IdentityResource.PasswordLength), ErrorMessageResourceType = typeof(IdentityResource), MinimumLength = 6)]
         [DataType(DataType.Text)]
-        [Display(Name = "Authenticator code")]
+        [Display(Name = nameof(IdentityResource.TwoFactorCode), ResourceType = typeof(IdentityResource))]
         public string TwoFactorCode { get; set; } = null!;
 
-        [Display(Name = "Remember this machine")]
+        [Display(Name = nameof(IdentityResource.RememberMachine), ResourceType = typeof(IdentityResource))]
         public bool RememberMachine { get; set; }
     }
 
     public async Task<IActionResult> OnGetAsync(bool rememberMe, string? returnUrl = null)
     {
         // Ensure the user has gone through the username & password screen first
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         ReturnUrl = returnUrl;
         RememberMe = rememberMe;
 
@@ -54,14 +48,9 @@ public class LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, IL
             return Page();
         }
 
-        returnUrl = returnUrl ?? Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
 
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         var authenticatorCode = Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
         var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, Input.RememberMachine);
@@ -79,7 +68,7 @@ public class LoginWith2faModel(SignInManager<ArvidsonFotoUser> signInManager, IL
         else
         {
             _logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", user.Id);
-            ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.LoginWith2fa.InvalidAuthenticatorCode"));
             return Page();
         }
     }

@@ -13,11 +13,6 @@ public class DevController : Controller
     public IActionResult Index()
     {
         // Only accessible in Development mode
-        if (!HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
-        {
-            return NotFound();
-        }
-
-        return View();
+        return !HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment() ? NotFound() : View();
     }
 }

@@ -25,7 +25,7 @@ public partial class IndexModel(
     public class InputModel
     {
         [Phone]
-        [Display(Name = "Phone number")]
+        [Display(Name = nameof(IdentityResource.PhoneNumber), ResourceType = typeof(IdentityResource))]
         public string? PhoneNumber { get; set; }
     }
 
@@ -47,7 +47,7 @@ public partial class IndexModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         await LoadAsync(user);
@@ -59,7 +59,7 @@ public partial class IndexModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         if (!ModelState.IsValid)
@@ -74,13 +74,13 @@ public partial class IndexModel(
             var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
             if (!setPhoneResult.Succeeded)
             {
-                StatusMessage = "Unexpected error when trying to set phone number.";
+                StatusMessage = IdentityResource.Get("Identity.Manage.Index.UnexpectedErrorWhenTryingToSetPhoneNumber");
                 return RedirectToPage();
             }
         }
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = "Your profile has been updated";
+        StatusMessage = IdentityResource.Get("Identity.Manage.Index.YourProfileHasBeenUpdated");
         return RedirectToPage();
     }
 }

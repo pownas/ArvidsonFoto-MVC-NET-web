@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
+using System.Globalization;
 
 namespace ArvidsonFoto.Tests.Unit.MockServices;
 
@@ -58,4 +59,43 @@ public class MockPageCounterService : IPageCounterService
 
         return result;
     }
+
+    public Dictionary<string, int> GetMonthlyPageViewsChart(DateTime startDate, DateTime endDate, bool picturePage)
+    {
+        var result = new Dictionary<string, int>();
+        var firstMonth = new DateTime(startDate.Year, startDate.Month, 1);
+        var lastMonth = new DateTime(endDate.Year, endDate.Month, 1);
+        for (var month = firstMonth; month <= lastMonth; month = month.AddMonths(1))
+        {
+            var key = month.ToString("yyyy-MM", CultureInfo.InvariantCulture);
+            result[key] = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters
+                .Where(pc => pc.MonthViewed == key && pc.PicturePage == picturePage)
+                .Sum(pc => pc.PageViews);
+        }
+
+        return result;
+    }
+
+    public List<TblPageCounter> GetPageCountsInPeriod(DateTime startDate, DateTime endDate, bool picturePage) =>
+        ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_PageCounters
+            .Where(pc => pc.PicturePage == picturePage
+                && string.Compare(pc.MonthViewed, startDate.ToString("yyyy-MM", CultureInfo.InvariantCulture), StringComparison.Ordinal) >= 0
+                && string.Compare(pc.MonthViewed, endDate.ToString("yyyy-MM", CultureInfo.InvariantCulture), StringComparison.Ordinal) <= 0)
+            .GroupBy(pc => picturePage ? pc.CategoryId.ToString(CultureInfo.InvariantCulture) : pc.PageName)
+            .Select(g =>
+            {
+                var latest = g.OrderByDescending(pc => pc.LastShowDate).First();
+                return new TblPageCounter
+                {
+                    Id = latest.Id,
+                    PageName = latest.PageName,
+                    CategoryId = latest.CategoryId,
+                    PicturePage = latest.PicturePage,
+                    MonthViewed = latest.MonthViewed,
+                    LastShowDate = latest.LastShowDate,
+                    PageViews = g.Sum(pc => pc.PageViews)
+                };
+            })
+            .OrderByDescending(pc => pc.PageViews)
+            .ToList();
 }

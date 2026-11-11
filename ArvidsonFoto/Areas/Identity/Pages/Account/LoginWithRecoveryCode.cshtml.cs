@@ -22,19 +22,14 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
         [BindProperty]
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Recovery Code")]
+        [Display(Name = nameof(IdentityResource.RecoveryCode), ResourceType = typeof(IdentityResource))]
         public string RecoveryCode { get; set; } = null!;
     }
 
     public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
     {
         // Ensure the user has gone through the username & password screen first
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         ReturnUrl = returnUrl;
 
         return Page();
@@ -47,12 +42,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
             return Page();
         }
 
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
         var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
 
         var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
@@ -70,7 +60,7 @@ public class LoginWithRecoveryCodeModel(SignInManager<ArvidsonFotoUser> signInMa
         else
         {
             _logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", user.Id);
-            ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+            ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.LoginWithRecoveryCode.InvalidRecoveryCodeEntered"));
             return Page();
         }
     }

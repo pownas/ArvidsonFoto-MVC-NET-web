@@ -19,7 +19,7 @@ public class PathResolutionResponse
     public int? FinalCategoryId { get; set; }
 
     /// <summary>Lista över sökvägsegment som ingår i lösningen</summary>
-    public List<PathSegment> PathResolution { get; set; } = new List<PathSegment>();
+    public List<PathSegment> PathResolution { get; set; } = [];
 }
 
 /// <summary>

@@ -19,7 +19,7 @@ public class DownloadPersonalDataModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));

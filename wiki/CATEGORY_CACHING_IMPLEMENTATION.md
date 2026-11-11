@@ -1,8 +1,10 @@
 ﻿# Category Caching System - Implementation Complete ✅
 
+> **Historisk implementeringsrapport (2025-12-30):** Queryantal och prestandasiffror nedan är uppskattningar från den ursprungliga ändringen, inte aktuella benchmarkresultat. Servercachen rensas numera via `ClearCache()` vid relevanta adminuppdateringar. Webbläsarcachen har egen TTL/versionering; servern pushar inte cacheinvalidering till andra besökares webbläsare. Se [TESTING_GUIDE.md](TESTING_GUIDE.md) för aktuell verifiering.
+
 ## Sammanfattning
 
-Ett komplett kategori-cachningssystem har implementerats för att drastiskt minska databasanrop från ~350,000 till <100 per 5 minuter.
+Den ursprungliga analysen uppskattade att cachningen skulle minska databasanrop från cirka 350 000 till färre än 100 per fem minuter. Dessa historiska uppskattningar är inte aktuella benchmarkresultat.
 
 ## Största Prestandavinsten
 
@@ -181,9 +183,12 @@ public IActionResult GetAllCategoriesLightweight()
     var lightweightCategories = allCategories.Select(c => new
     {
         categoryId = c.CategoryId,
-        name = c.Name,
-        urlCategoryPath = c.UrlCategoryPath,
-        urlCategoryPathFull = c.UrlCategoryPathFull,
+        nameSv = c.NameSv,
+        nameEn = c.NameEn,
+        urlCategoryPathSv = c.UrlCategoryPathSv,
+        urlCategoryPathEn = c.UrlCategoryPathEn,
+        urlCategoryPathFullSv = c.UrlCategoryPathFullSv,
+        urlCategoryPathFullEn = c.UrlCategoryPathFullEn,
         parentCategoryId = c.ParentCategoryId
     }).ToList();
     
@@ -193,50 +198,9 @@ public IActionResult GetAllCategoriesLightweight()
 
 **Fördel:** Endast ~300 KB för ~650 kategorier (ingen image counts, last images, etc.)
 
-### 3. **Cache Invalidation** (TODO)
+### 3. Cacheinvalidering
 
-#### När kategorier uppdateras via UploadAdmin:
-
-**Fil:** `ArvidsonFoto/Controllers/UploadAdminController.cs`
-
-**Metoder som behöver uppdateras:**
-```csharp
-[HttpPost, ValidateAntiForgeryToken]
-public IActionResult CreateCategory(UploadNewCategoryDto inputModel)
-{
-    // ...existing code...
-    
-    if (_categoryService.AddCategory(newCategory))
-    {
-        // 🆕 LÄGG TILL: Rensa cache när kategori skapas
-        _categoryService.ClearCache();
-        
-        inputModel.CategoryCreated = true;
-        inputModel.MainMenuId = null;
-    }
-    
-    return RedirectToAction("NyKategori", inputModel);
-}
-```
-
-**Lägg också till i:**
-- `UpdateCategory()` - om metoden finns
-- `DeleteCategory()` - om metoden finns
-
-**Client-side invalidation:**
-Lägg till detta i Razor-vyn efter lyckad kategori-skapning:
-
-```html
-@if (Model.CategoryCreated)
-{
-    <script>
-        // Invalidate client-side cache when category is created
-        if (window.CategoryCache) {
-            CategoryCache.invalidateCache();
-        }
-    </script>
-}
-```
+Servercachen rensas i UploadAdmin när kategori skapas eller uppdateras. Det finns ingen serverdriven push-invalidering för andra besökares localStorage-cache; den uppdateras när TTL löper ut eller cacheversionen ändras. Se den aktuella implementationen i UploadAdminController och categoryCache.js.
 
 ## Förväntade Resultat
 
@@ -259,7 +223,7 @@ Lägg till detta i Razor-vyn efter lyckad kategori-skapning:
 | **Efterföljande sidor** | ~50 queries | 0 queries (cache) | **100% ⬇️** |
 | **Total (5 min)** | ~350,000 queries | <100 queries | **99.97% ⬇️** |
 
-### ⏳ **Återstående (TODO):**
+### Äldre, ej ommätta prestandamål
 
 ## Disk & Memory Footprint
 
@@ -337,9 +301,7 @@ Nästa request laddar fresh data från DB
 ```
 Admin uppdaterar kategori
     ↓
-Razor-view renderar <script>CategoryCache.invalidateCache()</script>
-    ↓
-localStorage rensas
+localStorage rensas efter TTL eller version förändras
     ↓
 Nästa page load hämtar fresh data från server
 ```
@@ -453,7 +415,7 @@ location.reload()
 ✅ Server-side eager loading implementerad
 ✅ Client-side localStorage cache implementerad  
 ✅ Lightweight API endpoint skapad
-⏳ Cache invalidation i UploadAdmin (TODO)
+✅ Cache invalidation i UploadAdmin finns
 
 **Förväntad total reduktion:** 99%+ av databasanrop! 🚀
 

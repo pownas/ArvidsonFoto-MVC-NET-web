@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Diagnostics;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
 
@@ -17,16 +18,18 @@ public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
     /// <returns>The ID of the saved contact record</returns>
     public int SaveContactSubmission(TblKontakt kontakt)
     {
+        using var activity = AppTelemetry.ActivitySource.StartActivity("contact.save");
         try
         {
-            _context.TblKontakt.Add(kontakt);
-            _context.SaveChanges();
+            _ = _context.TblKontakt.Add(kontakt);
+            _ = _context.SaveChanges();
             Log.Information("Contact form saved to database. ID: {ContactId}, SourcePage: {SourcePage}, EmailSent: {EmailSent}",
                 kontakt.Id, kontakt.SourcePage, kontakt.EmailSent);
             return kontakt.Id;
         }
         catch (Exception ex)
         {
+            AppTelemetry.RecordError(activity, ex);
             Log.Error(ex, "Error saving contact form to database");
             throw; // Re-throw to let controller handle
         }
@@ -48,7 +51,7 @@ public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
 
             kontakt.EmailSent = emailSent;
             kontakt.ErrorMessage = errorMessage;
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
 
             Log.Information("Updated email status for contact ID: {ContactId} - EmailSent: {EmailSent}",
                 contactId, emailSent);
@@ -85,14 +88,14 @@ public class ContactService(ArvidsonFotoCoreDbContext context) : IContactService
         try
         {
             return _context.TblKontakt
-                .Where(k => k.EmailSent == false)
+                .Where(k => !k.EmailSent)
                 .OrderByDescending(k => k.SubmitDate)
                 .ToList();
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Error retrieving failed email submissions");
-            return Enumerable.Empty<TblKontakt>();
+            return [];
         }
     }
 }

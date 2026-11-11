@@ -1,5 +1,7 @@
 ﻿# Migreringslogg: .NET 10 → .NET 11 (RC1)
 
+> **Historisk migreringsanteckning:** Den här sidan beskriver den första RC1-migreringen och behåller dess dåvarande versionsuppgifter. Den är inte aktuell installationsvägledning. Nuvarande SDK-krav finns i `global.json` (11.0.100), och tillämpliga Microsoft framework-paket är pinnade till `11.0.0-rc.2.26504.105`. Se [README](../ReadMe.md) för aktuella startinstruktioner.
+
 **Datum**: 2026-08-26  
 **Version**: v3.10.11 → v3.11.0  
 **Status**: ✅ Slutförd

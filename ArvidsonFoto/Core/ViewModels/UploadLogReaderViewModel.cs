@@ -20,4 +20,10 @@ public class UploadLogReaderViewModel
 
     /// <summary>Datum för vilken dag som visas</summary>
     public DateTime DateShown { get; set; } = DateTime.Now;
+
+    public string? SearchQuery { get; set; }
+
+    public string LevelFilter { get; set; } = "all";
+
+    public int FilteredCount { get; set; }
 }

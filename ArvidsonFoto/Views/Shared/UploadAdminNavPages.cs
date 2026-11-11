@@ -15,6 +15,9 @@ public static class UploadAdminNavPages
     public static string NyKategori => "NyKategori";
     public static string? NyKategoriNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, NyKategori);
 
+    public static string RedigeraKategori => "RedigeraKategori";
+    public static string? RedigeraKategoriNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, RedigeraKategori);
+
     public static string RedigeraBilder => "RedigeraBilder";
     public static string? RedigeraBilderNavClass(ViewContext viewContext) => UploadPageNavClass(viewContext, RedigeraBilder);
 
@@ -41,7 +44,7 @@ public static class UploadAdminNavPages
     private static string? UploadPageNavClass(ViewContext viewContext, string page)
     {
         var activePage = viewContext.ViewData["ActiveUploadPage"] as string
-            ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
+            ?? Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
         return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
     }
 }

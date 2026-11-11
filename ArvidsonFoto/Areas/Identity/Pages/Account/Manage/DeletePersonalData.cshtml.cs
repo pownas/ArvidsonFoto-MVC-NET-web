@@ -33,7 +33,7 @@ public class DeletePersonalDataModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         RequirePassword = await _userManager.HasPasswordAsync(user);
@@ -45,7 +45,7 @@ public class DeletePersonalDataModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
         RequirePassword = await _userManager.HasPasswordAsync(user);
@@ -53,7 +53,7 @@ public class DeletePersonalDataModel(
         {
             if (!await _userManager.CheckPasswordAsync(user, Input.Password))
             {
-                ModelState.AddModelError(string.Empty, "Incorrect password.");
+                ModelState.AddModelError(string.Empty, IdentityResource.Get("Identity.Manage.DeletePersonalData.IncorrectPassword"));
                 return Page();
             }
         }

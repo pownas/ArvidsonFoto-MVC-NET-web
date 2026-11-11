@@ -28,4 +28,20 @@ public class UploadEditImagesViewModel
 
     /// <summary>ID för den senast uppdaterade bilden</summary>
     public int? UpdatedId { get; set; } = null;
+
+    public string? SearchQuery { get; set; }
+
+    public int? CategoryId { get; set; }
+
+    public DateTime? DateFrom { get; set; }
+
+    public DateTime? DateTo { get; set; }
+
+    public bool MissingSwedishDescription { get; set; }
+
+    public bool MissingEnglishDescription { get; set; }
+
+    public int ResultCount { get; set; }
+
+    public List<CategoryDto> Categories { get; set; } = [];
 }

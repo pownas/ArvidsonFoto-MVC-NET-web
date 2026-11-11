@@ -1,4 +1,5 @@
-﻿@using ArvidsonFoto.Views.Shared
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ArvidsonFoto.UploadAdminResource> L
+@using ArvidsonFoto.Views.Shared
 @model UploadLogReaderViewModel
 @section MetaData {
     <meta name="robots" content="noindex" />
@@ -14,7 +15,7 @@
 <nav id="page-breadcrumbs" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark-arvidsonfoto">
         <li class="breadcrumb-item"><a href="/">ArvidsonFoto.se</a></li>
-        <li class="breadcrumb-item"><a href="/UploadAdmin">Upload Admin</a></li>
+        <li class="breadcrumb-item"><a href="/uploadadmin">@L["UploadAdmin.Controller.UploadAdmin"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]<i class="bi bi-journal-code ms-1"></i></li>
     </ol>
 </nav>
@@ -27,7 +28,7 @@
         </ul>
     </nav>
     <div class="col-12 col-md-8">
-        <p>Välj en dag att visa:</p>
+        <p>@L["UploadAdmin.VisaLoggboken.ChooseADayToView"]</p>
         <p>
             @{ //Start på kalender-vy
                 var getDate = Model!.DateShown;
@@ -42,18 +43,18 @@
                 var yesterDay = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             }
 
-            <a href="/UploadAdmin/VisaLoggboken?datum=@previousMonth">Föregående månad</a> | <a href="/UploadAdmin/VisaLoggboken?datum=@yesterDay">Senaste loggen (Igår)</a>
+            <a href="/uploadadmin/visaloggboken?datum=@previousMonth">@L["UploadAdmin.VisaLoggboken.PreviousMonth"]</a> | <a href="/uploadadmin/visaloggboken?datum=@yesterDay">@L["UploadAdmin.VisaLoggboken.LatestLogYesterday"]</a>
             <table class="table table-striped table-bordered table-dark text-center" style="width: 23rem;">
                 <thead>
                     <tr>
-                        <th>V.</th>
-                        <th>Mo</th>
-                        <th>Ti</th>
-                        <th>On</th>
-                        <th>To</th>
-                        <th>Fr</th>
-                        <th>Lö</th>
-                        <th>Sö</th>
+                        <th>@L["Admin.Week"]</th>
+                        <th>@L["Admin.Mon"]</th>
+                        <th>@L["Admin.Tue"]</th>
+                        <th>@L["Admin.Wed"]</th>
+                        <th>@L["Admin.Thu"]</th>
+                        <th>@L["Admin.Fri"]</th>
+                        <th>@L["Admin.Sat"]</th>
+                        <th>@L["Admin.Sun"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,7 +82,7 @@
                             }
                             else if (DateTime.Now.ToString("yyyy-MM-dd") == date.ToString("yyyy-MM-dd"))
                             {
-                                <td class="bg-secondary">idag</td>
+                                <td class="bg-secondary">@L["UploadAdmin.VisaLoggboken.Today"]</td>
                             }
                             else
                             {
@@ -94,7 +95,7 @@
 
                                 if (fileExist)
                                 {
-                                    <td><a href="/UploadAdmin/VisaLoggboken?datum=@date.ToString("yyyy-MM-dd")">@date.Day</a></td>
+                                    <td><a href="/uploadadmin/visaloggboken?datum=@date.ToString("yyyy-MM-dd")">@date.Day</a></td>
                                 }
                                 else
                                 {
@@ -106,67 +107,55 @@
                 </tbody>
             </table>
         </p>
-        <p>
+        <form asp-action="ToggleShowAllLogs" method="post" class="mb-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="date" value="@Model.DateShown.ToString("yyyy-MM-dd")" />
             @if (Model.ShowAllLogs)
             {
-                <a class="btn btn-outline-danger" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
-                    Dölj filtrerade loggar
-                </a>
+                <button type="submit" class="btn btn-outline-danger">@L["UploadAdmin.VisaLoggboken.HideFilteredLogs"]</button>
             }
             else
             {
-                <a class="btn btn-success" href="./UploadAdmin/ToggleShowAllLogs?date=@Model.DateShown.ToString("yyyy-MM-dd")">
-                    Visa alla loggar
-                </a>
+                <button type="submit" class="btn btn-success">@L["UploadAdmin.VisaLoggboken.ShowAllLogs"]</button>
             }
-        </p>
-        <p>Här nedan visas loggboken från hemsidan:</p>
+        </form>
+        <form asp-action="SearchLogbook" method="post" class="row g-2 align-items-end mb-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="datum" value="@Model.DateShown.ToString("yyyy-MM-dd")" />
+            <div class="col-12 col-md-6">
+                <label for="log-search" class="form-label">@L["UploadAdmin.Logbook.Search"]</label>
+                <input id="log-search" type="search" name="search" value="@Model.SearchQuery" maxlength="100" class="form-control" />
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="log-level" class="form-label">@L["UploadAdmin.Logbook.Level"]</label>
+                <select id="log-level" name="level" class="form-select">
+                    <option value="all" selected="@(Model.LevelFilter == "all")">@L["UploadAdmin.Logbook.AllLevels"]</option>
+                    <option value="error" selected="@(Model.LevelFilter == "error")">@L["UploadAdmin.Logbook.Error"]</option>
+                    <option value="warning" selected="@(Model.LevelFilter == "warning")">@L["UploadAdmin.Logbook.Warning"]</option>
+                    <option value="info" selected="@(Model.LevelFilter == "info")">@L["UploadAdmin.Logbook.Information"]</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">@L["UploadAdmin.Review.Search"]</button>
+                <a class="btn btn-outline-secondary" href="/uploadadmin/visaloggboken?datum=@Model.DateShown.ToString("yyyy-MM-dd")">@L["UploadAdmin.Images.Reset"]</a>
+            </div>
+        </form>
+        <p role="status">@L["UploadAdmin.Logbook.ResultCount", Model.FilteredCount]</p>
+        <p>@L["UploadAdmin.VisaLoggboken.TheSiteSLogsAreShownBelow"]</p>
         @{
-            int lineCounter = 0;
             foreach (var line in Model.LogBook)
             {
-                if (Model.ShowAllLogs || FilterLogBook(line))
-                {
-                    lineCounter++;
-                    string lineColor = "";
-                    lineColor = line.Contains("[INF]") ? "bg-info text-dark" : lineColor;
-                    lineColor = line.Contains("[WRN]") ? "bg-warning text-dark" : lineColor;
-                    lineColor = line.Contains("[ERR]") ? "bg-danger" : lineColor;
-                    <p class="text-break mb-1 @lineColor">@line</p>
-                }
+                var lineColor = line.Contains("[INF]") ? "admin-log-entry--info"
+                    : line.Contains("[WRN]") ? "admin-log-entry--warning"
+                    : line.Contains("[ERR]") ? "admin-log-entry--error"
+                    : "";
+                <p class="admin-log-entry text-break mb-1 @lineColor">@line</p>
             }
 
-            if (lineCounter is 0)
+            if (Model.FilteredCount is 0)
             {
-                <p class="text-break mb-1">Inga alvarliga fel har inträffat idag.</p>
+                <p class="text-break mb-1">@L["UploadAdmin.Logbook.NoResults"]</p>
             }
         }
     </div>
 </div>
-@{
-    static bool FilterLogBook(string line)
-    {
-        bool show = true;
-
-        if (line.Contains("/images/gallery"))
-            show = false;
-        if (line.Contains("/img/gallery"))
-            show = false;
-        if (line.Contains("to page: /Senast/Fotograferad"))
-            show = false;
-        if (line.Contains("Redirect from page: "))
-            show = false;
-        if (line.Contains("/Bilder/"))
-            show = false;
-        if (line.Contains("/GB.asp"))
-            show = false;
-        if (line.Contains("/code/"))
-            show = false;
-        if (line.Contains("/apple-"))
-            show = false;
-        if (line.Contains("/wp-"))
-            show = false;
-
-        return show;
-    }
-}

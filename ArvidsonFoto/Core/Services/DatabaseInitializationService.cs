@@ -65,7 +65,7 @@ public class DatabaseInitializationService(
         }
 
         // Check if database initialization is enabled via configuration
-        var enableSeeding = configuration.GetValue<bool>("DatabaseSettings:EnableSeeding", false);
+        var enableSeeding = configuration.GetValue("DatabaseSettings:EnableSeeding", false);
         if (!enableSeeding)
         {
             logger.LogInformation("Database initialization disabled via configuration setting 'DatabaseSettings:EnableSeeding'");
@@ -124,7 +124,7 @@ public class DatabaseInitializationService(
             else
             {
                 logger.LogInformation("💾 Using in-memory database - ensuring database is created");
-                await context.Database.EnsureCreatedAsync();
+                _ = await context.Database.EnsureCreatedAsync();
                 logger.LogInformation("✅ In-memory database created successfully");
             }
 
@@ -169,7 +169,7 @@ public class DatabaseInitializationService(
                 else
                 {
                     logger.LogInformation("Using in-memory database - ensuring ArvidsonFotoIdentityContext is created");
-                    await identityContext.Database.EnsureCreatedAsync();
+                    _ = await identityContext.Database.EnsureCreatedAsync();
                 }
                 logger.LogInformation("ArvidsonFotoIdentityContext initialization completed");
                 return;
@@ -203,7 +203,7 @@ public class DatabaseInitializationService(
                     else
                     {
                         logger.LogInformation("Using in-memory database - ensuring {ContextType} is created", context.GetType().Name);
-                        await context.Database.EnsureCreatedAsync();
+                        _ = await context.Database.EnsureCreatedAsync();
                     }
                     logger.LogInformation("{ContextType} initialization completed", context.GetType().Name);
                 }
@@ -270,11 +270,11 @@ public class DatabaseInitializationService(
         var configuration = services.GetService<IConfiguration>();
 
         // Get configuration to check for limited seeding - try config first, then environment variables
-        var limitSeedData = configuration?.GetValue<bool>("DatabaseSettings:LimitSeedData", false) ??
+        var limitSeedData = configuration?.GetValue("DatabaseSettings:LimitSeedData", false) ??
                            Environment.GetEnvironmentVariable("DatabaseSettings__LimitSeedData") == "true";
-        var maxImages = configuration?.GetValue<int>("DatabaseSettings:MaxImages", 50) ??
+        var maxImages = configuration?.GetValue("DatabaseSettings:MaxImages", 50) ??
                        int.Parse(Environment.GetEnvironmentVariable("DatabaseSettings__MaxImages") ?? "50");
-        var maxMenus = configuration?.GetValue<int>("DatabaseSettings:MaxMenus", 100) ??
+        var maxMenus = configuration?.GetValue("DatabaseSettings:MaxMenus", 100) ??
                       int.Parse(Environment.GetEnvironmentVariable("DatabaseSettings__MaxMenus") ?? "100");
 
         if (limitSeedData)
@@ -300,7 +300,7 @@ public class DatabaseInitializationService(
         if (limitSeedData)
         {
             // Step 1: Get the limited set of images
-            imagesToSeed = allImages.Take(maxImages).ToList();
+            imagesToSeed = [.. allImages.Take(maxImages)];
             logger.LogInformation("🔄 Selected {Count} images for limited seeding", imagesToSeed.Count);
 
             // Step 2: Get all category IDs that these images reference
@@ -363,14 +363,14 @@ public class DatabaseInitializationService(
 
                 foreach (var additional in additionalCategories)
                 {
-                    menuCategoriesWithParents.Add(additional);
+                    _ = menuCategoriesWithParents.Add(additional);
                 }
 
                 logger.LogInformation("➕ Added {Count} additional categories to reach target of {MaxMenus}",
                     additionalCategories.Count, maxMenus);
             }
 
-            menuCategoriesToSeed = menuCategoriesWithParents.OrderBy(m => m.Id).ToList();
+            menuCategoriesToSeed = [.. menuCategoriesWithParents.OrderBy(m => m.Id)];
 
             logger.LogInformation("✅ Final menu categories for seeding: {Count} (required: {RequiredCount}, with parents: {WithParentsCount})",
                 menuCategoriesToSeed.Count, requiredMenuCategories.Count, currentCount);
@@ -394,7 +394,7 @@ public class DatabaseInitializationService(
 
         // Save all changes
         logger.LogInformation("💾 Saving seed data to database...");
-        await context.SaveChangesAsync();
+        _ = await context.SaveChangesAsync();
 
         if (limitSeedData)
         {

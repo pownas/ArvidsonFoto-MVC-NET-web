@@ -1,11 +1,11 @@
 ﻿{
   "sdk": {
-    "version": "11.0.100-rc.2.26504.105",
+    "version": "11.0.100",
     "rollForward": "latestFeature",
     "allowPrerelease": true
   },
   "msbuild-sdks": {
-    "MSTest.Sdk": "4.3.3"
+    "MSTest.Sdk": "4.5.2"
   },
   "test": {
     "runner": "Microsoft.Testing.Platform"

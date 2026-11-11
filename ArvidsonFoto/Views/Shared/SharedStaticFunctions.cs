@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
+using ArvidsonFoto.Core.Extensions;
 using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ArvidsonFoto.Views.Shared;
 
@@ -85,8 +84,8 @@ public static class SharedStaticFunctions
     ///   <item>Diaeresis: ë→e, ï→i, ü→u, ÿ→y</item>
     ///   <item>Other: ñ→n, ç→c</item>
     /// </list>
-    /// Spaces are replaced with hyphens to match the convention used for <c>menu_URLtext</c>
-    /// in the database (e.g. "Turkos blåvinge" → "Turkos-blavinge", "café" → "cafe").
+    /// Spaces are replaced with hyphens to match the lowercase convention used for <c>menu_URLtext</c>
+    /// in the database (e.g. "Turkos blåvinge" → "turkos-blavinge", "café" → "cafe").
     /// Any remaining characters that are not alphanumeric or hyphens are removed, and consecutive
     /// hyphens are collapsed into a single hyphen.
     /// </remarks>
@@ -94,30 +93,17 @@ public static class SharedStaticFunctions
     /// <returns>A URL-safe segment string, or an empty string if <paramref name="displayName"/> is null or empty.</returns>
     public static string ToUrlSegment(string? displayName)
     {
-        if (string.IsNullOrEmpty(displayName))
-        {
-            return string.Empty;
-        }
-
-        // NFD decomposes each accented character into base letter + combining diacritical mark(s).
-        // Filtering out NonSpacingMark characters then removes all diacritics (å→a, é→e, ü→u, etc.).
-        var withoutDiacritics = new string(
-            displayName.Normalize(NormalizationForm.FormD)
-                       .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                       .ToArray());
-
-        var segment = withoutDiacritics.Replace(" ", "-");
-
-        // Remove any remaining characters that are not alphanumeric or hyphens
-        segment = Regex.Replace(segment, @"[^a-zA-Z0-9\-]", string.Empty);
-
-        // Collapse consecutive hyphens and trim leading/trailing hyphens
-        segment = Regex.Replace(segment, @"-{2,}", "-").Trim('-');
-
-        return segment;
+        return UrlSlug.ToUrlSegment(displayName);
     }
 }
 
+
+/// <summary>
+/// Extension methods for HttpRequest to retrieve the raw URL path, including query string, without any modifications or decoding.
+/// </summary>
+/// <remarks>
+/// Original code from: https://stackoverflow.com/a/38747631/14036841
+/// </remarks>
 public static class HttpRequestExtensions
 {
     public static string? GetRawUrl(this HttpContext httpContext)
@@ -126,14 +112,3 @@ public static class HttpRequestExtensions
         return requestFeature?.RawTarget.ToString();
     }
 }
-
-////Original-Code above from: https://stackoverflow.com/a/38747631/14036841
-//public static class HttpRequestExtensions
-//{
-//    public static Uri GetRawUrl(this HttpRequest request)
-//    {
-//        var httpContext = request.HttpContext;
-//        var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
-//        return new Uri(requestFeature.RawTarget);
-//    }
-//}

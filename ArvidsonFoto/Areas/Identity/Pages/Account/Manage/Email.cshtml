@@ -1,8 +1,8 @@
-﻿@page
+@page
 @using ArvidsonFoto.Views.Shared
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = L["Identity.Manage.Email.ManageEmail"];
     ViewData["ActivePage"] = ManageNavPages.Email;
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
 }
@@ -27,7 +27,7 @@
                  else
                 {
                     <input asp-for="Email" class="form-control" disabled />
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">@L["Identity.Manage.Email.SendVerificationEmail"]</button>
                 }
             </div>
             <div class="form-group">
@@ -35,7 +35,7 @@
                 <input asp-for="Input.NewEmail" class="form-control" />
                 <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">Change email</button>
+            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">@L["Identity.Manage.Email.ChangeEmail"]</button>
         </form>
     </div>
 </div>

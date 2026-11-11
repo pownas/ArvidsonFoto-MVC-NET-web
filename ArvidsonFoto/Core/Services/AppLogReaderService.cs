@@ -2,7 +2,7 @@
 
 public class AppLogReaderService
 {
-    private string folderDataPath = @".\logs\"; //Pekar på mappen där loggfilen ligger
+    private readonly string folderDataPath = @".\logs\"; //Pekar på mappen där loggfilen ligger
 
     /// <summary>
     /// En funktion som läser en loggfil. Tar ett filnamn som parameter.
@@ -12,17 +12,15 @@ public class AppLogReaderService
     public List<string> ReadData(string appLogFile)
     {
         string inputDataPath = folderDataPath + appLogFile; //Sätter sökvägen till filen.
-        List<string> dataList = new();
-        List<string> returnList = new();
+        List<string> dataList = [];
+        List<string> returnList = [];
         try
         { //Försöker öppna filen och läsa den...
-            using (StreamReader reader = File.OpenText(inputDataPath))//Läser filen, eller ger null om ingen fil finns
+            using StreamReader reader = File.OpenText(inputDataPath);//Läser filen, eller ger null om ingen fil finns
+            string? line = "";
+            while ((line = reader.ReadLine()) != null) //Loopar igenom alla rader (line) i filen
             {
-                string? line = "";
-                while ((line = reader.ReadLine()) != null) //Loopar igenom alla rader (line) i filen
-                {
-                    dataList.Add(line);
-                }
+                dataList.Add(line);
             }
         }
         catch (Exception ex)
@@ -41,7 +39,7 @@ public class AppLogReaderService
 
     public List<string> ExistingLogFiles()
     {
-        List<string> returnList = new();
+        List<string> returnList = [];
 
         DirectoryInfo di = new(folderDataPath);
         var files = di.GetFiles("appLog*.txt");

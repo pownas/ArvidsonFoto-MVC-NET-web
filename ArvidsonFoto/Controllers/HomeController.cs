@@ -57,13 +57,11 @@ public class HomeController(IPageCounterService pageCounterService, IApiImageSer
         {
             ViewData["Title"] = "Error";
         }
-        else if (viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase))
-        {
-            ViewData["Title"] = "Error 301 - Old image Url";
-        }
         else
         {
-            ViewData["Title"] = "Error 404 - Page not found";
+            ViewData["Title"] = viewModel.VisitedUrl.StartsWith("/images/gallery", StringComparison.CurrentCultureIgnoreCase)
+                ? "Error 301 - Old image Url"
+                : "Error 404 - Page not found";
         }
 
         return View(viewModel);

@@ -1,8 +1,8 @@
-﻿@page
+@page
 @using ArvidsonFoto.Views.Shared
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = L["Identity.Manage.Index.Profile"];
     ViewData["ActivePage"] = ManageNavPages.Index;
     ViewData["ActiveUploadPage"] = UploadAdminNavPages.HanteraKontot;
 }
@@ -22,7 +22,7 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>*@
-            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-primary">@L["Identity.Manage.Index.Save"]</button>
         </form>
     </div>
 </div>

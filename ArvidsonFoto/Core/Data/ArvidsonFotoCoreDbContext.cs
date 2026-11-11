@@ -31,19 +31,19 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
     }
 
     /// <summary>DbSet för gästboksinlägg</summary>
-    public virtual DbSet<TblGb> TblGbs { get; set; } = null!;
+    public virtual DbSet<TblGb> TblGbs { get; set; } = null;
 
     /// <summary>DbSet för bilder</summary>
-    public virtual DbSet<TblImage> TblImages { get; set; } = null!;
+    public virtual DbSet<TblImage> TblImages { get; set; } = null;
 
     /// <summary>DbSet för menykategorier</summary>
-    public virtual DbSet<TblMenu> TblMenus { get; set; } = null!;
+    public virtual DbSet<TblMenu> TblMenus { get; set; } = null;
 
     /// <summary>DbSet för sidräknare</summary>
-    public virtual DbSet<TblPageCounter> TblPageCounter { get; set; } = null!;
+    public virtual DbSet<TblPageCounter> TblPageCounter { get; set; } = null;
 
     /// <summary>DbSet för kontaktformulär inlämningar</summary>
-    public virtual DbSet<TblKontakt> TblKontakt { get; set; } = null!;
+    public virtual DbSet<TblKontakt> TblKontakt { get; set; } = null;
 
 
     /// <summary>
@@ -52,187 +52,219 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
     /// <param name="modelBuilder">Modellbyggare för Entity Framework</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasAnnotation("Relational:Collation", "Finnish_Swedish_CI_AS");
+        _ = modelBuilder.HasAnnotation("Relational:Collation", "Finnish_Swedish_CI_AS");
 
-        modelBuilder.Entity<TblGb>(entity =>
+        _ = modelBuilder.Entity<TblGb>(entity =>
         {
-            entity.ToTable("tbl_gb");
+            _ = entity.ToTable("tbl_gb");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
+            _ = entity.Property(e => e.Id).HasColumnName("ID");
 
-            entity.Property(e => e.GbId)
+            _ = entity.Property(e => e.GbId)
                 .HasColumnName("GB_ID");
 
-            entity.Property(e => e.GbDate)
+            _ = entity.Property(e => e.GbDate)
                 .HasColumnType("smalldatetime")
                 .HasColumnName("GB_date");
 
-            entity.Property(e => e.GbEmail)
+            _ = entity.Property(e => e.GbEmail)
                 .HasMaxLength(100)
                 .HasColumnName("GB_email");
 
-            entity.Property(e => e.GbHomepage)
+            _ = entity.Property(e => e.GbHomepage)
                 .HasMaxLength(255)
                 .HasColumnName("GB_homepage");
 
-            entity.Property(e => e.GbIp)
+            _ = entity.Property(e => e.GbIp)
                 .HasMaxLength(50)
                 .HasColumnName("GB_IP");
 
-            entity.Property(e => e.GbReadPost)
+            _ = entity.Property(e => e.GbReadPost)
                 .HasColumnType("bit")
                 .HasColumnName("GB_ReadPost");
 
-            entity.Property(e => e.GbName)
+            _ = entity.Property(e => e.GbName)
                 .HasMaxLength(100)
                 .HasColumnName("GB_name");
 
-            entity.Property(e => e.GbText)
+            _ = entity.Property(e => e.GbNameEn)
+                .HasMaxLength(100)
+                .HasColumnName("GB_name_en");
+            _ = entity.Property(e => e.GbNameEnReviewed).HasColumnName("GB_name_en_reviewed");
+
+            _ = entity.Property(e => e.GbText)
                 .HasColumnName("GB_text");
 
-            entity.HasKey(e => e.Id);
+            _ = entity.Property(e => e.GbTextEn)
+                .HasColumnName("GB_text_en");
+            _ = entity.Property(e => e.GbTextEnReviewed).HasColumnName("GB_text_en_reviewed");
+
+            _ = entity.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<TblImage>(entity =>
+        _ = modelBuilder.Entity<TblImage>(entity =>
         {
-            entity.ToTable("tbl_images");
+            _ = entity.ToTable("tbl_images");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
+            _ = entity.Property(e => e.Id).HasColumnName("ID");
 
-            entity.Property(e => e.ImageId)
+            _ = entity.Property(e => e.ImageId)
                 .HasColumnName("image_ID");
 
-            entity.Property(e => e.ImageMainFamilyId)
+            _ = entity.Property(e => e.ImageMainFamilyId)
                 .HasColumnName("image_huvudfamilj");
 
-            entity.Property(e => e.ImageFamilyId)
+            _ = entity.Property(e => e.ImageFamilyId)
                 .HasColumnName("image_familj");
 
-            entity.Property(e => e.ImageCategoryId)
+            _ = entity.Property(e => e.ImageCategoryId)
                 .HasColumnName("image_art");
 
-            entity.Property(e => e.ImageUrlName)
+            _ = entity.Property(e => e.ImageUrlName)
                 .HasMaxLength(50)
                 .HasColumnName("image_URL");
 
-            entity.Property(e => e.ImageDate)
+            _ = entity.Property(e => e.ImageDate)
                 .HasColumnType("smalldatetime")
                 .HasColumnName("image_date");
 
-            entity.Property(e => e.ImageDescription)
+            _ = entity.Property(e => e.ImageDescription)
                 .HasMaxLength(150)
                 .HasColumnName("image_description");
 
-            entity.Property(e => e.ImageUpdate)
+            _ = entity.Property(e => e.ImageDescriptionEn)
+                .HasMaxLength(150)
+                .HasColumnName("image_description_en");
+            _ = entity.Property(e => e.ImageDescriptionEnReviewed).HasColumnName("image_description_en_reviewed");
+
+            _ = entity.Property(e => e.ImageUpdate)
                 .HasColumnType("datetime")
                 .HasColumnName("image_update");
 
-            entity.HasKey(e => e.Id);
+            _ = entity.Property(e => e.IsGameSelectable)
+                .HasColumnName("is_game_selectable")
+                .HasDefaultValue(true);
+
+            _ = entity.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<TblMenu>(entity =>
+        _ = modelBuilder.Entity<TblMenu>(entity =>
         {
-            entity.ToTable("tbl_menu");
+            _ = entity.ToTable("tbl_menu");
 
             //entity.Property(e => e.MenuEngtext)
             //    .HasMaxLength(50)
             //    .HasColumnName("menu_ENGtext");
-            entity.Property(e => e.Id).HasColumnName("ID");
+            _ = entity.Property(e => e.Id).HasColumnName("ID");
 
-            entity.Property(e => e.MenuCategoryId)
+            _ = entity.Property(e => e.MenuCategoryId)
                 .HasColumnName("menu_ID");
 
-            entity.Property(e => e.MenuParentCategoryId)
+            _ = entity.Property(e => e.MenuParentCategoryId)
                 .HasColumnName("menu_mainID");
 
-            entity.Property(e => e.MenuDisplayName)
+            _ = entity.Property(e => e.MenuDisplayName)
                 .HasMaxLength(50)
                 .HasColumnName("menu_text");
 
-            entity.Property(e => e.MenuUrlSegment)
+            _ = entity.Property(e => e.MenuDisplayNameEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_text_en");
+            _ = entity.Property(e => e.MenuDisplayNameEnReviewed).HasColumnName("menu_text_en_reviewed");
+
+            _ = entity.Property(e => e.MenuUrlSegment)
                 .HasMaxLength(50)
                 .HasColumnName("menu_URLtext");
 
-            entity.Property(e => e.MenuDateUpdated)
+            _ = entity.Property(e => e.MenuUrlSegmentEn)
+                .HasMaxLength(50)
+                .HasColumnName("menu_URLtext_en");
+            _ = entity.Property(e => e.MenuUrlSegmentEnReviewed).HasColumnName("menu_URLtext_en_reviewed");
+
+            _ = entity.Property(e => e.MenuDateUpdated)
                 .HasColumnType("datetime")
                 .HasColumnName("menu_dateUpdated");
 
-            entity.HasKey(e => e.Id);
+            _ = entity.Property(e => e.IsGameSelectable)
+                .HasColumnName("is_game_selectable")
+                .HasDefaultValue(true);
+
+            _ = entity.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<TblPageCounter>(entity =>
+        _ = modelBuilder.Entity<TblPageCounter>(entity =>
         {
-            entity.ToTable("tbl_PageCounter");
+            _ = entity.ToTable("tbl_PageCounter");
 
-            entity.Property(e => e.Id)
+            _ = entity.Property(e => e.Id)
                 .HasColumnName("PageCounter_ID")
                 .ValueGeneratedOnAdd()
                 .UseIdentityColumn(1, 1); // Explicitly configure as IDENTITY column
 
-            entity.Property(e => e.PageViews)
+            _ = entity.Property(e => e.PageViews)
                 .HasColumnName("PageCounter_Views");
 
-            entity.Property(e => e.PageName)
+            _ = entity.Property(e => e.PageName)
                 .HasMaxLength(50)
                 .HasColumnName("PageCounter_Name");
 
-            entity.Property(e => e.MonthViewed)
+            _ = entity.Property(e => e.MonthViewed)
                 .HasMaxLength(20)
                 .HasColumnName("PageCounter_MonthViewed");
 
-            entity.Property(e => e.LastShowDate)
+            _ = entity.Property(e => e.LastShowDate)
                 .HasColumnType("datetime")
                 .HasColumnName("PageCounter_LastShowDate");
 
-            entity.Property(e => e.PicturePage)
+            _ = entity.Property(e => e.PicturePage)
                 .HasColumnType("bit")
                 .HasColumnName("PageCounter_PicturePage");
 
-            entity.Property(e => e.CategoryId)
+            _ = entity.Property(e => e.CategoryId)
                 .HasColumnName("PageCounter_CategoryId");
 
-            entity.HasKey(e => e.Id);
+            _ = entity.HasKey(e => e.Id);
         });
 
-        modelBuilder.Entity<TblKontakt>(entity =>
+        _ = modelBuilder.Entity<TblKontakt>(entity =>
         {
-            entity.ToTable("tbl_kontakt");
+            _ = entity.ToTable("tbl_kontakt");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
+            _ = entity.Property(e => e.Id).HasColumnName("ID");
 
-            entity.Property(e => e.SubmitDate)
+            _ = entity.Property(e => e.SubmitDate)
                 .HasColumnType("datetime")
                 .HasColumnName("SubmitDate");
 
-            entity.Property(e => e.Name)
+            _ = entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("Name");
 
-            entity.Property(e => e.Email)
+            _ = entity.Property(e => e.Email)
                 .HasMaxLength(150)
                 .HasColumnName("Email");
 
-            entity.Property(e => e.Subject)
+            _ = entity.Property(e => e.Subject)
                 .HasMaxLength(50)
                 .HasColumnName("Subject");
 
-            entity.Property(e => e.Message)
+            _ = entity.Property(e => e.Message)
                 .HasMaxLength(2000)
                 .HasColumnName("Message");
 
-            entity.Property(e => e.SourcePage)
+            _ = entity.Property(e => e.SourcePage)
                 .HasMaxLength(50)
                 .HasColumnName("SourcePage");
 
-            entity.Property(e => e.EmailSent)
+            _ = entity.Property(e => e.EmailSent)
                 .HasColumnType("bit")
                 .HasColumnName("EmailSent");
 
-            entity.Property(e => e.ErrorMessage)
+            _ = entity.Property(e => e.ErrorMessage)
                 .HasMaxLength(500)
                 .HasColumnName("ErrorMessage");
 
-            entity.HasKey(e => e.Id);
+            _ = entity.HasKey(e => e.Id);
         });
 
 
@@ -243,4 +275,60 @@ public partial class ArvidsonFotoCoreDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public override int SaveChanges()
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ResetChangedTranslationReviews();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void ResetChangedTranslationReviews()
+    {
+        ChangeTracker.DetectChanges();
+        foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Modified))
+        {
+            if (entry.Entity is TblMenu)
+            {
+                Reset(entry, nameof(TblMenu.MenuDisplayName), nameof(TblMenu.MenuDisplayNameEn), nameof(TblMenu.MenuDisplayNameEnReviewed));
+                Reset(entry, nameof(TblMenu.MenuUrlSegment), nameof(TblMenu.MenuUrlSegmentEn), nameof(TblMenu.MenuUrlSegmentEnReviewed));
+            }
+            else if (entry.Entity is TblImage)
+            {
+                Reset(entry, nameof(TblImage.ImageDescription), nameof(TblImage.ImageDescriptionEn), nameof(TblImage.ImageDescriptionEnReviewed));
+            }
+            else if (entry.Entity is TblGb)
+            {
+                Reset(entry, nameof(TblGb.GbName), nameof(TblGb.GbNameEn), nameof(TblGb.GbNameEnReviewed));
+                Reset(entry, nameof(TblGb.GbText), nameof(TblGb.GbTextEn), nameof(TblGb.GbTextEnReviewed));
+            }
+        }
+    }
+
+    private static void Reset(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, string swedish, string english, string reviewed)
+    {
+        if (!Equals(entry.Property(swedish).OriginalValue, entry.Property(swedish).CurrentValue) ||
+            !Equals(entry.Property(english).OriginalValue, entry.Property(english).CurrentValue) ||
+            string.IsNullOrWhiteSpace(entry.Property(english).CurrentValue as string))
+        {
+            entry.Property(reviewed).CurrentValue = false;
+        }
+    }
 }

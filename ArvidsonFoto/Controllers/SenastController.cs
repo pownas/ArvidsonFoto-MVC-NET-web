@@ -1,4 +1,5 @@
 ﻿using ArvidsonFoto.Core.Data;
+using ArvidsonFoto.Core.Extensions;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Services;
 using ArvidsonFoto.Core.ViewModels;
@@ -6,6 +7,13 @@ using ArvidsonFoto.Views.Shared;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace ArvidsonFoto.Controllers;
+
+internal enum LatestSortOrder
+{
+    Fotograferad,
+    Uppladdad,
+    PerKategori
+}
 
 public class SenastController(
     ArvidsonFotoCoreDbContext coreContext,
@@ -19,6 +27,8 @@ public class SenastController(
     internal IPageCounterService _pageCounterService = new PageCounterService(coreContext);
 
     [Route("[controller]/{sortOrder}")]
+    [Route("/latest")]
+    [Route("/latest/{sortOrder}")]
     public IActionResult Index(string sortOrder, int? sida)
     {
         GalleryViewModel viewModel = new();
@@ -29,19 +39,31 @@ public class SenastController(
             sida = 1;
         }
 
-        if (sortOrder is null)
+        var selectedSortOrder = NormalizeSortOrder(sortOrder);
+        if (selectedSortOrder is null)
         {
-            sortOrder = "Fotograferad";
+            var url = Url.ActionContext.HttpContext;
+            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
+            Log.Information("Unknown latest sort order {SortOrder} from {Url}; redirecting to photographed.", sortOrder, visitedUrl);
+            return RedirectToAction("Index", new { sortOrder = LatestSortOrder.Fotograferad.ToString() });
         }
+
+        var latestSortOrder = selectedSortOrder.Value;
+        var sortTitle = latestSortOrder switch
+        {
+            LatestSortOrder.Uppladdad => "Uppladdad",
+            LatestSortOrder.PerKategori => "Per kategori",
+            _ => "Fotograferad"
+        };
+        ViewData["Title"] = sortTitle;
 
         viewModel.CurrentPage = (int)sida;
 
-        if (sortOrder.Equals("Per kategori"))
+        if (latestSortOrder == LatestSortOrder.PerKategori)
         {
-            ViewData["Title"] = "Per kategori";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Per kategori");
+                _pageCounterService.AddPageCount("senast-per kategori");
             }
 
             // OPTIMIZED: Use SQL-level query to get one image per category efficiently
@@ -50,7 +72,7 @@ public class SenastController(
                 .OrderBy(m => m.MenuDisplayName)
                 .ToList();
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>();
+            viewModel.AllImagesList = [];
 
             // Get all category IDs that have images (including family and main family relationships)
             var categoriesWithImages = categories
@@ -60,6 +82,8 @@ public class SenastController(
                     img.ImageMainFamilyId == cat.MenuCategoryId))
                 .Select(cat => cat.MenuCategoryId)
                 .ToList();
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(
+                categoriesWithImages.Where(categoryId => categoryId.HasValue).Select(categoryId => categoryId!.Value).ToList());
 
             // Fetch one image per category in a single optimized query
             foreach (var categoryId in categoriesWithImages)
@@ -76,7 +100,8 @@ public class SenastController(
                         i.ImageUrlName,
                         i.ImageDate,
                         i.ImageUpdate,
-                        i.ImageDescription
+                        i.ImageDescription,
+                        i.ImageDescriptionEn
                     })
                     .FirstOrDefault();
 
@@ -86,6 +111,7 @@ public class SenastController(
                     var categoryName = category?.MenuDisplayName ?? string.Empty;
                     // Use display path with ÅÄÖ to match physical folder structure
                     var categoryPath = _categoryService.GetCategoryDisplayPathForImage(categoryId ?? 0);
+                    var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId ?? 0, string.Empty);
                     // Use the image's own category path for the actual file location,
                     // which may be in a subcategory folder (e.g. "Dagrovfåglar/Röd glada")
                     var imagePath = _categoryService.GetCategoryDisplayPathForImage(image.ImageCategoryId ?? 0);
@@ -94,30 +120,29 @@ public class SenastController(
                     {
                         ImageId = image.ImageId ?? 0,
                         CategoryId = image.ImageCategoryId ?? 0,
-                        Name = categoryName,
-                        CategoryName = categoryName,
-                        UrlImage = $"bilder/{imagePath}/{image.ImageUrlName}",
-                        UrlCategory = $"bilder/{categoryPath}",
+                        CategoryNameSv = categoryName,
+                        CategoryNameEn = category?.MenuDisplayNameEn,
+                        UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(imagePath, image.ImageUrlName),
+                        UrlCategorySv = $"bilder/{categoryUrlPath}",
                         DateImageTaken = image.ImageDate,
                         DateUploaded = image.ImageUpdate,
-                        Description = image.ImageDescription ?? string.Empty
+                        DescriptionSv = image.ImageDescription ?? string.Empty,
+                        DescriptionEn = image.ImageDescriptionEn
                     });
                 }
             }
 
             viewModel.TotalImageCount = viewModel.AllImagesList.Count;
             viewModel.TotalPages = (int)Math.Ceiling(viewModel.AllImagesList.Count / (decimal)pageSize);
-            viewModel.DisplayImagesList = viewModel.AllImagesList
+            viewModel.DisplayImagesList = [.. viewModel.AllImagesList
                 .Skip((viewModel.CurrentPage - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize)];
         }
-        else if (sortOrder.Equals("Uppladdad"))
+        else if (latestSortOrder == LatestSortOrder.Uppladdad)
         {
-            ViewData["Title"] = "Uppladdad";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Uppladdad");
+                _pageCounterService.AddPageCount("senast-uppladdad");
             }
 
             // OPTIMIZED: Get total count first
@@ -137,7 +162,8 @@ public class SenastController(
                     i.ImageUrlName,
                     i.ImageDate,
                     i.ImageUpdate,
-                    i.ImageDescription
+                    i.ImageDescription,
+                    i.ImageDescriptionEn
                 })
                 .ToList();
 
@@ -148,44 +174,46 @@ public class SenastController(
                 .Distinct()
                 .ToList();
 
-            // Use display paths (with ÅÄÖ) for physical folder structure - switch later to GetCategoryPathForImage
+            // Use display paths (with ÅÄÖ) for physical folder structure
             var categoryDisplayPaths = new Dictionary<int, string>();
             foreach (var catId in categoryIds)
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(categoryIds);
 
             // Use bulk category name lookup to avoid N+1 queries
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
 
-            viewModel.DisplayImagesList = images.Select(image =>
+            viewModel.DisplayImagesList = [.. images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
+                var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
 
                 return new Core.DTOs.ImageDto
                 {
                     ImageId = image.ImageId ?? 0,
                     CategoryId = categoryId,
-                    Name = categoryName,
-                    CategoryName = categoryName,
-                    UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategory = $"bilder/{categoryPath}",
+                    CategoryNameSv = categoryName,
+                    CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
+                    UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, image.ImageUrlName),
+                    UrlCategorySv = $"bilder/{categoryUrlPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
-                    Description = image.ImageDescription ?? string.Empty
+                    DescriptionSv = image.ImageDescription ?? string.Empty,
+                    DescriptionEn = image.ImageDescriptionEn
                 };
-            }).ToList();
+            })];
 
-            viewModel.AllImagesList = new List<Core.DTOs.ImageDto>(); // Don't load all images
+            viewModel.AllImagesList = []; // Don't load all images
         }
-        else if (sortOrder.Equals("Fotograferad", StringComparison.OrdinalIgnoreCase))
+        else
         {
-            ViewData["Title"] = "Fotograferad";
             if (User?.Identity?.IsAuthenticated is false)
             {
-                _pageCounterService.AddPageCount("Senast-Fotograferad");
+                _pageCounterService.AddPageCount("senast-fotograferad");
             }
 
             // OPTIMIZED: Get total count first
@@ -206,7 +234,8 @@ public class SenastController(
                     i.ImageUrlName,
                     i.ImageDate,
                     i.ImageUpdate,
-                    i.ImageDescription
+                    i.ImageDescription,
+                    i.ImageDescriptionEn
                 })
                 .ToList();
 
@@ -223,43 +252,50 @@ public class SenastController(
             {
                 categoryDisplayPaths[catId] = _categoryService.GetCategoryDisplayPathForImage(catId);
             }
+            var categoryUrlPaths = _categoryService.GetCategoryPathsBulk(categoryIds);
 
             var categoryNames = _categoryService.GetCategoryNamesBulk(categoryIds);
 
-            viewModel.DisplayImagesList = images.Select(image =>
+            viewModel.DisplayImagesList = [.. images.Select(image =>
             {
                 var categoryId = image.ImageCategoryId ?? 0;
                 var categoryPath = categoryDisplayPaths.GetValueOrDefault(categoryId, string.Empty);
+                var categoryUrlPath = categoryUrlPaths.GetValueOrDefault(categoryId, string.Empty);
                 var categoryName = categoryNames.GetValueOrDefault(categoryId, string.Empty);
 
                 return new Core.DTOs.ImageDto
                 {
                     ImageId = image.ImageId ?? 0,
                     CategoryId = categoryId,
-                    Name = categoryName,
-                    CategoryName = categoryName,
-                    UrlImage = $"bilder/{categoryPath}/{image.ImageUrlName}",
-                    UrlCategory = $"bilder/{categoryPath}",
+                    CategoryNameSv = categoryName,
+                    CategoryNameEn = _categoryService.GetById(categoryId).NameEn,
+                    UrlImage = ImageMappingExtensions.ToPhysicalImageUrl(categoryPath, image.ImageUrlName),
+                    UrlCategorySv = $"bilder/{categoryUrlPath}",
                     DateImageTaken = image.ImageDate,
                     DateUploaded = image.ImageUpdate,
-                    Description = image.ImageDescription ?? string.Empty
+                    DescriptionSv = image.ImageDescription ?? string.Empty,
+                    DescriptionEn = image.ImageDescriptionEn
                 };
-            }).ToList();
+            })];
 
             viewModel.AllImagesList = []; // Don't load all images
         }
-        else
-        {
-            var url = Url.ActionContext.HttpContext;
-            string? visitedUrl = HttpRequestExtensions.GetRawUrl(url);
-            Log.Information($"Redirect from page: {visitedUrl}, to page: /Senast/Fotograferad");
-
-            return RedirectToAction("Index", new { sortOrder = "Fotograferad" });
-        }
-
-        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { Name = sortOrder };
-        viewModel.CurrentUrl = "/Senast/" + sortOrder;
+        viewModel.SelectedCategory = new Core.DTOs.CategoryDto { NameSv = sortTitle };
+        viewModel.CurrentUrl = HttpContext?.Request.Path.Value ??
+            ("/senast/" + sortTitle);
 
         return View(viewModel);
+    }
+
+    private static LatestSortOrder? NormalizeSortOrder(string? sortOrder)
+    {
+        return sortOrder?.Trim().ToLowerInvariant() switch
+        {
+            null or "" => LatestSortOrder.Fotograferad,
+            "photographed" or "fotograferad" => LatestSortOrder.Fotograferad,
+            "uploaded" or "uppladdad" => LatestSortOrder.Uppladdad,
+            "by-category" or "per kategori" or "perkategori" => LatestSortOrder.PerKategori,
+            _ => null
+        };
     }
 }

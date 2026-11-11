@@ -1,10 +1,25 @@
-﻿<!DOCTYPE html>
-<html lang="sv-se" data-bs-theme="dark">
+﻿@using ArvidsonFoto.Core.Extensions
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http.Features
+@inject ArvidsonFoto.Core.Interfaces.IApiCategoryService CategoryService
+@inject IWebHostEnvironment HostEnvironment
+@inject IConfiguration Configuration
+@inject IStringLocalizer<SiteResource> S
+<!DOCTYPE html>
+<html lang="@(ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish ? "en" : "sv")" data-bs-theme="dark">
 <head>
     <!-- Character encoding -->
     <meta charset="utf-8" />
     <!-- Viewport for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @{
+        var pageActivity = Context.Features.Get<IHttpActivityFeature>()?.Activity;
+    }
+    @if (HostEnvironment.IsDevelopment() && Configuration.GetValue("Telemetry:CorrelateBrowserRequests", true)
+        && pageActivity?.IdFormat == ActivityIdFormat.W3C)
+    {
+        <meta name="arvidsonfoto-traceparent" content="@pageActivity.Id" />
+    }
     <!-- Site version and last modified content -->
     @{
         var appVersion = typeof(ArvidsonFoto.Controllers.HomeController).Assembly
@@ -14,6 +29,10 @@
             ?.InformationalVersion ?? "unknown";
         var appVersionInfo = appVersion.Split('+');
         var commitId = appVersionInfo.Length > 1 ? appVersionInfo[1] : appVersion;
+        if (commitId.StartsWith("commit.", StringComparison.OrdinalIgnoreCase))
+        {
+            commitId = commitId["commit.".Length..];
+        }
 
         var assemblyPath = typeof(ArvidsonFoto.Controllers.HomeController).Assembly.Location;
         var lastModifiedUtc = !string.IsNullOrWhiteSpace(assemblyPath) && System.IO.File.Exists(assemblyPath)
@@ -29,21 +48,46 @@
     @await RenderSectionAsync("MetaData", required: false)
     <title>@ViewData["Title"] - ArvidsonFoto.se</title>
     <base href="~/" />
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @*<!-- Se info i "wwwroot/css/site.scss" för alla CSS-imports... -->*@
 </head>
 <body>
     <header>
         <partial name="_NavBar" />
+        @{
+            var existingQuery = Context.Request.Query
+                .Where(pair => pair.Key != "culture")
+                .SelectMany(pair => pair.Value.Select(value => new KeyValuePair<string, string?>(pair.Key, value)));
+            string LanguageLink(string culture) =>
+                Context.Request.PathBase.ToString() + LocalizedRoutes.Switch(Context.Request.Path.Value ?? "/",
+                    culture == "en-US", CategoryService.GetAll()) +
+                QueryString.Create(existingQuery.Append(new KeyValuePair<string, string?>("culture", culture)));
+            var english = ArvidsonFoto.Core.Extensions.LocalizedText.IsEnglish;
+        }
     </header>
-    <main class="container-md pb-5">
+    <main class="container-md pb-5 @((ViewContext.RouteData.Values["controller"]?.ToString() == "UploadAdmin"
+        || ViewContext.RouteData.Values["controller"]?.ToString() == "TranslationReview"
+        || (string.Equals(ViewContext.RouteData.Values["area"]?.ToString(), "Identity", System.StringComparison.OrdinalIgnoreCase)
+            && ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Account/Manage", System.StringComparison.OrdinalIgnoreCase) == true))
+            ? "upload-admin-page" : "")">
         @RenderBody()
     </main>
+    <section class="site-pre-footer-controls" aria-label="@S["Layout.Settings.Label"]">
+        <nav aria-label="Language / Språk" class="page-language-switcher">
+            <a href="@LanguageLink("sv-SE")" lang="sv" hreflang="sv" class="btn btn-sm @(english ? "btn-outline-light" : "btn-light")" aria-current="@(english ? null : "true")"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#006aa7" d="M0 0h32v20H0z"/><path fill="#fecc00" d="M10 0h4v20h-4zM0 8h32v4H0z"/></svg> Svenska</a>
+            <a href="@LanguageLink("en-US")" lang="en" hreflang="en" class="btn btn-sm @(english ? "btn-light" : "btn-outline-light")" aria-current="@(english ? "true" : null)"><svg aria-hidden="true" width="20" height="14" viewBox="0 0 32 20"><path fill="#012169" d="M0 0h32v20H0z"/><path stroke="#fff" stroke-width="5" d="m0 0 32 20M32 0 0 20"/><path stroke="#c8102e" stroke-width="2" d="m0 0 32 20M32 0 0 20"/><path fill="#fff" d="M0 7h32v6H0zM13 0h6v20h-6z"/><path fill="#c8102e" d="M0 8.5h32v3H0zM14.5 0h3v20h-3z"/></svg> English</a>
+        </nav>
+        <div class="theme-switcher">
+            <p id="theme-switcher-description">@S["Layout.Theme.Description"]</p>
+            <button type="button" id="dark-mode-toggle" class="btn btn-secondary" aria-describedby="theme-switcher-description" aria-label="@S["Layout.Theme.ToLight"]" data-label-light="@S["Layout.Theme.ToLight"]" data-label-dark="@S["Layout.Theme.ToDark"]" title="@S["Layout.Theme.ToLight"]"><span id="dark-mode-toggle-btn-text">@S["Layout.Theme.ToDark"]</span> <i class="bi bi-lightbulb" aria-hidden="true"></i></button>
+        </div>
+    </section>
     <footer class="footer overridden-footer">
         <div class="container">
             <partial name="_Footer" />
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script> @*<!-- version: 3.5.1 - Required for jQuery.smartmenus and other plugins -->*@
+    <script src="~/js/pageTrace.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script> @*<!-- version: 5.3.3-dist (includes Popper v2, no longer requires jQuery) -->*@
     <script src="~/lib/jQuery.smartmenus/jquery.smartmenus.min.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@
     <script src="~/lib/jQuery.smartmenus/smartmenu.js" asp-append-version="true"></script> @*<!-- version: 1.1.1 -->*@

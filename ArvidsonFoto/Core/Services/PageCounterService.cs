@@ -1,6 +1,7 @@
 ﻿using ArvidsonFoto.Core.Data;
 using ArvidsonFoto.Core.Interfaces;
 using ArvidsonFoto.Core.Models;
+using System.Globalization;
 
 namespace ArvidsonFoto.Core.Services;
 
@@ -26,14 +27,13 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <param name="pageName">Namn på sidan som ska uppdateras</param>
     public void AddPageCount(string pageName)
     {
-        string monthViewed = DateTime.Now.ToString("yyyy-MM");
+        string monthViewed = DateTime.Now.ToString("yyyy-MM", CultureInfo.InvariantCulture);
 
         try
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == false
-                                  && p.PageName == pageName
+                .FirstOrDefault(p => !p.PicturePage && p.PageName == pageName
                                   && p.MonthViewed == monthViewed);
 
             if (existingCounter != null)
@@ -54,10 +54,10 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
                     PicturePage = false,
                     LastShowDate = DateTime.Now
                 };
-                _context.TblPageCounter.Add(pageCounter);
+                _ = _context.TblPageCounter.Add(pageCounter);
             }
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -72,14 +72,13 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <param name="pageName">Namn på kategorin som ska uppdateras</param>
     public void AddCategoryCount(int categoryId, string pageName)
     {
-        string monthViewed = DateTime.Now.ToString("yyyy-MM");
+        string monthViewed = DateTime.Now.ToString("yyyy-MM", CultureInfo.InvariantCulture);
 
         try
         {
             // Check if the record already exists
             var existingCounter = _context.TblPageCounter
-                .FirstOrDefault(p => p.PicturePage == true
-                                  && p.CategoryId == categoryId
+                .FirstOrDefault(p => p.PicturePage && p.CategoryId == categoryId
                                   && p.MonthViewed == monthViewed);
 
             if (existingCounter != null)
@@ -100,10 +99,10 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
                     PicturePage = true,
                     LastShowDate = DateTime.Now
                 };
-                _context.TblPageCounter.Add(pageCounter);
+                _ = _context.TblPageCounter.Add(pageCounter);
             }
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
         }
         catch (Exception ex)
         {
@@ -119,10 +118,9 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <returns>Lista med sidvisningar för den angivna månaden</returns>
     public List<TblPageCounter> GetMonthCount(string yearMonth, bool picturePage)
     {
-        return _context.TblPageCounter
+        return [.. _context.TblPageCounter
             .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
-            .OrderByDescending(p => p.PageViews)
-            .ToList();
+            .OrderByDescending(p => p.PageViews)];
     }
 
     /// <summary>
@@ -156,7 +154,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     public List<TblPageCounter> GetTop20CategoryCountsGroupedByPageCount()
     {
         var groupedCounters = _context.TblPageCounter
-            .Where(p => p.PicturePage == true)
+            .Where(p => p.PicturePage)
             .GroupBy(p => p.CategoryId)
             .Select(g => new TblPageCounter
             {
@@ -181,9 +179,7 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <returns>Lista med alla sidvisningar</returns>
     public List<TblPageCounter> GetAllPageCounts()
     {
-        return _context.TblPageCounter
-            .OrderByDescending(p => p.LastShowDate)
-            .ToList();
+        return [.. _context.TblPageCounter.OrderByDescending(p => p.LastShowDate)];
     }
 
     /// <summary>
@@ -194,21 +190,77 @@ public class PageCounterService(ArvidsonFotoCoreDbContext context) : IPageCounte
     /// <returns>Dictionary med månad som nyckel och totala sidvisningar som värde</returns>
     public Dictionary<string, int> GetMonthlyPageViewsChart(int monthsBack, bool picturePage)
     {
-        var result = new Dictionary<string, int>();
-        var currentDate = DateTime.Now;
-
-        for (int i = monthsBack - 1; i >= 0; i--)
+        if (monthsBack <= 0)
         {
-            var targetDate = currentDate.AddMonths(-i);
-            var yearMonth = targetDate.ToString("yyyy-MM");
-
-            var monthlyViews = _context.TblPageCounter
-                .Where(p => p.MonthViewed == yearMonth && p.PicturePage == picturePage)
-                .Sum(p => p.PageViews);
-
-            result[yearMonth] = monthlyViews;
+            return [];
         }
 
-        return result;
+        var endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        var startDate = endDate.AddMonths(-(monthsBack - 1));
+        return GetMonthlyPageViewsChart(startDate, endDate, picturePage);
+    }
+
+    public Dictionary<string, int> GetMonthlyPageViewsChart(DateTime startDate, DateTime endDate, bool picturePage)
+    {
+        var monthKeys = GetMonthKeys(startDate, endDate);
+        if (monthKeys.Length == 0)
+        {
+            return [];
+        }
+
+        var monthlyTotals = _context.TblPageCounter
+            .Where(p => monthKeys.Contains(p.MonthViewed) && p.PicturePage == picturePage)
+            .GroupBy(p => p.MonthViewed)
+            .Select(group => new { Month = group.Key, Views = group.Sum(p => p.PageViews) })
+            .ToDictionary(group => group.Month, group => group.Views);
+
+        return monthKeys.ToDictionary(month => month, month => monthlyTotals.GetValueOrDefault(month));
+    }
+
+    public List<TblPageCounter> GetPageCountsInPeriod(DateTime startDate, DateTime endDate, bool picturePage)
+    {
+        var monthKeys = GetMonthKeys(startDate, endDate);
+        if (monthKeys.Length == 0)
+        {
+            return [];
+        }
+
+        var counters = _context.TblPageCounter
+            .Where(p => monthKeys.Contains(p.MonthViewed) && p.PicturePage == picturePage)
+            .ToList();
+        return counters
+            .GroupBy(p => picturePage && p.CategoryId != 0
+                ? $"id:{p.CategoryId.ToString(CultureInfo.InvariantCulture)}"
+                : $"name:{p.PageName}")
+            .Select(group =>
+            {
+                var latest = group.OrderByDescending(p => p.LastShowDate).First();
+                return new TblPageCounter
+                {
+                    Id = latest.Id,
+                    PageName = latest.PageName,
+                    CategoryId = latest.CategoryId,
+                    PicturePage = picturePage,
+                    PageViews = group.Sum(p => p.PageViews),
+                    LastShowDate = group.Max(p => p.LastShowDate),
+                    MonthViewed = latest.MonthViewed
+                };
+            })
+            .OrderByDescending(counter => counter.PageViews)
+            .ToList();
+    }
+
+    private static string[] GetMonthKeys(DateTime startDate, DateTime endDate)
+    {
+        var firstMonth = new DateTime(startDate.Year, startDate.Month, 1);
+        var lastMonth = new DateTime(endDate.Year, endDate.Month, 1);
+        if (lastMonth < firstMonth)
+        {
+            return [];
+        }
+
+        return Enumerable.Range(0, ((lastMonth.Year - firstMonth.Year) * 12) + lastMonth.Month - firstMonth.Month + 1)
+            .Select(offset => firstMonth.AddMonths(offset).ToString("yyyy-MM", CultureInfo.InvariantCulture))
+            .ToArray();
     }
 }

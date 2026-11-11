@@ -58,13 +58,13 @@ public class ExternalLoginModel(
         returnUrl ??= Url.Content("~/");
         if (remoteError != null)
         {
-            ErrorMessage = $"Error from external provider: {remoteError}";
+            ErrorMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.ErrorFromExternalProvider0"), remoteError);
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = "Error loading external login information.";
+            ErrorMessage = IdentityResource.Get("Identity.ExternalLogin.ErrorLoadingExternalLoginInformation");
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
@@ -102,7 +102,7 @@ public class ExternalLoginModel(
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = "Error loading external login information during confirmation.";
+            ErrorMessage = IdentityResource.Get("Identity.ExternalLogin.ErrorLoadingExternalLoginInformationDuringConfirmation");
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
@@ -127,8 +127,8 @@ public class ExternalLoginModel(
                         values: new { area = "Identity", userId, code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, IdentityResource.Get("Identity.ExternalLogin.ConfirmYourEmail"),
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ExternalLogin.PleaseConfirmYourAccountByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)

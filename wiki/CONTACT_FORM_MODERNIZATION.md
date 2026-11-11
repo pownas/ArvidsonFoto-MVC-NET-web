@@ -4,6 +4,8 @@
 **Version**: 3.11.0  
 **Status**: ✅ Slutförd och testad
 
+> **Historisk ändringsrapport:** Detta dokument beskriver implementationen i version 3.11.0 (2025-01-20). Konfigurations- och kodexemplen är en ändringshistorik; verifiera aktuell `SmtpSettings`, controller och databasmodell innan du använder dem som driftinstruktioner.
+
 ---
 
 ## 📝 Översikt av Ändringar

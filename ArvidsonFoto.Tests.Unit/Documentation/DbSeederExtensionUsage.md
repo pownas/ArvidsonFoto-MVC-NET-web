@@ -92,7 +92,7 @@ public void Index_ReturnsViewResult_WithGalleryViewModel()
     // Assert
     var viewResult = Assert.IsType<ViewResult>(result);
     var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-    Assert.Equal("/Bilder/Faglar", model.CurrentUrl);
+    Assert.Equal("/bilder/Faglar", model.CurrentUrl);
     Assert.NotNull(model.SelectedCategory);
     Assert.Equal("Fåglar", model.SelectedCategory.MenuText);
 }
@@ -135,7 +135,7 @@ public void Index_ReturnsViewResult_WithSubCategory()
     // Assert
     var viewResult = Assert.IsType<ViewResult>(result);
     var model = Assert.IsType<GalleryViewModel>(viewResult.Model);
-    Assert.Equal("/Bilder/Tattingar/Mesar/Blames", model.CurrentUrl);
+    Assert.Equal("/bilder/Tattingar/Mesar/Blames", model.CurrentUrl);
     Assert.NotNull(model.SelectedCategory);
     Assert.Equal("Blåmes", model.SelectedCategory.MenuText);
 }

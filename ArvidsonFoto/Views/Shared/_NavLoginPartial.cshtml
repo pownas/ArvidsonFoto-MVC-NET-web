@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@inject IStringLocalizer<SharedResource> T
 @inject SignInManager<ArvidsonFotoUser> SignInManager
 @inject UserManager<ArvidsonFotoUser> UserManager
 
@@ -9,13 +10,13 @@
     username = splittedUser[0];
     <li class="nav-item">
         <div class="dropdown-divider"></div>
-        <a href="./UploadAdmin" title="Manage"><i class="bi bi-cloud-upload"></i> Upload Admin</a>
+        <a href="./UploadAdmin" title="@T["Navigation.Admin"]"><i class="bi bi-cloud-upload"></i> @T["Navigation.Admin"]</a>
     </li>
     <li class="nav-item">
-        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="bi bi-file-person"></i> Hantera kontot: @username</a>
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="@T["Navigation.ManageAccountTitle"]"><i class="bi bi-file-person"></i> @T["Navigation.ManageAccount", username]</a>
     </li>
     <li class="nav-item">
-        <a asp-area="Identity" asp-page="/Account/Logout"><i class="bi bi-lock"></i> Logga ut</a>
+        <a asp-area="Identity" asp-page="/Account/Logout"><i class="bi bi-lock"></i> @T["Navigation.LogOut"]</a>
     </li>
 }
 else

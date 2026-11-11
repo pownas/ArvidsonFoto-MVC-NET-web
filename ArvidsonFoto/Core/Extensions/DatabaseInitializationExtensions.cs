@@ -16,7 +16,7 @@ public static class DatabaseInitializationExtensions
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddDatabaseInitialization(this IServiceCollection services)
     {
-        services.AddScoped<DatabaseInitializationService>();
+        _ = services.AddScoped<DatabaseInitializationService>();
         return services;
     }
 

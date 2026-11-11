@@ -11,9 +11,9 @@ public class ResetAuthenticatorModel(
     SignInManager<ArvidsonFotoUser> signInManager,
     ILogger<ResetAuthenticatorModel> logger) : PageModel
 {
-    private UserManager<ArvidsonFotoUser> _userManager = userManager;
+    private readonly UserManager<ArvidsonFotoUser> _userManager = userManager;
     private readonly SignInManager<ArvidsonFotoUser> _signInManager = signInManager;
-    private ILogger<ResetAuthenticatorModel> _logger = logger;
+    private readonly ILogger<ResetAuthenticatorModel> _logger = logger;
 
     [TempData]
     public string? StatusMessage { get; set; }
@@ -21,12 +21,9 @@ public class ResetAuthenticatorModel(
     public async Task<IActionResult> OnGet()
     {
         var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-        }
-
-        return Page();
+        return user == null
+            ? NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)))
+            : Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -34,15 +31,15 @@ public class ResetAuthenticatorModel(
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            return NotFound(string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ConfirmEmail.UnableToLoadUserWithID0"), _userManager.GetUserId(User)));
         }
 
-        await _userManager.SetTwoFactorEnabledAsync(user, false);
-        await _userManager.ResetAuthenticatorKeyAsync(user);
+        _ = await _userManager.SetTwoFactorEnabledAsync(user, false);
+        _ = await _userManager.ResetAuthenticatorKeyAsync(user);
         _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
 
         await _signInManager.RefreshSignInAsync(user);
-        StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";
+        StatusMessage = IdentityResource.Get("Identity.Manage.ResetAuthenticator.YourAuthenticatorAppKeyHasBeenNewKey");
 
         return RedirectToPage("./EnableAuthenticator");
     }

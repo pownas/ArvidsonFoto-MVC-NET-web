@@ -1,6 +1,10 @@
-﻿@section MetaData {
+﻿@inject IStringLocalizer<SiteResource> S
+@{
+    ViewData["Title"] = S["Privacy.Header.Title"].Value;
+}
+@section MetaData {
     <meta name="robots" content="noimageindex" />
 }
 <h2>@ViewData["Title"]</h2>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<p>@S["Privacy.Body.Placeholder"]</p>

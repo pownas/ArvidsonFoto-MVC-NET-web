@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Form.Validation.CodeRequired" xml:space="preserve"><value>Please enter the code.</value></data>
+  <data name="Form.Validation.CodeInvalid" xml:space="preserve"><value>Incorrect code.</value></data>
+  <data name="Contact.Form.Validation.EmailRequired" xml:space="preserve"><value>Enter your email address.</value></data>
+  <data name="Contact.Form.Validation.EmailInvalid" xml:space="preserve"><value>Enter a valid email address.</value></data>
+  <data name="Guestbook.Form.Validation.EmailInvalid" xml:space="preserve"><value>Enter a valid email address or leave it blank.</value></data>
+  <data name="Form.Validation.EmailTooLong" xml:space="preserve"><value>Email address is too long (maximum 150 characters).</value></data>
+  <data name="Contact.Form.Validation.NameRequired" xml:space="preserve"><value>Enter your name.</value></data>
+  <data name="Form.Validation.NameTooLong" xml:space="preserve"><value>Name is too long (maximum 50 characters).</value></data>
+  <data name="Contact.Form.Validation.SubjectRequired" xml:space="preserve"><value>Enter a subject.</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteInvalid" xml:space="preserve"><value>Enter a valid URL or leave it blank.</value></data>
+  <data name="Form.Validation.MessageRequired" xml:space="preserve"><value>Enter a message.</value></data>
+  <data name="Form.Validation.MessageTooLong" xml:space="preserve"><value>Message is too long (maximum 2000 characters).</value></data>
+  <data name="Contact.Form.Validation.SubjectTooLong" xml:space="preserve"><value>Subject is too long (maximum 50 characters).</value></data>
+  <data name="Guestbook.Form.Validation.WebsiteTooLong" xml:space="preserve"><value>Website address is too long (maximum 250 characters).</value></data>
+  <data name="Admin.Image.Validation.FilenameRequired" xml:space="preserve"><value>Enter a filename.</value></data>
+  <data name="Admin.Image.Validation.FilenameTooShort" xml:space="preserve"><value>Filename must be at least 2 characters long.</value></data>
+  <data name="Admin.Image.Validation.DateRequired" xml:space="preserve"><value>Enter the photo date.</value></data>
+  <data name="Admin.Image.Validation.DescriptionTooLong" xml:space="preserve"><value>Description must not exceed 150 characters.</value></data>
+  <data name="Admin.Facebook.Validation.ImageRequired" xml:space="preserve"><value>Select at least one image.</value></data>
+  <data name="Admin.Facebook.Validation.ImagesTooMany" xml:space="preserve"><value>You can select up to 10 images.</value></data>
+  <data name="Admin.Facebook.Validation.MessageRequired" xml:space="preserve"><value>Write a message.</value></data>
+  <data name="Admin.Facebook.Validation.MessageTooLong" xml:space="preserve"><value>Message must not exceed 5000 characters.</value></data>
+  <data name="Admin.Category.Validation.NameRequired" xml:space="preserve"><value>Enter a category name.</value></data>
+  <data name="Admin.Category.Validation.ParentRequired" xml:space="preserve"><value>Select a category to attach the new one to.</value></data>
+  <data name="Admin.Image.Form.Label.Filename" xml:space="preserve"><value>Filename</value></data>
+  <data name="Admin.Image.Form.Label.Date" xml:space="preserve"><value>Photo date</value></data>
+  <data name="Admin.Image.Form.Label.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Admin.Image.Form.Label.DescriptionEn" xml:space="preserve"><value>Description (English)</value></data>
+  <data name="Admin.Facebook.Form.Label.Message" xml:space="preserve"><value>Message</value></data>
+</root>

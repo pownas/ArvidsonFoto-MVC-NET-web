@@ -19,13 +19,6 @@ public class LogoutModel(SignInManager<ArvidsonFotoUser> signInManager) : PageMo
         Log.Information("User: " + User?.Identity?.Name + ", logging out.");
         await _signInManager.SignOutAsync();
         Log.Information("User logged out successfully.");
-        if (returnUrl != null)
-        {
-            return LocalRedirect(returnUrl);
-        }
-        else
-        {
-            return RedirectToPage();
-        }
+        return returnUrl != null ? LocalRedirect(returnUrl) : RedirectToPage();
     }
 }

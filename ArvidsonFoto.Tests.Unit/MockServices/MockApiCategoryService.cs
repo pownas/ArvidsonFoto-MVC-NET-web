@@ -19,10 +19,14 @@ public class MockApiCategoryService : IApiCategoryService
         _testCategories = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.Select(menu => new CategoryDto
         {
             CategoryId = menu.MenuCategoryId ?? 0,
-            Name = menu.MenuDisplayName ?? string.Empty,
-            UrlCategoryPath = menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}",
-            UrlCategoryPathFull = BuildCategoryPath(menu.MenuCategoryId ?? 0),
-            UrlCategory = $"bilder/{menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}"}",
+            NameSv = menu.MenuDisplayName ?? string.Empty,
+            NameEn = menu.MenuDisplayNameEn,
+            UrlCategoryPathSv = menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}",
+            UrlCategoryPathEn = menu.MenuUrlSegmentEn,
+            UrlCategoryPathFullSv = BuildCategoryPath(menu.MenuCategoryId ?? 0),
+            UrlCategorySv = $"bilder/{menu.MenuUrlSegment ?? $"category-{menu.MenuCategoryId ?? 0}"}",
+            UrlCategoryPathFullEn = BuildEnglishCategoryPath(menu.MenuCategoryId ?? 0),
+            UrlCategoryEn = $"images/{BuildEnglishCategoryPath(menu.MenuCategoryId ?? 0)}",
             UrlImage = GetDefaultImageForCategory(menu.MenuCategoryId ?? 0),
             ParentCategoryId = menu.MenuParentCategoryId == 0 ? null : menu.MenuParentCategoryId,
             ImageCount = GetImageCountForCategory(menu.MenuCategoryId ?? 0),
@@ -60,6 +64,21 @@ public class MockApiCategoryService : IApiCategoryService
         return string.Join("/", pathParts);
     }
 
+    private static string BuildEnglishCategoryPath(int menuId)
+    {
+        var menu = ArvidsonFotoCoreDbSeeder.DbSeed_Tbl_MenuCategories.FirstOrDefault(item => item.MenuCategoryId == menuId);
+        if (menu == null)
+        {
+            return string.Empty;
+        }
+
+        var parentPath = menu.MenuParentCategoryId is 0 or null
+            ? string.Empty
+            : BuildEnglishCategoryPath(menu.MenuParentCategoryId.Value);
+        var segment = menu.MenuCategoryId == 1 ? string.Empty : menu.MenuUrlSegmentEn ?? menu.MenuUrlSegment;
+        return string.Join("/", new[] { parentPath, segment }.Where(value => !string.IsNullOrWhiteSpace(value)));
+    }
+
     private static string GetDefaultImageForCategory(int menuId)
     {
         // Try to find an image for this category
@@ -77,7 +96,7 @@ public class MockApiCategoryService : IApiCategoryService
 
     public bool AddCategory(CategoryDto category)
     {
-        if (category?.Name == null)
+        if (category == null || string.IsNullOrWhiteSpace(category.NameSv))
         {
             return false;
         }
@@ -101,7 +120,8 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.Name, categoryName, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.NameSv, categoryName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.NameEn, categoryName, StringComparison.OrdinalIgnoreCase));
 
         return category ?? CreateNotFoundCategory();
     }
@@ -137,7 +157,7 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
-        return category?.Name ?? "Not found";
+        return category?.NameSv ?? "Not found";
     }
 
     public int GetIdByName(string categoryName)
@@ -148,8 +168,10 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.Name, categoryName, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(c.UrlCategoryPath, categoryName, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.NameSv, categoryName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.NameEn, categoryName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathSv, categoryName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathEn, categoryName, StringComparison.OrdinalIgnoreCase));
 
         return category?.CategoryId ?? -1;
     }
@@ -167,8 +189,10 @@ public class MockApiCategoryService : IApiCategoryService
             return false;
         }
 
-        existingCategory.Name = updatedCategory.Name;
-        existingCategory.UrlCategoryPath = updatedCategory.UrlCategoryPath;
+        existingCategory.NameSv = updatedCategory.NameSv;
+        existingCategory.NameEn = updatedCategory.NameEn;
+        existingCategory.UrlCategoryPathSv = updatedCategory.UrlCategoryPathSv;
+        existingCategory.UrlCategoryPathEn = updatedCategory.UrlCategoryPathEn;
         existingCategory.DateUpdated = DateTime.UtcNow;
         return true;
     }
@@ -203,7 +227,7 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == id);
-        return category?.UrlCategory ?? string.Empty;
+        return category?.UrlCategorySv ?? string.Empty;
     }
 
     public MainMenuResponse GetMainMenu()
@@ -216,10 +240,10 @@ public class MockApiCategoryService : IApiCategoryService
             var subCategoryCount = _testCategories.Count(c => c.ParentCategoryId == category.CategoryId);
             mainMenu.MainMenu.Add(new MainMenuDto
             {
-                MenuUrl = category.UrlCategory ?? string.Empty,
-                MenuDisplayName = category.Name ?? string.Empty,
+                MenuUrl = category.UrlCategorySv ?? string.Empty,
+                MenuDisplayName = category.NameSv,
                 SubCategoryCount = subCategoryCount,
-                SortingUrlWithAao = category.UrlCategoryPathFull ?? string.Empty
+                SortingUrlWithAao = category.UrlCategoryPathFullSv ?? string.Empty
             });
         }
 
@@ -269,7 +293,8 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.UrlCategoryPathSv, urlSegment, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathEn, urlSegment, StringComparison.OrdinalIgnoreCase));
 
         return category ?? CreateNotFoundCategory();
     }
@@ -282,7 +307,8 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c =>
-            string.Equals(c.UrlCategoryPath, urlSegment, StringComparison.OrdinalIgnoreCase));
+            string.Equals(c.UrlCategoryPathSv, urlSegment, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(c.UrlCategoryPathEn, urlSegment, StringComparison.OrdinalIgnoreCase));
 
         return category?.CategoryId ?? -1;
     }
@@ -318,7 +344,7 @@ public class MockApiCategoryService : IApiCategoryService
         }
 
         var category = _testCategories.FirstOrDefault(c => c.CategoryId == categoryId);
-        return category?.UrlCategoryPathFull ?? string.Empty;
+        return category?.UrlCategoryPathFullSv ?? string.Empty;
     }
 
     public string GetCategoryDisplayPathForImage(int categoryId)
@@ -407,10 +433,10 @@ public class MockApiCategoryService : IApiCategoryService
         return new CategoryDto
         {
             CategoryId = -1,
-            Name = "Not found",
-            UrlCategory = "bilder/404-NotFound",
-            UrlCategoryPath = "404-NotFound",
-            UrlCategoryPathFull = "404-NotFound",
+            NameSv = "Not found",
+            UrlCategorySv = "bilder/404-NotFound",
+            UrlCategoryPathSv = "404-NotFound",
+            UrlCategoryPathFullSv = "404-NotFound",
             DateUpdated = DateTime.UtcNow
         };
     }

@@ -31,7 +31,7 @@ public class ForgotPasswordModel(UserManager<ArvidsonFotoUser> userManager, IEma
         if (ModelState.IsValid)
         {
             var user = await _userManager.FindByEmailAsync(Input.Email);
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
             {
                 // Don't reveal that the user does not exist or is not confirmed
                 return RedirectToPage("./ForgotPasswordConfirmation");
@@ -49,8 +49,8 @@ public class ForgotPasswordModel(UserManager<ArvidsonFotoUser> userManager, IEma
 
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                "Reset Password",
-                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
+                IdentityResource.Get("Identity.ForgotPassword.ResetPassword"),
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, IdentityResource.Get("Identity.ForgotPassword.PleaseResetYourPasswordByAHereA"), HtmlEncoder.Default.Encode(callbackUrl!)));
 
             return RedirectToPage("./ForgotPasswordConfirmation");
         }
