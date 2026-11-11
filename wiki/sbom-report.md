@@ -1,13 +1,13 @@
 ﻿# 🛡️ Security & SBOM Scan Report
-*Genererad den: 2026-11-11 00:55:42*
+*Genererad den: 2026-11-11 01:12:09*
 
 ## 📊 Översikt
 <table width="100%">
   <tr>
-    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">205</font></td>
+    <td align="center" width="25%" style="background-color:#f6f8fa; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #d0d7de;"><b>Totalt skannade</b><br><font size="5" color="#1f2328">204</font></td>
     <td align="center" width="25%" style="background-color:#ffebe9; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #ffc1c0;"><b>⚠️ Aktiva sårbarheter</b><br><font size="5" color="#cf222e"><b>1</b></font></td>
-    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>1</b></font></td>
-    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>29</b></font></td>
+    <td align="center" width="25%" style="background-color:#fff8c5; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #eee0b0;"><b>🔄 Versionskonflikter</b><br><font size="5" color="#9a6700"><b>0</b></font></td>
+    <td align="center" width="25%" style="background-color:#ddf4ff; color:#1f2328; padding:15px; border-radius:6px; border:1px solid #b6e3ff;"><b>📦 Outdaterade paket</b><br><font size="5" color="#0969da"><b>33</b></font></td>
   </tr>
 </table>
 
@@ -36,23 +36,6 @@
           <span style="font-size:12px;"> Berör intervall: <code>[11.0.0-preview.1, 11.0.0-rc.1]</code></span> - <a href="https://github.com/advisories/GHSA-2fmv-rv2c-59x7" target="_blank">Visa Advisory</a>
         </div>
       </td>
-    </tr>
-  </tbody>
-</table>
-
-## 🔄 Versionskonflikter upptäckta
-<blockquote>💡 <b>Tips:</b> Standardisera dessa paket till en gemensam version i din <code>Directory.Packages.props</code> för att undvika oväntat runtime-beteende.</blockquote>
-<table width="100%">
-  <thead>
-    <tr>
-      <th align="left" width="40%">Paketnamn</th>
-      <th align="left" width="60%">Installerade versioner</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>Microsoft.NET.StringTools</b></td>
-      <td><code>18.4.0</code> &nbsp;|&nbsp; <code>18.9.6</code></td>
     </tr>
   </tbody>
 </table>
@@ -553,10 +536,10 @@
       <td><font size="2">Ja (11.0.0)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Compliance.Abstractions</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.Http.Resilience, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
@@ -700,17 +683,17 @@
       <td><font size="2">Ja (11.0.0)</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Http.Diagnostics</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.Http.Resilience, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Http.Resilience</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Ja (10.11.0)</font></td>
     </tr>
     <tr>
@@ -784,10 +767,10 @@
       <td><font size="2">Nej (Transitivt)<br>Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Microsoft.AspNetCore.Mvc.Testing, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Resilience</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.Http.Resilience, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
@@ -805,17 +788,17 @@
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.ServiceDiscovery</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Telemetry</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.Http.Resilience, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
+      <td><span style="background-color:#ddf4ff; color:#0969da; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">🔄 Uppdatering</span></td>
       <td><b>Microsoft.Extensions.Telemetry.Abstractions</b></td>
       <td><code>10.11.0</code></td>
-      <td><code>10.11.0</code></td>
+      <td><code>11.0.0</code></td>
       <td><font size="2">Nej (Transitivt)<br>Okänd källa, Microsoft.Extensions.Http.Resilience, Aspire.Hosting.Testing</font></td>
     </tr>
     <tr>
@@ -882,18 +865,11 @@
       <td><font size="2">Nej (Transitivt)<br>Okänd källa</font></td>
     </tr>
     <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
+      <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
       <td><b>Microsoft.NET.StringTools</b></td>
-      <td><code>18.4.0</code></td>
       <td><code>18.11.0</code></td>
-      <td><font size="2">Nej (Transitivt)<br>MessagePack, Aspire.Hosting.AppHost, Aspire.Hosting.SqlServer, Aspire.Hosting.Testing</font></td>
-    </tr>
-    <tr>
-      <td><span style="background-color:#fff8c5; color:#744210; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">⚠️ Konflikt</span></td>
-      <td><b>Microsoft.NET.StringTools</b></td>
-      <td><code>18.9.6</code></td>
       <td><code>18.11.0</code></td>
-      <td><font size="2">Nej (Transitivt)<br>Microsoft.EntityFrameworkCore.Design</font></td>
+      <td><font size="2">Ja (18.11.0)</font></td>
     </tr>
     <tr>
       <td><span style="background-color:#dafbe1; color:#1f883d; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; display:inline-block;">✓ OK</span></td>
