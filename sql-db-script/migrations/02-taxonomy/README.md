@@ -118,7 +118,7 @@ Kontrollera först att måldatabasen inte redan finns. Välj ett nytt
 `$database`-namn om den gör det:
 
 ```powershell
-& $sqlcmd -S $server -E -b -Q "IF DB_ID(N'$database') IS NOT NULL THROW 51010, 'Target test database already exists. Choose a new name.', 1;"
+& $sqlcmd -S $server -E -d master -b -Q "IF DB_ID(N'$database') IS NOT NULL THROW 51010, 'Testdatabasen finns redan. Välj ett nytt namn.', 1;"
 if ($LASTEXITCODE -ne 0) { throw 'Databaskontrollen misslyckades; avbryt.' }
 ```
 
@@ -155,7 +155,7 @@ Kör arbetskopian, inte källdumpen:
 
 ```powershell
 $restoreLog = Join-Path $workDirectory "$database-restore.log"
-& $sqlcmd -S $server -E -b -f 65001 -i $workingDump -o $restoreLog
+& $sqlcmd -S $server -E -d master -b -f 65001 -i $workingDump -o $restoreLog
 if ($LASTEXITCODE -ne 0) {
     throw "Teståterställningen misslyckades. Läs $restoreLog; fortsätt inte."
 }
