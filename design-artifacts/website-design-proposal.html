@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Designförslag – ArvidsonFoto.se</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #111310;
+      --surface: #1b1d19;
+      --surface-raised: #242621;
+      --text: #f3f0e8;
+      --muted: #b6b5ad;
+      --line: #3a3b34;
+      --accent: #d9ae75;
+      --accent-strong: #f1c58a;
+      --accent-ink: #1c1711;
+      --focus: #f7d49e;
+      --shadow: 0 1.25rem 3.5rem rgb(0 0 0 / 24%);
+      --radius: 1.1rem;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --page: #f5f3ed;
+      --surface: #fffefa;
+      --surface-raised: #eeece4;
+      --text: #252721;
+      --muted: #62645d;
+      --line: #d8d6cc;
+      --accent: #81552d;
+      --accent-strong: #68401f;
+      --accent-ink: #fffaf1;
+      --focus: #5d3517;
+      --shadow: 0 1.25rem 3.5rem rgb(54 44 31 / 12%);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: var(--page);
+      color: var(--text);
+      font: 16px/1.6 var(--sans);
+      transition: background-color .2s ease, color .2s ease;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    .wrap { width: min(1160px, calc(100% - 3rem)); margin-inline: auto; }
+    .proposal-note {
+      padding: .65rem 1rem;
+      background: var(--accent);
+      color: var(--accent-ink);
+      text-align: center;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .025em;
+    }
+    .site-header { border-bottom: 1px solid var(--line); background: var(--page); }
+    .header-inner {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .brand-mark {
+      width: 42px; height: 42px; display: grid; place-items: center;
+      border: 1px solid var(--line); border-radius: 50%; color: var(--accent-strong);
+      font-size: 1.35rem;
+    }
+    .brand-name { font: 600 1.12rem/1.1 var(--serif); letter-spacing: .015em; }
+    .brand-name small { display: block; margin-top: .35rem; color: var(--muted); font: 500 .65rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+    .nav-tools { display: flex; align-items: center; gap: 1.45rem; }
+    .primary-nav { display: flex; align-items: center; gap: 1.5rem; }
+    .primary-nav button, .tool-button, .menu-button {
+      padding: .45rem 0; border: 0; background: transparent; color: var(--muted);
+      cursor: pointer; text-decoration: none; font-size: .9rem;
+    }
+    .primary-nav button:hover, .primary-nav button[aria-current="page"], .tool-button:hover { color: var(--text); }
+    .nav-actions { display: flex; align-items: center; gap: .8rem; }
+    .tool-button { min-width: 2.5rem; border: 1px solid var(--line); border-radius: 999px; padding: .4rem .7rem; }
+    .menu-button { display: none; border: 1px solid var(--line); border-radius: .65rem; padding: .55rem .8rem; color: var(--text); }
+    .button {
+      display: inline-flex; min-height: 46px; align-items: center; justify-content: center;
+      gap: .55rem; padding: .7rem 1.15rem; border: 1px solid var(--accent);
+      border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+      cursor: pointer; text-decoration: none; font-size: .9rem; font-weight: 700;
+      transition: transform .18s ease, background-color .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); background: var(--accent-strong); }
+    .button.secondary { border-color: var(--line); background: transparent; color: var(--text); }
+    .button.secondary:hover { border-color: var(--accent); }
+    main { padding-block: 2.1rem 5rem; }
+    .breadcrumb { margin: 0 0 1.4rem; color: var(--muted); font-size: .82rem; }
+    .breadcrumb span { padding-inline: .5rem; color: var(--accent); }
+    .eyebrow { color: var(--accent-strong); font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.14; }
+    h1 { margin-bottom: 1.1rem; font-size: clamp(2.6rem, 6vw, 5rem); letter-spacing: -.035em; }
+    h2 { font-size: clamp(2rem, 4vw, 3.15rem); letter-spacing: -.025em; }
+    h3 { font-size: 1.45rem; }
+    .intro { max-width: 57ch; color: var(--muted); font-size: 1.05rem; }
+    .hero {
+      display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+      min-height: 470px; overflow: hidden; border: 1px solid var(--line);
+      border-radius: calc(var(--radius) * 1.2); background: var(--surface); box-shadow: var(--shadow);
+    }
+    .hero-copy { align-self: center; padding: clamp(2rem, 5vw, 4.5rem); }
+    .hero-copy h1 em { color: var(--accent-strong); font-weight: 400; }
+    .hero-copy .intro { margin-bottom: 1.8rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .hero-photo { position: relative; min-height: 320px; background: #35372f; }
+    .hero-photo img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: contain; }
+    .photo-caption {
+      position: absolute; right: 1rem; bottom: 1rem; padding: .45rem .75rem;
+      border: 1px solid rgb(255 255 255 / 24%); border-radius: 999px;
+      background: rgb(17 19 16 / 72%); color: #fff; font-size: .75rem;
+    }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: 4.5rem 0 1.5rem; }
+    .section-heading h2 { margin: .35rem 0 0; }
+    .text-link { color: var(--accent-strong); text-decoration-thickness: 1px; text-underline-offset: .25em; }
+    .explore-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .explore-card {
+      min-height: 205px; padding: 1.5rem; border: 1px solid var(--line);
+      border-radius: var(--radius); background: var(--surface); text-align: left;
+    }
+    .explore-card .icon { display: block; margin-bottom: 1.4rem; color: var(--accent-strong); font-size: 1.45rem; }
+    .explore-card h3 { margin-bottom: .45rem; }
+    .explore-card p { margin-bottom: 0; color: var(--muted); font-size: .9rem; }
+    .latest-row { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1.4rem; align-items: center; }
+    .latest-photo {
+      min-height: 240px; overflow: hidden; display: grid; place-items: center;
+      border-radius: var(--radius); background: var(--surface-raised);
+    }
+    .latest-photo img { width: 100%; height: 100%; max-height: 400px; object-fit: contain; }
+    .latest-copy { padding: 1rem; }
+    .latest-copy p { color: var(--muted); }
+    .page-view[hidden] { display: none; }
+    .page-title { margin: .25rem 0 1rem; }
+    .category-row { display: flex; flex-wrap: wrap; gap: .55rem; margin: 1.5rem 0; }
+    .category-chip {
+      border: 1px solid var(--line); border-radius: 999px; background: transparent;
+      color: var(--muted); padding: .48rem .85rem; cursor: pointer; font-size: .84rem;
+    }
+    .category-chip[aria-pressed="true"], .category-chip:hover { border-color: var(--accent); color: var(--text); }
+    .gallery-meta { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; color: var(--muted); font-size: .85rem; }
+    .photo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+    .photo-card { min-width: 0; }
+    .photo-button {
+      width: 100%; height: 230px; display: grid; place-items: center; overflow: hidden;
+      padding: .7rem; border: 1px solid var(--line); border-radius: .85rem;
+      background: var(--surface); cursor: zoom-in;
+    }
+    .photo-button:hover { border-color: var(--accent); }
+    .photo-button img { width: 100%; height: 100%; object-fit: contain; }
+    .photo-card figcaption { margin-top: .65rem; color: var(--muted); font-size: .84rem; }
+    .photo-card figcaption strong { display: block; color: var(--text); font-weight: 600; }
+    .purchase-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 1.25rem; align-items: stretch; margin-top: 2rem; }
+    .info-panel, .form-panel { padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .info-panel p, .info-panel li { color: var(--muted); }
+    .info-panel ul { padding-left: 1.2rem; }
+    .form-panel label { display: block; margin: 1rem 0 .4rem; font-size: .87rem; font-weight: 650; }
+    .form-panel input { width: 100%; min-height: 46px; padding: .65rem .8rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--page); color: var(--text); }
+    .form-panel input::placeholder { color: var(--muted); }
+    .form-panel .button { margin-top: 1.2rem; }
+    .site-footer { border-top: 1px solid var(--line); padding: 1.8rem 0; color: var(--muted); font-size: .83rem; }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+    .footer-inner a { color: var(--text); }
+    .lightbox {
+      position: fixed; z-index: 3; inset: 0; display: grid; place-items: center; padding: 2rem;
+      background: rgb(0 0 0 / 88%);
+    }
+    .lightbox[hidden] { display: none; }
+    .lightbox img { max-width: min(100%, 950px); max-height: 82vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 1rem; right: 1rem; min-width: 44px; min-height: 44px; border: 1px solid #fff8; border-radius: 50%; background: #111; color: white; cursor: pointer; }
+    @media (max-width: 850px) {
+      .header-inner { min-height: 72px; }
+      .nav-tools { gap: .8rem; }
+      .primary-nav { gap: .9rem; }
+      .hero { min-height: 390px; }
+      .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .photo-button { height: 190px; }
+    }
+    @media (max-width: 650px) {
+      .wrap { width: min(100% - 2rem, 560px); }
+      .header-inner { flex-wrap: wrap; padding-block: .8rem; }
+      .menu-button { display: inline-flex; align-items: center; gap: .5rem; }
+      .nav-tools { display: none; width: 100%; align-items: stretch; flex-direction: column; padding: .8rem 0 .3rem; }
+      .nav-tools[data-open="true"] { display: flex; }
+      .primary-nav { align-items: stretch; flex-direction: column; gap: 0; }
+      .primary-nav button { padding: .75rem 0; border-bottom: 1px solid var(--line); text-align: left; }
+      .nav-actions { justify-content: flex-start; }
+      main { padding-top: 1.2rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { padding: 2rem 1.5rem; }
+      .hero-photo { min-height: 270px; }
+      .explore-grid, .purchase-layout { grid-template-columns: 1fr; }
+      .explore-card { min-height: auto; }
+      .section-heading { align-items: start; flex-direction: column; margin-top: 3.3rem; }
+      .latest-row { grid-template-columns: 1fr; gap: .5rem; }
+      .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+      .photo-button { height: 155px; padding: .4rem; }
+      .gallery-meta { flex-direction: column; gap: .15rem; }
+      .footer-inner { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proposal-note" data-sv="Interaktivt designförslag · koncept, inte publicerad webbplats" data-en="Interactive design proposal · concept, not the live website">Interaktivt designförslag · koncept, inte publicerad webbplats</div>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#" aria-label="ArvidsonFoto.se startsida" data-home-link>
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span class="brand-name">ArvidsonFoto.se<small data-sv="Torbjörn Arvidson · fotografi" data-en="Torbjörn Arvidson · photography">Torbjörn Arvidson · fotografi</small></span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-tools"><span aria-hidden="true">☰</span><span data-sv="Meny" data-en="Menu">Meny</span></button>
+      <div class="nav-tools" id="nav-tools">
+        <nav class="primary-nav" aria-label="Huvudnavigation" data-label-sv="Huvudnavigation" data-label-en="Main navigation">
+          <button type="button" data-view="home" aria-current="page" data-sv="Hem" data-en="Home">Hem</button>
+          <button type="button" data-view="gallery" data-sv="Utforska bilder" data-en="Explore photos">Utforska bilder</button>
+          <button type="button" data-view="purchase" data-sv="Köp bilder" data-en="Buy photos">Köp bilder</button>
+        </nav>
+        <div class="nav-actions">
+          <button class="tool-button" type="button" id="language-toggle" aria-label="Byt språk">EN</button>
+          <button class="tool-button" type="button" id="theme-toggle" aria-label="Byt färgtema"><span aria-hidden="true">◐</span><span data-sv="Tema" data-en="Theme">Tema</span></button>
+          <button class="tool-button" type="button" data-view="gallery" aria-label="Sök bilder">⌕ <span data-sv="Sök" data-en="Search">Sök</span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-view" id="home-view" aria-labelledby="home-title">
+      <p class="breadcrumb" data-sv="ArvidsonFoto.se  /  Välkommen" data-en="ArvidsonFoto.se  /  Welcome">ArvidsonFoto.se <span>/</span> Välkommen</p>
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow" data-sv="Möten med naturen" data-en="A closer look at nature">Möten med naturen</p>
+          <h1 id="home-title"><span data-sv="Bilder som får dig att" data-en="Photography that invites you to">Bilder som får dig att</span> <em data-sv="stanna upp." data-en="pause.">stanna upp.</em></h1>
+          <p class="intro" data-sv="Upptäck svensk natur genom Torbjörn Arvidsons fotografier. Utforska bildarkivet eller hör av dig om du vill köpa en bild." data-en="Discover Swedish nature through photographs by Torbjörn Arvidson. Explore the archive or get in touch to purchase a photograph.">Upptäck svensk natur genom Torbjörn Arvidsons fotografier. Utforska bildarkivet eller hör av dig om du vill köpa en bild.</p>
+          <div class="hero-actions">
+            <button class="button" type="button" data-view="gallery"><span data-sv="Utforska bilder" data-en="Explore photos">Utforska bilder</span><span aria-hidden="true">→</span></button>
+            <button class="button secondary" type="button" data-view="purchase" data-sv="Köp bilder" data-en="Buy photos">Köp bilder</button>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson, fotograf" data-alt-sv="Torbjörn Arvidson, fotograf" data-alt-en="Torbjörn Arvidson, photographer">
+          <span class="photo-caption" data-sv="Torbjörn Arvidson · fotograf" data-en="Torbjörn Arvidson · photographer">Torbjörn Arvidson · fotograf</span>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div><p class="eyebrow" data-sv="Hitta din väg" data-en="Find your way">Hitta din väg</p><h2 data-sv="Utforska bildarkivet" data-en="Explore the archive">Utforska bildarkivet</h2></div>
+        <button class="text-link" type="button" data-view="gallery" data-sv="Se alla bilder →" data-en="Browse all photos →">Se alla bilder →</button>
+      </div>
+      <div class="explore-grid">
+        <article class="explore-card"><span class="icon" aria-hidden="true">↗</span><h3 data-sv="Senaste bilderna" data-en="Latest photos">Senaste bilderna</h3><p data-sv="Se de senast fotograferade motiven från arkivet." data-en="See the most recently photographed scenes from the archive.">Se de senast fotograferade motiven från arkivet.</p></article>
+        <article class="explore-card"><span class="icon" aria-hidden="true">⌕</span><h3 data-sv="Sök motiv" data-en="Search subjects">Sök motiv</h3><p data-sv="Hitta arter, platser och teman bland fotografierna." data-en="Find species, places and themes among the photographs.">Hitta arter, platser och teman bland fotografierna.</p></article>
+        <article class="explore-card"><span class="icon" aria-hidden="true">♡</span><h3 data-sv="Köp en bild" data-en="Purchase a photo">Köp en bild</h3><p data-sv="Läs om utskrifter, digitala bilder och användning." data-en="Learn about prints, digital images and licensing.">Läs om utskrifter, digitala bilder och användning.</p></article>
+      </div>
+
+      <div class="section-heading">
+        <div><p class="eyebrow" data-sv="Ur bildarkivet" data-en="From the archive">Ur bildarkivet</p><h2 data-sv="Ett ögonblick i naturen" data-en="A moment in nature">Ett ögonblick i naturen</h2></div>
+        <button class="text-link" type="button" data-view="gallery" data-sv="Fortsätt utforska →" data-en="Keep exploring →">Fortsätt utforska →</button>
+      </div>
+      <div class="latest-row">
+        <div class="latest-photo"><img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson med kamera" data-alt-sv="Torbjörn Arvidson med kamera" data-alt-en="Torbjörn Arvidson with his camera"></div>
+        <div class="latest-copy"><p class="eyebrow" data-sv="Fotografen" data-en="The photographer">Fotografen</p><h3 data-sv="Bilderna får tala först" data-en="Let the photographs speak first">Bilderna får tala först</h3><p data-sv="En lugnare startsida låter fotografiet stå i centrum och ger samtidigt tydliga vägar vidare till kategorier, sökning och köpinformation." data-en="A quieter home page puts photography first while keeping clear paths to categories, search and purchase information.">En lugnare startsida låter fotografiet stå i centrum och ger samtidigt tydliga vägar vidare till kategorier, sökning och köpinformation.</p><button class="text-link" type="button" data-view="gallery" data-sv="Visa bildgalleriet →" data-en="Open the gallery →">Visa bildgalleriet →</button></div>
+      </div>
+    </section>
+
+    <section class="page-view" id="gallery-view" aria-labelledby="gallery-title" hidden>
+      <p class="breadcrumb" data-sv="ArvidsonFoto.se  /  Bilder" data-en="ArvidsonFoto.se  /  Photos">ArvidsonFoto.se <span>/</span> Bilder</p>
+      <p class="eyebrow" data-sv="Bildarkivet" data-en="Photo archive">Bildarkivet</p>
+      <h1 class="page-title" id="gallery-title" data-sv="Bildarkivet" data-en="Photo archive">Bildarkivet</h1>
+      <p class="intro" data-sv="Välj en kategori eller sök bland fotografierna. Hela motivet visas i varje miniatyr. Den lokala porträttbilden används som bildexempel i prototypen." data-en="Choose a category or search the photographs. Thumbnails keep the full image in view. The locally available portrait is used as a sample image in this prototype.">Välj en kategori eller sök bland fotografierna. Hela motivet visas i varje miniatyr. Den lokala porträttbilden används som bildexempel i prototypen.</p>
+      <div class="category-row" aria-label="Underkategorier" data-label-sv="Underkategorier" data-label-en="Subcategories">
+        <button class="category-chip" type="button" aria-pressed="true" data-filter="all" data-sv="Alla motiv" data-en="All subjects">Alla motiv</button>
+        <button class="category-chip" type="button" aria-pressed="false" data-filter="portrait" data-sv="Porträtt" data-en="Portrait">Porträtt</button>
+        <label class="category-chip" for="gallery-search"><span data-sv="Sök" data-en="Search">Sök</span> <input id="gallery-search" type="search" placeholder="Kanin…" data-placeholder-sv="Kanin…" data-placeholder-en="Rabbit…" aria-label="Sök i bildarkivet"></label>
+      </div>
+      <div class="gallery-meta"><span data-sv="Urval ur bildarkivet" data-en="A selection from the archive">Urval ur bildarkivet</span><span data-sv="Visar hela motivet" data-en="Full image shown">Visar hela motivet</span></div>
+      <div class="photo-grid">
+        <figure class="photo-card" data-category="portrait"><button class="photo-button" type="button" aria-label="Visa större bild 1"><img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson med kamera" data-alt-sv="Torbjörn Arvidson med kamera" data-alt-en="Torbjörn Arvidson with his camera"></button><figcaption><strong data-sv="Fotografen" data-en="The photographer">Fotografen</strong><span data-sv="Porträtt · exempelbild" data-en="Portrait · sample image">Porträtt · exempelbild</span></figcaption></figure>
+        <figure class="photo-card" data-category="portrait"><button class="photo-button" type="button" aria-label="Visa större bild 2"><img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson med kamera" data-alt-sv="Torbjörn Arvidson med kamera" data-alt-en="Torbjörn Arvidson with his camera"></button><figcaption><strong data-sv="Ett möte med fotografen" data-en="Meet the photographer">Ett möte med fotografen</strong><span data-sv="Porträtt · exempelbild" data-en="Portrait · sample image">Porträtt · exempelbild</span></figcaption></figure>
+        <figure class="photo-card" data-category="portrait"><button class="photo-button" type="button" aria-label="Visa större bild 3"><img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson med kamera" data-alt-sv="Torbjörn Arvidson med kamera" data-alt-en="Torbjörn Arvidson with his camera"></button><figcaption><strong data-sv="Bakom kameran" data-en="Behind the camera">Bakom kameran</strong><span data-sv="Porträtt · exempelbild" data-en="Portrait · sample image">Porträtt · exempelbild</span></figcaption></figure>
+        <figure class="photo-card" data-category="portrait"><button class="photo-button" type="button" aria-label="Visa större bild 4"><img src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson med kamera" data-alt-sv="Torbjörn Arvidson med kamera" data-alt-en="Torbjörn Arvidson with his camera"></button><figcaption><strong data-sv="Bildexempel" data-en="Sample photo">Bildexempel</strong><span data-sv="Porträtt · exempelbild" data-en="Portrait · sample image">Porträtt · exempelbild</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="page-view" id="purchase-view" aria-labelledby="purchase-title" hidden>
+      <p class="breadcrumb" data-sv="ArvidsonFoto.se  /  Information  /  Köp bilder" data-en="ArvidsonFoto.se  /  Information  /  Buy photos">ArvidsonFoto.se <span>/</span> Information <span>/</span> Köp bilder</p>
+      <p class="eyebrow" data-sv="Från bild till vägg" data-en="From image to print">Från bild till vägg</p>
+      <h1 class="page-title" id="purchase-title" data-sv="Köp bilder" data-en="Purchase a photograph">Köp bilder</h1>
+      <p class="intro" data-sv="En tydlig väg från bildintresse till kontakt, med information och formulär samlade på samma sida." data-en="A clear path from choosing a photograph to getting in touch, with information and the form together.">En tydlig väg från bildintresse till kontakt, med information och formulär samlade på samma sida.</p>
+      <div class="purchase-layout">
+        <article class="info-panel">
+          <p class="eyebrow" data-sv="Information" data-en="Information">Information</p>
+          <h2 data-sv="Vad vill du använda bilden till?" data-en="How would you like to use the photo?">Vad vill du använda bilden till?</h2>
+          <p data-sv="Kontakta mig med en länk till bilden och berätta vad du söker, så återkommer jag med information." data-en="Send me a link to the photograph and tell me what you need; I’ll get back to you with details.">Kontakta mig med en länk till bilden och berätta vad du söker, så återkommer jag med information.</p>
+          <ul><li data-sv="Utskrifter" data-en="Prints">Utskrifter</li><li data-sv="Digitala bilder" data-en="Digital images">Digitala bilder</li><li data-sv="Redaktionell användning" data-en="Editorial use">Redaktionell användning</li><li data-sv="Kommersiell användning" data-en="Commercial use">Kommersiell användning</li></ul>
+          <p><a class="text-link" href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
+        </article>
+        <form class="form-panel" id="contact-demo">
+          <p class="eyebrow" data-sv="Kontakt" data-en="Contact">Kontakt</p>
+          <h2 data-sv="Berätta vad du söker" data-en="Tell me what you need">Berätta vad du söker</h2>
+          <label for="name" data-sv="Namn" data-en="Name">Namn</label><input id="name" name="name" autocomplete="name" required>
+          <label for="email" data-sv="E-postadress" data-en="Email address">E-postadress</label><input id="email" name="email" type="email" autocomplete="email" required>
+          <label for="message" data-sv="Meddelande" data-en="Message">Meddelande</label><input id="message" name="message" placeholder="Bildlänk eller fråga" data-placeholder-sv="Bildlänk eller fråga" data-placeholder-en="Photo link or question">
+          <button class="button" type="submit" data-sv="Skicka förfrågan" data-en="Send enquiry">Skicka förfrågan <span aria-hidden="true">→</span></button>
+          <p id="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span data-sv="Torbjörn Arvidson Foto · Örebro" data-en="Torbjörn Arvidson Photography · Örebro">Torbjörn Arvidson Foto · Örebro</span>
+      <span><a href="tel:0708120412">0708-12 04 12</a> · <a href="mailto:torbjorn_arvidson@hotmail.com" data-sv="E-post" data-en="Email">E-post</a> · <a href="https://Facebook.com/ArvidsonFoto" rel="noreferrer">Facebook</a></span>
+      <span><span data-sv="© 2003–" data-en="© 2003–">© 2003–</span><span id="year"></span> Torbjörn Arvidson</span>
+    </div>
+  </footer>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Bildvisning" hidden>
+    <button class="lightbox-close" type="button" aria-label="Stäng bildvisning">×</button>
+    <img alt="" src="">
+  </div>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const navTools = document.getElementById("nav-tools");
+      const menuButton = document.querySelector(".menu-button");
+      let language = "sv";
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      function translate() {
+        document.querySelectorAll("[data-" + language + "]").forEach((element) => {
+          element.textContent = element.getAttribute("data-" + language);
+        });
+        document.querySelectorAll("[data-placeholder-" + language + "]").forEach((element) => {
+          element.placeholder = element.getAttribute("data-placeholder-" + language);
+        });
+        document.querySelectorAll("[data-alt-" + language + "]").forEach((image) => {
+          image.alt = image.getAttribute("data-alt-" + language);
+        });
+        document.querySelectorAll("[data-view]").forEach((button) => {
+          if (button.tagName === "BUTTON" && button.hasAttribute("aria-label")) {
+            button.setAttribute("aria-label", language === "sv" ? "Sök bilder" : "Search photos");
+          }
+        });
+        root.lang = language;
+        document.getElementById("language-toggle").textContent = language === "sv" ? "EN" : "SV";
+        document.getElementById("language-toggle").setAttribute("aria-label", language === "sv" ? "Byt språk" : "Change language");
+        document.getElementById("theme-toggle").setAttribute("aria-label", language === "sv" ? "Byt färgtema" : "Change color theme");
+        menuButton.setAttribute("aria-label", language === "sv" ? "Öppna eller stäng menyn" : "Open or close menu");
+        document.getElementById("gallery-search").setAttribute("aria-label", language === "sv" ? "Sök i bildarkivet" : "Search the photo archive");
+        const nav = document.querySelector(".primary-nav");
+        nav.setAttribute("aria-label", language === "sv" ? nav.dataset.labelSv : nav.dataset.labelEn);
+        const categories = document.querySelector(".category-row");
+        categories.setAttribute("aria-label", language === "sv" ? categories.dataset.labelSv : categories.dataset.labelEn);
+        document.querySelectorAll(".photo-button").forEach((button, index) => {
+          button.setAttribute("aria-label", language === "sv" ? "Visa större bild " + (index + 1) : "View larger image " + (index + 1));
+        });
+        document.querySelector("#lightbox").setAttribute("aria-label", language === "sv" ? "Bildvisning" : "Image viewer");
+        document.querySelector(".lightbox-close").setAttribute("aria-label", language === "sv" ? "Stäng bildvisning" : "Close image viewer");
+      }
+
+      document.getElementById("language-toggle").addEventListener("click", () => {
+        language = language === "sv" ? "en" : "sv";
+        translate();
+      });
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      });
+      menuButton.addEventListener("click", () => {
+        const open = menuButton.getAttribute("aria-expanded") !== "true";
+        menuButton.setAttribute("aria-expanded", String(open));
+        navTools.dataset.open = String(open);
+      });
+
+      document.querySelectorAll("[data-view]").forEach((control) => {
+        control.addEventListener("click", () => {
+          const target = control.dataset.view;
+          document.querySelectorAll(".page-view").forEach((view) => {
+            view.hidden = view.id !== target + "-view";
+          });
+          document.querySelectorAll(".primary-nav [data-view]").forEach((item) => {
+            if (item.dataset.view === target) item.setAttribute("aria-current", "page");
+            else item.removeAttribute("aria-current");
+          });
+          menuButton.setAttribute("aria-expanded", "false");
+          delete navTools.dataset.open;
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+
+      document.querySelectorAll(".category-chip[data-filter]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          document.querySelectorAll(".category-chip[data-filter]").forEach((item) => item.setAttribute("aria-pressed", String(item === chip)));
+          document.querySelectorAll(".photo-card").forEach((card) => {
+            card.hidden = chip.dataset.filter !== "all" && card.dataset.category !== chip.dataset.filter;
+          });
+        });
+      });
+      document.getElementById("gallery-search").addEventListener("input", (event) => {
+        const query = event.target.value.trim().toLocaleLowerCase(language);
+        document.querySelectorAll(".photo-card").forEach((card) => {
+          card.hidden = query.length > 0 && !card.textContent.toLocaleLowerCase(language).includes(query);
+        });
+        document.querySelectorAll(".category-chip[data-filter]").forEach((chip) => chip.setAttribute("aria-pressed", String(chip.dataset.filter === "all")));
+      });
+
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = lightbox.querySelector("img");
+      let lightboxTrigger;
+      document.querySelectorAll(".photo-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const image = button.querySelector("img");
+          lightboxTrigger = button;
+          lightboxImage.src = image.src;
+          lightboxImage.alt = image.alt;
+          lightbox.hidden = false;
+          lightbox.querySelector("button").focus();
+        });
+      });
+      function closeLightbox() {
+        lightbox.hidden = true;
+        lightboxImage.removeAttribute("src");
+        lightboxTrigger?.focus();
+      }
+      lightbox.querySelector("button").addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => { if (event.target === lightbox) closeLightbox(); });
+      document.addEventListener("keydown", (event) => {
+        if (lightbox.hidden) return;
+        if (event.key === "Escape") closeLightbox();
+        if (event.key === "Tab") {
+          event.preventDefault();
+          lightbox.querySelector("button").focus();
+        }
+      });
+
+      document.getElementById("contact-demo").addEventListener("submit", (event) => {
+        event.preventDefault();
+        document.getElementById("form-message").textContent = language === "sv"
+          ? "Detta är en prototyp – formuläret skickar inget meddelande."
+          : "This is a prototype — the form does not send a message.";
+      });
+    })();
+  </script>
+</body>
+</html>

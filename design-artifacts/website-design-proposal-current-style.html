@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Alternativt designförslag – ArvidsonFoto.se</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #282a2d;
+      --header: #111214;
+      --surface: #34373b;
+      --surface-raised: #3d4146;
+      --text: #f0f1f2;
+      --muted: #c0c4c8;
+      --line: #50555b;
+      --link: #69aaff;
+      --link-hover: #9cc8ff;
+      --blue: #176fcb;
+      --focus: #a7d0ff;
+      --shadow: 0 12px 32px rgb(0 0 0 / 18%);
+    }
+    [data-theme="light"] {
+      color-scheme: light;
+      --page: #f1f3f5;
+      --header: #191c20;
+      --surface: #fff;
+      --surface-raised: #e7ebef;
+      --text: #24292f;
+      --muted: #525d68;
+      --line: #d3dae2;
+      --link: #075cae;
+      --link-hover: #004481;
+      --blue: #0b63b6;
+      --focus: #064f95;
+      --shadow: 0 12px 32px rgb(29 44 59 / 10%);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--page);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input { font: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    a { color: var(--link); text-underline-offset: .2em; }
+    a:hover { color: var(--link-hover); }
+    .wrap { width: min(1180px, calc(100% - 2.5rem)); margin-inline: auto; }
+    .demo-banner {
+      padding: .45rem 1rem;
+      background: var(--blue);
+      color: white;
+      text-align: center;
+      font-size: .78rem;
+      font-weight: 650;
+      letter-spacing: .02em;
+    }
+    .header { background: var(--header); color: #f3f5f7; }
+    .brand-row {
+      display: flex;
+      min-height: 76px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      border-bottom: 1px solid #ffffff1a;
+    }
+    .brand { display: flex; align-items: center; gap: .75rem; color: white; text-decoration: none; }
+    .brand-camera {
+      width: 42px; height: 42px; display: grid; place-items: center;
+      border: 2px solid #69aaff; border-radius: 12px; color: #9cc8ff; font-size: 1.35rem;
+    }
+    .brand strong { display: block; font-size: 1.12rem; letter-spacing: .01em; }
+    .brand small { display: block; color: #aeb8c2; font-size: .72rem; }
+    .head-tools { display: flex; align-items: center; gap: .6rem; }
+    .head-tools button, .mobile-toggle {
+      min-height: 40px; border: 1px solid #ffffff38; border-radius: .6rem;
+      padding: .4rem .7rem; background: transparent; color: white; cursor: pointer;
+    }
+    .mobile-toggle { display: none; }
+    .nav-row { display: flex; align-items: stretch; min-height: 50px; }
+    .mobile-menu { display: flex; align-items: stretch; justify-content: space-between; gap: .75rem; }
+    .nav-row nav { display: flex; align-items: stretch; gap: .15rem; }
+    .nav-row a, .nav-row summary {
+      display: flex; align-items: center; min-height: 50px; padding: 0 .95rem;
+      color: #e0e5ea; text-decoration: none; font-size: .88rem; cursor: pointer;
+    }
+    .nav-row a:hover, .nav-row summary:hover, .nav-row a[aria-current="page"] {
+      background: #ffffff12; color: white;
+    }
+    .nav-row details { position: relative; }
+    .menu-panel {
+      position: absolute; z-index: 2; top: 100%; left: 0; min-width: 215px;
+      padding: .45rem; border: 1px solid var(--line); border-radius: 0 0 .7rem .7rem;
+      background: var(--surface); box-shadow: var(--shadow);
+    }
+    .menu-panel a { min-height: 42px; border-radius: .35rem; color: var(--text); }
+    .menu-panel a:hover { background: var(--surface-raised); color: var(--link); }
+    main { padding-block: 1.5rem 4rem; }
+    .breadcrumbs { margin: 0 0 1.2rem; color: var(--muted); font-size: .82rem; }
+    .breadcrumbs span { margin-inline: .35rem; color: var(--link); }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { margin: 0; font-size: clamp(1.7rem, 3.5vw, 2.45rem); letter-spacing: -.025em; }
+    h2 { font-size: 1.55rem; }
+    h3 { font-size: 1.12rem; }
+    .welcome-heading {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+      margin-bottom: 1rem; padding-bottom: .8rem; border-bottom: 1px solid var(--line);
+    }
+    .welcome-heading p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .home-layout { display: grid; grid-template-columns: minmax(245px, .75fr) minmax(0, 1.6fr); gap: 1.25rem; }
+    .intro-panel, .gallery-panel, .quick-card, .content-panel {
+      border: 1px solid var(--line); border-radius: .85rem; background: var(--surface); box-shadow: var(--shadow);
+    }
+    .intro-panel { padding: 1.25rem; }
+    .intro-panel p { color: var(--muted); }
+    .intro-panel .signature { color: var(--text); font-style: italic; }
+    .portrait {
+      display: block; width: min(100%, 300px); max-height: 260px; margin: 1rem auto .5rem;
+      border: 1px solid var(--line); border-radius: .7rem; object-fit: cover; object-position: center 35%;
+    }
+    .intro-panel figcaption { color: var(--muted); text-align: center; font-size: .82rem; }
+    .gallery-panel { padding: 1rem; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .65rem; }
+    .panel-heading h2 { margin: 0; font-size: 1.2rem; }
+    .panel-heading button { border: 0; background: none; color: var(--link); cursor: pointer; font-size: .85rem; }
+    .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; }
+    .tile {
+      position: relative; min-width: 0; aspect-ratio: 1; overflow: hidden;
+      border: 1px solid #ffffff20; border-radius: .5rem; background: #3b4650;
+      cursor: zoom-in;
+    }
+    .tile img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform .2s ease; }
+    .tile:hover img { transform: scale(1.045); }
+    .tile-caption {
+      position: absolute; right: 0; bottom: 0; left: 0; padding: .35rem .45rem;
+      background: linear-gradient(transparent, rgb(0 0 0 / 76%)); color: white;
+      font-size: .7rem; line-height: 1.2;
+    }
+    .photo-note { margin: .65rem 0 0; color: var(--muted); font-size: .77rem; }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 2rem 0 .9rem; }
+    .section-heading h2 { margin: 0; font-size: 1.35rem; }
+    .quick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; }
+    .quick-card { display: flex; min-height: 145px; flex-direction: column; padding: 1rem; transition: border-color .15s, transform .15s; }
+    .quick-card:hover { transform: translateY(-2px); border-color: var(--link); }
+    .quick-card .icon { color: var(--link); font-size: 1.25rem; }
+    .quick-card h3 { margin: .35rem 0; }
+    .quick-card p { margin: 0; color: var(--muted); font-size: .82rem; }
+    .page-view[hidden] { display: none; }
+    .page-title { margin: 0 0 .5rem; }
+    .page-intro { max-width: 68ch; color: var(--muted); }
+    .category-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+    .category-tabs button {
+      min-height: 40px; border: 1px solid var(--line); border-radius: 999px;
+      padding: .45rem .85rem; background: var(--surface); color: var(--text); cursor: pointer;
+    }
+    .category-tabs button[aria-pressed="true"], .category-tabs button:hover { border-color: var(--link); color: var(--link); }
+    .gallery-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; margin: 1.2rem 0 .8rem; }
+    .gallery-toolbar input { min-height: 42px; width: min(100%, 300px); border: 1px solid var(--line); border-radius: .5rem; padding: .5rem .75rem; background: var(--surface); color: var(--text); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .results-count { color: var(--muted); font-size: .85rem; }
+    .expanded-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+    .expanded-gallery figure { margin: 0; }
+    .expanded-gallery .tile { display: block; width: 100%; }
+    .expanded-gallery figcaption { padding-top: .5rem; color: var(--muted); font-size: .82rem; }
+    .buy-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; margin-top: 1.4rem; }
+    .content-panel { padding: 1.4rem; }
+    .content-panel p, .content-panel li { color: var(--muted); }
+    .content-panel label { display: block; margin: .8rem 0 .3rem; color: var(--text); font-size: .85rem; font-weight: 650; }
+    .content-panel input, .content-panel textarea { display: block; width: 100%; border: 1px solid var(--line); border-radius: .45rem; padding: .6rem .7rem; background: var(--page); color: var(--text); }
+    .content-panel textarea { min-height: 110px; resize: vertical; }
+    .primary-action { min-height: 42px; margin-top: 1rem; border: 1px solid var(--blue); border-radius: .5rem; padding: .55rem 1rem; background: var(--blue); color: white; font-weight: 650; cursor: pointer; }
+    .primary-action:hover { filter: brightness(1.12); }
+    .footer { border-top: 1px solid var(--line); background: var(--header); color: #d7dce1; }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; font-size: .82rem; }
+    .footer-inner p { margin: 0; }
+    .footer-inner a { color: #9cc8ff; }
+    .lightbox[hidden] { display: none; }
+    .lightbox { position: fixed; z-index: 5; inset: 0; display: grid; place-items: center; padding: 2rem; background: rgb(0 0 0 / 90%); }
+    .lightbox img { max-width: min(100%, 1000px); max-height: 82vh; object-fit: contain; }
+    .lightbox button { position: absolute; top: 1rem; right: 1rem; min-width: 46px; min-height: 46px; border: 1px solid #fff9; border-radius: 50%; background: #16181a; color: white; font-size: 1.4rem; cursor: pointer; }
+    @media (max-width: 900px) {
+      .home-layout { grid-template-columns: minmax(215px, .8fr) minmax(0, 1.3fr); gap: .8rem; }
+      .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .expanded-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .nav-row a, .nav-row summary { padding-inline: .7rem; }
+    }
+    @media (max-width: 650px) {
+      .wrap { width: calc(100% - 1.25rem); }
+      .brand-row { min-height: 66px; }
+      .mobile-toggle { display: inline-flex; align-items: center; gap: .4rem; }
+      .mobile-menu { display: none; padding-bottom: .7rem; }
+      .mobile-menu[data-open="true"] { display: block; }
+      .nav-row { min-height: auto; }
+      .nav-row nav { width: 100%; flex-direction: column; gap: 0; }
+      .head-tools { display: flex; padding: .7rem 0 0; }
+      .nav-row a, .nav-row summary { min-height: 45px; border-top: 1px solid #ffffff17; }
+      .nav-row details { display: block; }
+      .menu-panel { position: static; border: 0; border-radius: 0; padding: 0 .5rem .4rem; background: #ffffff0a; box-shadow: none; }
+      .menu-panel a { min-height: 40px; }
+      main { padding-top: 1rem; }
+      .welcome-heading { align-items: flex-start; flex-direction: column; gap: .15rem; }
+      .home-layout, .buy-layout { grid-template-columns: 1fr; }
+      .intro-panel { display: grid; grid-template-columns: 1fr minmax(115px, 35%); gap: 0 .75rem; align-items: start; }
+      .intro-panel h2, .intro-panel p, .intro-panel .signature { grid-column: 1; }
+      .intro-panel figure { grid-column: 2; grid-row: 1 / span 4; margin: .3rem 0; }
+      .portrait { width: 100%; max-height: 190px; }
+      .gallery-panel { padding: .7rem; }
+      .mosaic { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+      .tile figcaption { font-size: .62rem; }
+      .quick-grid { gap: .55rem; }
+      .quick-card { min-height: 132px; padding: .8rem; }
+      .expanded-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+      .footer-inner { flex-direction: column; gap: .5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner" data-sv="Alternativt interaktivt designförslag · konceptbild, inte live-webbplatsen" data-en="Alternative interactive design proposal · concept, not the live website">Alternativt interaktivt designförslag · konceptbild, inte live-webbplatsen</div>
+  <header class="header">
+    <div class="wrap brand-row">
+      <a class="brand" href="#" aria-label="ArvidsonFoto.se startsida" data-home>
+        <span class="brand-camera" aria-hidden="true">▣</span>
+        <span><strong>ArvidsonFoto.se</strong><small data-sv="Torbjörn Arvidson Foto" data-en="Torbjörn Arvidson Photography">Torbjörn Arvidson Foto</small></span>
+      </a>
+      <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"><span aria-hidden="true">☰</span><span data-sv="Meny" data-en="Menu">Meny</span></button>
+    </div>
+    <div class="wrap mobile-menu" id="mobile-menu">
+      <div class="nav-row">
+        <nav aria-label="Huvudnavigation" data-nav-sv="Huvudnavigation" data-nav-en="Main navigation">
+          <a href="#" data-page="home" aria-current="page" data-sv="Hem" data-en="Home">Hem</a>
+          <details>
+            <summary data-sv="Senast" data-en="Latest">Senast</summary>
+            <div class="menu-panel">
+              <a href="#" data-page="gallery" data-sv="Senast fotograferade" data-en="Recently photographed">Senast fotograferade</a>
+              <a href="#" data-page="gallery" data-sv="Senast uppladdade" data-en="Recently uploaded">Senast uppladdade</a>
+              <a href="#" data-page="gallery" data-sv="Per kategori" data-en="By category">Per kategori</a>
+            </div>
+          </details>
+          <details>
+            <summary data-sv="Kategorier" data-en="Categories">Kategorier</summary>
+            <div class="menu-panel">
+              <a href="#" data-category="faglar" data-sv="Fåglar" data-en="Birds">Fåglar</a>
+              <a href="#" data-category="daggdjur" data-sv="Däggdjur" data-en="Mammals">Däggdjur</a>
+              <a href="#" data-category="landskap" data-sv="Landskap" data-en="Landscapes">Landskap</a>
+              <a href="#" data-category="vaxter" data-sv="Växter" data-en="Plants">Växter</a>
+              <a href="#" data-category="all" data-sv="Alla kategorier →" data-en="All categories →">Alla kategorier →</a>
+            </div>
+          </details>
+          <a href="#" data-page="purchase" data-sv="Köp av bilder" data-en="Buy photos">Köp av bilder</a>
+          <a href="#" data-page="info" data-sv="Info & kontakt" data-en="Info & contact">Info & kontakt</a>
+          <a href="#" data-page="gallery" aria-label="Sök bilder" data-search-link>⌕ <span data-sv="Sök" data-en="Search">Sök</span></a>
+        </nav>
+      </div>
+      <div class="head-tools">
+        <button id="language-toggle" type="button" aria-label="Byt språk">EN</button>
+        <button id="theme-toggle" type="button" aria-label="Byt färgtema"><span aria-hidden="true">◐</span> <span data-sv="Tema" data-en="Theme">Tema</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-view" id="home-view" aria-labelledby="welcome-title">
+      <p class="breadcrumbs">ArvidsonFoto.se <span>/</span><span data-sv="Välkommen" data-en="Welcome">Välkommen</span></p>
+      <div class="welcome-heading">
+        <h1 id="welcome-title">Torbjörn Arvidson Foto</h1>
+        <p data-sv="Välkommen till mitt bildarkiv" data-en="Welcome to my photo archive">Välkommen till mitt bildarkiv</p>
+      </div>
+      <div class="home-layout">
+        <article class="intro-panel">
+          <h2 data-sv="Välkommen till mitt bildarkiv" data-en="Welcome to my photo archive">Välkommen till mitt bildarkiv</h2>
+          <p data-sv="Här finner du ett urval av mina bilder." data-en="Here you can find a selection of my photographs.">Här finner du ett urval av mina bilder.</p>
+          <p data-sv="Är du intresserad av att köpa högupplösta bilder? Kontakta mig på" data-en="Interested in buying high-resolution photographs? Contact me at">Är du intresserad av att köpa högupplösta bilder? Kontakta mig på</p>
+          <a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a>
+          <p><a href="#" data-page="purchase" data-sv="Läs om köp av bilder →" data-en="Read about buying photos →">Läs om köp av bilder →</a></p>
+          <p class="signature">/ Torbjörn Arvidson</p>
+          <figure>
+            <img class="portrait" src="../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg" alt="Torbjörn Arvidson" data-alt-sv="Torbjörn Arvidson" data-alt-en="Torbjörn Arvidson">
+            <figcaption>Torbjörn Arvidson</figcaption>
+          </figure>
+        </article>
+        <section class="gallery-panel" aria-labelledby="latest-title">
+          <div class="panel-heading">
+            <h2 id="latest-title" data-sv="Några bilder ur arkivet" data-en="A few photos from the archive">Några bilder ur arkivet</h2>
+            <button type="button" data-page="gallery" data-sv="Visa alla →" data-en="View all →">Visa alla →</button>
+          </div>
+          <div class="mosaic" id="home-mosaic" aria-label="Exempel på bilder från arkivet" data-mosaic-sv="Exempel på bilder från arkivet" data-mosaic-en="Sample photos from the archive"></div>
+          <p class="photo-note" data-sv="Bildrutnätet följer startsidans befintliga galleri med ett urval av de senaste/slumpade bilderna." data-en="The photo grid follows the existing home gallery, with a selection of recent/random photos.">Bildrutnätet följer startsidans befintliga galleri med ett urval av de senaste/slumpade bilderna.</p>
+        </section>
+      </div>
+      <div class="section-heading">
+        <h2 data-sv="Utforska webbplatsen" data-en="Explore the website">Utforska webbplatsen</h2>
+        <span class="results-count" data-sv="Bildarkiv · kategorier · kontakt" data-en="Photo archive · categories · contact">Bildarkiv · kategorier · kontakt</span>
+      </div>
+      <div class="quick-grid">
+        <a class="quick-card" href="#" data-page="gallery"><span class="icon" aria-hidden="true">▧</span><h3 data-sv="Senaste bilderna" data-en="Latest photos">Senaste bilderna</h3><p data-sv="Se de senast fotograferade bilderna." data-en="Browse the most recently photographed images.">Se de senast fotograferade bilderna.</p></a>
+        <a class="quick-card" href="#" data-page="gallery"><span class="icon" aria-hidden="true">▦</span><h3 data-sv="Alla kategorier" data-en="All categories">Alla kategorier</h3><p data-sv="Utforska hela kategoriträdet." data-en="Explore the full category tree.">Utforska hela kategoriträdet.</p></a>
+        <a class="quick-card" href="#" data-page="purchase"><span class="icon" aria-hidden="true">▱</span><h3 data-sv="Köp bilder" data-en="Buy photos">Köp bilder</h3><p data-sv="Information om utskrifter och användning." data-en="Information about prints and licensing.">Information om utskrifter och användning.</p></a>
+        <a class="quick-card" href="#" data-page="info"><span class="icon" aria-hidden="true">ⓘ</span><h3 data-sv="Info & kontakt" data-en="Info & contact">Info & kontakt</h3><p data-sv="Läs mer eller skicka en fråga." data-en="Learn more or get in touch.">Läs mer eller skicka en fråga.</p></a>
+      </div>
+    </section>
+
+    <section class="page-view" id="gallery-view" aria-labelledby="gallery-title" hidden>
+      <p class="breadcrumbs">ArvidsonFoto.se <span>/</span><span data-sv="Bilder" data-en="Photos">Bilder</span></p>
+      <h1 class="page-title" id="gallery-title" data-sv="Bildarkiv" data-en="Photo archive">Bildarkiv</h1>
+      <p class="page-intro" data-sv="Välj en kategori eller sök bland bilderna. Rutnätet och bildvisningen behåller hela motivet." data-en="Choose a category or search the photos. The grid and image viewer preserve the full image.">Välj en kategori eller sök bland bilderna. Rutnätet och bildvisningen behåller hela motivet.</p>
+      <div class="category-tabs" aria-label="Kategorier" data-tabs-sv="Kategorier" data-tabs-en="Categories">
+        <button type="button" data-filter="all" aria-pressed="true" data-sv="Alla bilder" data-en="All photos">Alla bilder</button>
+        <button type="button" data-filter="faglar" aria-pressed="false" data-sv="Fåglar" data-en="Birds">Fåglar</button>
+        <button type="button" data-filter="daggdjur" aria-pressed="false" data-sv="Däggdjur" data-en="Mammals">Däggdjur</button>
+        <button type="button" data-filter="landskap" aria-pressed="false" data-sv="Landskap" data-en="Landscapes">Landskap</button>
+        <button type="button" data-filter="vaxter" aria-pressed="false" data-sv="Växter" data-en="Plants">Växter</button>
+      </div>
+      <div class="gallery-toolbar">
+        <label><span class="visually-hidden" data-sv="Sök i bildarkivet" data-en="Search the photo archive">Sök i bildarkivet</span><input id="gallery-search" type="search" placeholder="Sök motiv…" data-placeholder-sv="Sök motiv…" data-placeholder-en="Search subjects…"></label>
+        <span class="results-count" id="results-count" role="status" aria-live="polite"></span>
+      </div>
+      <div class="expanded-gallery" id="expanded-gallery"></div>
+    </section>
+
+    <section class="page-view" id="purchase-view" aria-labelledby="purchase-title" hidden>
+      <p class="breadcrumbs">ArvidsonFoto.se <span>/</span><span data-sv="Köp av bilder" data-en="Buying photos">Köp av bilder</span></p>
+      <h1 class="page-title" id="purchase-title" data-sv="Köp av bilder" data-en="Buying photos">Köp av bilder</h1>
+      <p class="page-intro" data-sv="Behåll den bekanta informationssidan, men samla information och kontaktväg i tydliga, lättöverskådliga block." data-en="Keep the familiar information page, while organizing details and contact options into clear, easy-to-scan sections.">Behåll den bekanta informationssidan, men samla information och kontaktväg i tydliga, lättöverskådliga block.</p>
+      <div class="buy-layout">
+        <article class="content-panel">
+          <h2 data-sv="Information" data-en="Information">Information</h2>
+          <p data-sv="Kontakta mig om du vill beställa en bild. Berätta gärna vilken bild och hur du önskar använda den." data-en="Contact me if you would like to order a photograph. Please include which photo and how you would like to use it.">Kontakta mig om du vill beställa en bild. Berätta gärna vilken bild och hur du önskar använda den.</p>
+          <ul><li data-sv="Utskrifter" data-en="Prints">Utskrifter</li><li data-sv="Digitala bilder" data-en="Digital images">Digitala bilder</li><li data-sv="Redaktionell och kommersiell användning" data-en="Editorial and commercial use">Redaktionell och kommersiell användning</li></ul>
+          <p><a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
+        </article>
+        <form class="content-panel" id="contact-demo">
+          <h2 data-sv="Skicka en förfrågan" data-en="Send an enquiry">Skicka en förfrågan</h2>
+          <label for="contact-name" data-sv="Namn" data-en="Name">Namn</label><input id="contact-name" autocomplete="name" required>
+          <label for="contact-email" data-sv="E-post" data-en="Email">E-post</label><input id="contact-email" type="email" autocomplete="email" required>
+          <label for="contact-message" data-sv="Meddelande" data-en="Message">Meddelande</label><textarea id="contact-message"></textarea>
+          <button class="primary-action" type="submit" data-sv="Skicka förfrågan" data-en="Send enquiry">Skicka förfrågan</button>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="page-view" id="info-view" aria-labelledby="info-title" hidden>
+      <p class="breadcrumbs">ArvidsonFoto.se <span>/</span><span data-sv="Info" data-en="Information">Info</span></p>
+      <h1 class="page-title" id="info-title" data-sv="Info & kontakt" data-en="Information & contact">Info & kontakt</h1>
+      <div class="quick-grid">
+        <article class="content-panel"><h2 data-sv="Om mig" data-en="About me">Om mig</h2><p data-sv="Läs om Torbjörn och fotograferingen." data-en="Read about Torbjörn and his photography.">Läs om Torbjörn och fotograferingen.</p></article>
+        <article class="content-panel"><h2 data-sv="Kontakt" data-en="Contact">Kontakt</h2><p><a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p><p><a href="tel:0708120412">0708-12 04 12</a></p></article>
+        <article class="content-panel"><h2 data-sv="Gästbok" data-en="Guestbook">Gästbok</h2><p data-sv="Besök gästboken och lämna en hälsning." data-en="Visit the guestbook and leave a message.">Besök gästboken och lämna en hälsning.</p></article>
+        <article class="content-panel"><h2 data-sv="Sitemap" data-en="Sitemap">Sitemap</h2><p data-sv="Få en överblick över kategorier och sidor." data-en="Browse an overview of categories and pages.">Få en överblick över kategorier och sidor.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>Torbjörn Arvidson Foto · Hagmarksgatan 8, Örebro</p>
+      <p><a href="tel:0708120412">0708-12 04 12</a> · <a href="mailto:torbjorn_arvidson@hotmail.com">torbjorn_arvidson@hotmail.com</a></p>
+      <p>© 2003–<span id="year"></span> Torbjörn Arvidson</p>
+    </div>
+  </footer>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Bildvisning" hidden>
+    <button type="button" aria-label="Stäng bildvisning">×</button><img src="" alt="">
+  </div>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const galleryData = [
+        { category: "daggdjur", titleSv: "Kanin", titleEn: "Rabbit", image: "https://arvidsonfoto.se/bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg", fallback: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Kanin", fallbackAlt: "Torbjörn Arvidson" },
+        { category: "faglar", titleSv: "Fågelmotiv", titleEn: "Birdlife", image: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Fotografens porträtt" },
+        { category: "landskap", titleSv: "Landskap", titleEn: "Landscape", image: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Fotografens porträtt" },
+        { category: "daggdjur", titleSv: "Möte i naturen", titleEn: "A moment in nature", image: "https://arvidsonfoto.se/bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg", fallback: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Kanin i naturen", fallbackAlt: "Torbjörn Arvidson" },
+        { category: "faglar", titleSv: "Fågelliv", titleEn: "Birdlife", image: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Fotografens porträtt" },
+        { category: "landskap", titleSv: "Ute i naturen", titleEn: "Outdoors", image: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Fotografens porträtt" },
+        { category: "daggdjur", titleSv: "Ett stilla ögonblick", titleEn: "A quiet moment", image: "https://arvidsonfoto.se/bilder/D%C3%A4ggdjur/Kanin/B57V4570.jpg", fallback: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Kanin", fallbackAlt: "Torbjörn Arvidson" },
+        { category: "faglar", titleSv: "Från bildarkivet", titleEn: "From the archive", image: "../ArvidsonFoto/wwwroot/img/Torbjorn2020.jpg", alt: "Fotografens porträtt" }
+      ];
+      let language = "sv";
+      let filter = "all";
+      let lightboxTrigger;
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      function imageElement(item) {
+        const image = document.createElement("img");
+        image.src = item.image;
+        image.alt = item.alt;
+        image.loading = "lazy";
+        if (item.fallback) image.addEventListener("error", () => {
+          image.src = item.fallback;
+          image.alt = item.fallbackAlt;
+        }, { once: true });
+        return image;
+      }
+
+      function photoButton(item, index) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "tile";
+        button.setAttribute("aria-label", language === "sv" ? "Visa större bild: " + item.titleSv : "View larger photo: " + item.titleEn);
+        button.append(imageElement(item));
+        const caption = document.createElement("span");
+        caption.className = "tile-caption";
+        caption.textContent = language === "sv" ? item.titleSv : item.titleEn;
+        button.append(caption);
+        button.addEventListener("click", () => {
+          lightboxTrigger = button;
+          const lightboxImage = document.querySelector("#lightbox img");
+          lightboxImage.src = button.querySelector("img").src;
+          lightboxImage.alt = button.querySelector("img").alt;
+          document.getElementById("lightbox").hidden = false;
+          document.querySelector("#lightbox button").focus();
+        });
+        return button;
+      }
+
+      function renderGallery() {
+        const grid = document.getElementById("expanded-gallery");
+        grid.replaceChildren();
+        const query = document.getElementById("gallery-search").value.trim().toLocaleLowerCase(language);
+        const visibleItems = galleryData.filter((item) => {
+          const title = language === "sv" ? item.titleSv : item.titleEn;
+          return (filter === "all" || item.category === filter) && title.toLocaleLowerCase(language).includes(query);
+        });
+        visibleItems.forEach((item, index) => {
+          const figure = document.createElement("figure");
+          figure.append(photoButton(item, index));
+          const caption = document.createElement("figcaption");
+          caption.textContent = language === "sv" ? item.titleSv : item.titleEn;
+          figure.append(caption);
+          grid.append(figure);
+        });
+        const count = document.getElementById("results-count");
+        count.textContent = language === "sv" ? visibleItems.length + " exempelbilder" : visibleItems.length + " sample photos";
+      }
+
+      function translate() {
+        document.querySelectorAll("[data-" + language + "]").forEach((element) => {
+          element.textContent = element.getAttribute("data-" + language);
+        });
+        document.querySelectorAll("[data-placeholder-" + language + "]").forEach((element) => {
+          element.placeholder = element.getAttribute("data-placeholder-" + language);
+        });
+        document.querySelectorAll("[data-alt-" + language + "]").forEach((element) => {
+          element.alt = element.getAttribute("data-alt-" + language);
+        });
+        root.lang = language;
+        document.getElementById("language-toggle").textContent = language === "sv" ? "EN" : "SV";
+        document.getElementById("language-toggle").setAttribute("aria-label", language === "sv" ? "Byt språk" : "Change language");
+        document.getElementById("theme-toggle").setAttribute("aria-label", language === "sv" ? "Byt färgtema" : "Change color theme");
+        document.querySelector(".mobile-toggle").setAttribute("aria-label", language === "sv" ? "Öppna eller stäng menyn" : "Open or close menu");
+        document.querySelector(".mobile-menu nav").setAttribute("aria-label", language === "sv" ? "Huvudnavigation" : "Main navigation");
+        document.querySelector(".category-tabs").setAttribute("aria-label", language === "sv" ? "Kategorier" : "Categories");
+        document.getElementById("home-mosaic").setAttribute("aria-label", language === "sv" ? "Exempel på bilder från arkivet" : "Sample photos from the archive");
+        document.querySelector("#lightbox").setAttribute("aria-label", language === "sv" ? "Bildvisning" : "Image viewer");
+        document.querySelector("#lightbox button").setAttribute("aria-label", language === "sv" ? "Stäng bildvisning" : "Close image viewer");
+        translateMosaic();
+        renderGallery();
+      }
+
+      function translateMosaic() {
+        document.querySelectorAll("#home-mosaic .tile figcaption").forEach((caption, index) => {
+          const item = galleryData[index % galleryData.length];
+          caption.textContent = language === "sv" ? item.titleSv : item.titleEn;
+        });
+        document.querySelectorAll("#home-mosaic .tile").forEach((button, index) => {
+          const item = galleryData[index % galleryData.length];
+          button.setAttribute("aria-label", language === "sv" ? "Visa större bild: " + item.titleSv : "View larger photo: " + item.titleEn);
+        });
+      }
+
+      const homeGrid = document.getElementById("home-mosaic");
+      Array.from({ length: 12 }, (_, index) => galleryData[index % galleryData.length]).forEach((item, index) => {
+        const figure = document.createElement("figure");
+        figure.style.margin = "0";
+        figure.append(photoButton(item, index));
+        homeGrid.append(figure);
+      });
+
+      document.getElementById("language-toggle").addEventListener("click", () => {
+        language = language === "sv" ? "en" : "sv";
+        translate();
+      });
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      });
+      document.querySelector(".mobile-toggle").addEventListener("click", (event) => {
+        const menu = document.getElementById("mobile-menu");
+        const open = event.currentTarget.getAttribute("aria-expanded") !== "true";
+        event.currentTarget.setAttribute("aria-expanded", String(open));
+        menu.dataset.open = String(open);
+      });
+      document.querySelectorAll("[data-page]").forEach((control) => {
+        control.addEventListener("click", (event) => {
+          event.preventDefault();
+          const target = control.dataset.page;
+          document.querySelectorAll(".page-view").forEach((view) => { view.hidden = view.id !== target + "-view"; });
+          document.querySelectorAll(".nav-row [data-page]").forEach((link) => {
+            if (link.dataset.page === target) link.setAttribute("aria-current", "page");
+            else link.removeAttribute("aria-current");
+          });
+          document.querySelector(".mobile-toggle").setAttribute("aria-expanded", "false");
+          delete document.getElementById("mobile-menu").dataset.open;
+          window.scrollTo(0, 0);
+          if (target === "gallery") renderGallery();
+        });
+      });
+      document.querySelectorAll("[data-category]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const selected = link.dataset.category;
+          filter = selected === "all" ? "all" : selected;
+          document.querySelectorAll(".category-tabs [data-filter]").forEach((button) => {
+            const value = selected === "all" ? "all" : selected;
+            button.setAttribute("aria-pressed", String(button.dataset.filter === value));
+          });
+          document.querySelectorAll(".page-view").forEach((view) => { view.hidden = view.id !== "gallery-view"; });
+          document.querySelector(".page-title").scrollIntoView({ block: "start" });
+          renderGallery();
+        });
+      });
+      document.querySelectorAll(".category-tabs [data-filter]").forEach((button) => {
+        button.addEventListener("click", () => {
+          filter = button.dataset.filter;
+          document.querySelectorAll(".category-tabs [data-filter]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          renderGallery();
+        });
+      });
+      document.getElementById("gallery-search").addEventListener("input", renderGallery);
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        lightbox.hidden = true;
+        lightbox.querySelector("img").removeAttribute("src");
+        lightboxTrigger?.focus();
+      }
+      document.querySelector("#lightbox button").addEventListener("click", closeLightbox);
+      document.getElementById("lightbox").addEventListener("click", (event) => {
+        if (event.target === event.currentTarget) closeLightbox();
+      });
+      document.addEventListener("keydown", (event) => {
+        const lightbox = document.getElementById("lightbox");
+        if (lightbox.hidden) return;
+        if (event.key === "Escape") closeLightbox();
+        if (event.key === "Tab") {
+          event.preventDefault();
+          lightbox.querySelector("button").focus();
+        }
+      });
+      document.getElementById("contact-demo").addEventListener("submit", (event) => {
+        event.preventDefault();
+        document.getElementById("form-status").textContent = language === "sv"
+          ? "Prototypformulär – inget meddelande har skickats."
+          : "Prototype form — no message was sent.";
+      });
+      renderGallery();
+      translateMosaic();
+    })();
+  </script>
+</body>
+</html>
