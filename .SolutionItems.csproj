@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Target Name="Build" />
   <Target Name="Restore" />
@@ -28,7 +28,7 @@
   <ItemGroup Label="Include BLOBs">
     <None Include=".config\**\*.*" />
     <None Include=".github\**\*.*" />
-    <None Include="artifacts\**\*.*" />
+    <None Include="artifacts\**\*.*" Exclude="artifacts\verify\**\*.*" />
     <None Include="TestResults\**\*.*" />
     <None Include="wiki\**\*.*" />
   </ItemGroup>
